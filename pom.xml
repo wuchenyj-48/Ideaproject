@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fortec</groupId>
+    <artifactId>fortec-mscm-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>fortec-mscm-upms</module>
+        <module>fortec-mscm-eureka</module>
+        <module>fortec-mscm-oauth</module>
+        <module>fortec-mscm-portal</module>
+        <module>fortec-mscm-base</module>
+    </modules>
+
+    <properties>
+
+        <main.basedir>${basedir}/../..</main.basedir>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <springboot.version>2.1.5.RELEASE</springboot.version>
+        <springcloud.version>Greenwich.RELEASE</springcloud.version>
+        <springsecurity.oauth2.version>2.3.6.RELEASE</springsecurity.oauth2.version>
+        <springsecurity.oauth2.autoconfigure.version>2.1.6.RELEASE</springsecurity.oauth2.autoconfigure.version>
+
+        <fastjson.version>1.2.58</fastjson.version>
+        <mybatisplus.version>3.1.1</mybatisplus.version>
+    </properties>
+
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${springcloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>
