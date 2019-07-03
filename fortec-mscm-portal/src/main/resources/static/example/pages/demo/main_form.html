@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 单行文本框
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="testInput" required lay-verify="required" placeholder="请输入单行文本框"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 下拉框
+                        </label>
+                        <div class="layui-input-block">
+                            <select name="testSelect"></select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs12">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 文本域
+                        </label>
+                        <div class="layui-input-block">
+                            <textarea name="testTextarea" placeholder="请输入文本域" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 数字
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="testNumber" required lay-verify="number|required"
+                                   placeholder="请输入数字"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 单选框
+                        </label>
+                        <div class="layui-input-block">
+                            <div id="testRadioDiv"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 复选框
+                        </label>
+                        <div class="layui-input-block">
+                            <div id="testCheckboxDiv"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            开关
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="testSwitch" lay-skin="switch" lay-text="是|否"
+                                   onchange="this.value = this.checked ? 1 : 0">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            日期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="testDate" placeholder="请选择日期" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            日期时间
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="testDatetime" placeholder="请选择日期时间" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="layui-tab child-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">子表管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div id="childToolbar">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
+                                    lay-event="addNewLine">
+                                <i class="layui-icon layui-icon-add-1"></i>增行
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
+                                <i class="layui-icon layui-icon-save"></i>批量保存
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
+                                <i class="layui-icon layui-icon-refresh"></i> 刷新
+                            </button>
+                        </div>
+                        <div class="row-edit-table" id="child_table" lay-filter="child_table">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 子表管理 开始  -->
+
+        <script type="text/html" id="testInputTpl">
+            <input type="text" data-name="testInput" value="{{d.testInput ? d.testInput : ''}}" lay-filter="testInput"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
+                   class="layui-input custom-input"/>
+        </script>
+
+        <script type="text/html" id="testSelectTpl">
+            <select data-name="testSelect" lay-filter="testSelect" lay-event="testSelect"
+                    data-index="{{d.LAY_TABLE_INDEX}}">
+                {{# layui.each($global.getDictDataList('sys_yes_no'), function(index, item){ }}
+                <option value="{{item.value}}" {{item.value== d.testSelect ?
+                'selected' : ''}}>{{item.label}}</option>
+                {{# }) }}
+            </select>
+        </script>
+
+        <script type="text/html" id="testEmailTpl">
+            <input type="text" data-name="testEmail" value="{{d.testEmail ? d.testEmail : ''}}" lay-filter="testEmail"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required|email"
+                   class="layui-input custom-input"/>
+        </script>
+
+        <script type="text/html" id="testNumberTpl">
+            <input type="text" data-name="testNumber" value="{{d.testNumber ? d.testNumber : ''}}"
+                   lay-filter="testNumber"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required|number"
+                   class="layui-input custom-input"/>
+        </script>
+
+        <script type="text/html" id="childCellToolbar">
+            {{#  if($strings.isBlank(d.id)){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
+                    class="fas fa-check"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
+                    class="far fa-trash-alt"></i></a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
+                    class="fas fa-save"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
+                    class="far fa-trash-alt"></i></a>
+            {{#  } }}
+        </script>
+        <!-- 子表管理 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let model = {}
+
+                window.reloadChildTable = () => {
+                    if($strings.isBlank(model.id)){
+                        return
+                    }
+                    $http.get(`/upms/test/childs/list?mainId=${model.id}`).then(resp => {
+                        layui.table.render({
+                            elem: '#child_table',
+                            data: resp.data.data,
+                            height: 300,
+                            cols: [[
+                                {type: 'numbers', align: 'center'},
+                                {field: 'testInput', title: '单行文本框', align: 'center', templet: '#testInputTpl'},
+                                {field: 'testSelect', title: '单选下拉框', align: 'center', templet: '#testSelectTpl'},
+                                {field: 'testEmail', title: '邮箱', align: 'center', templet: '#testEmailTpl'},
+                                {field: 'testNumber', title: '数值', align: 'center', templet: '#testNumberTpl'},
+                                {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#childCellToolbar"},
+                            ]]
+                        });
+                        $editable.watch('child_table')
+                    })
+                }
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        $(".child-tab").show()
+                        console.log(model)
+                        window.reloadChildTable && window.reloadChildTable()
+                    }else{
+                        $(".child-tab").hide()
+                    }
+                }
+
+                // 渲染下拉框 数据
+                $global.getDictDataList('sys_yes_no').forEach(o => {
+                    $("select[name='testSelect']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+
+                // 渲染单选框/多选框 数据
+                $global.getDictDataList('sys_yes_no').forEach(o => {
+                    $("#testRadioDiv").append(`<input type="radio" name="testRadio" value="${o.value}" title="${o.label}" /> `)
+                })
+                $global.getDictDataList('sys_yes_no').forEach(o => {
+                    $("#testCheckboxDiv").append(`<input type="checkbox" name="testCheckbox" value="${o.value}" title="${o.label}" /> `)
+                })
+                form.render('radio')
+
+                // 渲染日期、时间 数据
+                layui.laydate.render({elem: "input[name='testDate']", type: 'date', trigger: 'click'});
+                layui.laydate.render({elem: "input[name='testDatetime']", type: 'datetime', trigger: 'click'});
+
+                /*** 子表管理开始 */
+
+
+
+                // window.reloadChildTable()
+                $("#childToolbar button[lay-event='addNewLine']").click(() => {
+                    layui.table.addRow('child_table', 0, {testSelect: 0})
+                    form.render('select')
+                })
+
+                $("#childToolbar button[lay-event='batchSave']").click(() => {
+                    $editable.validateAllRows('child_table', (valid, errors) => {
+                        if (!valid) {
+                            return
+                        }
+                    })
+                })
+
+                $("#childToolbar button[lay-event='refresh']").click(() => {
+                    window.reloadChildTable()
+                })
+
+
+                // 监听子表的列工具栏
+                layui.table.on('tool(child_table)', function (obj) {
+                    // 获取行索引
+                    let index = obj.tr[0].getAttribute("data-index")
+                    var data = obj.data;
+                    if (obj.event === 'newDel') {
+                        // 未在数据库中存在，直接从界面移除即可
+                        obj.del()
+                        return
+                    }
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $http.delete(`/upms/test/childs/` + data.id).then(resp => {
+                                layer.msg(resp.data.msg, {icon: 1})
+                                obj.del()
+                            })
+                        });
+                        return
+                    }
+
+                    // 校验并保存
+                    $editable.validateSingleRow("child_table", index, (valid, error) => {
+                        if (!valid) {
+                            return
+                        }
+                        let data = layui.table.cache.child_table[index]
+                        data.mainId = model.id
+                        let promise = null
+                        if ($strings.isBlank(data.id)) {
+                            promise = $http.post("/upms/test/childs", data)
+                        } else {
+                            promise = $http.put("/upms/test/childs", data)
+                        }
+
+                        promise.then(resp => {
+                            if (resp.data.success) {
+                                parent.layer.msg(resp.data.msg, {icon: 1})
+
+                                // 重新渲染单行数据
+                                layui.table.renderSpecRow('child_table', index, {
+                                    id: resp.data.data.id
+                                })
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                });
+
+                /*** 子表管理结束 */
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    data.field = layui.$.extend({}, data.field)
+                    let promise = null
+                    if ($strings.isBlank(data.field.id)) {
+                        promise = $http.post("/upms/test/mains", data.field)
+                    } else {
+                        promise = $http.put("/upms/test/mains", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (resp.data.success) {
+                            window.initForm(resp.data.data)
+
+                            parent.layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                        } else {
+                            layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadSingleJs("/scripts/utils/editable.js", mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+
