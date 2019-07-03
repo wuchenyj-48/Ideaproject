@@ -31,6 +31,36 @@
         <mybatisplus.version>3.1.1</mybatisplus.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://maven.aliyun.com/repository/central/</url>
+        </repository>
+
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+
+        <repository>
+            <id>internal-releases</id>
+            <name>Archiva Managed Internal Repository</name>
+            <url>http://demo-mscm.forten-tech.com:8080/repository/internal</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+
+        <repository>
+            <id>internal-snapshots</id>
+            <name>Archiva Managed Internal Repository</name>
+            <url>http://demo-mscm.forten-tech.com:8080/repository/snapshots</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
 
         <dependencies>
