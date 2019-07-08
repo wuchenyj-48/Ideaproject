@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: true
+    appname: fortec-mscm-portal
+    # 必须设置，网关路由时将依据此参数的值获取服务列表，相关连接参考：
+    # com.netflix.discovery.shared.Applications.getInstancesByVirtualHostName
+    virtual-host-name: fortec-mscm-portal
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:5001/eureka/

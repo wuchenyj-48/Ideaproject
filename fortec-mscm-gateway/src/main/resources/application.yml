@@ -1,0 +1,56 @@
+server:
+  port: 5060
+
+logging:
+  level:
+    org.springframework: info
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: true
+    appname: fortec-mscm-gateway
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:5001/eureka/
+
+zuul:
+  # 以下请求头不传递到下游服务器，默认 "Cookie", "Set-Cookie", "Authorization"
+  sensitive-headers:
+    - Cookie
+    - Set-Cookie
+  ignored-patterns:
+    - /**.html
+    - /**.css
+    - /**.js
+  routes:
+    # 静态资源转向配置
+    static-lib-service:
+      path: /lib/**
+      strip-prefix: false
+      service-id: fortec-mscm-portal
+    static-script-service:
+      path: /scripts/**
+      strip-prefix: false
+      service-id: fortec-mscm-portal
+    static-style-service:
+      path: /styles/**
+      strip-prefix: false
+      service-id: fortec-mscm-portal
+    static-page-service:
+      path: /pages/**
+      strip-prefix: false
+      service-id: fortec-mscm-portal
+
+    upms-service:
+      path: /upms/**
+      serviceId: fortec-common-upms
+    base-service:
+      path: /base/**
+      serviceId: fortec-mscm-base
+ribbon:
+  eureka:
+    enabled: true

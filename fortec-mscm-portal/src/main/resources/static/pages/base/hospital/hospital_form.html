@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 医院代码
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="code" required lay-verify="required" placeholder="请输入医院代码"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 医院名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" required lay-verify="required" placeholder="请输入医院名称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            简称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="shortName" lay-verify="" placeholder="请输入简称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 拼音
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="pinyin" required lay-verify="abc|required" placeholder="请输入拼音"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            区域id
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="regionId" lay-verify="" placeholder="请输入区域id"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            地址
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="address" lay-verify="" placeholder="请输入地址"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            联系人
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="contactor" lay-verify="" placeholder="请输入联系人"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            邮箱
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="email" lay-verify="" placeholder="请输入邮箱"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            电话
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="phone" lay-verify="" placeholder="请输入电话"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <!--   加载子表表格-->
+            <div class="layui-tab child-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">医院收货地点管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div id="hospitalLocationToolbar">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
+                                    lay-event="addNewLine">
+                                <i class="layui-icon layui-icon-add-1"></i> 增行
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
+                                <i class="layui-icon layui-icon-save"></i> 批量保存
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
+                                <i class="layui-icon layui-icon-refresh"></i> 刷新
+                            </button>
+                        </div>
+                        <div class="row-edit-table" id="hospital_location_table"
+                             lay-filter="hospital_location_table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子表管理模板 开始  -->
+        <script type="text/html" id="locationNameTpl">
+            <input type="text" data-name="locationName" value="{{d.locationName ? d.locationName : ''}}"
+                   lay-filter="locationName"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="hospitalLocationCellToolbar">
+            {{#  if($strings.isBlank(d.id)){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
+                    class="fas fa-check"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
+                    class="far fa-trash-alt"></i></a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
+                    class="fas fa-save"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
+                    class="far fa-trash-alt"></i></a>
+            {{#  } }}
+        </script>
+        <!-- 子表管理模板 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let model = {}
+
+                // 加载子表表格
+                window.reloadHospitalLocationTable = () => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    $http.get(`/base/hospital_locations/list?hospitalId=${model.id}`).then(resp => {
+                        layui.table.render({
+                            elem: '#hospital_location_table',
+                            data: resp.data.data,
+                            height: 300,
+                            cols: [[
+                                {type: 'numbers', align: 'center'},
+                                {field: 'locationName', title: '收货地点', align: 'center',templet: "#locationNameTpl"},
+                                {
+                                    field: 'LAY_CELL_TOOLBAR',
+                                    title: '操作',
+                                    align: 'center',
+                                    templet: "#hospitalLocationCellToolbar"
+                                },
+                            ]]
+                        });
+                        $editable.watch('hospital_location_table')
+                    })
+                }
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        $(".hospital_location-tab").show()
+                        window.reloadHospitalLocationTable && window.reloadHospitalLocationTable()
+                    } else {
+                        $(".child-tab").hide()
+                    }
+                }
+
+                form.render('select')
+                form.render('radio')
+
+                /*** 子表管理开始 */
+                $("#hospitalLocationToolbar button[lay-event='addNewLine']").click(() => {
+                    layui.table.addRow('hospital_location_table', 0, {})
+                    form.render('select')
+                })
+
+                $("#hospitalLocationToolbar button[lay-event='batchSave']").click(() => {
+                    $editable.validateAllRows('hospital_location_table', (valid, errors) => {
+                        if (!valid) {
+                            return
+                        }
+                        let rows = layui.table.getRows('hospital_location_table')
+                        rows.forEach(o => o.hospitalId = model.id)
+                        $http.put("/base/hospital_locations/batch_save", rows).then(resp => {
+                            if (resp.data.success) {
+                                layui.layer.msg(resp.data.msg, {icon: 1})
+                                window.reloadHospitalLocationTable()
+                            } else {
+                                layui.layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                })
+
+                $("#hospitalLocationToolbar button[lay-event='refresh']").click(() => {
+                    window.reloadHospitalLocationTable()
+                })
+
+
+                // 监听子表的列工具栏
+                layui.table.on('tool(hospital_location_table)', function (obj) {
+                    // 获取行索引
+                    let index = obj.tr[0].getAttribute("data-index")
+                    var data = obj.data;
+                    if (obj.event === 'newDel') {
+                        // 未在数据库中存在，直接从界面移除即可
+                        obj.del()
+                        return
+                    }
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $http.delete(`/base/hospital_locations/` + data.id).then(resp => {
+                                layer.msg(resp.data.msg, {icon: 1})
+                                obj.del()
+                            })
+                        });
+                        return
+                    }
+
+                    // 校验并保存
+                    $editable.validateSingleRow("hospital_location_table", index, (valid, error) => {
+                        if (!valid) {
+                            return
+                        }
+                        let data = layui.table.cache.hospital_location_table[index]
+                        data.hospitalId = model.id
+                        let promise = null
+                        if ($strings.isBlank(data.id)) {
+                            promise = $http.post("/base/hospital_locations/", data)
+                        } else {
+                            promise = $http.put("/base/hospital_locations/", data)
+                        }
+
+                        promise.then(resp => {
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+
+                                // 重新渲染单行数据
+                                layui.table.renderSpecRow('hospital_location_table', index, {
+                                    id: resp.data.data.id
+                                })
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                });
+
+                /*** 子表管理结束 */
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    data.field = layui.$.extend({}, data.field)
+                    let promise = null
+                    if ($strings.isBlank(data.field.id)) {
+                        promise = $http.post("/base/hospitals", data.field)
+                    } else {
+                        promise = $http.put("/base/hospitals", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (resp.data.success) {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                        } else {
+                            layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+
+                    return false;
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadSingleJs("/scripts/utils/editable.js", mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    
