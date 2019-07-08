@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>service</name>
+    <fileDir>${genBaseDir}/${packageName}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/service</fileDir>
+    <fileName>${className}Service.java</fileName>
+    <content><![CDATA[
+package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.service;
+
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
+
+import fortec.common.core.service.IBaseService;
+
+
+/**
+* ${table.functionName} service 接口
+*
+* @author ${table.functionAuthor}
+* @version 1.0
+*/
+public interface ${className}Service extends IBaseService<${className}> {
+
+
+
+}]]>
+    </content>
+</template>
+
+

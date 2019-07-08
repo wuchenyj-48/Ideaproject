@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>controller</name>
+    <fileDir>${genBaseDir}/${packageName}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/controller</fileDir>
+    <fileName>${className}Controller.java</fileName>
+    <content><![CDATA[
+package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.web;
+
+
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import fortec.common.core.model.CommonResult;
+import fortec.common.core.model.PageResult;
+import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.utils.StringUtils;
+
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request.${className}QueryRequest;
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.service.${className}Service;
+
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+
+/**
+* ${table.functionName} controller
+*
+* @author ${table.functionAuthor}
+* @version 1.0
+*/
+@AllArgsConstructor
+@RestController
+@RequestMapping("<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s")
+public class ${className}Controller extends BaseController {
+
+    private ${className}Service ${className?uncap_first}Service;
+
+
+    @PostMapping
+    public CommonResult add(@RequestBody @Valid ${className} entity) {
+        boolean bSave = ${className?uncap_first}Service.saveCascadeById(entity);
+        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
+    }
+
+    @PutMapping
+    public CommonResult update(@RequestBody @Valid ${className} entity) {
+        boolean bUpdate = ${className?uncap_first}Service.updateCascadeById(entity);
+        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
+    }
+
+    @GetMapping("/page")
+    public PageResult page(${className}QueryRequest request) {
+        IPage page = ${className?uncap_first}Service.page(request.getPage(), Wrappers.<${className}>query()
+                <#list table.columns as c>
+                    <#if c.isQuery?? && c.isQuery == 1 && c.queryType??>
+                        <#if c.attrType == 'String'>
+                            <#switch c.queryType>
+                                <#case "=">
+                    .eq(StringUtils.isNotBlank(request.get${c.attrName?cap_first}()), "${c.columnName}", request.get${c.attrName?cap_first}())
+                                    <#break>
+                                <#case "like">
+                    .like(StringUtils.isNotBlank(request.get${c.attrName?cap_first}()), "${c.columnName}", request.get${c.attrName?cap_first}())
+                                    <#break>
+                                <#case "between">
+                    .between(StringUtils.isNotBlank(request.getBegin${c.attrName?cap_first}()) && StringUtils.isNotBlank(request.getEnd${c.attrName?cap_first}()), "${c.columnName}", request.getBegin${c.attrName?cap_first}(), request.getEnd${c.attrName?cap_first}())
+                                    <#break>
+                                <#default>
+                            </#switch>
+                        <#else>
+                            <#switch c.queryType>
+                                <#case "=">
+                    .eq(request.get${c.attrName?cap_first}() != null, "${c.columnName}", request.get${c.attrName?cap_first}())
+                                    <#break>
+                                <#case "like">
+                    .like(request.get${c.attrName?cap_first}() != null, "${c.columnName}", request.get${c.attrName?cap_first}())
+                                    <#break>
+                                <#case "between">
+                    .between(request.getBegin${c.attrName?cap_first}() != null && request.getEnd${c.attrName?cap_first}() != null, "${c.columnName}", request.getBegin${c.attrName?cap_first}(), request.getEnd${c.attrName?cap_first}())
+                                    <#break>
+                                <#default>
+                            </#switch>
+                        </#if>
+                    </#if>
+                </#list>
+                     .orderByDesc("gmt_modified")
+                );
+
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
+    @GetMapping("/list")
+    public CommonResult list(${className}QueryRequest request) {
+        List<${className}> list = ${className?uncap_first}Service.list(Wrappers.<${className}>query()
+            <#list table.columns as c>
+                <#if c.isQuery?? && c.isQuery == 1 && c.queryType??>
+                    <#if c.attrType == 'String'>
+                        <#switch c.queryType>
+                            <#case "=">
+                .eq(StringUtils.isNotBlank(request.get${c.attrName?cap_first}()), "${c.columnName}", request.get${c.attrName?cap_first}())
+                                <#break>
+                            <#case "like">
+                .like(StringUtils.isNotBlank(request.get${c.attrName?cap_first}()), "${c.columnName}", request.get${c.attrName?cap_first}())
+                                <#break>
+                            <#case "between">
+                .between(StringUtils.isNotBlank(request.getBegin${c.attrName?cap_first}()) && StringUtils.isNotBlank(request.getEnd${c.attrName?cap_first}()), "${c.columnName}", request.getBegin${c.attrName?cap_first}(), request.getEnd${c.attrName?cap_first}())
+                                <#break>
+                            <#default>
+                        </#switch>
+                    <#else>
+                        <#switch c.queryType>
+                            <#case "=">
+                .eq(request.get${c.attrName?cap_first}() != null, "${c.columnName}", request.get${c.attrName?cap_first}())
+                                <#break>
+                            <#case "like">
+                .like(request.get${c.attrName?cap_first}() != null, "${c.columnName}", request.get${c.attrName?cap_first}())
+                                <#break>
+                            <#case "between">
+                .between(request.getBegin${c.attrName?cap_first}() != null && request.getEnd${c.attrName?cap_first}() != null, "${c.columnName}", request.getBegin${c.attrName?cap_first}(), request.getEnd${c.attrName?cap_first}())
+                                <#break>
+                            <#default>
+                        </#switch>
+                    </#if>
+                </#if>
+            </#list>
+                .orderByDesc("gmt_modified")
+        );
+        return CommonResult.ok("查询成功", list);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public CommonResult deleteById(@PathVariable("id") Long id) {
+        boolean bRemove = ${className?uncap_first}Service.removeCascadeById(id);
+        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
+    }
+
+    @PutMapping("/batch_save")
+    public CommonResult batchSave(@RequestBody @Valid ${className}[] children) {
+        if (children == null || children.length == 0) {
+            return CommonResult.error("保存失败");
+        }
+        boolean bSuccess = ${className?uncap_first}Service.saveOrUpdateBatch(Lists.newArrayList(children));
+        return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
+    }
+
+}]]>
+    </content>
+</template>
+
+

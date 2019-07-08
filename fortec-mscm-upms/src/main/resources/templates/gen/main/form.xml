@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>viewList</name>
+    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
+    <fileName>${uncamelClassName}_form.html</fileName>
+    <content>
+    <![CDATA[
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+             .custom-form .layui-form-label { width: 120px }
+             .custom-form .layui-input-block { margin-left: 150px}
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+
+                <#assign rowSpan=0 >
+                <#-- 默认为新行标志 -->
+                <#assign newRowFlag=true>
+                <#list table.columns as c>
+                <#if c.isEdit?? && c.isEdit == 1>
+                    <#-- 正常情况下选择 属性名都以 id结尾，直接截取掉 -->
+                    <#if c.isComponentType == 1 >
+                        <#assign field="${c.attrName?substring(0,(c.attrName?length - 2))}" >
+                    <#else>
+                        <#assign field="${c.attrName}" >
+                    </#if>
+                    <#assign showType="${c.showType!''}">
+
+                    <#-- 如果是新行，直接输出行和列 -->
+                    <#if c.isNewRow?? && c.isNewRow == 1>
+                        <#-- 如果上一个循环中没有输出 /el-row 标签，在输出新行之前输出-->
+                        <#if !newRowFlag>
+                </div>
+                        </#if>
+                <#--输出新行信息-->
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs12">
+                        <label class="layui-form-label">
+                            <#if c.isNull == 0><span class="required-star">*</span> </#if> ${c.comments}
+                        </label>
+                        <div class="layui-input-block">
+                            <#if showType == 'input'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required</#if> lay-verify="${vc(c.isNull,c.validators)}" placeholder="请输入${c.comments}"
+                                   autocomplete="off" class="layui-input">
+                            <#elseif showType == 'textarea'>
+                            <textarea name="${c.attrName}"  placeholder="请输入${c.comments}" class="layui-textarea"></textarea>
+                            <#elseif showType == 'select'>
+                            <select name="${c.attrName}"></select>
+                            <#elseif showType == 'select_multiple'>
+
+                            <#elseif showType == 'radio'>
+                            <div id="${c.attrName}Div"></div>
+                            <#elseif showType == 'checkbox'>
+                            <div id="${c.attrName}Div"></div>
+                            <#elseif showType == 'switch'>
+                            <input type="checkbox" name="${c.attrName}" lay-skin="switch" lay-text="是|否">
+                            <#elseif showType == 'date'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                            <#elseif showType == 'datetime'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                            </#if>
+                        </div>
+                    </div>
+                </div>
+                            <#assign newRowFlag=true>
+                            <#assign rowSpan=0>
+                            <#continue>
+                    </#if>
+
+                    <#if newRowFlag>
+                   <div class="layui-row layui-col-space5 layui-form-item">
+                        <#assign newRowFlag=false>
+                   </#if>
+                   <div class="layui-col-xs${c.colSpan}">
+                        <label class="layui-form-label">
+                            <#if c.isNull == 0><span class="required-star">*</span> </#if> ${c.comments}
+                        </label>
+                        <div class="layui-input-block">
+                            <#if showType == 'input'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required</#if> lay-verify="${vc(c.isNull,c.validators)}" placeholder="请输入${c.comments}"
+                                   autocomplete="off" class="layui-input">
+                            <#elseif showType == 'textarea'>
+                            <textarea name="${c.attrName}"  placeholder="请输入${c.comments}" class="layui-textarea"></textarea>
+                            <#elseif showType == 'select'>
+                            <select name="${c.attrName}"></select>
+                            <#elseif showType == 'select_multiple'>
+
+                            <#elseif showType == 'radio'>
+                            <div id="${c.attrName}Div"></div>
+                            <#elseif showType == 'checkbox'>
+                            <div id="${c.attrName}Div"></div>
+                            <#elseif showType == 'switch'>
+                            <input type="checkbox" name="${c.attrName}" lay-skin="switch" lay-text="是|否">
+                            <#elseif showType == 'date'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                            <#elseif showType == 'datetime'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>   placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                            </#if>
+                        </div>
+                   </div>
+
+                        <#assign rowSpan = rowSpan + c.colSpan?number >
+                        <#if (rowSpan >= 12)>
+                </div>
+                            <#assign rowSpan=0 >
+                            <#assign newRowFlag=true>
+                        </#if>
+                    </#if>
+                </#list>
+                <#if newRowFlag != true>
+                </div>
+                </#if>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <#if (childTableList?size > 0)>
+            // 加载子表表格
+                <#list childTableList as t>
+            <div class="layui-tab child-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">${t.functionName}管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div id="${t.className?uncap_first}Toolbar">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
+                                    lay-event="addNewLine">
+                                <i class="layui-icon layui-icon-add-1"></i> 增行
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
+                                <i class="layui-icon layui-icon-save"></i> 批量保存
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
+                                <i class="layui-icon layui-icon-refresh"></i> 刷新
+                            </button>
+                        </div>
+                        <div class="row-edit-table" id="${uncamelCase(t.className)}_table" lay-filter="${uncamelCase(t.className)}_table"></div>
+                    </div>
+                </div>
+            </div>
+                </#list>
+            </#if>
+        </div>
+
+        <!-- 子表管理模板 开始  -->
+        <#if (childTableList?size > 0)>
+            <#list childTableList as t>
+                <#list t.columns as c>
+                    <#if c.isEdit?? && c.isEdit == 1>
+                        <#assign showType="${c.showType!''}">
+                        <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
+        <script type="text/html" id="${c.attrName}Tpl">
+            <select data-name="${c.attrName}" lay-filter="${c.attrName}" lay-event="${c.attrName}"
+                    data-index="{{d.LAY_TABLE_INDEX}}">
+                {{# layui.each($global.getDictDataList('${c.dictType!''}'), function(index, item){ }}
+                <option value="{{item.value}}" {{item.value== d.testSelect ?
+                'selected' : ''}}>{{item.label}}</option>
+                {{# }) }}
+            </select>
+        </script>
+                        <#elseif showType == 'input' || showType == 'textarea'>
+        <script type="text/html" id="${c.attrName}Tpl">
+            <input type="text" data-name="${c.attrName}" value="{{d.${c.attrName} ? d.${c.attrName} : ''}}" lay-filter="${c.attrName}"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="${vc(c.isNull,c.validators)}"
+                   class="layui-input custom-input"/>
+        </script>
+                        </#if>
+                    </#if>
+                </#list>
+                <script type="text/html" id="${uncamelCase(t.className)}CellToolbar">
+                {{#  if($strings.isBlank(d.id)){ }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
+                        class="fas fa-check"></i></a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
+                        class="far fa-trash-alt"></i></a>
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
+                        class="fas fa-save"></i></a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
+                        class="far fa-trash-alt"></i></a>
+                {{#  } }}
+            </script>
+            </#list>
+        </#if>
+        <!-- 子表管理模板 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let model = {}
+
+                <#if (childTableList?size > 0)>
+                // 加载子表表格
+                    <#list childTableList as t>
+                window.reload${t.className}Table = () => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    $http.get(`/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/list?${camelCase(t.parentTableFkName)}=${r"$"}{model.id}`).then(resp => {
+                        layui.table.render({
+                            elem: '#${uncamelCase(t.className)}_table',
+                            data: resp.data.data,
+                            height: 300,
+                            cols: [[
+                                {type: 'numbers', align: 'center'},
+                                <#list t.columns as c>
+                                    <#if c.isEdit?? && c.isEdit == 1>
+                                        <#assign showType="${c.showType!''}">
+                                        <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
+                                { field: '${c.attrName}', title: '${c.comments}', align: 'center', templet: "#${c.attrName}Tpl"},
+                                        <#else>
+                                { field: '${c.attrName}', title: '${c.comments}', align: 'center', templet: "#${c.attrName}Tpl"},
+                                        </#if>
+                                    </#if>
+                                </#list>
+                                {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#${t.className?uncap_first}CellToolbar"},
+                            ]]
+                        });
+                        $editable.watch('${uncamelCase(t.className)}_table')
+                    })
+                    </#list>
+                }
+                </#if>
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        <#list childTableList as t>
+                        $(".${uncamelCase(t.className)}-tab").show()
+                        window.reload${t.className}Table && window.reload${t.className}Table()
+                        </#list>
+                    } else {
+                        $(".child-tab").hide()
+                    }
+                }
+
+                // 渲染下拉框 数据
+                <#list table.columns as c>
+                    <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && c.showType == 'select'>
+                        <#if c.isNull == 1>
+                $("select[name='${c.attrName}']").append('<option>请选择</option>')
+                        </#if>
+                $global.getDictDataList('${c.dictType!""}').forEach(o => {
+                    $("select[name='${c.attrName}']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                    </#if>
+                </#list>
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                <#list table.columns as c>
+                    <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'radio' || c.showType == 'checkbox')>
+                        <#if c.isNull == 1>
+                $("#${c.attrName}Div").append('<option>请选择</option>')
+                        </#if>
+                $global.getDictDataList('${c.dictType!""}').forEach(o => {
+                    $("#${c.attrName}Div").append(`<input type="${c.showType}" name="${c.attrName}" value="${r"$"}{o.value}" title="${r"$"}{o.label}" /> `)
+                })
+                    </#if>
+                </#list>
+                form.render('radio')
+
+                // 渲染日期、时间 数据
+                <#list table.columns as c>
+                    <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'date' || c.showType == 'datetime')>
+                layui.laydate.render({elem: "input[name='${c.attrName}']", type: '${c.showType}',trigger: 'click'});
+                    </#if>
+                </#list>
+
+
+                <#list childTableList as t>
+                /*** 子表管理开始 */
+                $("#${t.className?uncap_first}Toolbar button[lay-event='addNewLine']").click(() => {
+                    layui.table.addRow('${uncamelCase(t.className)}_table', 0, {})
+                    form.render('select')
+                })
+
+                $("#${t.className?uncap_first}Toolbar button[lay-event='batchSave']").click(() => {
+                    $editable.validateAllRows('${uncamelCase(t.className)}_table', (valid, errors) => {
+                        if (!valid) {
+                            return
+                        }
+                        let rows = layui.table.getRows('${uncamelCase(t.className)}_table')
+                        rows.forEach(o => o.${camelCase(t.parentTableFkName)} = model.id)
+                        $http.put("/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/batch_save", rows).then(resp => {
+                            if (resp.data.success) {
+                                layui.layer.msg(resp.data.msg, {icon: 1})
+                                window.reload${t.className}Table()
+                            } else {
+                                layui.layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                })
+
+                $("#${t.className?uncap_first}Toolbar button[lay-event='refresh']").click(() => {
+                    window.reload${t.className}Table()
+                })
+
+
+                // 监听子表的列工具栏
+                layui.table.on('tool(${uncamelCase(t.className)}_table)', function (obj) {
+                    // 获取行索引
+                    let index = obj.tr[0].getAttribute("data-index")
+                    var data = obj.data;
+                    if (obj.event === 'newDel') {
+                        // 未在数据库中存在，直接从界面移除即可
+                        obj.del()
+                        return
+                    }
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $http.delete(`/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/` + data.id).then(resp => {
+                                layer.msg(resp.data.msg, {icon: 1})
+                                obj.del()
+                            })
+                        });
+                        return
+                    }
+
+                    // 校验并保存
+                    $editable.validateSingleRow("${uncamelCase(t.className)}_table", index, (valid, error) => {
+                        if (!valid) {
+                            return
+                        }
+                        let data = layui.table.cache.${uncamelCase(t.className)}_table[index]
+                        data.${camelCase(t.parentTableFkName)}= model.id
+                        let promise = null
+                        if ($strings.isBlank(data.id)) {
+                            promise = $http.post("/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/", data)
+                        } else {
+                            promise = $http.put("/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/", data)
+                        }
+
+                        promise.then(resp => {
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+
+                                // 重新渲染单行数据
+                                layui.table.renderSpecRow('${uncamelCase(t.className)}_table', index, {
+                                    id: resp.data.data.id
+                                })
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                });
+
+                /*** 子表管理结束 */
+                </#list>
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    data.field = layui.$.extend({}, data.field)
+                    let promise = null
+                    if ($strings.isBlank(data.field.id)) {
+                        promise = $http.post("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)
+                    } else {
+                        promise = $http.put("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (resp.data.success) {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                        } else {
+                            layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+
+                    return false;
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadSingleJs("/scripts/utils/editable.js", mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    ]]>
+    </content>
+</template>
+
+

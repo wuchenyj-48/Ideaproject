@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>request</name>
+    <fileDir>${genBaseDir}/${packageName}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/request</fileDir>
+    <fileName>${className}QueryRequest.java</fileName>
+    <content><![CDATA[
+package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request;
+
+import fortec.common.core.model.PageRequest;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+public class ${className}QueryRequest extends PageRequest {
+
+     <#-- 生成字段属性 -->
+    <#list table.columns as c>
+        <#if c.isQuery?? && c.isQuery == 1>
+            <#-- 字段备注 -->
+            <#if c.comments??>
+    /** ${c.comments} */
+            </#if>
+            <#if c.queryType?? && c.queryType == "between">
+    private ${c.attrType} begin${c.attrName?cap_first};
+    private ${c.attrType} end${c.attrName?cap_first};
+            <#else>
+    private ${c.attrType} ${c.attrName};
+            </#if>
+
+        </#if>
+    </#list>
+
+}]]>
+    </content>
+</template>
+
+

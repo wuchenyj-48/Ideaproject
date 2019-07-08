@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>serviceImpl</name>
+    <fileDir>${genBaseDir}/${packageName}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/service/impl</fileDir>
+    <fileName>${className}ServiceImpl.java</fileName>
+    <content><![CDATA[
+package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.service.impl;
+
+import fortec.common.core.service.TreeServiceImpl;
+
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.mapper.${className}Mapper;
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.service.${className}Service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+
+/**
+* ${table.functionName} service 实现
+*
+* @author ${table.functionAuthor}
+* @version 1.0
+*/
+@Slf4j
+@Service
+public class ${className}ServiceImpl extends TreeServiceImpl<${className}Mapper, ${className}> implements ${className}Service {
+
+
+
+}]]>
+    </content>
+</template>
+
+

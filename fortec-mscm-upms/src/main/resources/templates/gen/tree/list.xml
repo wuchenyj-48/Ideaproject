@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>viewList</name>
+    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
+    <fileName>${uncamelClassName}s.html</fileName>
+    <content>
+    <![CDATA[
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>${functionName}管理</title>
+    </head>
+    <body>
+
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">${functionName}管理</div>
+                        <div class="layui-card-body">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew" onclick="edit({})">
+                                    <i class="layui-icon layui-icon-add-1"></i>新增
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary refresh"  >
+                                    <i class="layui-icon layui-icon-refresh"></i>
+                                    刷新
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary open-all"  >
+                                    <i class="far fa-folder-open"></i>
+                                    全部展开
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary close-all">
+                                    <i class="far  fa-folder"></i>
+                                    全部关闭
+                                </button>
+                            </div>
+                            <table id="${className?uncap_first}Tree" lay-filter="${className?uncap_first}Tree" class="layui-table layui-form"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/scripts/utils/common.js"></script>
+
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, treeTable = layui.treeTable, $ = layui.$
+                let ${className?uncap_first}Tree = treeTable.render({
+                    elem: '#${className?uncap_first}Tree',
+                    data: [],
+                    icon_key: 'name',
+                    primary_key: 'id',
+                    parent_key: 'parentId',
+                    cols: [
+                        <#list table.columns as c>
+                            <#if c.isList?? && c.isList == 1>
+                        <#assign showType="${c.showType!''}">
+                            <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
+                        {
+                            key: '${c.attrName}', title: '${c.comments}', align: 'center',
+                            templet(item) {
+                                return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.${c.attrName})}</div>`;
+                            }
+                        },
+                            <#else>
+                        { key: '${c.attrName}', title: '${c.comments}', align: 'center'},
+                            </#if>
+                            </#if>
+                        </#list>
+                        {
+                            title: '操作',
+                            align: 'center',
+                            template(item) {
+                                return '<a class="layui-btn layui-btn-xs layui-btn-normal" lay-filter="add">添加</a>' +
+                                    '<a class="layui-btn layui-btn-xs" lay-filter="edit">编辑</a>' +
+                                    '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-filter="del">删除</a>';
+                            }
+                        },
+                    ],
+                    end(e) {
+                        form.render();
+                    }
+                });
+
+                /**
+                 * 刷新列表数据
+                 */
+                window.reloadTable = () => {
+                    $http.get('/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/list').then(resp => {
+                        // 加载列表数据
+                        ${className?uncap_first}Tree.data = resp.data.data
+                        treeTable.render(${className?uncap_first}Tree)
+                    })
+                }
+
+                /**
+                 * 编辑按钮
+                 * @param data
+                 */
+                window.edit = (data) => {
+                    layer.open({
+                        type: 2,
+                        area: ['960px', '400px'],
+                        content: ['./${uncamelClassName}_form.html', 'no'],
+                        success(layero, index) {
+                            var iframeWin = window[layero.find('iframe')[0]['name']]
+
+                            if ($strings.isNotBlank(data.parentId)) {
+                                let parentNames = ${className?uncap_first}Tree.data.filter(o => o.id == data.parentId).map(o => o.name)
+                                data.parentName = parentNames.length > 0 ? parentNames[0] : ''
+                            }
+                            iframeWin && iframeWin.initForm(data)
+                            layer.iframeAuto(index)
+                        }
+                    });
+                }
+
+                window.deleteById = (data) => {
+                    layer.confirm('真的删除行么', function (index) {
+                        $http.delete(`/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/${r"$"}{data.id}`).then(resp => {
+                            layer.close(index)
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+                                window.reloadTable()
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    });
+                }
+                window.reloadTable()
+
+                // 事件监听
+                treeTable.on('tree(add)', (obj) => {
+                    window.edit({parentId: obj.item.id})
+                })
+                treeTable.on('tree(edit)', (obj) => {
+                    window.edit(obj.item)
+                })
+                treeTable.on('tree(del)', (obj) => {
+                    window.deleteById(obj.item)
+                })
+
+                $('.refresh').click(function () {
+                    window.reloadTable()
+                })
+                $('.open-all').click(function () {
+                    treeTable.openAll(${className?uncap_first}Tree);
+                })
+                $('.close-all').click(function () {
+                    treeTable.closeAll(${className?uncap_first}Tree);
+                })
+            }
+
+            /**
+             * 继承父页面所有脚本及样式
+             */
+            extendParentScriptsAndStyles(() => {
+                // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
+                loadSingleJs("/lib/treeTable.js", mainFunction)
+            })
+
+        </script>
+    </body>
+
+
+</html>
+    ]]>
+    </content>
+</template>
+
+

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>viewList</name>
+    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
+    <fileName>${uncamelClassName}_form.html</fileName>
+    <content>
+    <![CDATA[
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+             .custom-form .layui-form-label { width: 120px }
+             .custom-form .layui-input-block { margin-left: 150px}
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+
+                <#assign rowSpan=0 >
+                <#-- 默认为新行标志 -->
+                <#assign newRowFlag=true>
+                <#list table.columns as c>
+                <#if c.isEdit?? && c.isEdit == 1>
+                    <#-- 正常情况下选择 属性名都以 id结尾，直接截取掉 -->
+                    <#if c.isComponentType == 1 >
+                        <#assign field="${c.attrName?substring(0,(c.attrName?length - 2))}" >
+                    <#else>
+                        <#assign field="${c.attrName}" >
+                    </#if>
+                    <#assign showType="${c.showType!''}">
+
+                    <#-- 如果是新行，直接输出行和列 -->
+                    <#if c.isNewRow?? && c.isNewRow == 1>
+                        <#-- 如果上一个循环中没有输出 /el-row 标签，在输出新行之前输出-->
+                        <#if !newRowFlag>
+                </div>
+                        </#if>
+                <#--输出新行信息-->
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs12">
+                        <label class="layui-form-label">
+                            <#if c.isNull == 0><span class="required-star">*</span> </#if> ${c.comments}
+                        </label>
+                        <div class="layui-input-block">
+                            <#if showType == 'input'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required</#if> lay-verify="${vc(c.isNull,c.validators)}" placeholder="请输入${c.comments}"
+                                   autocomplete="off" class="layui-input">
+                            <#elseif showType == 'textarea'>
+                            <textarea name="${c.attrName}"  placeholder="请输入${c.comments}" class="layui-textarea"></textarea>
+                            <#elseif showType == 'select'>
+                            <select name="${c.attrName}"></select>
+                            <#elseif showType == 'select_multiple'>
+
+                            <#elseif showType == 'radio'>
+                            <div id="${c.attrName}Div"></div>
+                            <#elseif showType == 'checkbox'>
+                            <div id="${c.attrName}Div"></div>
+                            <#elseif showType == 'switch'>
+                            <input type="checkbox" name="${c.attrName}" lay-skin="switch" lay-text="是|否">
+                            <#elseif showType == 'date'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                            <#elseif showType == 'datetime'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                            </#if>
+                        </div>
+                    </div>
+                </div>
+                            <#assign newRowFlag=true>
+                            <#assign rowSpan=0>
+                            <#continue>
+                    </#if>
+
+                    <#if newRowFlag>
+                   <div class="layui-row layui-col-space5 layui-form-item">
+                        <#assign newRowFlag=false>
+                   </#if>
+                   <div class="layui-col-xs${c.colSpan}">
+                        <label class="layui-form-label">
+                            <#if c.isNull == 0><span class="required-star">*</span> </#if> ${c.comments}
+                        </label>
+                        <div class="layui-input-block">
+                            <#if showType == 'input'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required</#if> lay-verify="${vc(c.isNull,c.validators)}" placeholder="请输入${c.comments}"
+                                   autocomplete="off" class="layui-input">
+                            <#elseif showType == 'textarea'>
+                            <textarea name="${c.attrName}"  placeholder="请输入${c.comments}" class="layui-textarea"></textarea>
+                            <#elseif showType == 'select'>
+                            <select name="${c.attrName}"></select>
+                            <#elseif showType == 'select_multiple'>
+
+                            <#elseif showType == 'radio'>
+                            <div id="${c.attrName}Div"></div>
+                            <#elseif showType == 'checkbox'>
+                            <div id="${c.attrName}Div"></div>
+                            <#elseif showType == 'switch'>
+                            <input type="checkbox" name="${c.attrName}" lay-skin="switch" lay-text="是|否">
+                            <#elseif showType == 'date'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                            <#elseif showType == 'datetime'>
+                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>   placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                            </#if>
+                        </div>
+                   </div>
+
+                        <#assign rowSpan = rowSpan + c.colSpan?number >
+                        <#if (rowSpan >= 12)>
+                </div>
+                            <#assign rowSpan=0 >
+                            <#assign newRowFlag=true>
+                        </#if>
+                    </#if>
+                </#list>
+                <#if newRowFlag != true>
+                </div>
+                </#if>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let model = {}
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                    }
+                }
+
+                // 渲染下拉框 数据
+                <#list table.columns as c>
+                    <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && c.showType == 'select'>
+                        <#if c.isNull == 1>
+                $("select[name='${c.attrName}']").append('<option>请选择</option>')
+                        </#if>
+                $global.getDictDataList('${c.dictType!""}').forEach(o => {
+                    $("select[name='${c.attrName}']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                    </#if>
+                </#list>
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                <#list table.columns as c>
+                    <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'radio' || c.showType == 'checkbox')>
+                        <#if c.isNull == 1>
+                $("#${c.attrName}Div").append('<option>请选择</option>')
+                        </#if>
+                $global.getDictDataList('${c.dictType!""}').forEach(o => {
+                    $("#${c.attrName}Div").append(`<input type="${c.showType}" name="${c.attrName}" value="${r"$"}{o.value}" title="${r"$"}{o.label}" /> `)
+                })
+                    </#if>
+                </#list>
+                form.render('radio')
+
+                // 渲染日期、时间 数据
+                <#list table.columns as c>
+                    <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'date' || c.showType == 'datetime')>
+                layui.laydate.render({elem: "input[name='${c.attrName}']", type: '${c.showType}',trigger: 'click'});
+                    </#if>
+                </#list>
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    data.field = layui.$.extend({}, data.field)
+                    let promise = null
+                    if ($strings.isBlank(data.field.id)) {
+                        promise = $http.post("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)
+                    } else {
+                        promise = $http.put("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (resp.data.success) {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+
+                            parent.layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                        } else {
+                            layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                mainFunction()
+            })
+
+        </script>
+
+    </body>
+</html>
+    ]]>
+    </content>
+</template>
+
+
