@@ -86,15 +86,17 @@
 
                         <#list table.columns as c>
                             <#if c.isList?? && c.isList == 1>
+                                <#assign showType="${c.showType!''}">
+                                <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
                         {
                             field: '${c.attrName}', title: '${c.comments}', align: 'center',
-                            <#assign showType="${c.showType!''}">
-                            <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
                             templet(item) {
-                                return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.testSelect)}</div>`;
+                                return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.${c.attrName})}</div>`;
                             }
-                            </#if>
                         },
+                                <#else>
+                        { field: '${c.attrName}', title: '${c.comments}', align: 'center'},
+                                </#if>
                             </#if>
                         </#list>
                     ]]

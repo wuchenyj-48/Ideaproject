@@ -99,14 +99,14 @@
                             <#if c.isList?? && c.isList == 1>
                                 <#assign showType="${c.showType!''}">
                                 <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
-                            {
-                                field: '${c.attrName}', title: '${c.comments}', align: 'center',
-                                templet(item) {
-                                    return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.${c.attrName})}</div>`;
-                                }
-                            },
+                        {
+                            field: '${c.attrName}', title: '${c.comments}', align: 'center',
+                            templet(item) {
+                                return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.${c.attrName})}</div>`;
+                            }
+                        },
                                 <#else>
-                            { field: '${c.attrName}', title: '${c.comments}', align: 'center'}
+                        { field: '${c.attrName}', title: '${c.comments}', align: 'center'},
                                 </#if>
                             </#if>
                         </#list>
