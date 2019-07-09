@@ -20,7 +20,7 @@
 
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
-                        <label class="layui-form-label">父级菜单</label>
+                        <label class="layui-form-label">父级${functionName}</label>
                         <div class="layui-input-block">
                             <input type="text" name="parentName" id="parentName" class="layui-input" lay-filter="tree"/>
                         </div>

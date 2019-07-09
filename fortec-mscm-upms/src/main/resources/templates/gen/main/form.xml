@@ -180,13 +180,13 @@
                         <#elseif showType == 'input' || showType == 'textarea'>
         <script type="text/html" id="${c.attrName}Tpl">
             <input type="text" data-name="${c.attrName}" value="{{d.${c.attrName} ? d.${c.attrName} : ''}}" lay-filter="${c.attrName}"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="${vc(c.isNull,c.validators)}"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="${vc(c.isNull,c.validators)}"  <#if c.isNull?? && c.isNull == 0>placeholder="必填"</#if>
                    class="layui-input custom-input"/>
         </script>
                         </#if>
                     </#if>
                 </#list>
-                <script type="text/html" id="${uncamelCase(t.className)}CellToolbar">
+                <script type="text/html" id="${t.className?uncap_first}CellToolbar">
                 {{#  if($strings.isBlank(d.id)){ }}
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
                         class="fas fa-check"></i></a>

@@ -1,44 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<template>
-    <name>viewList</name>
-    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
-    <fileName>${uncamelClassName}s.html</fileName>
-    <content>
-    <![CDATA[
+
+    
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>${functionName}管理</title>
+        <title>包装单位管理</title>
     </head>
     <body>
+
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">${functionName}管理</div>
+                        <div class="layui-card-header">包装单位管理</div>
                         <div class="layui-card-body">
                             <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
                                 <i class="layui-icon layui-icon-add-1"></i> 新增
                             </button>
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
-                                 <#-- 查询条件   开始 -->
-                                <#list table.columns as c>
-                                    <#if c.isQuery?? && c.isQuery == 1>
-                                        <#assign showType="${c.showType!''}">
                                 <div class="layui-input-inline">
-                                    <#if showType == "input" || showType == "textarea">
-                                    <input type="text" name="${c.attrName}" placeholder="请输入${c.comments}" autocomplete="off"
+                                    <input type="text" name="id" placeholder="请输入单位编码" autocomplete="off"
                                            class="layui-input">
-                                    <#elseif showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
-                                    <select name="${c.attrName}">
-                                        <option value="">请选择${c.comments}</option>
-                                    </select>
-                                    </#if>
                                 </div>
-                                    </#if>
-                                </#list>
-                                 <#-- 查询条件   结束 -->
+                                <div class="layui-input-inline">
+                                    <input type="text" name="name" placeholder="请输入单位名称" autocomplete="off"
+                                           class="layui-input">
+                                </div>
 
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
                                         lay-filter="list">
@@ -76,7 +63,7 @@
         <script>
 
             extendParentScriptsAndStyles(() => {
-                let table = layui.table, $ = layui.$, form = layui.form
+                let table = layui.table, $ = layui.$, form = layui.form;
 
                 window.reloadTable = () => {
                     table.reload('listTable', {
@@ -87,59 +74,41 @@
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
-                    title: '${functionName}信息',
+                    title: '包装单位信息',
                     height: 'full-160',
-                    url: '/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/page',
+                    url: '/base/pack_units/page',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
 
-                        <#list table.columns as c>
-                            <#if c.isList?? && c.isList == 1>
-                                <#assign showType="${c.showType!''}">
-                                <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
-                        {
-                            field: '${c.attrName}', title: '${c.comments}', align: 'center',
-                            templet(item) {
-                                return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.${c.attrName})}</div>`;
-                            }
-                        },
-                                <#else>
-                        { field: '${c.attrName}', title: '${c.comments}', align: 'center'},
-                                </#if>
-                            </#if>
-                        </#list>
+                        { field: 'id', title: '单位编码', align: 'center'},
+                        { field: 'name', title: '单位名称', align: 'center'},
+                        { field: 'gmtModified', title: '修改时间', align: 'center'},
                         {field: "LAY_CELL_TOOL_BAR", title: '操作', toolbar: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });
 
                  // 渲染下拉框 数据
-                <#list table.columns as c>
-                    <#if c.isQuery?? && c.isQuery == 1 && c.showType?? && (c.showType == "select" || c.showType == "select_multiple" || c.showType == "checkbox" || c.showType == "radio" || c.showType == "switch")>
-                $global.getDictDataList('${c.dictType!""}').forEach(o => {
-                    $("select[name='${c.attrName}']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
-                    </#if>
-                </#list>
                 form.render('select')
 
                 window.edit = (data) => {
-                    let index = layer.open({
+                    layer.open({
                         type: 2,
                         area: ['950px', '400px'],
-                        content: ['./${uncamelClassName}_form.html'],
+                        content: ['./pack_unit_form.html', 'no'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
+
+                            layer.iframeAuto(index)
                         }
                     });
-                    layer.full(index)
                 }
 
                 window.deleteById = (data) => {
                     layer.confirm('真的删除行么', function (index) {
 
-                        $http.delete(`/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/` + data.id).then(resp => {
+                        $http.delete(`/base/pack_units/` + data.id).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
                             table.reload('listTable')
 
@@ -168,7 +137,7 @@
                 layui.$(".layui-btn").on('click', function () {
                     let layevent = this.getAttribute("lay-event");
                     if (layevent == 'addNew') {
-                        edit({});
+                        edit({isNew: true});
                     }
                 });
 
@@ -190,8 +159,5 @@
 
 
 </html>
-    ]]>
-    </content>
-</template>
-
-
+    
+    

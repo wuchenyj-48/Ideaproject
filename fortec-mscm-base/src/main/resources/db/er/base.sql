@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS manufacturer;
 DROP TABLE IF EXISTS material;
 DROP TABLE IF EXISTS material_catalog;
 DROP TABLE IF EXISTS material_spec;
+DROP TABLE IF EXISTS pack_unit;
 DROP TABLE IF EXISTS supplier;
 DROP TABLE IF EXISTS supplier_regist;
 
@@ -139,6 +140,19 @@ CREATE TABLE material_spec
 	gmt_modified datetime NOT NULL COMMENT '修改时间',
 	PRIMARY KEY (id)
 ) COMMENT = '商品规格';
+
+
+-- 包装单位
+CREATE TABLE pack_unit
+(
+	id varchar(20) NOT NULL COMMENT '单位编码',
+	name varchar(50) NOT NULL COMMENT '单位名称',
+	creator bigint unsigned NOT NULL COMMENT '创建人',
+	gmt_create datetime NOT NULL COMMENT '创建时间',
+	modifier bigint unsigned NOT NULL COMMENT '修改人',
+	gmt_modified datetime NOT NULL COMMENT '修改时间',
+	PRIMARY KEY (id)
+) COMMENT = '包装单位';
 
 
 -- 供应商信息
