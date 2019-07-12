@@ -44,6 +44,10 @@ zuul:
       path: /pages/**
       strip-prefix: false
       service-id: fortec-mscm-portal
+    static-example-service:
+      path: /example/**
+      strip-prefix: false
+      service-id: fortec-mscm-portal
 
     upms-service:
       path: /upms/**

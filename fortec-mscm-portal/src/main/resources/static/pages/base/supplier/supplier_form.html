@@ -302,7 +302,10 @@
                 $global.getDictDataList('sys_yes_no').forEach(o => {
                     $("#isReagentDiv").append(`<input type="radio" name="isReagent" value="${o.value}" title="${o.label}" /> `)
                 })
+                //默认选中
+                $("input:radio[value='0']").attr('checked','true')
                 form.render('radio')
+
 
                 // 渲染日期、时间 数据
 

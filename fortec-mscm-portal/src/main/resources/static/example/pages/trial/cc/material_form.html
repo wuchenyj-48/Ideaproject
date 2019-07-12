@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="catalogId" />
+                <input type="hidden" name="supplierId" />
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <spen class="layui-form-label">
+                            <span class="required-star">*</span>品类
+                        </spen>
+                        <div class="layui-input-block">
+                            <input type="text" name="catalogName" id="catalogName" lay-verify="required" class="layui-input" lay-filter="tree"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span>供应商
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="supplierName" id="supplierName" lay-verify="required" class="layui-input"/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 商品类型
+                        </label>
+                        <div class="layui-input-block">
+                            <select name="materialTypeCode" >
+                                <option placeholder="请选择商品类型"></option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 品名
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="materialName" required lay-verify="required" placeholder="请输入品名"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 商品名
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="materialTradeName" required lay-verify="required"
+                                   placeholder="请输入商品名"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            ERP代码
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="materialErpCode" lay-verify="" placeholder="请输入ERP代码"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            助记码
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="pinyin" lay-verify="" placeholder="请输入助记码"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            注册证号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="certificateNo" lay-verify="" placeholder="请输入注册证号"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            注册证效期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="certificateExpiredDate" placeholder="请选择注册证效期" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            批准文号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="approvalNo" lay-verify="" placeholder="请输入批准文号"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            生产厂商
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="manufacturerId" lay-verify="" placeholder="请输入生产厂商"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="layui-tab child-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">商品规格管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div id="materialSpecToolbar">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
+                                    lay-event="addNewLine">
+                                <i class="layui-icon layui-icon-add-1"></i> 增行
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
+                                <i class="layui-icon layui-icon-save"></i> 批量保存
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
+                                <i class="layui-icon layui-icon-refresh"></i> 刷新
+                            </button>
+                        </div>
+                        <div class="row-edit-table" id="material_spec_table" lay-filter="material_spec_table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子表管理模板 开始  -->
+        <script type="text/html" id="materialSpecTpl">
+            <input type="text" data-name="materialSpec" value="{{d.materialSpec ? d.materialSpec : ''}}"
+                   lay-filter="materialSpec"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="inputCodingTypeTpl">
+            <select data-name="inputCodingType " lay-verify="number|required" value="{{d.inputCodingType ? d.inputCodingType : ''}}"
+                    lay-filter="inputCodingType" data-index="{{d.LAY_TABLE_INDEX}}">
+                {{#  $global.getDictDataList('base_input_coding_type').forEach(o => { }}
+                <option value="{{o.value}}" {{o.value== d.inputCodingType ?
+                'selected' : ''}}>{{o.label}}</option>
+                {{# }) }}
+            </select>
+        </script>
+        <script type="text/html" id="inputCodeTpl">
+            <input type="text" data-name="inputCode" value="{{d.inputCode ? d.inputCode : ''}}" lay-filter="inputCode"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="formTpl">
+            <input type="text" data-name="form" value="{{d.form ? d.form : ''}}" lay-filter="form"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="unitTpl">
+            <input type="text" data-name="unit" value="{{d.unit ? d.unit : ''}}" lay-filter="unit"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="priceTpl">
+            <input type="text" data-name="price" value="{{d.price ? d.price : ''}}" lay-filter="price"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="smallPackageUnitTpl">
+            <select data-name="smallPackageUnit" value="{{d.smallPackageUnit ? d.smallPackageUnit : ''}}" lay-filter="smallPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}">
+                {{# layui.each(packUnits, function(index, item){ }}
+                <option value="{{item.id}}" {{item.id== d.smallPackageUnit ?
+                'selected' : ''}}>{{item.name}}</option>
+                {{# }) }}
+            </select>
+        </script>
+        <script type="text/html" id="smallPackageQtyTpl">
+            <input type="text" data-name="smallPackageQty" value="{{d.smallPackageQty ? d.smallPackageQty : ''}}"
+                   lay-filter="smallPackageQty"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="mediumPackageUnitTpl">
+
+            <select data-name="mediumPackageUnit" value="{{d.mediumPackageUnit ? d.mediumPackageUnit : ''}}"
+                    lay-filter="mediumPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}">
+                {{# layui.each(packUnits, function(index, item){ }}
+                <option value="{{item.id}}" {{item.id== d.mediumPackageUnit ?
+                'selected' : ''}}>{{item.name}}</option>
+                {{# }) }}
+            </select>
+        </script>
+        <script type="text/html" id="mediumPackageQtyTpl">
+            <input type="text" data-name="mediumPackageQty" value="{{d.mediumPackageQty ? d.mediumPackageQty : ''}}"
+                   lay-filter="mediumPackageQty"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="largePackageUnitTpl">
+
+            <select data-name="largePackageUnit" value="{{d.largePackageUnit ? d.largePackageUnit : ''}}"
+                    lay-filter="largePackageUnit" data-index="{{d.LAY_TABLE_INDEX}}">
+                {{# layui.each(packUnits, function(index, item){ }}
+                <option value="{{item.id}}" {{item.id== d.largePackageUnit ?
+                'selected' : ''}}>{{item.name}}</option>
+                {{# }) }}
+            </select>
+        </script>
+        <script type="text/html" id="largePackageQtyTpl">
+            <input type="text" data-name="largePackageQty" value="{{d.largePackageQty ? d.largePackageQty : ''}}"
+                   lay-filter="largePackageQty"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="materialSpecCellToolbar">
+            {{#  if($strings.isBlank(d.id)){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
+                    class="fas fa-check"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
+                    class="far fa-trash-alt"></i></a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
+                    class="fas fa-save"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
+                    class="far fa-trash-alt"></i></a>
+            {{#  } }}
+        </script>
+        <!-- 子表管理模板 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let model = {}
+
+                window.packUnits = []
+
+                // 加载子表表格
+                window.reloadMaterialSpecTable = () => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    $http.get(`/base/material_specs/list?materialId=${model.id}`).then(resp => {
+                        layui.table.render({
+                            elem: '#material_spec_table',
+                            data: resp.data.data,
+                            height: 300,
+                            cols: [[
+                                {type: 'numbers', align: 'center'},
+                                {field: 'materialSpec', title: '规格', align: 'center', templet: "#materialSpecTpl"},
+                                {
+                                    field: 'inputCodingType',
+                                    title: '编码格式',
+                                    align: 'center',
+                                    templet: "#inputCodingTypeTpl"
+                                },
+                                {field: 'inputCode', title: '输入编码', align: 'center', templet: "#inputCodeTpl"},
+                                {field: 'form', title: '剂型', align: 'center', templet: "#formTpl"},
+                                {field: 'unit', title: '单位', align: 'center', templet: "#unitTpl"},
+                                {field: 'price', title: '价格', align: 'center', templet: "#priceTpl"},
+                                {
+                                    field: 'smallPackageUnit',
+                                    title: '小包装单位',
+                                    align: 'center',
+                                    templet: "#smallPackageUnitTpl"
+                                },
+                                {
+                                    field: 'smallPackageQty',
+                                    title: '小包装单位数量',
+                                    align: 'center',
+                                    templet: "#smallPackageQtyTpl"
+                                },
+                                {
+                                    field: 'mediumPackageUnit',
+                                    title: '中包装单位',
+                                    align: 'center',
+                                    templet: "#mediumPackageUnitTpl"
+                                },
+                                {
+                                    field: 'mediumPackageQty',
+                                    title: '中包装单位数量',
+                                    align: 'center',
+                                    templet: "#mediumPackageQtyTpl"
+                                },
+                                {
+                                    field: 'largePackageUnit',
+                                    title: '大包装单位',
+                                    align: 'center',
+                                    templet: "#largePackageUnitTpl"
+                                },
+                                {
+                                    field: 'largePackageQty',
+                                    title: '大包装单位数量',
+                                    align: 'center',
+                                    templet: "#largePackageQtyTpl"
+                                },
+                                {
+                                    field: 'LAY_CELL_TOOLBAR',
+                                    title: '操作',
+                                    align: 'center',
+                                    templet: "#materialSpecCellToolbar"
+                                },
+                            ]]
+                        });
+                        $editable.watch('material_spec_table')
+                    })
+                }
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        $(".material_spec-tab").show()
+                        window.reloadMaterialSpecTable && window.reloadMaterialSpecTable()
+                    } else {
+                        $(".child-tab").hide()
+                    }
+                }
+
+                // 渲染商品品类
+                layui.treeSelect.render({
+                    elem: '#catalogName',
+                    url: '/base/material_catalogs/tree',
+                    search: true,
+                    style: {
+                        folder: {enable: true},
+                        line: {enable: true}
+                    },
+                    click(d) {
+                        model.catalogId = d.current.id
+                        if (d.current.isParent){
+                            layui.layer.msg("只能选择末级品类",{icon: 5})
+                            layui.treeSelect.clear && layui.treeSelect.clear('catalogName')
+                            return
+                        }
+
+                        $("form input[name='catalogId']").val(model.catalogId)
+                        $("form input[name='catalogName']").val(d.current.title)
+
+                    },
+                    clear() {
+                        model.catalogId = null
+                        model.catalogName = null
+                    },
+                    success(d) {
+                        layui.treeSelect.checkNode('tree', $strings.defaultString(model.catalogId, '0'))
+                    }
+                });
+
+                layui.tableSelect.render({
+                    elem: '#supplierName',	//定义输入框input对象 必填
+                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
+                    searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
+                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                        url:'/base/suppliers/page_by_keywords',
+                        cols: [[
+                            { type: 'radio' },
+                            { field: 'name', title: '名称' },
+                            { field: 'code', title: '识别码' },
+                            { field: 'companyCode', title: '统一社会信用代码' }
+                        ]]
+                    },
+                    done(elem, data) {
+                        model.supplierId = data.data[0].id
+                        layui.each(data.data, function (index, item) {
+                            $("form input[name='supplierId']").val(model.supplierId)
+                            elem.val(item.name)
+                        })
+                    }
+                })
+
+                // 渲染下拉框 数据
+                $global.getDictDataList('base_material_type').forEach(o => {
+                    $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                form.render('radio')
+
+                // 渲染日期、时间 数据
+                layui.laydate.render({
+                    elem: "input[name='certificateExpiredDate']",
+                    type: 'datetime',
+                    trigger: 'click'
+                });
+
+
+                /*** 子表管理开始 */
+                $("#materialSpecToolbar button[lay-event='addNewLine']").click(() => {
+                    layui.table.addRow('material_spec_table', 0, {})
+                    form.render('select')
+                })
+
+                $("#materialSpecToolbar button[lay-event='batchSave']").click(() => {
+                    $editable.validateAllRows('material_spec_table', (valid, errors) => {
+                        if (!valid) {
+                            return
+                        }
+                        let rows = layui.table.getRows('material_spec_table')
+                        rows.forEach(o => o.materialId = model.id)
+                        $http.put("/base/material_specs/batch_save", rows).then(resp => {
+                            if (resp.data.success) {
+                                layui.layer.msg(resp.data.msg, {icon: 1})
+                                window.reloadMaterialSpecTable()
+                            } else {
+                                layui.layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                })
+
+                $("#materialSpecToolbar button[lay-event='refresh']").click(() => {
+                    window.reloadMaterialSpecTable()
+                })
+
+                // 监听子表的列工具栏
+                layui.table.on('tool(material_spec_table)', function (obj) {
+                    // 获取行索引
+                    let index = obj.tr[0].getAttribute("data-index")
+                    var data = obj.data;
+                    if (obj.event === 'newDel') {
+                        // 未在数据库中存在，直接从界面移除即可
+                        obj.del()
+                        return
+                    }
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $http.delete(`/base/material_specs/` + data.id).then(resp => {
+                                layer.msg(resp.data.msg, {icon: 1})
+                                obj.del()
+                            })
+                        });
+                        return
+                    }
+
+                    // 校验并保存
+                    $editable.validateSingleRow("material_spec_table", index, (valid, error) => {
+                        if (!valid) {
+                            return
+                        }
+                        let data = layui.table.cache.material_spec_table[index]
+                        data.materialId = model.id
+                        let promise = null
+                        if ($strings.isBlank(data.id)) {
+                            promise = $http.post("/base/material_specs/", data)
+                        } else {
+                            promise = $http.put("/base/material_specs/", data)
+                        }
+
+                        promise.then(resp => {
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+
+                                // 重新渲染单行数据
+                                layui.table.renderSpecRow('material_spec_table', index, {
+                                    id: resp.data.data.id
+                                })
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                });
+
+                $http.get("/base/pack_units/list").then(resp => {
+                    window.packUnits = resp.data.data
+                })
+
+                /*** 子表管理结束 */
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    data.field = layui.$.extend({}, data.field)
+                    let promise = null
+                    if ($strings.isBlank(data.field.id)) {
+                        promise = $http.post("/base/materials", data.field)
+                    } else {
+                        promise = $http.put("/base/materials", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (resp.data.success) {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                        } else {
+                            layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+
+                    return false;
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(["/scripts/utils/editable.js", "/lib/treeSelect.js", "/lib/tableSelect.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

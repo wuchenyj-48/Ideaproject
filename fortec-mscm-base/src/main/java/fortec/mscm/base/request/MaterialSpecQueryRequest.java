@@ -10,10 +10,14 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class ManufacturerQueryRequest extends PageRequest {
+public class MaterialSpecQueryRequest extends PageRequest {
 
-    /** 供应商ID */
-    private String supplierId;
+    /** 规格 */
+    private String materialSpec;
+
+    /** 价格 */
+    private Double beginPrice;
+    private Double endPrice;
 
 
 }
