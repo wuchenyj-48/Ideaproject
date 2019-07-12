@@ -6,10 +6,13 @@
     <content><![CDATA[
 package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request.${className}QueryRequest;
 
 import fortec.common.core.service.IBaseService;
 
+import java.util.List;
 
 /**
 * ${table.functionName} service 接口
@@ -19,7 +22,10 @@ import fortec.common.core.service.IBaseService;
 */
 public interface ${className}Service extends IBaseService<${className}> {
 
+    List<${className}> list(${className}QueryRequest request);
 
+
+    IPage<${className}> page(${className}QueryRequest request);
 
 }]]>
     </content>

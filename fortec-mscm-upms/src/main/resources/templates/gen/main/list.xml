@@ -74,6 +74,7 @@
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
 
         <script>
+
             extendParentScriptsAndStyles(() => {
                 let table = layui.table, $ = layui.$, form = layui.form
 
@@ -162,6 +163,7 @@
                     window.reloadTable()
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
+
 
                 layui.$(".layui-btn").on('click', function () {
                     let layevent = this.getAttribute("lay-event");

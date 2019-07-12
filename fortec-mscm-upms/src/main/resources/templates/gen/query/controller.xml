@@ -6,13 +6,10 @@
     <content><![CDATA[
 package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.web;
 
-
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.common.core.utils.StringUtils;
 
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request.${className}QueryRequest;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
 
 /**
 * ${table.functionName} controller
@@ -41,50 +37,15 @@ public class ${className}Controller extends BaseController {
 
     @GetMapping("/page")
     public PageResult page(${className}QueryRequest request) {
-        IPage page = ${className?uncap_first}Service.page(request.getPage(), Wrappers.<${className}>query()
-                <#list table.columns as c>
-                    <#if c.isQuery?? && c.isQuery == 1 && c.queryType??>
-                        <#if c.attrType == 'String'>
-                            <#switch c.queryType>
-                                <#case "=">
-                    .eq(StringUtils.isNotBlank(request.get${c.attrName?cap_first}()), "${c.columnName}", request.get${c.attrName?cap_first}())
-                                    <#break>
-                                <#case "like">
-                    .like(StringUtils.isNotBlank(request.get${c.attrName?cap_first}()), "${c.columnName}", request.get${c.attrName?cap_first}())
-                                    <#break>
-                                <#case "between">
-                    .between(StringUtils.isNotBlank(request.getBegin${c.attrName?cap_first}()) && StringUtils.isNotBlank(request.getEnd${c.attrName?cap_first}()), "${c.columnName}", request.getBegin${c.attrName?cap_first}(), request.getEnd${c.attrName?cap_first}())
-                                    <#break>
-                                <#default>
-                            </#switch>
-                        <#else>
-                            <#switch c.queryType>
-                                <#case "=">
-                    .eq(request.get${c.attrName?cap_first}() != null, "${c.columnName}", request.get${c.attrName?cap_first}())
-                                    <#break>
-                                <#case "like">
-                    .like(request.get${c.attrName?cap_first}() != null, "${c.columnName}", request.get${c.attrName?cap_first}())
-                                    <#break>
-                                <#case "between">
-                    .between(request.getBegin${c.attrName?cap_first}() != null && request.getEnd${c.attrName?cap_first}() != null, "${c.columnName}", request.getBegin${c.attrName?cap_first}(), request.getEnd${c.attrName?cap_first}())
-                                    <#break>
-                                <#default>
-                            </#switch>
-                        </#if>
-                    </#if>
-                </#list>
-                     .orderByDesc("gmt_modified")
-                );
-
+        IPage page = ${className?uncap_first}Service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(${className}QueryRequest request) {
-        List<${className}> list = ${className?uncap_first}Service.list(Wrappers.<${className}>query().orderByDesc("gmt_modified"));
+        List<${className}> list = ${className?uncap_first}Service.list(request);
         return CommonResult.ok("查询成功", list);
     }
-
 
 }]]>
     </content>

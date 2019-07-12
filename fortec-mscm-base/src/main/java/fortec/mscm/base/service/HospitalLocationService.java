@@ -1,9 +1,12 @@
 
 package fortec.mscm.base.service;
 
-import fortec.mscm.base.entity.HospitalLocation;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.service.IBaseService;
+import fortec.mscm.base.entity.HospitalLocation;
+import fortec.mscm.base.request.HospitalLocationQueryRequest;
+
+import java.util.List;
 
 
 /**
@@ -15,6 +18,9 @@ import fortec.common.core.service.IBaseService;
 public interface HospitalLocationService extends IBaseService<HospitalLocation> {
 
 
+    List<HospitalLocation> list(HospitalLocationQueryRequest request);
 
+
+    IPage<HospitalLocation> page(HospitalLocationQueryRequest request);
 }
     

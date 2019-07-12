@@ -3,7 +3,6 @@ package fortec.mscm.base.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
@@ -18,11 +17,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
-* 医院收货地点 controller
-*
-* @author yuntao.zhou
-* @version 1.0
-*/
+ * 医院收货地点 controller
+ *
+ * @author yuntao.zhou
+ * @version 1.0
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/hospital_locations")
@@ -32,33 +31,27 @@ public class HospitalLocationController extends BaseController {
 
 
     @PostMapping
-    public CommonResult add(@RequestBody @Valid HospitalLocation  entity) {
+    public CommonResult add(@RequestBody @Valid HospitalLocation entity) {
         boolean bSave = hospitalLocationService.saveCascadeById(entity);
         return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
     }
 
     @PutMapping
-    public CommonResult update(@RequestBody @Valid HospitalLocation  entity) {
+    public CommonResult update(@RequestBody @Valid HospitalLocation entity) {
         boolean bUpdate = hospitalLocationService.updateCascadeById(entity);
         return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
     @GetMapping("/page")
     public PageResult page(HospitalLocationQueryRequest request) {
-        IPage page = hospitalLocationService.page(request.getPage(), Wrappers.<HospitalLocation>query()
-                    .eq(request.getHospitalId() != null, "hospital_id", request.getHospitalId())
-                     .orderByDesc("gmt_modified")
-                );
+        IPage page = hospitalLocationService.page(request);
 
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(HospitalLocationQueryRequest request) {
-        List<HospitalLocation> list = hospitalLocationService.list(Wrappers.<HospitalLocation>query()
-                .eq(request.getHospitalId() != null, "hospital_id", request.getHospitalId())
-                .orderByDesc("gmt_modified")
-        );
+        List<HospitalLocation> list = hospitalLocationService.list(request);
         return CommonResult.ok("查询成功", list);
     }
 

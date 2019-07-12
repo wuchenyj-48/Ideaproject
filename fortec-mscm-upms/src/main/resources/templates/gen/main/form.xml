@@ -180,7 +180,7 @@
                         <#elseif showType == 'input' || showType == 'textarea'>
         <script type="text/html" id="${c.attrName}Tpl">
             <input type="text" data-name="${c.attrName}" value="{{d.${c.attrName} ? d.${c.attrName} : ''}}" lay-filter="${c.attrName}"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="${vc(c.isNull,c.validators)}"  <#if c.isNull?? && c.isNull == 0>placeholder="必填"</#if>
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="${vc(c.isNull,c.validators)}" <#if c.isNull?? && c.isNull == 0>placeholder="必填"</#if>
                    class="layui-input custom-input"/>
         </script>
                         </#if>
@@ -252,7 +252,7 @@
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         <#list childTableList as t>
-                        $(".${uncamelCase(t.className)}-tab").show()
+                        $(".child-tab").show()
                         window.reload${t.className}Table && window.reload${t.className}Table()
                         </#list>
                     } else {

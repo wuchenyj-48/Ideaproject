@@ -7,12 +7,10 @@
 package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.web;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.common.core.utils.StringUtils;
 
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request.${className}QueryRequest;

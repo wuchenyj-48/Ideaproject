@@ -94,7 +94,6 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-
                         <#list table.columns as c>
                             <#if c.isList?? && c.isList == 1>
                                 <#assign showType="${c.showType!''}">

@@ -144,7 +144,7 @@
                     let data = $.extend({}, formData)
                     form.val("editForm", data)
                     model = data
-                    if (model.isNew) {
+                    if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                     }
                 }
@@ -195,7 +195,7 @@
                 form.on('submit(*)', (data) => {
                     data.field = layui.$.extend({}, data.field)
                     let promise = null
-                    if ($strings.isBlank(data.field.id)) {
+                    if (model.isNew) {
                         promise = $http.post("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)
                     } else {
                         promise = $http.put("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)

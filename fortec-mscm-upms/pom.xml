@@ -52,8 +52,6 @@
             </exclusions>
         </dependency>
 
-
-
         <!-- spring security end     resource server must have -->
 
 
