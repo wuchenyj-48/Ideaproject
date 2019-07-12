@@ -144,7 +144,7 @@
                     let data = $.extend({}, formData)
                     form.val("editForm", data)
                     model = data
-                    if ($strings.isNotBlank(model.id)) {
+                    if (model.isNew) {
                         $(".form-reset").hide()
                     }
                 }

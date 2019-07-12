@@ -7,10 +7,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
+import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -44,6 +48,9 @@ public class OAuthConfig {
 
         private final FilterIgnoreProperties ignoreProperties;
 
+        private final RemoteTokenServices remoteTokenServices;
+
+        private final UserDetailsService userDetailsService;
 
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -51,16 +58,16 @@ public class OAuthConfig {
             /**
              * 配置userDetailsService，否则无法获取用户信息
              */
-//            DefaultUserAuthenticationConverter userAuthenticationConverter = new DefaultUserAuthenticationConverter();
-//            userAuthenticationConverter.setUserDetailsService(userDetailsService);
-//
-//            DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
-//            accessTokenConverter.setUserTokenConverter(userAuthenticationConverter);
-//            tokenServices.setAccessTokenConverter(accessTokenConverter);
+            DefaultUserAuthenticationConverter userAuthenticationConverter = new DefaultUserAuthenticationConverter();
+            userAuthenticationConverter.setUserDetailsService(userDetailsService);
+
+            DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
+            accessTokenConverter.setUserTokenConverter(userAuthenticationConverter);
+            remoteTokenServices.setAccessTokenConverter(accessTokenConverter);
 
             resources.authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler)
-            .tokenStore(tokenStore)
-//                    .tokenServices(tokenServices)
+//            .tokenStore(tokenStore)
+                    .tokenServices(remoteTokenServices)
             ;
         }
 
