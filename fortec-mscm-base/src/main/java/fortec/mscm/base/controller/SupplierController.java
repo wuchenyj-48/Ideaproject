@@ -2,17 +2,15 @@
 package fortec.mscm.base.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
 import fortec.common.core.utils.StringUtils;
-
 import fortec.mscm.base.entity.Supplier;
 import fortec.mscm.base.request.SupplierQueryRequest;
 import fortec.mscm.base.service.SupplierService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +68,20 @@ public class SupplierController extends BaseController {
     public CommonResult deleteById(@PathVariable("id") Long id) {
         boolean bRemove = supplierService.removeCascadeById(id);
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
+    }
+
+    @GetMapping("/page_by_keywords")
+    public PageResult page(SupplierQueryRequest request, @RequestParam(value = "keywords",required = false) String keywords) {
+        IPage page = supplierService.page(request.getPage(), Wrappers.<Supplier>query()
+                .like(StringUtils.isNotBlank(keywords), "company_code", keywords)
+                .or()
+                .like(StringUtils.isNotBlank(keywords), "code", keywords)
+                .or()
+                .like(StringUtils.isNotBlank(keywords), "name", keywords)
+                .orderByDesc("gmt_modified")
+        );
+
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
 }

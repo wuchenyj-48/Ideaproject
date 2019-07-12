@@ -108,19 +108,19 @@
                         { field: 'applicantEmail', title: '申请人邮箱', align: 'center'},
                         { field: 'regionId', title: '区域id', align: 'center'},
                         {
-                            field: 'isDrug', title: '是否药品供应商', align: 'center',
+                            field: 'isDrug', title: '药品供应商', align: 'center',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('sys_yes_no', item.isDrug)}</div>`;
                             }
                         },
                         {
-                            field: 'isConsumable', title: '是否耗材供应商', align: 'center',
+                            field: 'isConsumable', title: '耗材供应商', align: 'center',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('sys_yes_no', item.isConsumable)}</div>`;
                             }
                         },
                         {
-                            field: 'isReagent', title: '是否试剂供应商', align: 'center',
+                            field: 'isReagent', title: '试剂供应商', align: 'center',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('sys_yes_no', item.isReagent)}</div>`;
                             }

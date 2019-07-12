@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.entity.Manufacturer;
 import fortec.mscm.base.request.ManufacturerQueryRequest;
 import fortec.mscm.base.service.ManufacturerService;
@@ -76,6 +77,19 @@ public class ManufacturerController extends BaseController {
         }
         boolean bSuccess = manufacturerService.saveOrUpdateBatch(Lists.newArrayList(children));
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
+    }
+
+    @GetMapping("/page_by_keywords")
+    public PageResult page( ManufacturerQueryRequest request, @RequestParam(value = "keywords",required = false) String keywords) {
+        IPage page = manufacturerService.page(request.getPage(), Wrappers.<Manufacturer>query()
+                .eq(StringUtils.isNotBlank(request.getSupplierId()),"supplier_id",request.getSupplierId())
+                .like(StringUtils.isNotBlank(keywords), "company_code", keywords)
+                .or()
+                .like(StringUtils.isNotBlank(keywords), "name", keywords)
+                .orderByDesc("gmt_modified")
+        );
+
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
 }
