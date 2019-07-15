@@ -14,4 +14,5 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan({"fortec.mscm.base.service", "fortec.mscm.base.controller", "fortec.mscm.base.listener"})
 @EnableDiscoveryClient
 public class AppConfig {
+
 }

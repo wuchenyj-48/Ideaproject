@@ -23,7 +23,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <springboot.version>2.1.5.RELEASE</springboot.version>
+        <springboot.version>2.1.6.RELEASE</springboot.version>
         <springcloud.version>Greenwich.RELEASE</springcloud.version>
         <springsecurity.oauth2.version>2.3.6.RELEASE</springsecurity.oauth2.version>
         <springsecurity.oauth2.autoconfigure.version>2.1.5.RELEASE</springsecurity.oauth2.autoconfigure.version>
