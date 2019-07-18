@@ -31,7 +31,7 @@
         <fastjson.version>1.2.58</fastjson.version>
         <mybatisplus.version>3.1.1</mybatisplus.version>
 
-        <fortec.common.version>1.0.0-RELEASE</fortec.common.version>
+        <fortec.common.version>1.0.2-SNAPSHOT</fortec.common.version>
     </properties>
 
     <repositories>
