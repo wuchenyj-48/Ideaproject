@@ -17,7 +17,7 @@
         <dependency>
             <groupId>fortec</groupId>
             <artifactId>fortec-common-upms</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${fortec.common.version}</version>
         </dependency>
 
         <dependency>

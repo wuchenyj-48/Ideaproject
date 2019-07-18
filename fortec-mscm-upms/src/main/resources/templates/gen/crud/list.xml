@@ -109,7 +109,7 @@
                                 </#if>
                             </#if>
                         </#list>
-                        {field: "LAY_CELL_TOOL_BAR", title: '操作', toolbar: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });
 
@@ -123,7 +123,7 @@
                 </#list>
                 form.render('select')
 
-                window.edit = (data) => {
+                window.edit = (data,rowIndex) => {
                     layer.open({
                         type: 2,
                         area: ['950px', '400px'],
@@ -137,12 +137,12 @@
                     });
                 }
 
-                window.deleteById = (data) => {
+                window.deleteById = (data,rowIndex) => {
                     layer.confirm('真的删除行么', function (index) {
 
                         $http.delete(`/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/` + data.id).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
-                            table.reload('listTable')
+                            window.reloadTable()
 
                             layer.close(index)
                         })
@@ -175,11 +175,13 @@
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
-                    var data = obj.data;
+                    // 获取当前行索引
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+
                     if (obj.event === 'del') {
-                        window.deleteById(obj.data)
+                        window.deleteById(obj.data, rowIndex)
                     } else if (obj.event === 'edit') {
-                        window.edit(obj.data)
+                        window.edit(obj.data, rowIndex)
                     }
                 });
 

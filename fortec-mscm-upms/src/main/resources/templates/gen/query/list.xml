@@ -67,7 +67,6 @@
                     })
                 }
 
-                //第一个实例
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
