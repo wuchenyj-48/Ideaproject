@@ -2,20 +2,19 @@
 
 package fortec.mscm.base.entity;
 
-import java.io.Serializable;
-
-import fortec.common.core.model.DataEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
-
+import fortec.common.core.model.DataEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
+
 /**
 * 实体对象
 * @author chenchen
@@ -67,9 +66,26 @@ public class SupplierRegist extends DataEntity  implements Serializable {
     @NotNull(message="是否试剂供应商不能为空")
     private Integer isReagent;
 
-    /** 审核状态 : 0：未提交，1：待审核，2：审核通过。字典类型：base_supplier_regist_astatus */
-    @NotNull(message="审核状态 : 0：未提交，1：待审核，2：审核通过。字典类型：base_supplier_regist_astatus不能为空")
-    private Integer astatus;
+    /** 审核状态*/
+    //@NotNull(message="审核状态不能为空")
+    private Integer auditStatus;
 
+    /** 审核人 */
+    private String auditor;
+
+    /** 审核时间 */
+    private Date gmtAudited;
+
+    /** 取消原因 */
+    private String cancelReason;
+
+    /*地址*/
+    private String address;
+
+
+    public static final int AUDIT_STATUS_UNSUBMIT = 0;
+    public static final int AUDIT_STATUS_SUBMITED = 1;
+    public static final int AUDIT_STATUS_PASSED = 2;
+    public static final int AUDIT_STATUS_CANCELED = 3;
 }
     

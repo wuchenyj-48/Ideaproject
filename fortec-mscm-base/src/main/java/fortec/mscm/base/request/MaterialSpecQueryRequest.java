@@ -19,6 +19,12 @@ public class MaterialSpecQueryRequest extends PageRequest {
     private Double beginPrice;
     private Double endPrice;
 
+    /**搜索关键词*/
+    private String keywords;
+
+    /**供应商标识*/
+    private String supplierId;
+
 
 }
     

@@ -1,0 +1,126 @@
+
+    
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+             .custom-form .layui-form-label { width: 120px }
+             .custom-form .layui-input-block { margin-left: 150px}
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+
+
+                   <div class="layui-row layui-col-space5 layui-form-item">
+                   <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span>  医院ID
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="hospitalId" required lay-verify="required" placeholder="请输入医院ID"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                   </div>
+
+
+                   <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span>  供应商ID
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="supplierId" required lay-verify="required" placeholder="请输入供应商ID"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                   </div>
+
+                </div>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let model = {}
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                    }
+                }
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                form.render('radio')
+
+                // 渲染日期、时间 数据
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    data.field = layui.$.extend({}, data.field)
+                    let promise = null
+                    if (model.isNew) {
+                        promise = $http.post("/base/hospital_suppliers", data.field)
+                    } else {
+                        promise = $http.put("/base/hospital_suppliers", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (resp.data.success) {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+
+                            parent.layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                        } else {
+                            layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                mainFunction()
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

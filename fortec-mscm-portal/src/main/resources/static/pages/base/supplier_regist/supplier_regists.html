@@ -14,9 +14,9 @@
                     <div class="layui-card">
                         <div class="layui-card-header">管理</div>
                         <div class="layui-card-body">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
+                            <!--<button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
                                 <i class="layui-icon layui-icon-add-1"></i> 新增
-                            </button>
+                            </button>-->
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
                                     <input type="text" name="companyCode" placeholder="请输入统一社会信用代码" autocomplete="off"
@@ -65,17 +65,25 @@
             </div>
         </div>
 
-        <script type="text/html" id="headToolbar">
+        <!--<script type="text/html" id="headToolbar">
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
                     <i class="layui-icon layui-icon-add-1"></i>添加
                 </button>
             </div>
-        </script>
+        </script>-->
 
         <script type="text/html" id="cellToolbar">
+            {{#  if(d.auditStatus ==0){ }}
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            {{# }if(d.auditStatus ==1) { }}
+            <a class="layui-btn layui-btn-xs" lay-event="audit">通过</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cancel">取消</a>
+            {{# }if(d.auditStatus ==2) { }}
+
+            {{#  } }}
+
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -100,13 +108,12 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-
                         { field: 'companyCode', title: '统一社会信用代码', align: 'center'},
                         { field: 'name', title: '供应商名称', align: 'center'},
                         { field: 'applicant', title: '申请人', align: 'center'},
                         { field: 'applicantMobile', title: '申请人手机', align: 'center'},
                         { field: 'applicantEmail', title: '申请人邮箱', align: 'center'},
-                        { field: 'regionId', title: '区域id', align: 'center'},
+                        { field: 'address', title: '地址', align: 'center'},
                         {
                             field: 'isDrug', title: '药品供应商', align: 'center',
                             templet(item) {
@@ -126,14 +133,15 @@
                             }
                         },
                         {
-                            field: 'astatus', title: '审核状态', align: 'center',
+                            field: 'auditStatus', title: '审核状态', align: 'center',
                             templet(item) {
-                                return `<div>${$global.getDictLabel('base_supplier_regist_astatus', item.astatus)}</div>`;
+                                return `<div>${$global.getDictLabel('base_supplier_regist_astatus', item.auditStatus)}</div>`;
                             }
                         },
+                        { field: 'cancelReason', title: '审核备注', align: 'center'},
                         { field: 'modifier', title: '修改人', align: 'center'},
                         { field: 'gmtModified', title: '修改时间', align: 'center'},
-                        {field: "LAY_CELL_TOOL_BAR", title: '操作', toolbar: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });
 
@@ -177,6 +185,29 @@
                         })
                     });
                 }
+
+                window.audit = (data) => {
+                    layer.confirm('确定通过么', function (index) {
+
+                        $http.post(`/base/supplier_regists/audit/` + data.id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+                        })
+                    });
+                }
+
+                window.cancel = (data) => {
+
+                    layer.prompt({title: '请输入取消原因，并确定', formType: 2},function(val, index){
+
+                        $http.post(`/base/supplier_regists/cancel/` +data.id+"/"+val).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+                            layer.close(index)
+                        })
+                    });
+
+                }
                 // 监听表单重置
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
@@ -209,6 +240,10 @@
                         window.deleteById(obj.data)
                     } else if (obj.event === 'edit') {
                         window.edit(obj.data)
+                    }else if (obj.event === 'audit') {
+                        window.audit(obj.data)
+                    }else if (obj.event === 'cancel') {
+                        window.cancel(obj.data)
                     }
                 });
 

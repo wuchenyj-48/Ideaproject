@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.base.mapper.MaterialApplicantItemMapper">
+    <select id="list" resultType="fortec.mscm.base.entity.MaterialApplicantItem">
+        select
+            mai.*,
+            ms.material_spec,
+            ms.price,
+            ms.unit,
+            m.material_name,
+            m.material_trade_name
+        from
+        material_applicant_item mai
+        inner join material_spec ms on mai.material_spec_id = ms.id
+        inner join material m on ms.material_id = m.id
+        <where>
+            <if test="request.applicantId != null and request.applicantId != ''">
+                and mai.applicant_id = #{request.applicantId}
+            </if>
+        </where>
+        order by mai.gmt_modified desc
+    </select>
+</mapper>

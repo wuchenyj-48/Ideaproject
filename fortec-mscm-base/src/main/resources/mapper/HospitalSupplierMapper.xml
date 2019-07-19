@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.base.mapper.HospitalSupplierMapper">
+    <select id="page" resultType="fortec.mscm.base.entity.HospitalSupplier">
+        select
+        hs.*,
+        h.name as hospital_name,
+        s.name as supplier_name
+        from
+        hospital_supplier hs
+        inner join hospital h on hs.hospital_id = h.id
+        inner join supplier s on hs.supplier_id = s.id
+        <where>
+            <if test="request.hospitalName != null and request.hospitalName != ''">
+                and h.name like concat( '%', #{request.hospitalName}, '%')
+            </if>
+            <if test="request.supplierName != null and request.supplierName != ''">
+                and s.name like concat('%',#{request.supplierName},'%')
+            </if>
+        </where>
+        order by hs.gmt_modified desc
+    </select>
+
+    <select id="pageByKeywords" resultType="fortec.mscm.base.entity.HospitalSupplier">
+        select
+            hs.*,
+            h.name as hospital_name
+        from
+        hospital_supplier hs
+        inner join hospital h on hs.hospital_id = h.id
+        <where>
+            <if test="request.keywords != null and request.keywords != ''">
+                and h.name like concat( '%', #{request.keywords}, '%')
+            </if>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and hs.supplier_id = #{request.supplierId}
+            </if>
+        </where>
+    </select>
+</mapper>

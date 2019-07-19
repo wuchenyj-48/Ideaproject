@@ -1,7 +1,12 @@
 server:
   port: 8080
 
-
+spring:
+  resources:
+    cache:
+      cachecontrol:
+        no-cache: true
+        no-store: true
 eureka:
   instance:
     hostname: 127.0.0.1

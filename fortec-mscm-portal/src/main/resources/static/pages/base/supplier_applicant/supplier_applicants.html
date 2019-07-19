@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>SupplierApplicant管理</title>
+    </head>
+    <body>
+
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">供方资格审核</div>
+                        <div class="layui-card-body">
+
+                            <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="code" placeholder="请输入单据号" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">请选择单据状态</option>
+                                    </select>
+                                </div>
+
+                                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
+                                        lay-filter="list">
+                                    <i class="layui-icon layui-icon-search"></i> 查询
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="reset">
+                                    <i class="layui-icon "></i> 重置
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">
+                                    <i class="layui-icon "></i> 关闭
+                                </button>
+                            </form>
+                            <table id="listTable" lay-filter="listTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/html" id="headToolbar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
+                    <i class="layui-icon layui-icon-add-1"></i>添加
+                </button>
+            </div>
+        </script>
+
+        <script type="text/html" id="cellToolbar">
+            {{#  if(d.status == 3){ }}
+
+            {{# }if(d.status == 1) { }}
+            <a class="layui-btn layui-btn-xs" lay-event="pass">通过</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cancel">取消</a>
+            {{# }if(d.status == 2) { }}
+
+            {{#  } }}
+
+        </script>
+
+        <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
+
+        <script>
+
+            extendParentScriptsAndStyles(() => {
+                let table = layui.table, $ = layui.$, form = layui.form;
+
+                window.reloadTable = () => {
+                    table.reload('listTable', {
+                        where: layui.$('#queryForm').serializeObject()
+                    })
+                }
+
+                table.render({
+                    id: "listTable",
+                    elem: '#listTable',
+                    title: 'SupplierApplicant信息',
+                    height: 'full-160',
+                    url: '/base/supplier_applicants/page',
+                    page: {limit: 30},
+                    cols: [[ //表头
+                        {type: 'numbers', align: 'center', fixed: 'left'},
+                        {field: 'code', title: '单据号', align: 'center'},
+                        {field: 'hospitalName', title: '医院名称', align: 'center'},
+                        {field: 'supplierName', title: '供应商名称', align: 'center'},
+                        {field: 'remark', title: '说明', align: 'center'},
+                        {
+                            field: 'status', title: '单据状态', align: 'center',
+                            templet(item) {
+                                return `<div>${$global.getDictLabel('base_supplier_applicant_status', item.status)}</div>`;
+                            }
+                        },
+                        {field: 'gmtAudited', title: '审核时间', align: 'center'},
+                        {field: 'auditor', title: '审核人', align: 'center'},
+                        {field: 'auditedRemark', title: '审核备注', align: 'center'},
+                        {
+                            field: "LAY_CELL_TOOLBAR",
+                            title: '操作',
+                            templet: '#cellToolbar',
+                            width: 150,
+                            align: 'center',
+                            fixed: 'right'
+                        }
+                    ]]
+                });
+
+                // 渲染下拉框 数据
+                $global.getDictDataList('base_supplier_applicant_status').forEach(o => {
+                    $("select[name='status']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                form.render('select')
+
+                window.pass = (data) => {
+                    layer.confirm('确定通过么', function (index) {
+
+                        $http.post(`/base/supplier_applicants/pass/` + data.id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+                        })
+                    });
+                }
+
+                window.cancel = (data) => {
+                    layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
+
+                        $http.post(`/base/supplier_applicants/cancel/` + data.id + "/" + val).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+                            layer.close(index)
+                        })
+                    });
+                }
+                // 监听表单重置
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+
+                // 监听界面重置
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+                // 监听表单提交事件
+                layui.form.on('submit(list)', (data) => {
+                    window.reloadTable()
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+
+
+                layui.$(".layui-btn").on('click', function () {
+                    let layevent = this.getAttribute("lay-event");
+                    if (layevent == 'addNew') {
+                        edit({isNew: true});
+                    }
+                });
+
+                //监听行工具事件
+                table.on('tool(listTable)', function (obj) {
+                    var data = obj.data;
+                    if (obj.event === 'pass') {
+                        window.pass(obj.data)
+                    } else if (obj.event === 'cancel') {
+                        window.cancel(obj.data)
+                    }
+                });
+            })
+
+        </script>
+    </body>
+
+
+</html>
+    
+    
