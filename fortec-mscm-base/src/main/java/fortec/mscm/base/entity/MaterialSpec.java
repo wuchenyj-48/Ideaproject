@@ -2,6 +2,7 @@
 
 package fortec.mscm.base.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
 import lombok.Data;
@@ -68,6 +69,18 @@ public class MaterialSpec extends DataEntity  implements Serializable {
 
     /** 大包装单位数量 */
     private Integer largePackageQty;
+
+    /**供应商标识*/
+    @TableField(exist = false)
+    private String supplierId;
+
+    /**品名*/
+    @TableField(exist = false)
+    private String materialName;
+
+    /**商品名*/
+    @TableField(exist = false)
+    private String materialTradeName;
 
 }
     

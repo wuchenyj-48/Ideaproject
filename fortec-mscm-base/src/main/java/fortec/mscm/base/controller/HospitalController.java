@@ -20,11 +20,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
-* 医院 controller
-*
-* @author yuntao.zhou
-* @version 1.0
-*/
+ * 医院 controller
+ *
+ * @author yuntao.zhou
+ * @version 1.0
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/hospitals")
@@ -48,10 +48,10 @@ public class HospitalController extends BaseController {
     @GetMapping("/page")
     public PageResult page(HospitalQueryRequest request) {
         IPage page = hospitalService.page(request.getPage(), Wrappers.<Hospital>query()
-                    .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
-                    .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
-                     .orderByDesc("gmt_modified")
-                );
+                .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
+                .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
+                .orderByDesc("gmt_modified")
+        );
 
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
@@ -67,6 +67,15 @@ public class HospitalController extends BaseController {
     public CommonResult deleteById(@PathVariable("id") Long id) {
         boolean bRemove = hospitalService.removeCascadeById(id);
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
+    }
+
+    @GetMapping("/page_by_keywords")
+    public CommonResult page(HospitalQueryRequest request, @RequestParam(value = "keywords", required = false) String keywords) {
+        IPage page = hospitalService.page(request.getPage(), Wrappers.<Hospital>query()
+                .like(StringUtils.isNotBlank(keywords), "name", keywords)
+                .orderByDesc("gmt_modified")
+        );
+        return PageResult.ok("查询成功",page.getRecords(),page.getTotal());
     }
 
 }

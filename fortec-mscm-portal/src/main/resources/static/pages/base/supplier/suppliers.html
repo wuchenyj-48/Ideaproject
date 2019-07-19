@@ -117,7 +117,6 @@
                                 return `<div>${$global.getDictLabel('sys_yes_no', item.isReagent)}</div>`;
                             }
                         },
-                        { field: 'regionId', title: '区域id', align: 'center'},
                         { field: 'address', title: '地址', align: 'center'},
                         { field: 'contactor', title: '联系人', align: 'center'},
                         { field: 'email', title: '邮箱', align: 'center'},
@@ -125,7 +124,7 @@
                         { field: 'mobile', title: '移动电话', align: 'center'},
                         { field: 'modifier', title: '修改人', align: 'center'},
                         { field: 'gmtModified', title: '修改时间', align: 'center'},
-                        {field: "LAY_CELL_TOOL_BAR", title: '操作', toolbar: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });
 

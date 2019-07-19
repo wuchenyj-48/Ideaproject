@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.base.mapper.MaterialApplicantMapper">
+    <select id="page" resultType="fortec.mscm.base.entity.MaterialApplicant">
+        select
+        ma.*,
+        h.name as hospital_name,
+        s.name as supplier_name
+        from
+        material_applicant ma
+        inner join hospital h on ma.hospital_id = h.id
+        inner join supplier s on ma.supplier_id = s.id
+        <where>
+            <if test="request.hospitalName != null and request.hospitalName != ''">
+                and h.name like concat( '%', #{request.hospitalName}, '%')
+            </if>
+            <if test="request.supplierName != null and request.supplierName != ''">
+                and s.name like concat('%',#{request.supplierName},'%')
+            </if>
+        </where>
+        order by ma.code desc
+    </select>
+</mapper>

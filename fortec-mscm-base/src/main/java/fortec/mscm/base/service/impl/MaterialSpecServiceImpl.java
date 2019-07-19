@@ -1,10 +1,12 @@
 
 package fortec.mscm.base.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.service.BaseServiceImpl;
 
 import fortec.mscm.base.entity.MaterialSpec;
 import fortec.mscm.base.mapper.MaterialSpecMapper;
+import fortec.mscm.base.request.MaterialSpecQueryRequest;
 import fortec.mscm.base.service.MaterialSpecService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,10 @@ import org.springframework.stereotype.Service;
 public class MaterialSpecServiceImpl extends BaseServiceImpl<MaterialSpecMapper, MaterialSpec> implements MaterialSpecService {
 
 
+    @Override
+    public IPage<MaterialSpec> pageByKeywords(MaterialSpecQueryRequest request) {
 
+        return this.baseMapper.pageByKeywords(request.getPage(),request);
+    }
 }
     

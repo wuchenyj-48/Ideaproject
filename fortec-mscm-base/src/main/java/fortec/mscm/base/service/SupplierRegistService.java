@@ -4,6 +4,7 @@ package fortec.mscm.base.service;
 import fortec.mscm.base.entity.SupplierRegist;
 
 import fortec.common.core.service.IBaseService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -14,7 +15,20 @@ import fortec.common.core.service.IBaseService;
 */
 public interface SupplierRegistService extends IBaseService<SupplierRegist> {
 
+    /**
+     * 审核通过
+     * @param id
+     */
+    @Transactional
+    void pass(String id);
 
+    /**
+     * 取消审核
+     * @param id
+     * @param reason
+     */
+    @Transactional
+    void cancel(String id,String reason);
 
 }
     

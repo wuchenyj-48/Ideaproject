@@ -1,13 +1,16 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>编辑表单</title>
         <style>
-             .custom-form .layui-form-label { width: 130px }
-             .custom-form .layui-input-block { margin-left: 160px}
+            .custom-form .layui-form-label {
+                width: 130px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 160px
+            }
         </style>
     </head>
     <body>
@@ -18,121 +21,121 @@
                 <input type="hidden" name="id" class="layui-input"/>
 
 
-                   <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  统一社会信用代码
+                            <span class="required-star">*</span> 统一社会信用代码
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="companyCode" required lay-verify="number|required" placeholder="请输入统一社会信用代码"
+                            <input type="text" name="companyCode" required lay-verify="number|required"
+                                   placeholder="请输入统一社会信用代码"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
 
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  供应商名称
+                            <span class="required-star">*</span> 供应商名称
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="name" required lay-verify="required" placeholder="请输入供应商名称"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
 
-                   <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  申请人
+                            <span class="required-star">*</span> 申请人
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="applicant" required lay-verify="required" placeholder="请输入申请人"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
 
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  申请人手机
+                            <span class="required-star">*</span> 申请人手机
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="applicantMobile" required lay-verify="phone|required" placeholder="请输入申请人手机"
+                            <input type="text" name="applicantMobile" required lay-verify="phone|required"
+                                   placeholder="请输入申请人手机"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
 
-                   <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  申请人邮箱
+                            <span class="required-star">*</span> 申请人邮箱
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="applicantEmail" required lay-verify="email|required" placeholder="请输入申请人邮箱"
+                            <input type="text" name="applicantEmail" required lay-verify="email|required"
+                                   placeholder="请输入申请人邮箱"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
 
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                             区域id
+                            区域id
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="regionId"  lay-verify="" placeholder="请输入区域id"
+                            <input type="text" name="regionId" lay-verify="" placeholder="请输入区域id"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
 
-                   <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  是否药品供应商
+                            <span class="required-star">*</span> 是否药品供应商
                         </label>
                         <div class="layui-input-block">
                             <div id="isDrugDiv"></div>
                         </div>
-                   </div>
+                    </div>
 
 
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  是否耗材供应商
+                            <span class="required-star">*</span> 是否耗材供应商
                         </label>
                         <div class="layui-input-block">
                             <div id="isConsumableDiv"></div>
                         </div>
-                   </div>
+                    </div>
 
-                </div>
-
-                   <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  是否试剂供应商
+                            <span class="required-star">*</span> 是否试剂供应商
                         </label>
                         <div class="layui-input-block">
                             <div id="isReagentDiv"></div>
                         </div>
-                   </div>
+                    </div>
 
-                       <div class="layui-col-xs6">
-                           <label class="layui-form-label">
-                               <span class="required-star">*</span>  审核状态
-                           </label>
-                           <div class="layui-input-block">
-                               <select name="astatus">
+                </div>
 
-                               </select>
-                           </div>
-                       </div>
+                <div class="layui-row layui-col-space5 layui-form-item">
 
+                        <label class="layui-form-label">
+                            地址
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="address" lay-verify="required" placeholder="请输入地址"
+                                   autocomplete="off" class="layui-input">
+                        </div>
 
                 </div>
                 <div class="block"></div>
@@ -165,10 +168,7 @@
                     }
                 }
 
-                // 渲染下拉框 数据
-                $global.getDictDataList('base_supplier_regist_astatus').forEach(o => {
-                    $("select[name='astatus']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
+
                 form.render('select')
 
                 // 渲染单选框/多选框 数据
@@ -182,7 +182,7 @@
                     $("#isReagentDiv").append(`<input type="radio" name="isReagent" value="${o.value}" title="${o.label}" /> `)
                 })
                 //默认选中
-                $("input:radio[value='0']").attr('checked','true')
+                $("input:radio[value='0']").attr('checked', 'true')
                 form.render('radio')
 
                 // 渲染日期、时间 数据

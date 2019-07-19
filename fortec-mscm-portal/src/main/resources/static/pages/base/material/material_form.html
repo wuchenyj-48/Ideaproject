@@ -440,6 +440,7 @@
                     },
                     done(elem, data) {
                         model.supplierId = data.data.length > 0 ? data.data[0].id : null
+                        model.supplierName = data.data.length > 0 ? data.data[0].name : null
                         layui.each(data.data, function (index, item) {
                             $("form input[name='supplierId']").val(model.supplierId)
                             elem.val(item.name)
@@ -472,6 +473,7 @@
                         },
                         done(elem, data) {
                             model.manufacturerId = data.data.length > 0 ? data.data[0].id : null
+                            model.manufacturerName = data.data.length > 0 ? data.data[0].name : null
                             layui.each(data.data, function (index, item) {
                                 $("form input[name='manufacturerId']").val(model.manufacturerId)
                                 elem.val(item.name)

@@ -53,7 +53,7 @@ public class SupplierRegistController extends BaseController {
                     .eq(request.getIsDrug() != null, "is_drug", request.getIsDrug())
                     .eq(request.getIsConsumable() != null, "is_consumable", request.getIsConsumable())
                     .eq(request.getIsReagent() != null, "is_reagent", request.getIsReagent())
-                    .eq(request.getAstatus() != null, "astatus", request.getAstatus())
+                    .eq(request.getAstatus() != null, "audit_status", request.getAstatus())
                      .orderByDesc("gmt_modified")
                 );
 
@@ -71,6 +71,25 @@ public class SupplierRegistController extends BaseController {
     public CommonResult deleteById(@PathVariable("id") Long id) {
         boolean bRemove = supplierRegistService.removeCascadeById(id);
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
+    }
+
+    @PostMapping("/regist")
+    public CommonResult regist(@RequestBody @Valid SupplierRegist entity) {
+        entity.setAuditStatus(SupplierRegist.AUDIT_STATUS_SUBMITED);
+        boolean bSave = supplierRegistService.saveCascadeById(entity);
+        return bSave ? CommonResult.ok("注册成功", entity) : CommonResult.error("注册失败");
+    }
+
+    @PostMapping("/audit/{id}")
+    public CommonResult audit(@PathVariable("id")String id) {
+        supplierRegistService.pass(id);
+        return CommonResult.ok("审核通过");
+    }
+
+    @PostMapping("/cancel/{id}/{reason}")
+    public CommonResult cancel(@PathVariable("id") String id,@PathVariable("reason") String reason) {
+        supplierRegistService.cancel(id,reason);
+        return CommonResult.ok("取消成功");
     }
 
 }

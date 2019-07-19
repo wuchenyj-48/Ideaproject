@@ -83,5 +83,11 @@ public class MaterialSpecController extends BaseController {
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
     }
 
+    @GetMapping("/page_by_keywords")
+    public PageResult pageByKeywords(MaterialSpecQueryRequest request) {
+        IPage<MaterialSpec> page = materialSpecService.pageByKeywords(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
 }
     
