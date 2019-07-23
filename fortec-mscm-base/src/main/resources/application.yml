@@ -101,7 +101,7 @@ security:
   oauth2:
     resource:
       service-id: mscm-base-service
-      token-info-uri: http://localhost:5050/oauth/check_token
+      token-info-uri: http://fortec-common-oauth/oauth/check_token
     client:
       client-id: upms
       # 明文密码，详情参考：org.springframework.security.oauth2.provider.token.RemoteTokenServices#getAuthorizationHeader
