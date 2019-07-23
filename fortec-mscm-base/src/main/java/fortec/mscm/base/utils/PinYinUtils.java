@@ -34,7 +34,8 @@ public class PinYinUtils {
         for (int i = 0; i < nameChar.length; i++) {
             if (nameChar[i] > 128) {
                 try {
-                    pinyinName += PinyinHelper.toHanyuPinyinStringArray(nameChar[i], defaultFormat)[0].charAt(0);
+                    String[] pinyinStringArray = PinyinHelper.toHanyuPinyinStringArray(nameChar[i], defaultFormat);
+                    pinyinName += pinyinStringArray.length > 0 ?  pinyinStringArray[0].charAt(0) : "";
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     e.printStackTrace();
                 }

@@ -30,7 +30,7 @@
 
         <dependency>
             <groupId>fortec</groupId>
-            <artifactId>fortec-common-core</artifactId>
+            <artifactId>fortec-common-security-starter</artifactId>
             <version>${fortec.common.version}</version>
         </dependency>
 
@@ -191,6 +191,22 @@
         </dependency>
 
         <!-- database end -->
+
+        <!-- transaction manager begin -->
+        <dependency>
+            <groupId>com.codingapi.txlcn</groupId>
+            <artifactId>txlcn-tc</artifactId>
+            <version>${txlcn.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.codingapi.txlcn</groupId>
+            <artifactId>txlcn-txmsg-netty</artifactId>
+            <version>${txlcn.version}</version>
+        </dependency>
+
+        <!-- transaction manager end -->
+
 
         <!-- utils begin -->
 

@@ -2,10 +2,9 @@
 package fortec.mscm.base.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import fortec.common.core.service.IBaseService;
 import fortec.mscm.base.entity.SupplierApplicant;
 import fortec.mscm.base.request.SupplierApplicantQueryRequest;
-
-import fortec.common.core.service.IBaseService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -40,7 +39,6 @@ public interface SupplierApplicantService extends IBaseService<SupplierApplicant
      * 医院审核
      * @param id
      */
-    @Transactional
     void pass(String id);
 
     /**

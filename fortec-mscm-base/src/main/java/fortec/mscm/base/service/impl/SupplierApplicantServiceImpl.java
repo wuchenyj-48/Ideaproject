@@ -13,10 +13,11 @@ import fortec.mscm.base.mapper.SupplierApplicantMapper;
 import fortec.mscm.base.request.SupplierApplicantQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
 import fortec.mscm.base.service.SupplierApplicantService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -27,13 +28,12 @@ import java.util.List;
  * @author chenchen
  * @version 1.0
  */
+@AllArgsConstructor
 @Slf4j
 @Service
 public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplicantMapper, SupplierApplicant> implements SupplierApplicantService {
-    @Autowired
-    HospitalSupplierService hospitalSupplierService;
-    @Autowired
-    SupplierApplicantService supplierApplicantService;
+
+    private final HospitalSupplierService hospitalSupplierService;
 
     @Override
     public List<SupplierApplicant> list(SupplierApplicantQueryRequest request) {
@@ -47,11 +47,6 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     @Override
     public IPage<SupplierApplicant> page(SupplierApplicantQueryRequest request) {
-        /*IPage page = this.page(request.getPage(), Wrappers.<SupplierApplicant>query()
-                .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
-                .eq(request.getStatus() != null, "status", request.getStatus())
-                .orderByDesc("gmt_modified")
-        );*/
         return this.baseMapper.page(request.getPage(), request);
     }
 
@@ -59,7 +54,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
     public boolean applicant(SupplierApplicant entity) {
 
         //申请表中是否存在
-        SupplierApplicant applicantServiceOne = supplierApplicantService.getOne(Wrappers.<SupplierApplicant>query()
+        SupplierApplicant applicantServiceOne = this.getOne(Wrappers.<SupplierApplicant>query()
                 .eq("hospital_id", entity.getHospitalId())
                 .eq("supplier_id", "1150667601773346818")
                 .notIn("status",SupplierApplicant.STATUS_CANCELED,SupplierApplicant.STATUS_UNSUBMIT)
@@ -73,14 +68,14 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         entity.setSupplierId("1150667601773346818")
                 .setCode("SA" + StringUtils.getRandomNum(13))
                 .setStatus(SupplierApplicant.STATUS_UNSUBMIT);
-        boolean save = supplierApplicantService.saveOrUpdate(entity);
+        boolean save = this.saveOrUpdate(entity);
         return save;
     }
 
     @Override
     public void submit(String id) {
         //状态是否是制单状态
-        SupplierApplicant supplierApplicant = supplierApplicantService.getById(id);
+        SupplierApplicant supplierApplicant = this.getById(id);
         if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_UNSUBMIT){
             throw new BusinessException("当前状态不支持提交");
         }
@@ -91,10 +86,12 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         this.updateById(supplierApplicant);
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void pass(String id) {
         //状态是否是提交待审核
-        SupplierApplicant supplierApplicant = supplierApplicantService.getById(id);
+        SupplierApplicant supplierApplicant = this.getById(id);
         if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_SUBMITED) {
             throw new BusinessException("当前状态不支持审核");
         }
@@ -110,12 +107,13 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         HospitalSupplier hospitalSupplier = new HospitalSupplier();
         BeanUtils.copyProperties(supplierApplicant,hospitalSupplier);
         hospitalSupplierService.save(hospitalSupplier);
+
     }
 
     @Override
     public void cancel(String id, String auditedRemark) {
         //状态是否是提交待审核
-        SupplierApplicant supplierApplicant = supplierApplicantService.getById(id);
+        SupplierApplicant supplierApplicant = this.getById(id);
         if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_SUBMITED) {
             throw new BusinessException("当前状态不支持取消", null);
         }

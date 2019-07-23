@@ -1,5 +1,9 @@
 package fortec.mscm.base.config;
 
+import fortec.common.core.annotation.EnableDefaultCoreConfig;
+import fortec.common.feign.annotation.EnableDefaultFeignConfig;
+import fortec.common.security.annotation.EnableDefaultSecurityCommonConfig;
+import fortec.common.security.annotation.EnableDefaultSecurityResourceConfig;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +17,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan({"fortec.mscm.base.service", "fortec.mscm.base.controller", "fortec.mscm.base.listener"})
 @EnableDiscoveryClient
+@EnableDefaultFeignConfig
+@EnableDefaultCoreConfig
+@EnableDefaultSecurityCommonConfig
+@EnableDefaultSecurityResourceConfig
 public class AppConfig {
 
 }

@@ -22,7 +22,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
     druid:
-      url: jdbc:mysql://mysql.forten-tech.com:3366/mscm-base?useUnicode=true&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+      url: jdbc:mysql://mysql.forten-tech.com:3366/mscm-base?useUnicode=true&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
       username: root
       password: 34821015
 
@@ -45,6 +45,9 @@ spring:
         #loginByPassword-password: admin
       connection-properties: config.decrypt=false;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJDSTJx3OWh1q/TPdqSEpB5RrZRmcb3nGfkEqCTyEQmdcXSvuPVz2409AJMj+4u24KUchq3IhLgiXmQGfegP/rcCAwEAAQ==
       filters: stat,wall
+  main:
+    allow-bean-definition-overriding: true
+
 
 
 
@@ -107,11 +110,18 @@ security:
         - upms
 
 
+tx-lcn:
+  ribbon:
+    loadbalancer:
+      dtx:
+        enabled: true
+  client:
+    manager-address: 127.0.0.1:8070
+    chain-level: 3
+  logger:
+    enabled: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://mysql.forten-tech.com:3366/common-tm?useUnicode=true&autoReconnect=true&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 34821015
 
-ignore:
-  urls:
-    - /lib/**
-    - /scripts/**
-    - /styles/**
-    - /pages/**
-    - //users/findByUserKey

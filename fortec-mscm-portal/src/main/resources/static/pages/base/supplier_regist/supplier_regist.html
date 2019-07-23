@@ -202,6 +202,9 @@
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
                     $("form input:hidden").val('')
+                    $("select[name='isDrug']").val("0")
+                    $("select[name='isConsumable']").val("0")
+                    $("select[name='isReagent']").val("0")
                 })
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);
@@ -211,6 +214,8 @@
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     let field = data.field
+                    console.log(Number.parseInt(field.isDrug) , Number.parseInt(field.isConsumable) , Number.parseInt(field.isReagent))
+                    console.log(Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent))
                     if((Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent)) == 0){
                         layer.msg("药品/耗材/试剂供应商 至少选中一个", {icon: 5})
                         return false;

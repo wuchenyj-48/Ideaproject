@@ -331,7 +331,7 @@
                     var data = obj.data;
                     if (obj.event === 'newDel') {
                         // 未在数据库中存在，直接从界面移除即可
-                        obj.del()
+                        layui.table.deleteRow('${uncamelCase(t.className)}_table', index)
                         return
                     }
                     if (obj.event === 'del') {
