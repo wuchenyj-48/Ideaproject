@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form  class="layui-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="hospitalId" class="layui-input"/>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span> 医院
+                        </label>
+                        <div class="layui-input-block">
+                            <input disabled type="text" name="hospitalName" id="hospitalName" required lay-verify="required"
+                                   placeholder="请选择医院"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs12">
+                        <label class="layui-form-label">
+                            说明
+                        </label>
+                        <div class="layui-input-block">
+
+                            <textarea disabled name="remark" placeholder="请输入说明" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn form-pass" type="button">通过</button>
+                            <button class="layui-btn layui-btn-danger form-cancel" type="button">取消</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-tab child-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">供货申请明细</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+
+                        <div class="row-edit-table" id="material_applicant_item_table"
+                             lay-filter="material_applicant_item_table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子表管理模板 开始  -->
+
+
+
+        <!-- 子表管理模板 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let model = {}
+
+
+                // 加载子表表格
+                window.reloadMaterialApplicantItemTable = () => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    $http.get(`/base/material_applicant_items/list?applicantId=${model.id}`).then(resp => {
+                        let data = resp.data.data
+                        layui.table.render({
+                            id: "material_applicant_item_table",
+                            elem: '#material_applicant_item_table',
+                            data: data,
+                            height: 400,
+                            cols: [[
+                                {type: 'numbers', align: 'center'},
+
+                                {field: 'materialSpec', title: '规格', align: 'center'},
+                                {field: 'materialName', title: '品名', align: 'center'},
+                                {
+                                    field: 'materialTradeName',
+                                    title: '商品名',
+                                    align: 'center'
+                                },
+                                {field: 'unit', title: '单位', align: 'center'},
+                                {field: 'price', title: '价格', align: 'center'},
+
+                            ]]
+                        });
+                        $editable.watch('material_applicant_item_table')
+
+                    })
+                }
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+
+                    if(model.status != 1){
+                        $(".form-pass").hide()
+                        $(".form-cancel").hide()
+                    }
+
+                    window.reloadMaterialApplicantItemTable && window.reloadMaterialApplicantItemTable()
+
+                }
+
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                $(".form-pass").click(() => {
+                    layer.confirm('确定通过么', function (index) {
+                        $http.post(`/base/material_applicants/pass/` + model.id).then(resp => {
+                            if(!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        })
+                    });
+                })
+
+                $(".form-cancel").click(() => {
+                    layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
+
+                        $http.post(`/base/material_applicants/cancel/` + data.id + "/" + val).then(resp => {
+                            if (!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+                            layer.close(index)
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        })
+                    });
+                })
+
+                // 监听表单提交事件
+                /*form.on('submit(*)', (data) => {
+                        data.field = layui.$.extend({}, data.field)
+                        let promise  = $http.put("/base/material_applicants", data.field)
+
+                        promise.then(resp => {
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+                                parent.reloadTable()
+                                window.initForm($.extend(model, resp.data.data, {isNew: false}))
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+
+                        return false;
+                });*/
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(["/scripts/utils/editable.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

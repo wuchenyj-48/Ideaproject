@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Param;
 */
 @Mapper
 public interface MaterialApplicantMapper extends BaseMapper<MaterialApplicant> {
-    IPage<MaterialApplicant> page(IPage page, @Param("request")MaterialApplicantQueryRequest request);
+    IPage<MaterialApplicant> page(IPage page, @Param("request") MaterialApplicantQueryRequest request);
 
 }
     

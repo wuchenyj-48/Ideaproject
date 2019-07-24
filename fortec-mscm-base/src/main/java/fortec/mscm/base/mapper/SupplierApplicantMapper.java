@@ -19,5 +19,7 @@ import org.apache.ibatis.annotations.Param;
 public interface SupplierApplicantMapper extends BaseMapper<SupplierApplicant> {
     IPage<SupplierApplicant> page(IPage page, @Param("request") SupplierApplicantQueryRequest request);
 
+    IPage<SupplierApplicant> pageAudit(IPage page, @Param("request") SupplierApplicantQueryRequest request);
+
 }
     

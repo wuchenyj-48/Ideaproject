@@ -29,5 +29,17 @@ public interface HospitalSupplierService extends IBaseService<HospitalSupplier> 
      */
     IPage<HospitalSupplier> pageByKeywords(HospitalSupplierQueryRequest request);
 
+    /**
+     * 将医院供应商状态设为正常
+     * @param id
+     */
+    void enable(String id);
+
+    /**
+     * 将医院供应商状态设为停用
+     * @param id
+     */
+    void disable(String id);
+
 }
     

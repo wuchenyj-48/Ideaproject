@@ -18,11 +18,17 @@ public class HospitalSupplierQueryRequest extends PageRequest {
     /** 供应商ID */
     private String supplierId;
 
+    /** 医院名称 */
     private String hospitalName;
 
+    /** 供应商名称 */
     private String supplierName;
 
+    /** 关键词搜索 */
     private String keywords;
+
+    /** 停用标志 */
+    private String inactive;
 
 
 }

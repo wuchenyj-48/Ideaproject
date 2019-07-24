@@ -4,6 +4,7 @@ package fortec.mscm.base.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.exceptions.BusinessException;
+import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
@@ -47,6 +48,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     @Override
     public IPage<SupplierApplicant> page(SupplierApplicantQueryRequest request) {
+
         return this.baseMapper.page(request.getPage(), request);
     }
 
@@ -56,36 +58,37 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         //申请表中是否存在
         SupplierApplicant applicantServiceOne = this.getOne(Wrappers.<SupplierApplicant>query()
                 .eq("hospital_id", entity.getHospitalId())
-                .eq("supplier_id", "1150667601773346818")
-                .notIn("status",SupplierApplicant.STATUS_CANCELED,SupplierApplicant.STATUS_UNSUBMIT)
+                .eq("supplier_id", "1153134446392754177")
+                .notIn("status", SupplierApplicant.STATUS_CANCELED, SupplierApplicant.STATUS_UNSUBMIT)
         );
         if (applicantServiceOne != null) {
             throw new BusinessException("不可重复申请", null);
         }
         //关系表中是否存在
-        checkExist(entity);
+        assertHasExist(entity);
+
         //供应商，单据号，单据状态
-        entity.setSupplierId("1150667601773346818")
-                .setCode("SA" + StringUtils.getRandomNum(13))
+        entity.setSupplierId("1153134446392754177")
+                .setCode(SerialUtils.generateCode("base_supplier_applicant_code"))
                 .setStatus(SupplierApplicant.STATUS_UNSUBMIT);
-        boolean save = this.saveOrUpdate(entity);
-        return save;
+        return this.saveOrUpdate(entity);
     }
 
     @Override
     public void submit(String id) {
         //状态是否是制单状态
         SupplierApplicant supplierApplicant = this.getById(id);
-        if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_UNSUBMIT){
+        if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_UNSUBMIT) {
             throw new BusinessException("当前状态不支持提交");
         }
+
         //关系表中是否存在
-        checkExist(supplierApplicant);
+        assertHasExist(supplierApplicant);
+
         //修改状态为提交待审核
         supplierApplicant.setStatus(SupplierApplicant.STATUS_SUBMITED);
         this.updateById(supplierApplicant);
     }
-
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -95,19 +98,21 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_SUBMITED) {
             throw new BusinessException("当前状态不支持审核");
         }
-        //关系表中是否存在
-        checkExist(supplierApplicant);
+
+        assertHasExist(supplierApplicant);
+
         //修改状态为已审核
         supplierApplicant
                 .setStatus(SupplierApplicant.STATUS_PASSED)
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
                 .setGmtAudited(new Date());
         this.updateById(supplierApplicant);
+
         //添加信息到关系表
         HospitalSupplier hospitalSupplier = new HospitalSupplier();
-        BeanUtils.copyProperties(supplierApplicant,hospitalSupplier);
+        BeanUtils.copyProperties(supplierApplicant, hospitalSupplier);
+        hospitalSupplier.setInactive(HospitalSupplier.DISABLE);
         hospitalSupplierService.save(hospitalSupplier);
-
     }
 
     @Override
@@ -125,18 +130,24 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         this.updateById(supplierApplicant);
     }
 
+    @Override
+    public IPage<SupplierApplicant> pageAudit(SupplierApplicantQueryRequest request) {
+        return this.baseMapper.pageAudit(request.getPage(), request);
+    }
+
+
     /**
      * 关系表中查找并返回
      *
      * @param entity
      * @return
      */
-    public void checkExist(SupplierApplicant entity) {
+    public void assertHasExist(SupplierApplicant entity) {
         //关系表中是否存在
         HospitalSupplier one = hospitalSupplierService.getOne(
                 Wrappers.<HospitalSupplier>query()
                         .eq("hospital_id", entity.getHospitalId())
-                        .eq("supplier_id", "1150667601773346818")
+                        .eq("supplier_id", "1153134446392754177")
         );
         if (one != null) {
             throw new BusinessException("关系已存在", null);

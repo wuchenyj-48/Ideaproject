@@ -280,8 +280,9 @@
                                     let newData = {
                                         id: tableRows[rowIndex].id,
                                         materialSpecId: checkedRows[j].id,
+                                        materialId: checkedRows[j].materialId,
                                         materialSpec: checkedRows[j].materialSpec,
-                                        materialName: checkedRows[j].materialName + Math.random().toString(),
+                                        materialName: checkedRows[j].materialName,
                                         materialTradeName: checkedRows[j].materialTradeName,
                                         price: checkedRows[j].price,
                                         unit: checkedRows[j].unit
@@ -290,7 +291,8 @@
                                     // 重新渲染单行数据
                                     layui.table.renderSpecRow('material_applicant_item_table', rowIndex, newData)
                                 }
-                                if (newFlag) {
+                                if(newFlag){
+                                    // 当有新增行数时，表格会被重载，需重新进行选择渲染
                                     window.renderSpecSelect()
                                 }
                             }
@@ -366,14 +368,14 @@
                     if ($strings.isBlank(data.field.id)) {
                         promise = $http.post("/base/material_applicants/saveHospital", data.field)
                     } else {
-                        promise = $http.put("/base/material_applicants/saveHospital", data.field)
+                        promise = $http.put("/base/material_applicants", data.field)
                     }
 
                     promise.then(resp => {
                         if (resp.data.success) {
                             layer.msg(resp.data.msg, {icon: 1})
                             parent.reloadTable()
-                            window.initForm($.extend(model, {id: resp.data.data.id, isNew: false}))
+                            window.initForm($.extend(model, resp.data.data, {isNew: false}))
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }

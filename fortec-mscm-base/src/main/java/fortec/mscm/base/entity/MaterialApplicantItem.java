@@ -25,11 +25,14 @@ public class MaterialApplicantItem extends DataEntity  implements Serializable {
 
     /** 主表ID */
     @NotNull(message="主表ID不能为空")
-    private Long applicantId;
+    private String applicantId;
 
     /** 商品规格ID */
     @NotNull(message="商品规格ID不能为空")
-    private Long materialSpecId;
+    private String materialSpecId;
+
+    /** 商品ID。商品规格选择后自动赋值 */
+    private String materialId;
 
     /**商品规格*/
     @TableField(exist = false)
@@ -37,7 +40,7 @@ public class MaterialApplicantItem extends DataEntity  implements Serializable {
 
     /**价格*/
     @TableField(exist = false)
-    private String price;
+    private Double price;
 
     /**单价*/
     @TableField(exist = false)

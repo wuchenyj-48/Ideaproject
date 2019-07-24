@@ -4,6 +4,7 @@
     <select id="pageByKeywords" resultType="fortec.mscm.base.entity.MaterialSpec">
         select
             ms.id ,
+            ms.material_id,
             ms.material_spec,
             ms.price,
             ms.unit,

@@ -2,6 +2,7 @@
 
 package fortec.mscm.base.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
 import lombok.Data;
@@ -25,15 +26,15 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
 
     /** 医院标识 */
     @NotNull(message="医院标识不能为空")
-    private Long hospitalId;
+    private String hospitalId;
 
     /** 商品ID */
     @NotNull(message="商品ID不能为空")
-    private Long materialId;
+    private String materialId;
 
     /** 商品规格ID */
     @NotNull(message="商品规格ID不能为空")
-    private Long materialSpecId;
+    private String materialSpecId;
 
     /** 商品编码 */
     @Length(max=20, message="商品编码长度必须介于 0 和 20 之间")
@@ -48,7 +49,7 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
     private String materialTradeName;
 
     /** 价格 */
-    private Long price;
+    private Double price;
 
     /** 最小请领单位 */
     @Length(max=20, message="最小请领单位长度必须介于 0 和 20 之间")
@@ -67,6 +68,17 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
     /** 停用标志 */
     @NotNull(message="停用标志不能为空")
     private Integer inactive;
+
+    /**医院名称*/
+    @TableField(exist = false)
+    private String hospitalName;
+
+    /**商品规格*/
+    @TableField(exist = false)
+    private String materialSpec;
+
+    public static final int ACTIVATE = 0;
+    public static final int DEACTIVATE = 1;
 
 }
     

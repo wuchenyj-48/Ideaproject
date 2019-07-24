@@ -47,6 +47,7 @@ public class SupplierApplicantController extends BaseController {
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
+
     @GetMapping("/list")
     public CommonResult list(SupplierApplicantQueryRequest request) {
         List<SupplierApplicant> list = supplierApplicantService.list(request);
@@ -83,6 +84,12 @@ public class SupplierApplicantController extends BaseController {
     public CommonResult cancel(@PathVariable("id") String id,@PathVariable("auditedRemark") String auditedRemark){
         supplierApplicantService.cancel(id,auditedRemark);
         return CommonResult.ok("取消成功");
+    }
+
+    @GetMapping("/pageAudit")
+    public PageResult pageAudit(SupplierApplicantQueryRequest request) {
+        IPage page = supplierApplicantService.pageAudit(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
 }

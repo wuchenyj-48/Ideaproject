@@ -17,6 +17,9 @@
             <if test="request.supplierName != null and request.supplierName != ''">
                 and s.name like concat('%',#{request.supplierName},'%')
             </if>
+            <if test="request.inactive != null">
+                and hs.inactive = #{request.inactive}
+            </if>
         </where>
         order by hs.gmt_modified desc
     </select>

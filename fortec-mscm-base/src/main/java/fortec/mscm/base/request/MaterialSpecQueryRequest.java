@@ -12,6 +12,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class MaterialSpecQueryRequest extends PageRequest {
 
+    private String materialId;
+
+
     /** 规格 */
     private String materialSpec;
 

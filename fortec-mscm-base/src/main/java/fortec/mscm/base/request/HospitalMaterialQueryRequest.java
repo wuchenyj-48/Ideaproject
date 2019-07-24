@@ -25,6 +25,14 @@ public class HospitalMaterialQueryRequest extends PageRequest {
     /** 停用标志 */
     private Integer inactive;
 
+    /**医院名称*/
+    private String hospitalName;
+
+    /**商品规格*/
+    private String materialSpec;
+
+    /**商品价格*/
+    private Double price;
 
 }
     

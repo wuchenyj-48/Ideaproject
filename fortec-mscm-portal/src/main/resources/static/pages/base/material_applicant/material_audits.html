@@ -1,5 +1,3 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -13,16 +11,11 @@
                     <div class="layui-card">
                         <div class="layui-card-header">供货资格审核</div>
                         <div class="layui-card-body">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                                <i class="layui-icon layui-icon-add-1"></i> 新增
-                            </button>
+
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
+
                                 <div class="layui-input-inline">
-                                    <input type="text" name="hospitalId" placeholder="请输入医院ID" autocomplete="off"
-                                           class="layui-input">
-                                </div>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="supplierId" placeholder="请输入供应商ID" autocomplete="off"
+                                    <input type="text" name="supplierName" placeholder="请输入供应商名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
@@ -30,8 +23,9 @@
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="status" placeholder="请输入单据状态" autocomplete="off"
-                                           class="layui-input">
+                                    <select name="status">
+                                        <option value="">请选择单据状态</option>
+                                    </select>
                                 </div>
 
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
@@ -61,8 +55,8 @@
         </script>
 
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">查看</a>
+
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -87,26 +81,40 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-
-                        { field: 'code', title: '单据号', align: 'center'},
-                        { field: 'supplierId', title: '供应商ID', align: 'center'},
-                        { field: 'remark', title: '申请说明', align: 'center'},
-                        { field: 'status', title: '单据状态', align: 'center'},
-                        { field: 'gmtAudited', title: '审核时间', align: 'center'},
-                        { field: 'auditor', title: '审核人', align: 'center'},
-                        { field: 'auditedRemark', title: '审核备注', align: 'center'},
-                        {field: "LAY_CELL_TOOL_BAR", title: '操作', toolbar: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                        {field: 'code', title: '单据号', align: 'center'},
+                        {field: 'supplierName', title: '供应商名称', align: 'center'},
+                        {field: 'remark', title: '申请说明', align: 'center'},
+                        {
+                            field: 'status', title: '单据状态', align: 'center',
+                            templet(item) {
+                                return `<div>${$global.getDictLabel('base_supplier_applicant_status', item.status)}</div>`;
+                            }
+                        },
+                        {field: 'gmtAudited', title: '审核时间', align: 'center'},
+                        {field: 'auditor', title: '审核人', align: 'center'},
+                        {field: 'auditedRemark', title: '审核备注', align: 'center'},
+                        {
+                            field: "LAY_CELL_TOOL_BAR",
+                            title: '操作',
+                            toolbar: '#cellToolbar',
+                            width: 150,
+                            align: 'center',
+                            fixed: 'right'
+                        }
                     ]]
                 });
 
-                 // 渲染下拉框 数据
+                // 渲染下拉框 数据
+                $global.getDictDataList('base_supplier_applicant_status').forEach(o => {
+                    $("select[name='status']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
                 form.render('select')
 
                 window.edit = (data) => {
                     let index = layer.open({
                         type: 2,
                         area: ['950px', '400px'],
-                        content: ['./material_applicant_form.html'],
+                        content: ['./material_audit_form.html'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
@@ -122,6 +130,34 @@
                             layer.msg(resp.data.msg, {icon: 1})
                             table.reload('listTable')
 
+                            layer.close(index)
+                        })
+                    });
+                }
+
+                window.pass = (data) => {
+                    layer.confirm('确定通过么', function (index) {
+                        $http.post(`/base/material_applicants/pass/` + data.id).then(resp => {
+                            if(!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+                        })
+                    });
+                }
+
+                window.cancel = (data) => {
+                    layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
+
+                        $http.post(`/base/material_applicants/cancel/` + data.id + "/" + val).then(resp => {
+                            if (!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
                             layer.close(index)
                         })
                     });

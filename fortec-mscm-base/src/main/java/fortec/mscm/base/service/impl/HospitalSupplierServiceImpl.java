@@ -11,6 +11,7 @@ import fortec.mscm.base.request.HospitalSupplierQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,5 +45,43 @@ public class HospitalSupplierServiceImpl extends BaseServiceImpl<HospitalSupplie
     public IPage<HospitalSupplier> pageByKeywords(HospitalSupplierQueryRequest request) {
         return this.baseMapper.pageByKeywords(request.getPage(),request);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void enable(String id) {
+        HospitalSupplier hs = this.getById(id);
+        if (hs == null) {
+            return;
+        }
+
+        //当前状态是否是停用状态
+        if (hs.getInactive() != HospitalSupplier.DISABLE) {
+            return;
+        }
+
+        //修改状态为正常状态
+        hs.setInactive(HospitalSupplier.ENABLE);
+        this.updateById(hs);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void disable(String id) {
+        HospitalSupplier hs = this.getById(id);
+        if (hs == null) {
+            return;
+        }
+
+        //当前状态是否是正常状态
+        if (hs.getInactive() != HospitalSupplier.ENABLE) {
+            return;
+        }
+
+        //修改状态为停用状态
+        hs.setInactive(HospitalSupplier.DISABLE);
+        this.updateById(hs);
+    }
+
+
 }
     

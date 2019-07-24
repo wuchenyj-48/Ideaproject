@@ -15,6 +15,7 @@
         <module>fortec-mscm-portal</module>
         <module>fortec-mscm-base</module>
         <module>fortec-mscm-gateway</module>
+        <module>fortec-mscm-tm</module>
     </modules>
 
     <properties>

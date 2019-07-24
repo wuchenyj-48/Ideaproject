@@ -2,13 +2,10 @@
 package fortec.mscm.base.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import fortec.common.core.exceptions.BusinessException;
+import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
-import fortec.common.core.utils.StringUtils;
-import fortec.common.feign.clients.OfficeClient;
-import fortec.common.feign.dto.OfficeDTO;
 import fortec.mscm.base.entity.Supplier;
 import fortec.mscm.base.entity.SupplierRegist;
 import fortec.mscm.base.mapper.SupplierRegistMapper;
@@ -35,14 +32,9 @@ import java.util.Date;
 public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMapper, SupplierRegist> implements SupplierRegistService {
 
     @Autowired
-    private SupplierService supplierService;
-
-
-    @Autowired
-    private OfficeClient officeClient;
+    SupplierService supplierService;
 
     @Transactional(rollbackFor = Exception.class)
-    @LcnTransaction
     @Override
     public void pass(String id) {
 
@@ -74,16 +66,15 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
                 .setPinyin(PinYinUtils.getAlpha(supplier.getName()))
                 .setContactor(regist.getApplicant())
                 .setEmail(regist.getApplicantEmail())
-                .setCode("S" + StringUtils.getRandomNum(6))
+                .setCode(SerialUtils.generateCode("base_supplier_code"))
                 .setId(null);
+
+
         supplierService.save(supplier);
 
 
         // TODO 添加正式机构 和 用户
-        OfficeDTO office = new OfficeDTO();
-        office.setCode(supplier.getCode());
-        office.setName(supplier.getName());
-        officeClient.addOffice(office);
+
     }
 
     @Override

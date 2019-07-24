@@ -60,9 +60,21 @@ public class HospitalSupplierController extends BaseController {
 
     @GetMapping("/page_by_keywords")
     public CommonResult pageByKeywords(HospitalSupplierQueryRequest request){
-        request.setSupplierId("1150667601773346818");
+        request.setSupplierId("1153134446392754177");
         IPage<HospitalSupplier> page = hospitalSupplierService.pageByKeywords(request);
         return PageResult.ok("", page.getRecords(),page.getTotal());
+    }
+
+    @PostMapping("enable/{id}")
+    public CommonResult enable(@PathVariable("id") String id){
+        hospitalSupplierService.enable(id);
+        return CommonResult.ok("启用成功");
+    }
+
+    @PostMapping("disable/{id}")
+    public CommonResult disable(@PathVariable("id") String id){
+        hospitalSupplierService.disable(id);
+        return CommonResult.ok("停用成功");
     }
 
 }
