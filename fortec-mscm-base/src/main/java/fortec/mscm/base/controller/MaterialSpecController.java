@@ -21,11 +21,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
-* 商品规格 controller
-*
-* @author chenchen
-* @version 1.0
-*/
+ * 商品规格 controller
+ *
+ * @author chenchen
+ * @version 1.0
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/material_specs")
@@ -49,10 +49,10 @@ public class MaterialSpecController extends BaseController {
     @GetMapping("/page")
     public PageResult page(MaterialSpecQueryRequest request) {
         IPage page = materialSpecService.page(request.getPage(), Wrappers.<MaterialSpec>query()
-                    .like(StringUtils.isNotBlank(request.getMaterialSpec()), "material_spec", request.getMaterialSpec())
-                    .between(request.getBeginPrice() != null && request.getEndPrice() != null, "price", request.getBeginPrice(), request.getEndPrice())
-                     .orderByDesc("gmt_modified")
-                );
+                .like(StringUtils.isNotBlank(request.getMaterialSpec()), "material_spec", request.getMaterialSpec())
+                .between(request.getBeginPrice() != null && request.getEndPrice() != null, "price", request.getBeginPrice(), request.getEndPrice())
+                .orderByDesc("gmt_modified")
+        );
 
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
@@ -60,8 +60,10 @@ public class MaterialSpecController extends BaseController {
     @GetMapping("/list")
     public CommonResult list(MaterialSpecQueryRequest request) {
         List<MaterialSpec> list = materialSpecService.list(Wrappers.<MaterialSpec>query()
+                .and(StringUtils.isNotBlank(request.getMaterialId()), q -> q.eq("material_id", request.getMaterialId()))
                 .like(StringUtils.isNotBlank(request.getMaterialSpec()), "material_spec", request.getMaterialSpec())
-                .between(request.getBeginPrice() != null && request.getEndPrice() != null, "price", request.getBeginPrice(), request.getEndPrice())
+                        .between(request.getBeginPrice() != null && request.getEndPrice() != null, "price", request.getBeginPrice(), request.getEndPrice())
+
                 .orderByDesc("gmt_modified")
         );
         return CommonResult.ok("查询成功", list);

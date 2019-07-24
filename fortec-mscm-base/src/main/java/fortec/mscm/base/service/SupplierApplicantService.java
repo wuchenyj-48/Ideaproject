@@ -2,19 +2,20 @@
 package fortec.mscm.base.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import fortec.common.core.service.IBaseService;
 import fortec.mscm.base.entity.SupplierApplicant;
 import fortec.mscm.base.request.SupplierApplicantQueryRequest;
+
+import fortec.common.core.service.IBaseService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
-* SupplierApplicant service 接口
-*
-* @author chenchen
-* @version 1.0
-*/
+ * SupplierApplicant service 接口
+ *
+ * @author chenchen
+ * @version 1.0
+ */
 public interface SupplierApplicantService extends IBaseService<SupplierApplicant> {
 
     List<SupplierApplicant> list(SupplierApplicantQueryRequest request);
@@ -39,6 +40,7 @@ public interface SupplierApplicantService extends IBaseService<SupplierApplicant
      * 医院审核
      * @param id
      */
+    @Transactional
     void pass(String id);
 
     /**
@@ -48,6 +50,13 @@ public interface SupplierApplicantService extends IBaseService<SupplierApplicant
      */
     @Transactional
     void cancel(String id,String auditedRemark);
+
+    /**
+     * 审核页
+     * @param request
+     * @return
+     */
+    IPage<SupplierApplicant> pageAudit(SupplierApplicantQueryRequest request);
 
 }
     

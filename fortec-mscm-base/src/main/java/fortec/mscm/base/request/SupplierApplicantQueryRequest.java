@@ -19,5 +19,8 @@ public class SupplierApplicantQueryRequest extends PageRequest {
     private Integer status;
 
 
+    /** 排除状态，多个以 , 隔开 */
+    private String excludeStatus;
+
 }
     

@@ -204,7 +204,7 @@
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="inputCodingTypeTpl">
-            <select data-name="inputCodingType " lay-verify="number|required"
+            <select data-name="inputCodingType" lay-verify="number|required"
                     value="{{d.inputCodingType ? d.inputCodingType : ''}}"
                     lay-filter="inputCodingType" data-index="{{d.LAY_TABLE_INDEX}}">
                 {{# $global.getDictDataList('base_input_coding_type').forEach(o => { }}
@@ -215,7 +215,7 @@
         </script>
         <script type="text/html" id="inputCodeTpl">
             <input type="text" data-name="inputCode" value="{{d.inputCode ? d.inputCode : ''}}" lay-filter="inputCode"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="require" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="formTpl">
@@ -504,7 +504,9 @@
 
                 /*** 子表管理开始 */
                 $("#materialSpecToolbar button[lay-event='addNewLine']").click(() => {
-                    layui.table.addRow('material_spec_table', 0, {})
+                    layui.table.addRow('material_spec_table', 0, {
+                        inputCodingType: 0
+                    })
                     form.render('select')
                 })
 
@@ -609,7 +611,7 @@
                             layer.msg(resp.data.msg, {icon: 1})
                             parent.reloadTable()
 
-                            window.initForm($.extend(model, {id: resp.data.data.id, isNew: false}))
+                            window.initForm($.extend(model ,resp.data.data,{isNew: false}))
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }

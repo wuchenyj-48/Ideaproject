@@ -62,9 +62,16 @@ public class MaterialApplicant extends DataEntity  implements Serializable {
     @TableField(exist = false)
     private String supplierName;
 
+    /**制单状态*/
     public static final int STATUS_UNSUBMIT = 0;
+
+    /**提交待审核状态*/
     public static final int STATUS_SUBMITED = 1;
+
+    /**通过状态*/
     public static final int STATUS_PASSED = 2;
+
+    /**取消状态*/
     public static final int STATUS_CANCELED = 3;
 
 }

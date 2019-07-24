@@ -14,8 +14,27 @@
             <if test="request.code != null and request.code != ''">
                 and sa.code like concat( '%', #{request.code}, '%')
             </if>
-            <if test="request.status != null and request.status != ''">
-                and sa.status like concat('%',#{request.status},'%')
+            <if test="request.status != null">
+                and sa.status = #{request.status}
+            </if>
+        </where>
+        order by sa.gmt_modified desc
+    </select>
+    <select id="pageAudit" resultType="fortec.mscm.base.entity.SupplierApplicant">
+        select
+        sa.*,
+        h.name as hospital_name,
+        s.name as supplier_name
+        from
+        supplier_applicant sa
+        left join hospital h on sa.hospital_id = h.id
+        left join supplier s on sa.supplier_id = s.id
+        <where>
+            <if test="request.code != null and request.code != ''">
+                and sa.code like concat( '%', #{request.code}, '%')
+            </if>
+            <if test="request.status != null">
+                and sa.status = #{request.status}
             </if>
         </where>
         order by sa.gmt_modified desc

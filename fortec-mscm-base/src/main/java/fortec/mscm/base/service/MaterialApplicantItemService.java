@@ -19,7 +19,6 @@ public interface MaterialApplicantItemService extends IBaseService<MaterialAppli
 
     List<MaterialApplicantItem> list(MaterialApplicantItemQueryRequest request);
 
-
     IPage<MaterialApplicantItem> page(MaterialApplicantItemQueryRequest request);
 
 }

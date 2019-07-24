@@ -4,6 +4,7 @@
     <select id="list" resultType="fortec.mscm.base.entity.MaterialApplicantItem">
         select
             mai.*,
+            ms.material_id,
             ms.material_spec,
             ms.price,
             ms.unit,

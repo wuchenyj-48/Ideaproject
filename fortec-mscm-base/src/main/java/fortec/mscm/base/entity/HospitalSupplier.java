@@ -34,11 +34,16 @@ public class HospitalSupplier extends DataEntity  implements Serializable {
     @Length(min=1, max=20, message="供应商ID长度必须介于 1 和 20 之间")
     private String supplierId;
 
+    private Integer inactive;
+
     @TableField(exist = false)
     private String hospitalName;
 
     @TableField(exist = false)
     private String supplierName;
+
+    public static final int ENABLE = 0;
+    public static final int DISABLE = 1;
 
 }
     

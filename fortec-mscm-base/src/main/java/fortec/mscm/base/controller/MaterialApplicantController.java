@@ -63,7 +63,25 @@ public class MaterialApplicantController extends BaseController {
     @PostMapping("/saveHospital")
     public CommonResult saveHospital(@RequestBody @Valid MaterialApplicant entity) {
         boolean bSave = materialApplicantService.saveHospital(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
+        return bSave ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
+    }
+
+    @PostMapping("/submit/{id}")
+    public CommonResult submit(@PathVariable("id") String id){
+        materialApplicantService.submit(id);
+        return CommonResult.ok("提交成功");
+    }
+
+    @PostMapping("/pass/{id}")
+    public CommonResult pass(@PathVariable("id") String id){
+        materialApplicantService.pass(id);
+        return CommonResult.ok("审核通过");
+    }
+
+    @PostMapping("/cancel/{id}/{reason}")
+    public CommonResult cancel(@PathVariable("id") String id,@PathVariable("reason") String reason){
+        materialApplicantService.cancel(id,reason);
+        return CommonResult.ok("取消成功");
     }
 
 }

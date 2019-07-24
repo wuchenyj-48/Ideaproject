@@ -27,7 +27,7 @@ public class MaterialSpec extends DataEntity  implements Serializable {
 
     /** 商品ID */
     @NotNull(message="商品ID不能为空")
-    private Long materialId;
+    private String materialId;
 
     /** 规格 */
     @NotBlank(message="规格不能为空")

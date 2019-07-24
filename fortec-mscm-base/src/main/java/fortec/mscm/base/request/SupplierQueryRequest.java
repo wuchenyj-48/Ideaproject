@@ -28,5 +28,6 @@ public class SupplierQueryRequest extends PageRequest {
     private Integer isReagent;
 
 
+
 }
     

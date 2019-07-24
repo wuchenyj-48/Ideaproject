@@ -1,5 +1,3 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -14,16 +12,14 @@
                     <div class="layui-card">
                         <div class="layui-card-header">供货关系管理</div>
                         <div class="layui-card-body">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                                <i class="layui-icon layui-icon-add-1"></i> 新增
-                            </button>
+
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
-                                    <input type="text" name="hospitalId" placeholder="请输入医院标识" autocomplete="off"
+                                    <input type="text" name="hospitalName" placeholder="请输入医院名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="materialName" placeholder="请输入商品名称" autocomplete="off"
+                                    <input type="text" name="materialSpec" placeholder="请输入商品规格" autocomplete="off"
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
@@ -54,17 +50,9 @@
             </div>
         </div>
 
-        <script type="text/html" id="headToolbar">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                    <i class="layui-icon layui-icon-add-1"></i>添加
-                </button>
-            </div>
-        </script>
-
-        <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <script type="text/html" id="inactiveTpl">
+            <input type="checkbox" name="inactive" data-id="{{d.id}}" value="{{d.inactive}}" lay-skin="switch" lay-text="正常|停用"
+                   lay-filter="inactive" {{ d.id== 0 ? 'checked' : '' }}>
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -89,33 +77,40 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-                        { field: 'hospitalId', title: '医院标识', align: 'center'},
-                        { field: 'materialId', title: '商品ID', align: 'center'},
-                        { field: 'materialSpecId', title: '商品规格ID', align: 'center'},
-                        { field: 'materialCode', title: '商品编码', align: 'center'},
-                        { field: 'materialName', title: '商品名称', align: 'center'},
-                        { field: 'materialTradeName', title: '商品通用名', align: 'center'},
-                        { field: 'price', title: '价格', align: 'center'},
-                        { field: 'miniumRequestUnit', title: '最小请领单位', align: 'center'},
-                        { field: 'miniumRequestQty', title: '最小请领单位数量', align: 'center'},
-                        { field: 'miniumOrderUnit', title: '最小订单单位', align: 'center'},
-                        { field: 'miniumOrderQty', title: '最小订单单位数量', align: 'center'},
-                        {
-                            field: 'inactive', title: '停用标志', align: 'center',
-                            templet(item) {
-                                return `<div>${$global.getDictLabel('common_inactive', item.inactive)}</div>`;
-                            }
-                        },
-                        { field: 'gmtModified', title: '修改时间', align: 'center'},
-                        {field: "LAY_CELL_TOOL_BAR", title: '操作', toolbar: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                        {field: 'hospitalName', title: '医院名称', align: 'center'},
+                        {field: 'materialTradeName', title: '商品通用名称', align: 'center'},
+                        {field: 'materialSpec', title: '商品规格', align: 'center'},
+                        {field: 'materialCode', title: '商品编码', align: 'center'},
+                        {field: 'materialName', title: '商品院内名称', align: 'center'},
+                        {field: 'price', title: '价格', align: 'center'},
+                        {field: 'miniumRequestUnit', title: '最小请领单位', align: 'center'},
+                        {field: 'miniumRequestQty', title: '最小请领单位数量', align: 'center'},
+                        {field: 'miniumOrderUnit', title: '最小订单单位', align: 'center'},
+                        {field: 'miniumOrderQty', title: '最小订单单位数量', align: 'center'},
+                        {field: 'inactive', title: '停用标志', align: 'center', templet: "#inactiveTpl"},
+                        {field: 'gmtModified', title: '修改时间', align: 'center'}
                     ]]
                 });
 
-                 // 渲染下拉框 数据
+                // 渲染下拉框 数据
                 $global.getDictDataList('common_inactive').forEach(o => {
                     $("select[name='inactive']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
                 form.render('select')
+
+                form.on('switch(inactive)', function (obj) {
+                    let id = layui.$(this).attr("data-id")
+                    if (obj.elem.checked) {
+                        $http.post(`/base/hospital_materials/active/` + id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                        })
+                    }
+                    if (!obj.elem.checked) {
+                        $http.post(`/base/hospital_materials/deactive/` + id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                        })
+                    }
+                });
 
                 window.edit = (data) => {
                     layer.open({
@@ -136,8 +131,7 @@
 
                         $http.delete(`/base/hospital_materials/` + data.id).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
-                            table.reload('listTable')
-
+                            window.reloadTable();
                             layer.close(index)
                         })
                     });
@@ -159,13 +153,6 @@
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
 
-
-                layui.$(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({isNew: true});
-                    }
-                });
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
