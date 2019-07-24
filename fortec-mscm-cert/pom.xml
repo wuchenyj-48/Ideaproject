@@ -9,15 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fortec-mscm-base</artifactId>
-
-    <properties>
-        <druid.version>1.1.10</druid.version>
-        <mysql.version>8.0.16</mysql.version>
-
-
-    </properties>
-
+    <artifactId>fortec-mscm-cert</artifactId>
 
     <dependencies>
 
@@ -112,6 +104,7 @@
 
 
         <!-- springcloud end -->
+
 
 
         <!-- spring security begin     resource server must have -->
@@ -213,13 +206,13 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>27.1-jre</version>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.58</version>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
