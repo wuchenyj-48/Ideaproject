@@ -8,6 +8,8 @@ logging:
 
 
 spring:
+  application:
+    name: fortec-mscm-cert
   profiles:
     active: dev
   sleuth:
@@ -124,4 +126,6 @@ tx-lcn:
     jdbc-url: jdbc:mysql://mysql.forten-tech.com:3366/common-tm?useUnicode=true&autoReconnect=true&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
     username: root
     password: 34821015
+    max-pool-size: 10
+
 

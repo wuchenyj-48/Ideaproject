@@ -8,6 +8,8 @@ logging:
 
 
 spring:
+  application:
+    name: fortec-mscm-base
   profiles:
     active: dev
   sleuth:

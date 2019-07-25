@@ -2,20 +2,17 @@
 
 package fortec.mscm.base.entity;
 
-import java.io.Serializable;
-
-import fortec.common.core.model.DataEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
-
+import fortec.common.core.model.DataEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 /**
 * 供应商实体对象
 * @author chenchen
@@ -26,6 +23,10 @@ import javax.validation.constraints.NotNull;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 public class Supplier extends DataEntity  implements Serializable {
+
+    /** 机构ID */
+    @NotBlank(message="组织机构不能为空")
+    private String officeId;
 
     /** 识别码 */
     @NotBlank(message="识别码不能为空")

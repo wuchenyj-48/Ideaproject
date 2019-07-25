@@ -10,6 +10,7 @@ import fortec.common.core.mvc.controller.BaseController;
 import fortec.common.core.utils.StringUtils;
 
 import fortec.mscm.base.entity.SupplierRegist;
+import fortec.mscm.base.request.SupplierRegistCancelRequest;
 import fortec.mscm.base.request.SupplierRegistQueryRequest;
 import fortec.mscm.base.service.SupplierRegistService;
 
@@ -20,11 +21,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
-*  controller
-*
-* @author chenchen
-* @version 1.0
-*/
+ * controller
+ *
+ * @author chenchen
+ * @version 1.0
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/supplier_regists")
@@ -48,14 +49,14 @@ public class SupplierRegistController extends BaseController {
     @GetMapping("/page")
     public PageResult page(SupplierRegistQueryRequest request) {
         IPage page = supplierRegistService.page(request.getPage(), Wrappers.<SupplierRegist>query()
-                    .like(StringUtils.isNotBlank(request.getCompanyCode()), "company_code", request.getCompanyCode())
-                    .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
-                    .eq(request.getIsDrug() != null, "is_drug", request.getIsDrug())
-                    .eq(request.getIsConsumable() != null, "is_consumable", request.getIsConsumable())
-                    .eq(request.getIsReagent() != null, "is_reagent", request.getIsReagent())
-                    .eq(request.getAstatus() != null, "audit_status", request.getAstatus())
-                     .orderByDesc("gmt_modified")
-                );
+                .like(StringUtils.isNotBlank(request.getCompanyCode()), "company_code", request.getCompanyCode())
+                .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
+                .eq(request.getIsDrug() != null, "is_drug", request.getIsDrug())
+                .eq(request.getIsConsumable() != null, "is_consumable", request.getIsConsumable())
+                .eq(request.getIsReagent() != null, "is_reagent", request.getIsReagent())
+                .eq(request.getAstatus() != null, "audit_status", request.getAstatus())
+                .orderByDesc("gmt_modified")
+        );
 
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
@@ -80,15 +81,15 @@ public class SupplierRegistController extends BaseController {
         return bSave ? CommonResult.ok("注册成功", entity) : CommonResult.error("注册失败");
     }
 
-    @PostMapping("/audit/{id}")
-    public CommonResult audit(@PathVariable("id")String id) {
+    @PostMapping("/pass/{id}")
+    public CommonResult pass(@PathVariable("id") String id) {
         supplierRegistService.pass(id);
         return CommonResult.ok("审核通过");
     }
 
-    @PostMapping("/cancel/{id}/{reason}")
-    public CommonResult cancel(@PathVariable("id") String id,@PathVariable("reason") String reason) {
-        supplierRegistService.cancel(id,reason);
+    @PostMapping("/cancel/{id}")
+    public CommonResult cancel(@PathVariable("id") String id, @RequestBody SupplierRegistCancelRequest request) {
+        supplierRegistService.cancel(id, request.getReason());
         return CommonResult.ok("取消成功");
     }
 

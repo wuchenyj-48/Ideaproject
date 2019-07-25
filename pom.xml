@@ -40,6 +40,8 @@
 
         <guava.version>27.1-jre</guava.version>
 
+        <xxljob.version>2.1.0</xxljob.version>
+
         <fortec.common.version>1.0.2-SNAPSHOT</fortec.common.version>
     </properties>
 
