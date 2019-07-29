@@ -17,6 +17,7 @@
         <module>fortec-mscm-gateway</module>
         <module>fortec-mscm-tx-manager</module>
         <module>fortec-mscm-cert</module>
+        <module>fortec-mscm-doc</module>
     </modules>
 
     <properties>
