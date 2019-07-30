@@ -9,6 +9,7 @@ import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
+import fortec.mscm.base.consts.CommonConsts;
 import fortec.mscm.base.entity.*;
 import fortec.mscm.base.mapper.MaterialApplicantMapper;
 import fortec.mscm.base.request.MaterialApplicantQueryRequest;
@@ -71,14 +72,12 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean saveHospital(MaterialApplicant entity) {
-        //申请表中已存在
 
         //供应商id，单据号，单据状态，医院id
-        entity.setSupplierId("1153134446392754177")
+        entity.setSupplierId(CommonConsts.SUPPLIER_ID)
                 .setCode(SerialUtils.generateCode("base_material_applicant_code"))
                 .setStatus(MaterialApplicant.STATUS_UNSUBMIT);
         return this.save(entity);
-
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -87,7 +86,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         //当前状态是否为制单状态
         MaterialApplicant ma = this.getById(id);
         if (ma.getStatus() != MaterialApplicant.STATUS_UNSUBMIT) {
-            throw new BusinessException("当前状态不适合提交");
+            throw new BusinessException("当前状态不是制单状态");
         }
 
         //商品明细是否为空
@@ -115,7 +114,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         // 当前状态是否为提交待审核
         MaterialApplicant ma = this.getById(id);
         if (ma.getStatus() != MaterialApplicant.STATUS_SUBMITED) {
-            throw new BusinessException("当前状态不适合审核");
+            throw new BusinessException("当前状态不是待审核状态");
         }
 
         // 医院商品表中是否已存在
@@ -171,7 +170,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         //当前状态是否为提交待审核
         MaterialApplicant ma = this.getById(id);
         if (ma.getStatus() != MaterialApplicant.STATUS_SUBMITED){
-            throw new BusinessException("当前状态不适合取消");
+            throw new BusinessException("当前状态不是待审核状态");
         }
 
         //医院商品表中是否已存在

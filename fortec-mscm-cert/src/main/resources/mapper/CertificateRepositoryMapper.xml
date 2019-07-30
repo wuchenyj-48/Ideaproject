@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.cert.mapper.CertificateRepositoryMapper">
+    <select id="page" resultType="fortec.mscm.cert.entity.CertificateRepository">
+        select
+        cr.*,
+        c.name as certificate_name
+        from
+        certificate_repository cr
+        inner join certificate c on cr.certificate_id = c.id
+        <where>
+            <if test="request.targetDescribeId != null and request.targetDescribeId != ''">
+                and cr.target_describe_id = #{request.targetDescribeId}
+            </if>
+            <if test="request.certificateName != null and request.certificateName != ''">
+                and c.name like concat( '%', #{request.certificateName}, '%')
+            </if>
+            <if test="request.businessTypeCode != null and request.businessTypeCode != ''">
+                and cr.business_type_code = #{request.businessTypeCode}
+            </if>
+            <if test="request.certificateNo != null and request.certificateNo != ''">
+                and cr.certificate_no like concat( '%', #{request.certificateNo}, '%')
+            </if>
+            <if test="request.beginExpiryDate != null and request.beginExpiryDate != '' and request.endExpiryDate != null and request.endExpiryDate != '' ">
+                and cr.expiry_date between #{request.beginExpiryDate} and #{request.endExpiryDate}
+            </if>
+        </where>
+        order by cr.gmt_modified desc
+    </select>
+    <select id="list" resultType="fortec.mscm.cert.entity.CertificateRepository">
+        select
+        cr.*,
+        c.name as certificate_name
+        from
+        certificate_repository cr
+        inner join certificate c on cr.certificate_id = c.id
+        <where>
+            <if test="request.targetDescribeId != null and request.targetDescribeId != ''">
+                and cr.target_describe_id = #{request.targetDescribeId}
+            </if>
+            <if test="request.certificateName != null and request.certificateName != ''">
+                and c.name like concat( '%', #{request.certificateName}, '%')
+            </if>
+            <if test="request.businessTypeCode != null and request.businessTypeCode != ''">
+                and cr.business_type_code = #{request.businessTypeCode}
+            </if>
+            <if test="request.certificateNo != null and request.certificateNo != ''">
+                and cr.certificate_no like concat( '%', #{request.certificateNo}, '%')
+            </if>
+            <if test="request.beginExpiryDate != null and request.beginExpiryDate != '' and request.endExpiryDate != null and request.endExpiryDate != '' ">
+                and cr.expiry_date between #{request.beginExpiryDate} and #{request.endExpiryDate}
+            </if>
+        </where>
+        order by cr.gmt_modified desc
+    </select>
+</mapper>

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
+import fortec.mscm.base.consts.CommonConsts;
 import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.request.HospitalSupplierQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
@@ -60,7 +61,7 @@ public class HospitalSupplierController extends BaseController {
 
     @GetMapping("/page_by_keywords")
     public CommonResult pageByKeywords(HospitalSupplierQueryRequest request){
-        request.setSupplierId("1153134446392754177");
+        request.setSupplierId(CommonConsts.SUPPLIER_ID);
         IPage<HospitalSupplier> page = hospitalSupplierService.pageByKeywords(request);
         return PageResult.ok("", page.getRecords(),page.getTotal());
     }
@@ -75,6 +76,18 @@ public class HospitalSupplierController extends BaseController {
     public CommonResult disable(@PathVariable("id") String id){
         hospitalSupplierService.disable(id);
         return CommonResult.ok("停用成功");
+    }
+
+    @GetMapping("/page_for_hospital")
+    public PageResult pageForHospital(HospitalSupplierQueryRequest request) {
+        IPage page = hospitalSupplierService.pageForHospital(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
+    @GetMapping("/page_for_supplier")
+    public PageResult pageForSupplier(HospitalSupplierQueryRequest request) {
+        IPage page = hospitalSupplierService.pageForSupplier(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
 }

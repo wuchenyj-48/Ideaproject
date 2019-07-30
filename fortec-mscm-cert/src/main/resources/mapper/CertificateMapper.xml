@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.cert.mapper.CertificateMapper">
+    <select id="pageByKeywords" resultType="fortec.mscm.cert.entity.Certificate">
+        select
+        c.*
+        from
+        certificate c
+        <where>
+            <if test="request.keywords != null and request.keywords != ''">
+                and c.name like concat( '%', #{request.keywords}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.cert.mapper.CertificateHospitalBusinessMapper">
+    <select id="page" resultType="fortec.mscm.cert.entity.CertificateHospitalBusiness">
+        SELECT
+            chb.*,
+            h.name as hospital_name,
+            c.name as certificateName,
+            c.code as code,
+            c.limit_file_extension as limit_file_extension,
+            c.need_expiry_date as need_expiry_date,
+            c.maxium_file_size as maxium_file_size,
+            c.maxium_file_count as maxium_file_count
+        FROM certificate_hospital_business chb
+        INNER JOIN `mscm-base`.hospital h on chb.hospital_id = h.id
+        INNER JOIN certificate c ON chb.certificate_id = c.id
+        <where>
+            <if test="request.businessTypeCode != null and request.businessTypeCode != ''">
+                and chb.business_type_code = #{request.businessTypeCode}
+            </if>
+            <if test="request.certificateName != null and request.certificateName != ''">
+                and c.name like concat( '%', #{request.certificateName}, '%')
+            </if>
+        </where>
+        order by chb.gmt_modified desc
+    </select>
+</mapper>

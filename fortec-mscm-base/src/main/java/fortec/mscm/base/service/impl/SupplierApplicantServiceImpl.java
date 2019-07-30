@@ -8,6 +8,7 @@ import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
+import fortec.mscm.base.consts.CommonConsts;
 import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.entity.SupplierApplicant;
 import fortec.mscm.base.mapper.SupplierApplicantMapper;
@@ -58,7 +59,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         //申请表中是否存在
         SupplierApplicant applicantServiceOne = this.getOne(Wrappers.<SupplierApplicant>query()
                 .eq("hospital_id", entity.getHospitalId())
-                .eq("supplier_id", "1153134446392754177")
+                .eq("supplier_id", CommonConsts.SUPPLIER_ID)
                 .notIn("status", SupplierApplicant.STATUS_CANCELED, SupplierApplicant.STATUS_UNSUBMIT)
         );
         if (applicantServiceOne != null) {
@@ -68,7 +69,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         assertHasExist(entity);
 
         //供应商，单据号，单据状态
-        entity.setSupplierId("1153134446392754177")
+        entity.setSupplierId(CommonConsts.SUPPLIER_ID)
                 .setCode(SerialUtils.generateCode("base_supplier_applicant_code"))
                 .setStatus(SupplierApplicant.STATUS_UNSUBMIT);
         return this.saveOrUpdate(entity);
@@ -147,7 +148,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         HospitalSupplier one = hospitalSupplierService.getOne(
                 Wrappers.<HospitalSupplier>query()
                         .eq("hospital_id", entity.getHospitalId())
-                        .eq("supplier_id", "1153134446392754177")
+                        .eq("supplier_id", CommonConsts.SUPPLIER_ID)
         );
         if (one != null) {
             throw new BusinessException("关系已存在", null);
