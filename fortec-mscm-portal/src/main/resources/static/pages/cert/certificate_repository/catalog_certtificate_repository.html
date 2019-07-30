@@ -1,0 +1,167 @@
+
+    
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>商品品类管理</title>
+    </head>
+    <body>
+
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">品类资质维护</div>
+                        <div class="layui-card-body">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm layui-btn-primary refresh"  >
+                                    <i class="layui-icon layui-icon-refresh"></i>
+                                    刷新
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary open-all"  >
+                                    <i class="far fa-folder-open"></i>
+                                    全部展开
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary close-all">
+                                    <i class="far  fa-folder"></i>
+                                    全部关闭
+                                </button>
+                            </div>
+                            <table id="materialCatalogTree" lay-filter="materialCatalogTree" class="layui-table layui-form"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/scripts/utils/common.js"></script>
+
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, treeTable = layui.treeTable, $ = layui.$
+                let materialCatalogTree = treeTable.render({
+                    elem: '#materialCatalogTree',
+                    data: [],
+                    icon_key: 'name',
+                    primary_key: 'id',
+                    parent_key: 'parentId',
+                    cols: [
+                        { key: 'name', title: '品类名称', align: 'center'},
+                        {
+                            key: 'materialTypeCode',
+                            title: '商品类型',
+                            align: 'center',
+                            template(item) {
+                                return `${$global.getDictLabel('base_material_type', item.materialTypeCode)}`;
+                            }
+                        },
+                        { key: 'code', title: '品类代码', align: 'center'},
+                        { key: 'fullName', title: '品类全称', align: 'center'},
+                        { key: 'sort', title: '排序', align: 'center'},
+                        { key: 'modifier', title: '修改人', align: 'center'},
+                        { key: 'gmtModified', title: '修改时间', align: 'center'},
+                        {
+                            title: '操作',
+                            align: 'center',
+                            template(item) {
+                                if (item.level<3){
+                                    return '<a class="layui-btn layui-btn-xs" lay-filter="edit">上传资质</a>';
+                                }
+                                return ''
+
+                            }
+                        },
+                    ],
+                    end(e) {
+                        form.render();
+                    }
+                });
+
+                /**
+                 * 刷新列表数据
+                 */
+                window.reloadTable = () => {
+                    $http.get('/base/material_catalogs/list').then(resp => {
+                        // 加载列表数据
+                        materialCatalogTree.data = resp.data.data
+                        treeTable.render(materialCatalogTree)
+                    })
+                }
+
+                /**
+                 * 编辑按钮
+                 * @param data
+                 */
+                window.edit = (data) => {
+                    layer.open({
+                        title: "品类信息",
+                        type: 2,
+                        area: ['960px', '400px'],
+                        content: ['./catalog_certificate_repository_form.html', 'no'],
+                        success(layero, index) {
+                            var iframeWin = window[layero.find('iframe')[0]['name']]
+
+                            if ($strings.isNotBlank(data.parentId)) {
+                                let parentNames = materialCatalogTree.data.filter(o => o.id == data.parentId).map(o => o.name)
+                                data.parentName = parentNames.length > 0 ? parentNames[0] : ''
+                            }
+                            iframeWin && iframeWin.initForm(data)
+                            layer.full(index)
+                        }
+                    });
+                }
+
+                window.deleteById = (data) => {
+                    layer.confirm('真的删除行么', function (index) {
+                        $http.delete(`/base/material_catalogs/${data.id}`).then(resp => {
+                            layer.close(index)
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+                                window.reloadTable()
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    });
+                }
+                window.reloadTable()
+
+                // 事件监听
+                treeTable.on('tree(add)', (obj) => {
+                    window.edit({parentId: obj.item.id})
+                })
+                treeTable.on('tree(edit)', (obj) => {
+                    window.edit(obj.item)
+                })
+                treeTable.on('tree(del)', (obj) => {
+                    window.deleteById(obj.item)
+                })
+
+                $('.refresh').click(function () {
+                    window.reloadTable()
+                })
+                $('.open-all').click(function () {
+                    treeTable.openAll(materialCatalogTree);
+                })
+                $('.close-all').click(function () {
+                    treeTable.closeAll(materialCatalogTree);
+                })
+            }
+
+            /**
+             * 继承父页面所有脚本及样式
+             */
+            extendParentScriptsAndStyles(() => {
+                // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
+                loadSingleJs("/lib/treeTable.js", mainFunction)
+            })
+
+        </script>
+    </body>
+
+
+</html>
+    
+    

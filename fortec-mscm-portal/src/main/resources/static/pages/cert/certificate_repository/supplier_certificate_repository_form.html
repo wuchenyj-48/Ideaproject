@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+
+        <link href="/lib/webuploader/webuploader.css" rel="stylesheet">
+        <link href="/lib/webuploader/webuploader.support.css" rel="stylesheet">
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="certificateId" class="layui-input"/>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            资质名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="certificateName" id="certificateName" lay-verify=""
+                                   placeholder="请选择资质" readonly
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            资质编号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="certificateNo" lay-verify="" placeholder="请输入资质编号"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            签发方
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="certificateSign" lay-verify="" placeholder="请输入签发方"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            签发给
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="certificateSignTo" lay-verify="" placeholder="请输入签发给"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            有效期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="expiryDate" placeholder="请选择有效期" readonly autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs12">
+                        <label class="layui-form-label" >资质文件</label>
+                        <div class="layui-input-block">
+                            <div class="uploader uploader1">
+                                <div class="message">
+                                    文件类型限定为：png|pdf|jpg，单个文件大小不能超过2M，最多上传5个文件
+                                </div>
+                                <div class="wrapper">
+                                    <div class="file-list"></div>
+                                </div>
+                                <div class="actions-area">
+                                    <div class="actions">
+                                        <div class="filePicker action">选择图片</div>
+                                        <button class="uploadFile action upload-btn disabled">上传图片</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let model = {}
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                    }
+                }
+
+                //渲染资质
+                layui.tableSelect.render({
+                    elem: '#certificateName',	//定义输入框input对象 必填
+                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
+                    searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
+                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                        url: '/cert/certificates/page_by_keywords',
+                        cols: [[
+                            {type: 'radio'},
+                            {field: 'name', title: '资质名称'}
+                        ]]
+                    },
+                    done(elem, data) {
+                        model.certificateId = data.data.length > 0 ? data.data[0].id : null
+                        layui.each(data.data, function (index, item) {
+                            $("form input[name='certificateId']").val(model.certificateId)
+                            elem.val(item.name)
+                        })
+                    }
+                })
+
+                let wl = new WebUploaderSupport({
+                    server: "/doc/files/upload",
+                    paste: document.body,
+                    swf: '/lib/webuploader/Uploader.swf',  // swf文件所处路径
+                    accept: {
+                        extensions: 'gif,jpg,jpeg,bmp,png'
+                    },
+                    auto: true,
+                    support: {
+                        uploader: ".uploader.uploader1",  //上传区域容器选择器
+                        edit: true,
+                        fileSize: 5,  //文件总个数, -1时无限制
+                        // [{name:string, src: string, attrs: {}}]
+                        serverFiles: model.docIds == null ? [] : model.docIds.map(o => {
+                            return {
+                                src: `/doc/files/${o.fileId}`
+                            }
+                        }),
+                        errorTypeHanlder: function (type, file) {
+                            if (type == "Q_TYPE_DENIED") {
+                                layui.layer.msg(file.name + "不满足格式要求", {icon: 5});
+                            }
+                        },
+                        uploadFinished: function(){
+                            model.docIds = w1.getServerFiles().filter(o => $strings.isNotBlank(o.fileId)).map(o => o.fileId)
+                        }
+                    }
+                });
+
+
+                // 渲染下拉框 数据
+                $global.getDictDataList('cert_business_type').forEach(o => {
+                    $("select[name='businessTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                form.render('select')
+
+
+                // 渲染日期、时间 数据
+                layui.laydate.render({elem: "input[name='expiryDate']", type: 'datetime', trigger: 'click',min : 0});
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    data.field = layui.$.extend({}, data.field)
+                    let promise = null
+                    if (model.isNew) {
+                        promise = $http.post("/cert/certificate_repositorys/save_for_supplier", data.field)
+                    } else {
+                        promise = $http.post("/cert/certificate_repositorys/save_for_supplier", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (resp.data.success) {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+                            parent.layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                        } else {
+                            layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(['/lib/webuploader/webuploader.js', '/lib/webuploader/webuploader.support.js', "/lib/tableSelect.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

@@ -48,9 +48,7 @@
                                 <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="reset">
                                     <i class="layui-icon "></i> 重置
                                 </button>
-                                <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">
-                                    <i class="layui-icon "></i> 关闭
-                                </button>
+
                             </form>
                             <table id="listTable" lay-filter="listTable"></table>
                         </div>
@@ -142,6 +140,7 @@
 
                 window.edit = (data) => {
                     let index = layer.open({
+                        title: "编辑供应商信息",
                         type: 2,
                         area: ['950px', '400px'],
                         content: ['./supplier_form.html'],
@@ -169,11 +168,6 @@
                     $("form input:hidden").val('')
                 })
 
-                // 监听界面重置
-                $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                })
                 // 监听表单提交事件
                 layui.form.on('submit(list)', (data) => {
                     window.reloadTable()

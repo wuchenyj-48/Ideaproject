@@ -18,9 +18,10 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:5001/eureka/
 
 zuul:
+  socket-timeout-millis: 10000
+  connect-timeout-millis: 5000
   # 以下请求头不传递到下游服务器，默认 "Cookie", "Set-Cookie", "Authorization"
   sensitive-headers:
-    - Cookie
     - Set-Cookie
   ignored-patterns:
     - /**.html
@@ -52,9 +53,17 @@ zuul:
     upms-service:
       path: /upms/**
       serviceId: fortec-common-upms
+    doc-service:
+      path: /doc/**
+      serviceId: fortec-common-doc
     base-service:
       path: /base/**
       serviceId: fortec-mscm-base
+    cert-service:
+      path: /cert/**
+      serviceId: fortec-mscm-cert
 ribbon:
   eureka:
     enabled: true
+  # 默认5秒
+  ReadTimeout: 10000
