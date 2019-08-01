@@ -14,7 +14,7 @@
     <body>
         <div class="layui-fluid" id="app">
 
-            <form class="layui-form" id="editForm" lay-filter="editForm">
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
                 <input type="hidden" name="parentId" class="layui-input"/>
 

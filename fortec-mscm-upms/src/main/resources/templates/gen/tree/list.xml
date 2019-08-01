@@ -103,6 +103,7 @@
                  */
                 window.edit = (data) => {
                     layer.open({
+                        title: "编辑${functionName}",
                         type: 2,
                         area: ['960px', '400px'],
                         content: ['./${uncamelClassName}_form.html', 'no'],

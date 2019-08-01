@@ -11,13 +11,6 @@
 
     <artifactId>fortec-mscm-base</artifactId>
 
-    <properties>
-        <druid.version>1.1.10</druid.version>
-        <mysql.version>8.0.16</mysql.version>
-
-
-    </properties>
-
 
     <dependencies>
 
@@ -127,24 +120,6 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security.oauth.boot</groupId>
-            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-            <version>${springsecurity.oauth2.autoconfigure.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-jwt</artifactId>
-            <version>1.0.10.RELEASE</version>
         </dependency>
 
         <!-- spring security end     resource server must have -->

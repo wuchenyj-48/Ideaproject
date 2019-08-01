@@ -122,6 +122,7 @@
 
                 window.edit = (data,rowIndex) => {
                     let index = layer.open({
+                        title: "编辑${functionName}",
                         type: 2,
                         area: ['950px', '400px'],
                         content: ['./${uncamelClassName}_form.html'],
