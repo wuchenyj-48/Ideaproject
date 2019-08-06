@@ -29,18 +29,6 @@ public class SupplierApplicantController extends BaseController {
 
     private SupplierApplicantService supplierApplicantService;
 
-/*    @PostMapping
-    public CommonResult add(@RequestBody @Valid SupplierApplicant entity) {
-        boolean bSave = supplierApplicantService.saveCascadeById(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid SupplierApplicant entity) {
-        boolean bUpdate = supplierApplicantService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
-    }*/
-
     @GetMapping("/page")
     public PageResult page(SupplierApplicantQueryRequest request) {
         IPage page = supplierApplicantService.page(request);
@@ -61,6 +49,11 @@ public class SupplierApplicantController extends BaseController {
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
+    /**
+     * 供应商资格申请
+     * @param entity
+     * @return
+     */
     @PostMapping("/applicant")
     public CommonResult applicant(@RequestBody @Valid SupplierApplicant entity) {
         boolean applicant = supplierApplicantService.applicant(entity);

@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Supplier extends DataEntity  implements Serializable {
 
     /** 机构ID */
-    @NotBlank(message="组织机构不能为空")
+    //@NotBlank(message="组织机构不能为空")
     private String officeId;
 
     /** 识别码 */

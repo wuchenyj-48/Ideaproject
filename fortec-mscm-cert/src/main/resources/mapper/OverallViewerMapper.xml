@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.cert.mapper.OverallViewerMapper">
+
+    <select id="listSupplierCertCnt" resultType="fortec.mscm.cert.vo.OverAllSupplier">
+        SELECT
+            s.id as supplier_id,
+            s.`name` supplier_name,
+            (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = hs.hospital_id AND chb.business_type_code = 10) as require_cnt,
+            (SELECT count(1) from certificate_repository cr where  cr.target_describe_id = s.id AND cr.business_type_code = 10) as uploaded_cnt
+        from
+        `mscm-base`.supplier s
+        inner join `mscm-base`.hospital_supplier hs on s.id = hs.supplier_id
+
+        WHERE hs.hospital_id = #{hospitalId}
+    </select>
+    <select id="listManufacturerCertCnt" resultType="fortec.mscm.cert.vo.OverAllManufacturer">
+        select DISTINCT
+            m.id as manufacturer_id,
+            m.name as manufacturer_name,
+            (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = #{hospitalId} AND chb.business_type_code = 30) as require_cnt,
+            (SELECT count(1) from certificate_repository cr1 where cr1.supplier_id = cr.supplier_id and cr1.target_describe_id = m.id AND cr1.business_type_code = 30) as uploaded_cnt
+        from
+        `mscm-base`.manufacturer m INNER JOIN certificate_repository cr on cr.target_describe_id = m.id
+        where m.supplier_id = #{supplierId}
+    </select>
+    <select id="listCatalogCertCnt" resultType="fortec.mscm.cert.vo.OverAllCatalog">
+        select
+            DISTINCT
+            mc.id as catalog_id,mc.name as catalog_name,
+            (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = #{hospitalId} AND chb.business_type_code = 21) as require_cnt,
+            (SELECT count(1) from certificate_repository cr1 where cr1.supplier_id = cr.supplier_id and  cr1.target_describe_id = mc.id AND cr1.business_type_code = 21) as uploaded_cnt
+        from
+        `mscm-base`.material_catalog mc INNER JOIN certificate_repository cr on cr.target_describe_id = mc.id
+        where mc.parent_id = 0 and cr.manufacturer_id = #{manufacturerId}
+    </select>
+    <select id="listMaterialCertCnt" resultType="fortec.mscm.cert.vo.OverAllMaterial">
+        select
+            DISTINCT
+            m.id as material_id,m.material_name as material_name,
+            (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = #{hospitalId} AND chb.business_type_code = 20) as require_cnt,
+            (SELECT count(1) from certificate_repository cr1 where cr1.manufacturer_id = cr.manufacturer_id and  cr1.target_describe_id = m.id AND cr1.business_type_code = 20) as uploaded_cnt
+        from
+        `mscm-base`.material m INNER JOIN certificate_repository cr on cr.target_describe_id = m.id
+        inner join `mscm-base`.material_catalog mc on m.catalog_id = mc.id
+        where mc.parent_ids  like CONCAT('%,',#{catalogId},',%')
+    </select>
+    <select id="pageOverAll" resultType="fortec.mscm.cert.entity.CertificateRepository">
+        select
+            tmp.name as certificate_name,
+            cr.*
+        from
+        (
+            select
+                chb.*,c.name
+            from
+            certificate_hospital_business chb
+            inner join certificate c on chb.certificate_id = c.id
+            where chb.hospital_id = #{hospitalId} and chb.business_type_code = #{businessTypeCode}
+        ) tmp
+        left join certificate_repository cr on cr.certificate_id = tmp.certificate_id
+        <if test="targetDescribeId != null and targetDescribeId != ''">
+             and cr.target_describe_id = #{targetDescribeId}
+        </if>
+        and  cr.close_flag = 0
+    </select>
+
+</mapper>

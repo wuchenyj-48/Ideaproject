@@ -41,7 +41,7 @@
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="supplierName" id="supplierName" placeholder="请选择供应商"
-                                   lay-verify="required"
+                                   lay-verify="required" readonly
                                    class="layui-input"/>
                         </div>
                     </div>
@@ -153,7 +153,7 @@
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="manufacturerName" id="manufacturerName" lay-verify="required"
-                                   placeholder="请选择生产厂商"
+                                   placeholder="请选择生产厂商" readonly
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -215,7 +215,7 @@
         </script>
         <script type="text/html" id="inputCodeTpl">
             <input type="text" data-name="inputCode" value="{{d.inputCode ? d.inputCode : ''}}" lay-filter="inputCode"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="require" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="formTpl">

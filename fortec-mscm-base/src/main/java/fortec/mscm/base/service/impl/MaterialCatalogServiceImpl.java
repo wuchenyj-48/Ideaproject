@@ -5,10 +5,13 @@ import fortec.common.core.service.TreeServiceImpl;
 
 import fortec.mscm.base.entity.MaterialCatalog;
 import fortec.mscm.base.mapper.MaterialCatalogMapper;
+import fortec.mscm.base.request.MaterialCatalogQueryRequest;
 import fortec.mscm.base.service.MaterialCatalogService;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -20,7 +23,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class MaterialCatalogServiceImpl extends TreeServiceImpl<MaterialCatalogMapper, MaterialCatalog> implements MaterialCatalogService {
-
 
 
 }

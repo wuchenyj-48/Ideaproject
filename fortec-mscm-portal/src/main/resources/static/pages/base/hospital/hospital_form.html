@@ -223,6 +223,12 @@
                     })
                 }
 
+                //医院生成大写首字母
+                $("input[name='name']").bind("input propertychange", ()=> {
+                    let allFirstLetter = $pinyins.getAllFirstLetter($("input[name='name']").val())
+                    $("input[name='pinyin']").val(allFirstLetter);
+                })
+
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
                     let data = $.extend({}, formData)

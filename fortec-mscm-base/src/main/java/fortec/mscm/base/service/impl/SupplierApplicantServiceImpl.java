@@ -8,13 +8,13 @@ import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
-import fortec.mscm.base.consts.CommonConsts;
 import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.entity.SupplierApplicant;
 import fortec.mscm.base.mapper.SupplierApplicantMapper;
 import fortec.mscm.base.request.SupplierApplicantQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
 import fortec.mscm.base.service.SupplierApplicantService;
+import fortec.mscm.base.userdetails.ExtOAuthUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -55,21 +55,28 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     @Override
     public boolean applicant(SupplierApplicant entity) {
+        ExtOAuthUser currentUser = (ExtOAuthUser) SecurityUtils.getCurrentUser();
+        if(!currentUser.isSupplier()){
+            throw new BusinessException("当前非供应商用户，不允许申请");
+        }
 
         //申请表中是否存在
         SupplierApplicant applicantServiceOne = this.getOne(Wrappers.<SupplierApplicant>query()
                 .eq("hospital_id", entity.getHospitalId())
-                .eq("supplier_id", CommonConsts.SUPPLIER_ID)
+                .eq("supplier_id", currentUser.getSupplierId())
                 .notIn("status", SupplierApplicant.STATUS_CANCELED, SupplierApplicant.STATUS_UNSUBMIT)
         );
         if (applicantServiceOne != null) {
             throw new BusinessException("不可重复申请", null);
         }
+
+
         //关系表中是否存在
         assertHasExist(entity);
 
+
         //供应商，单据号，单据状态
-        entity.setSupplierId(CommonConsts.SUPPLIER_ID)
+        entity.setSupplierId(currentUser.getSupplierId())
                 .setCode(SerialUtils.generateCode("base_supplier_applicant_code"))
                 .setStatus(SupplierApplicant.STATUS_UNSUBMIT);
         return this.saveOrUpdate(entity);
@@ -82,7 +89,6 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_UNSUBMIT) {
             throw new BusinessException("当前状态不支持提交");
         }
-
         //关系表中是否存在
         assertHasExist(supplierApplicant);
 
@@ -148,7 +154,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         HospitalSupplier one = hospitalSupplierService.getOne(
                 Wrappers.<HospitalSupplier>query()
                         .eq("hospital_id", entity.getHospitalId())
-                        .eq("supplier_id", CommonConsts.SUPPLIER_ID)
+                        .eq("supplier_id", entity.getSupplierId())
         );
         if (one != null) {
             throw new BusinessException("关系已存在", null);

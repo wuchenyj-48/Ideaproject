@@ -88,7 +88,6 @@ public class ManufacturerController extends BaseController {
         IPage page = manufacturerService.page(request.getPage(), Wrappers.<Manufacturer>query()
                 .eq(StringUtils.isNotBlank(request.getSupplierId()), "supplier_id", request.getSupplierId())
                 .like(StringUtils.isNotBlank(keywords), "company_code", keywords)
-                .or()
                 .like(StringUtils.isNotBlank(keywords), "name", keywords)
                 .orderByDesc("gmt_modified")
         );

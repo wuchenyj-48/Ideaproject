@@ -188,74 +188,16 @@
                                 <i class="layui-icon layui-icon-refresh"></i> 刷新
                             </button>
                         </div>
-                        <div class="row-edit-table" id="material_certificate_repository_table"
-                             lay-filter="material_certificate_repository_table"></div>
+                        <table id="listTable" lay-filter="listTable"></table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 子表管理模板 开始  -->
-        <script type="text/html" id="businessTypeCodeTpl">
-            <select data-name="businessTypeCode" lay-verify="required"
-                    value="{{d.businessTypeCode ? d.businessTypeCode : ''}}"
-                    lay-filter="businessTypeCode" data-index="{{d.LAY_TABLE_INDEX}}">
-                {{# $global.getDictDataList('cert_business_type').forEach(o => { }}
-                <option value="{{o.value}}" {{o.value== d.businessTypeCode ?
-                'selected' : ''}}>{{o.label}}</option>
-                {{# }) }}
-            </select>
-        </script>
-        <script type="text/html" id="certificateNameTpl">
-            <input type="text" data-name="certificateName" value="{{d.certificateName ? d.certificateName : ''}}"
-                   lay-filter="certificateName"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="certificateNoTpl">
-            <input type="text" data-name="certificateNo" value="{{d.certificateNo ? d.certificateNo : ''}}"
-                   lay-filter="certificateNo"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="expiryDateTpl">
-            <input type="text" data-name="expiryDate" value="{{d.expiryDate ? d.expiryDate : ''}}"
-                   lay-filter="expiryDate"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="certificateSignTpl">
-            <input type="text" data-name="certificateSign" value="{{d.certificateSign ? d.certificateSign : ''}}"
-                   lay-filter="certificateSign"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="certificateSignToTpl">
-            <input type="text" data-name="certificateSignTo" value="{{d.certificateSignTo ? d.certificateSignTo : ''}}"
-                   lay-filter="certificateSignTo"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="docIdsTpl">
-            <input type="text" data-name="docIds" value="{{d.docIds ? d.docIds : ''}}" lay-filter="docIds"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
-                   class="layui-input custom-input"/>
-        </script>
-
         <script type="text/html" id="cellToolbar">
-            {{#  if($strings.isBlank(d.id)){ }}
-            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
-                    class="fas fa-check"></i></a>
-            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
-                    class="far fa-trash-alt"></i></a>
-            {{#  } else { }}
-            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
-                    class="fas fa-save"></i></a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
-                    class="far fa-trash-alt"></i></a>
-            {{#  } }}
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="close">关闭</a>
         </script>
-        <!-- 子表管理模板 结束  -->
 
         <script src="/scripts/utils/common.js"></script>
         <script>
@@ -263,209 +205,108 @@
             let mainFunction = () => {
                 let form = layui.form, $ = layui.$
                 var laydate = layui.laydate;
+                let table = layui.table
 
                 let model = {}
 
 
                 window.packUnits = []
 
-                // 加载子表表格
-                window.reloadMaterialSpecTable = () => {
-                    if ($strings.isBlank(model.id)) {
-                        return
-                    }
-                    $http.get(`/cert/certificate_repositorys/list?targetDescribeId=${model.id}`).then(resp => {
-                        layui.table.render({
-                            elem: '#material_certificate_repository_table',
-                            data: resp.data.data,
-                            height: 300,
-                            cols: [[ //表头
-                                {type: 'numbers', align: 'center', fixed: 'left'},
-                                {
-                                    field: 'certificateName',
-                                    title: '资质名称',
-                                    align: 'center',
-                                    templet: "#certificateNameTpl"
-                                },
-                                {field: 'certificateNo', title: '资质编号', align: 'center', templet: "#certificateNoTpl"},
-                                {field: 'expiryDate', title: '有效期', align: 'center', templet: "#expiryDateTpl"},
-                                {
-                                    field: 'certificateSign',
-                                    title: '签发方',
-                                    align: 'center',
-                                    templet: "#certificateSignTpl"
-                                },
-                                {
-                                    field: 'certificateSignTo',
-                                    title: '签发给',
-                                    align: 'center',
-                                    templet: "#certificateSignToTpl"
-                                },
-                                {field: 'docIds', title: '文档IDs', align: 'center', templet: "#docIdsTpl"},
-                                {field: 'version', title: '当前版本号', align: 'center'},
-                                {
-                                    field: "LAY_CELL_TOOLBAR",
-                                    title: '操作',
-                                    templet: '#cellToolbar',
-                                    width: 150,
-                                    align: 'center',
-                                    fixed: 'right'
-                                }
-                            ]],
-                            done(){
-                                renderCertificateName()
-                                renderExpiryDate()
-                            }
-                        });
-                        $editable.watch('material_certificate_repository_table')
-                    })
-                }
-
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
                     let data = $.extend({}, formData)
                     form.val("editForm", data)
                     model = data
-
                     if ($strings.isNotBlank(model.id)) {
                         $(".child-tab").show()
                         window.reloadMaterialSpecTable && window.reloadMaterialSpecTable()
                     }
                 }
 
+                // 加载子表表格
 
-                /**
-                 *  渲染有效期选择框
-                 */
-                window.renderExpiryDate = () => {
-                    let rows = layui.table.getRows('material_certificate_repository_table')
-                    for (let i = 0; i < rows.length; i++) {
-                        //渲染日期
-                        laydate.render({
-                            elem: `[data-name='expiryDate'][data-index='${i}']`,
-                            type: 'date',
-                            trigger: 'click',
-                            format : 'yyyy-MM-dd',
-                            value: rows[i].expiryDate,
-                            min : 0 ,
-                            done(value){
-                                rows[i].expiryDate = value
-                            }
+                window.reloadMaterialSpecTable = () => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    $http.get(`/cert/certificate_repositorys/list?targetDescribeId=${model.id}`).then(resp => {
+                        table.render({
+                            id: "listTable",
+                            elem: '#listTable',
+                            height: 'full-160',
+                            data: resp.data.data,
+                            cols: [[ //表头
+                                {type: 'numbers', align: 'center', fixed: 'left'},
+                                {
+                                    field: 'businessTypeCode', title: '资质类型', align: 'center',
+                                    templet(item) {
+                                        return `<div>${$global.getDictLabel('cert_business_type', item.businessTypeCode)}</div>`;
+                                    }
+                                },
+                                { field: 'certificateName', title: '资质名称', align: 'center'},
+                                { field: 'certificateNo', title: '资质编号', align: 'center'},
+                                { field: 'expiryDate', title: '有效期', align: 'center'},
+                                { field: 'certificateSign', title: '签发方', align: 'center'},
+                                { field: 'certificateSignTo', title: '签发给', align: 'center'},
+                                { field: 'version', title: '当前版本号', align: 'center'},
+                                {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                            ]]
                         });
-                    }
+                        //$editable.watch('material_certificate_repository_table')
+                    })
                 }
-
-
-                /**
-                 *  渲染商品规格选择框
-                 */
-                window.renderCertificateName = () => {
-                    let rows = layui.table.getRows('material_certificate_repository_table')
-                    for (let i = 0; i < rows.length; i++) {
-                        //渲染规格
-                        layui.tableSelect.render({
-                            elem: `[data-name='certificateName'][data-index='${i}']`,	//定义输入框input对象 必填
-                            checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                            searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
-                            table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                                url: '/cert/certificates/page_by_keywords',
-                                cols: [[
-                                    {type: 'radio'},
-                                    {field: 'name', title: '资质名称'}
-                                ]]
-                            },
-                            done(elem, data) {
-                                rows[i].certificateId = data.data.length > 0 ? data.data[0].id : null
-                                layui.each(data.data, function (index, item) {
-                                    elem.val(item.name)
-                                })
-                            }
-
-                        })
-                    }
-                }
-
-
-
-                // 渲染下拉框 数据
-                $global.getDictDataList('base_material_type').forEach(o => {
-                    $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
 
 
                 /*** 子表管理开始 */
-                $("#materialSpecToolbar button[lay-event='addNewLine']").click(() => {
-                    layui.table.addRow('material_certificate_repository_table', 0, {
-                        inputCodingType: 0
-                    })
-                    form.render('select')
-                })
 
-                $("#materialSpecToolbar button[lay-event='batchSave']").click(() => {
-                    $editable.validateAllRows('material_certificate_repository_table', (valid, errors) => {
-                        if (!valid) {
-                            return
-                        }
-                        let rows = layui.table.getRows('material_certificate_repository_table')
-                        rows.forEach(o => o.materialId = model.id)
-                        $http.put("/cert/certificate_repositorys/batch_save", rows).then(resp => {
-                            if (resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 1})
-                                window.reloadMaterialSpecTable()
-                            } else {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
-                            }
-                        })
-                    })
-                })
 
                 $("#materialSpecToolbar button[lay-event='refresh']").click(() => {
                     window.reloadMaterialSpecTable()
                 })
+                $("#materialSpecToolbar button[lay-event='addNewLine']").click(() => {
+                    edit({isNew: true});
+                })
 
-                // 监听子表的列工具栏
-                layui.table.on('tool(material_certificate_repository_table)', function (obj) {
-                    // 获取行索引
-                    let index = obj.tr[0].getAttribute("data-index")
-                    var data = obj.data;
-                    if (obj.event === 'newDel') {
-                        // 未在数据库中存在，直接从界面移除即可
-                        obj.del()
-                        return
-                    }
-                    if (obj.event === 'del') {
-                        layer.confirm('真的删除行么', function (index) {
-                            $http.delete(`/cert/certificate_repositorys/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1})
-                                obj.del()
-                            })
-                        });
-                        return
-                    }
+                window.edit = (data,rowIndex) => {
 
-                    // 校验并保存
-                    $editable.validateSingleRow("material_certificate_repository_table", index, (valid, error) => {
-                        if (!valid) {
-                            return
+                    layer.open({
+                        title: "商品资质信息",
+                        type: 2,
+                        area: ['950px', '520px'],
+                        content: ["./material_form.html?targetDescribeId=" + model.id+
+                        "&manufacturerId=" + model.manufacturerId+
+                        "&limitFileExtension=" + data.limitFileExtension+
+                        "&maxiumFileSize=" + data.maxiumFileSize+
+                        "&maxiumFileCount="+data.maxiumFileCount],
+                        success(layero, index) {
+                            let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm(data)
+                            // layer.iframeAuto(index)
                         }
-                        let data = layui.table.cache.material_certificate_repository_table[index]
-                        data.targetDescribeId = model.id
-                        let promise = $http.post("/cert/certificate_repositorys/save_for_material", data)
+                    });
+                }
 
-                        promise.then(resp => {
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                window.closeCert = (data,rowIndex) => {
+                    layer.confirm('真的关闭么', function (index) {
 
-                                // 重新渲染单行数据
-                                layui.table.renderSpecRow('material_certificate_repository_table', index, {
-                                    id: resp.data.data.id,
-                                    version: 1
-                                })
-                            } else {
-                                layer.msg(resp.data.msg, {icon: 5})
-                            }
+                        $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadMaterialSpecTable()
+
+                            layer.close(index)
                         })
-                    })
+                    });
+                }
+
+                //监听行工具事件
+                table.on('tool(listTable)', function (obj) {
+                    // 获取当前行索引
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    if (obj.event === 'close') {
+                        window.closeCert(obj.data, rowIndex)
+                    } else if (obj.event === 'edit') {
+                        window.edit(obj.data, rowIndex)
+                    }
                 });
 
 

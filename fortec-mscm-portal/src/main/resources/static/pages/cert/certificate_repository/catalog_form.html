@@ -23,6 +23,7 @@
             <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
                 <input type="hidden" name="certificateId" class="layui-input"/>
+                <input type="hidden" name="manufacturerId" class="layui-input"/>
 
 
                 <div class="layui-row layui-col-space5 layui-form-item">
@@ -81,6 +82,16 @@
                                    class="layui-input">
                         </div>
                     </div>
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span>生产厂商
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="manufacturerName" id="manufacturerName" lay-verify="required"
+                                   placeholder="请选择生产厂商" readonly
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
@@ -129,17 +140,22 @@
                 let form = layui.form, $ = layui.$
 
                 let model = {}
+                let params = $global.getUrlParams()
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
                     let data = $.extend({}, formData)
+
                     form.val("editForm", data)
                     model = data
+
+                    $(".message").hide()
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
-                        renderUploader(data.limitFileExtension, data.maxiumFileSize, data.maxiumFileCount)
+                        renderUploader(params.limitFileExtension, params.maxiumFileSize, params.maxiumFileCount)
                     }
 
                     window.renderExpiryDate(data.needExpiryDate)
+
                 }
 
                 /**
@@ -162,11 +178,13 @@
                     layui.form.render()
                 }
 
-                // 渲染资质选择
+                //渲染资质
                 layui.tableSelect.render({
                     elem: '#certificateName',	//定义输入框input对象 必填
                     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                    table: {
+                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
+                    searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
+                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
                         url: '/cert/certificates/page_by_keywords',
                         cols: [[
                             {type: 'radio'},
@@ -185,12 +203,38 @@
 
                         window.renderExpiryDate(selectedRow.needExpiryDate)
 
-                        model.docIds = []
+                        $(".message").show()
                         renderUploader(selectedRow.limitFileExtension, selectedRow.maxiumFileSize, selectedRow.maxiumFileCount)
                     }
                 })
 
-
+                //渲染生产厂商
+                layui.tableSelect.render({
+                    elem: '#manufacturerName',	//定义输入框input对象 必填
+                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
+                    searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
+                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                        url: '/base/manufacturers/page_by_keywords?supplierId=1153134446392754177',
+                        cols: [[
+                            {type: 'radio'},
+                            {field: 'name', title: '厂商名称'},
+                            {field: 'companyCode', title: '统一社会信用代码'}
+                        ]]
+                    },
+                    done(elem, data) {
+                        let selectedRow = data.data.length > 0 ? data.data[0] : null
+                        if (!selectedRow) {
+                            return
+                        }
+                        model.manufacturerId = selectedRow.id
+                        model.manufacturerName = selectedRow.name
+                        layui.each(data.data, function (index, item) {
+                            $("form input[name='manufacturerId']").val(model.manufacturerId)
+                            elem.val(item.name)
+                        })
+                    }
+                })
 
                 let uploader = null
                 window.renderUploader = (limitFileExtension, maxiumFileSize, maxiumFileCount) => {
@@ -255,16 +299,20 @@
 
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({docIds: model.docIds}, data.field)
+                    data.field = layui.$.extend({docIds: model.docIds,
+                        targetDescribeId : params.targetDescribeId,
+                        businessTypeCode : params.businessTypeCode,
+                        manufacturerId : model.manufacturerId}, data.field)
 
-                    let promise = $http.post("/cert/certificate_repositorys/save_for_supplier", data.field)
+                    let promise = $http.post("/cert/certificate_repositorys/save_for_catalog", data.field)
 
                     promise.then(resp => {
                         if (resp.data.success) {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layer.close(index); //再执行关闭
                             parent.layer.msg(resp.data.msg, {icon: 1})
-                            parent.reloadTable()
+                            //window.parent.reloadTable()
+                            window.parent.reloadMaterialSpecTable() //刷新父表格
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }
