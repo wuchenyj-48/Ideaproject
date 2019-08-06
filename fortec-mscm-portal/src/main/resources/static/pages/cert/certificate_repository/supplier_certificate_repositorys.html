@@ -12,7 +12,7 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">供应商资质管理</div>
+                        <div class="layui-card-header">企业资质管理</div>
                         <div class="layui-card-body">
                             <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
                                 <i class="layui-icon layui-icon-add-1"></i> 新增
@@ -71,7 +71,7 @@
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
-                    title: '供应商资质仓库信息',
+                    title: '企业资质仓库信息',
                     height: 'full-160',
                     url: '/cert/certificate_repositorys/page_for_supplier',
                     page: {limit: 30},
@@ -106,7 +106,7 @@
 
                 window.edit = (data,rowIndex) => {
                     layer.open({
-                        title: "编辑供应商资质信息",
+                        title: "编辑企业资质信息",
                         type: 2,
                         area: ['950px', '520px'],
                         content: ['./supplier_certificate_repository_form.html'],

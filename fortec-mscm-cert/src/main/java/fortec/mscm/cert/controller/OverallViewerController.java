@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.mscm.cert.request.CertificateRepositoryQueryRequest;
+import fortec.mscm.cert.request.OverallViewerQueryRequest;
 import fortec.mscm.cert.service.OverallViewerService;
 import fortec.mscm.cert.vo.OverAllCatalog;
 import fortec.mscm.cert.vo.OverAllManufacturer;
@@ -55,9 +55,14 @@ public class OverallViewerController extends BaseController {
         return CommonResult.ok("查询成功",list);
     }
 
+    /**
+     * 全景视图查询
+     * @param request
+     * @return
+     */
     @GetMapping("/page_over_all")
-    public PageResult pageOverAll(CertificateRepositoryQueryRequest request) {
-        IPage page = overallViewerService.pageOverAll(request.getPage(),request.getTargetDescribeId());
+    public PageResult pageOverAll(OverallViewerQueryRequest request) {
+        IPage page = overallViewerService.pageOverAll(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 }

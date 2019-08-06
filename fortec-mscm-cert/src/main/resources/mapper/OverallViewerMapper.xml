@@ -19,9 +19,9 @@
             m.id as manufacturer_id,
             m.name as manufacturer_name,
             (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = #{hospitalId} AND chb.business_type_code = 30) as require_cnt,
-            (SELECT count(1) from certificate_repository cr1 where cr1.supplier_id = cr.supplier_id and cr1.target_describe_id = m.id AND cr1.business_type_code = 30) as uploaded_cnt
+            (SELECT count(1) from certificate_repository cr where cr.supplier_id = m.supplier_id and cr.target_describe_id = m.id AND cr.business_type_code = 30) as uploaded_cnt
         from
-        `mscm-base`.manufacturer m INNER JOIN certificate_repository cr on cr.target_describe_id = m.id
+        `mscm-base`.manufacturer m
         where m.supplier_id = #{supplierId}
     </select>
     <select id="listCatalogCertCnt" resultType="fortec.mscm.cert.vo.OverAllCatalog">
@@ -47,22 +47,20 @@
     </select>
     <select id="pageOverAll" resultType="fortec.mscm.cert.entity.CertificateRepository">
         select
-            tmp.name as certificate_name,
-            cr.*
+            tmp.certificate_name,tmp.business_type_code,cr.id,cr.certificate_no,cr.expiry_date,cr.certificate_sign,cr.certificate_sign_to,cr.version
         from
         (
             select
-                chb.*,c.name
+            c.name as certificate_name,chb.*
             from
             certificate_hospital_business chb
             inner join certificate c on chb.certificate_id = c.id
-            where chb.hospital_id = #{hospitalId} and chb.business_type_code = 10
+            where hospital_id = #{request.hospitalId} and business_type_code = #{request.businessTypeCode}
         ) tmp
-        left join certificate_repository cr on cr.certificate_id = tmp.certificate_id
-        <if test="targetDescribeId != null and targetDescribeId != ''">
-             and cr.target_describe_id = #{targetDescribeId}
-        </if>
-        and  cr.close_flag = 0
+        left join certificate_repository cr
+        on tmp.certificate_id = cr.certificate_id and tmp.business_type_code = cr.business_type_code and cr.target_describe_id = #{request.targetDescribeId} and  cr.close_flag = 0
+
+
     </select>
 
 </mapper>

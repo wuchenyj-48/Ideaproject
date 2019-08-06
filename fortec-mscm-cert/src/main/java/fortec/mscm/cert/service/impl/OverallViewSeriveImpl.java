@@ -2,6 +2,7 @@ package fortec.mscm.cert.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.mscm.cert.mapper.OverallViewerMapper;
+import fortec.mscm.cert.request.OverallViewerQueryRequest;
 import fortec.mscm.cert.service.OverallViewerService;
 import fortec.mscm.cert.vo.OverAllCatalog;
 import fortec.mscm.cert.vo.OverAllManufacturer;
@@ -49,7 +50,8 @@ public class OverallViewSeriveImpl implements OverallViewerService {
     }
 
     @Override
-    public IPage pageOverAll(IPage page, String targetDescribeId) {
-        return overallViewerMapper.pageOverAll(page, CommonConsts.HOSPITAL_ID, targetDescribeId);
+    public IPage pageOverAll(OverallViewerQueryRequest request) {
+        request.setHospitalId(CommonConsts.HOSPITAL_ID);
+        return overallViewerMapper.pageOverAll(request.getPage(), request);
     }
 }

@@ -86,7 +86,7 @@ public class ManufacturerController extends BaseController {
     @GetMapping("/page_by_keywords")
     public PageResult page(ManufacturerQueryRequest request, @RequestParam(value = "keywords", required = false) String keywords) {
         IPage page = manufacturerService.page(request.getPage(), Wrappers.<Manufacturer>query()
-                .eq(StringUtils.isNotBlank(request.getSupplierId()), "supplier_id", request.getSupplierId())
+                .eq(StringUtils.isNotBlank(CommonConsts.SUPPLIER_ID), "supplier_id", CommonConsts.SUPPLIER_ID)
                 .like(StringUtils.isNotBlank(keywords), "company_code", keywords)
                 .like(StringUtils.isNotBlank(keywords), "name", keywords)
                 .orderByDesc("gmt_modified")

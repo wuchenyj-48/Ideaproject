@@ -4,37 +4,44 @@
         <meta charset="UTF-8">
         <title>资质全景视图</title>
 
-
+        <style>
+            #navTree{
+                overflow-x: auto;
+            }
+        </style>
     </head>
     <body>
 
         <div class="layui-fluid">
-            <div class="layui-row layui-col-space15">
-                <div class="layui-col-md3">
-                    <div class="layui-card">
-                        <div class="layui-card-body">
-                            <div id="testTree" class="ztree"></div>
+            <div class="layui-card">
+                <div class="layui-card">
+
+                    <div class="layui-card-header">资质全景</div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space5">
+                            <div class="layui-col-md2">
+                                <div id="navTree" class="ztree"></div>
+                            </div>
+                            <div class="layui-col-md10">
+                                <table id="listTable" lay-filter="listTable"></table>
+                            </div>
                         </div>
 
                     </div>
                 </div>
 
-                <div class="layui-col-md9">
-                    <div class="layui-card">
-                        <div class="layui-card-header">资质全景</div>
-                        <div class="layui-card-body">
-
-                            <table id="listTable" lay-filter="listTable"></table>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="upgrade">提醒升级</a>
-            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="cert">资质</a>
-            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="history">历史</a>
+            {{#  if(!d.expiryDate){ }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="upgrade">提醒上传</a>
+            {{#  } else { }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upgrade">提醒升级</a>
+                <a class="layui-btn layui-btn-xs" lay-event="cert">资质</a>
+                <a class="layui-btn layui-btn-xs layui-btn-cyan" lay-event="history">历史</a>
+            {{#  } }}
+
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -46,7 +53,6 @@
                 let laydate = layui.laydate;
 
                 let ztreeObj = null
-                //模拟数据1
                 let zNodes = []
                 $http.get(`/cert/overall_viewer/list_supplier_cert_cnt/`).then(resp => {
                     let supplierArr = resp.data.data
@@ -74,27 +80,51 @@
                                         loadMaterial(treeNode)
                                         break
                                 }
+
                             },
-                            onClick(event,treeId,treeNode){
-                                /*layui.layer.msg(JSON.stringify(treeNode))*/
-                                layui.table.reload('listTable',{
+                            onClick(event, treeId, treeNode) {
+                                let businessTypeCode = null
+                                if(treeNode.level == 0){
+                                    // 企业资质类型
+                                    businessTypeCode = 10
+                                }else if(treeNode.level == 1){
+                                    // 厂商资质类型
+                                    businessTypeCode = 30
+                                }else if(treeNode.level == 2){
+                                    // 一级品类资质类型
+                                    businessTypeCode = 21
+                                }else if(treeNode.level == 3){
+                                    // 品名资质类型
+                                    businessTypeCode = 20
+                                }
+
+                                layui.table.reload('listTable', {
                                     where: {
-                                        targetDescribeId : treeNode.id
+                                        businessTypeCode,
+                                        targetDescribeId: treeNode.id
                                     }
                                 })
 
                             }
                         }
                     }
-                    ztreeObj = $.fn.zTree.init($("#testTree"), setting, zNodes);
+                    ztreeObj = $.fn.zTree.init($("#navTree"), setting, zNodes);
                     window.reloadTable()
                 })
 
+                function updateNode(treeNode){
+                    let tmp = ztreeObj.getNodeByTId(treeNode.tId)
+                    if(tmp.children == null || tmp.children.length == 0){
+                        tmp.isParent = false
+                        ztreeObj.updateNode(tmp)
+                    }
+                }
+
                 /**
-                 * 拉去厂商信息
+                 * 拉取厂商信息
                  * @param treeNode
                  */
-                function loadManufacture(treeNode){
+                function loadManufacture(treeNode) {
                     // 拉取厂商数据
                     $http.get("/cert/overall_viewer/list_manufacturer_cert_cnt/" + treeNode.id).then(resp => {
                         let manufacturerArr = resp.data.data
@@ -107,6 +137,7 @@
                             })
                         }
                         ztreeObj.addNodes(treeNode, children)
+                        updateNode(treeNode)
                     })
                 }
 
@@ -114,7 +145,7 @@
                  * 拉去一级品类信息
                  * @param treeNode
                  */
-                function loadLevel1Catelog(treeNode){
+                function loadLevel1Catelog(treeNode) {
                     // 拉取一级品类数据
                     $http.get(`/cert/overall_viewer/list_catalog_cert_cnt/` + treeNode.id).then(resp => {
                         let catalogArr = resp.data.data
@@ -127,6 +158,8 @@
                             })
                         }
                         ztreeObj.addNodes(treeNode, children)
+                        updateNode(treeNode)
+
                     })
                 }
 
@@ -134,7 +167,7 @@
                  * 拉去商品信息
                  * @param treeNode
                  */
-                function loadMaterial(treeNode){
+                function loadMaterial(treeNode) {
                     // 拉取商品数据
                     $http.get(`/cert/overall_viewer/list_material_cert_cnt/` + treeNode.id).then(resp => {
                         let materialArr = resp.data.data
@@ -147,6 +180,8 @@
                             })
                         }
                         ztreeObj.addNodes(treeNode, children)
+                        updateNode(treeNode)
+
                     })
                 }
 
@@ -173,8 +208,12 @@
                         {
                             title: '状态', align: 'center',
                             templet(item) {
+                                if(!item.expiryDate){
+                                    return '<div><span class="layui-color-orange">未上传</span></div>'
+                                }
+
                                 if (new Date(item.expiryDate) <= new Date()) {
-                                    return '<div><span style="color: red">已过期</span></div>'
+                                    return '<div><span class="layui-color-red">已过期</span></div>'
                                 }
                                 return `<div>正常</div>`;
                             }
@@ -204,7 +243,7 @@
                     }
                 });
 
-                window.viewCert = (data,rowIndex) => {
+                window.viewCert = (data, rowIndex) => {
                     layer.photos({
                         photos: {
                             data: data.docIds.map(o => {
@@ -217,7 +256,7 @@
                     });
                 }
 
-                window.openHistory = (data,rowIndex) => {
+                window.openHistory = (data, rowIndex) => {
 
                     let rows = layui.table.getRows('listTable')
                     let row = rows[rowIndex]

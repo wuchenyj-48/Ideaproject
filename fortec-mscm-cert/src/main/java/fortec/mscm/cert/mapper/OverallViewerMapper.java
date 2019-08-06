@@ -2,6 +2,7 @@ package fortec.mscm.cert.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.mscm.cert.entity.CertificateRepository;
+import fortec.mscm.cert.request.OverallViewerQueryRequest;
 import fortec.mscm.cert.vo.OverAllCatalog;
 import fortec.mscm.cert.vo.OverAllManufacturer;
 import fortec.mscm.cert.vo.OverAllMaterial;
@@ -50,12 +51,11 @@ public interface OverallViewerMapper{
 
 
     /**
-     * 查询
+     * 全景视图查询功能
      * @param page
-     * @param hospitalId
-     * @param targetDescribeId
+     * @param request
      * @return
      */
-    IPage<CertificateRepository> pageOverAll(IPage page,@Param("hospitalId") String hospitalId , @Param("targetDescribeId") String targetDescribeId);
+    IPage<CertificateRepository> pageOverAll(IPage page, @Param("request") OverallViewerQueryRequest request);
 
 }

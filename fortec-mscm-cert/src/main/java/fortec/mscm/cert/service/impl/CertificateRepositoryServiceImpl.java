@@ -57,7 +57,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     public boolean addForSupplier(CertificateRepository entity) {
         entity.setSupplierId(CommonConsts.SUPPLIER_ID)
                 .setManufacturerId("0")
-                .setCloseFlag(CertificateRepository.NORMAL)
+                .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setBusinessTypeCode("10")
                 .setTargetDescribeId(CommonConsts.SUPPLIER_ID)
                 .setVersion(1);
@@ -68,7 +68,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     public boolean addForMaterial(CertificateRepository entity) {
         entity.setSupplierId(CommonConsts.SUPPLIER_ID)
                 .setBusinessTypeCode("20")
-                .setCloseFlag(CertificateRepository.NORMAL)
+                .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setVersion(1);
         return this.saveOrUpdate(entity);
     }
@@ -76,7 +76,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     @Override
     public boolean addForManufacturer(CertificateRepository entity) {
         entity.setSupplierId(CommonConsts.SUPPLIER_ID)
-                .setCloseFlag(CertificateRepository.NORMAL)
+                .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setBusinessTypeCode("30")
                 .setVersion(1);
         return this.saveOrUpdate(entity);
@@ -85,7 +85,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     @Override
     public boolean addForCatalog(CertificateRepository entity) {
         entity.setSupplierId(CommonConsts.SUPPLIER_ID)
-                .setCloseFlag(CertificateRepository.NORMAL)
+                .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setVersion(1);
         return this.saveOrUpdate(entity);
     }
@@ -94,11 +94,11 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     public void close(String id) {
         CertificateRepository entity = this.getById(id);
         //当前状态是否正常
-        if (entity.getCloseFlag() != CertificateRepository.NORMAL){
+        if (entity.getCloseFlag() != CertificateRepository.CLOSE_FLAG_NORMAL){
             throw new BusinessException("当前状态不是正常状态");
         }
         //修改状态为已关闭
-        entity.setCloseFlag(CertificateRepository.CLOSED);
+        entity.setCloseFlag(CertificateRepository.CLOSE_FLAG_CLOSED);
         this.updateById(entity);
     }
 
