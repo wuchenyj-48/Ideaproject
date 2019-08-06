@@ -32,5 +32,16 @@ public class CertificateRepositoryQueryRequest extends PageRequest {
     /** 资质名称 */
     private String certificateName;
 
+    /**
+     * 效期预警 -1 已过期  1-6 月后过期  999 6月后过期
+     */
+    private Integer expiredMonth;
+
+    /**
+     * 供应商id
+     */
+    private String supplierId;
+
+
 }
     

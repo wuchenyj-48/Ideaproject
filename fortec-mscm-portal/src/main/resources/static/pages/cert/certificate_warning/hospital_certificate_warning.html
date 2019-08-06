@@ -12,7 +12,7 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">供应商资质管理</div>
+                        <div class="layui-card-header">供应商资质预警</div>
                         <div class="layui-card-body">
                             <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
                                 <i class="layui-icon layui-icon-add-1"></i> 新增
@@ -21,16 +21,22 @@
                                 <input type="hidden" name="beginExpiryDate">
                                 <input type="hidden" name="endExpiryDate">
                                 <div class="layui-input-inline">
-                                    <input type="text" name="certificateName" placeholder="请输入资质名称" autocomplete="off"
-                                           class="layui-input">
+                                    <select name="businessTypeCode" >
+                                        <option value="">请选择资质类型</option>
+                                    </select>
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="certificateNo" placeholder="请输入资质编号" autocomplete="off"
-                                           class="layui-input">
-                                </div>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="expiryDate" id="expiryDate" placeholder="请选择日期范围" autocomplete="off"
-                                           class="layui-input">
+                                    <select name="expiredMonth" >
+                                        <option value="">请选择效期</option>
+                                        <option value="-1">已过期</option>v
+                                        <option value="1">1个月</option>
+                                        <option value="2">2个月</option>
+                                        <option value="3">3个月</option>
+                                        <option value="4">4个月</option>
+                                        <option value="5">5个月</option>
+                                        <option value="6">6个月</option>
+                                        <option value="999">6个月以上</option>
+                                    </select>
                                 </div>
 
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
@@ -48,10 +54,9 @@
             </div>
         </div>
 
-
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="close">关闭</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="cert">资质</a>
+            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="history">历史</a>
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -73,7 +78,7 @@
                     elem: '#listTable',
                     title: '供应商资质仓库信息',
                     height: 'full-160',
-                    url: '/cert/certificate_repositorys/page_for_supplier',
+                    url: '/cert/certificate_repositorys/page_for_warning',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
@@ -88,8 +93,16 @@
                         { field: 'expiryDate', title: '有效期', align: 'center'},
                         { field: 'certificateSign', title: '签发方', align: 'center'},
                         { field: 'certificateSignTo', title: '签发给', align: 'center'},
+                        { title: '状态', align: 'center',
+                            templet(item) {
+                                if(new Date(item.expiryDate) <= new Date()){
+                                    return '<div><span style="color: red">已过期</span></div>'
+                                }
+                                return `<div>正常</div>`;
+                            }
+                        },
                         { field: 'version', title: '当前版本号', align: 'center'},
-                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 250, align: 'center', fixed: 'right'}
                     ]]
                 });
 
@@ -110,31 +123,36 @@
                 })
                 form.render('select')
 
-                window.edit = (data,rowIndex) => {
+                window.openHistory = (data,rowIndex) => {
+
+                    let rows = layui.table.getRows('listTable')
+                    let row = rows[rowIndex]
+                    // top.tabAdd(`/pages/cert/certificate_warning/certificate_repository_historys.html?certificateRepositoryId=${row.id}`,`${row.certificateName}历史资质`)
+                    //
                     layer.open({
-                        title: "编辑供应商资质信息",
+                        title: `${row.certificateName}历史资质`,
                         type: 2,
                         area: ['950px', '520px'],
-                        content: ['./supplier_certificate_repository_form.html'],
+                        content: [`./certificate_repository_historys.html?certificateRepositoryId=${row.id}`],
                         success(layero, index) {
-                            let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                            iframeWin && iframeWin.initForm(data)
-                            // layer.iframeAuto(index)
+                            layer.iframeAuto(index)
                         }
                     });
                 }
 
-                window.closeCert = (data,rowIndex) => {
-                    layer.confirm('真的关闭么', function (index) {
-
-                        $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
-                            window.reloadTable()
-
-                            layer.close(index)
-                        })
-                    });
+                window.viewCert = (data,rowIndex) => {
+                        layer.photos({
+                            photos: {
+                                data: data.docIds.map(o => {
+                                    return {
+                                        src: `/doc/files/${o}?preview`
+                                    }
+                                })
+                            },
+                            anim: 2
+                        });
                 }
+
                 // 监听表单重置
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
@@ -161,8 +179,10 @@
                     let rowIndex = obj.tr[0].getAttribute("data-index")
                     if (obj.event === 'close') {
                         window.closeCert(obj.data, rowIndex)
-                    } else if (obj.event === 'edit') {
-                        window.edit(obj.data, rowIndex)
+                    } else if (obj.event === 'history') {
+                        window.openHistory(obj.data, rowIndex)
+                    } else if (obj.event === 'cert') {
+                        window.viewCert(obj.data, rowIndex)
                     }
                 });
 

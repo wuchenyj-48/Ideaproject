@@ -18,7 +18,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface CertificateHospitalBusinessMapper extends BaseMapper<CertificateHospitalBusiness> {
 
-    IPage<CertificateHospitalBusiness> page(IPage page, @Param("request")CertificateHospitalBusinessQueryRequest request);
+    IPage<CertificateHospitalBusiness> page(IPage page, @Param("request") CertificateHospitalBusinessQueryRequest request);
 
 }
     

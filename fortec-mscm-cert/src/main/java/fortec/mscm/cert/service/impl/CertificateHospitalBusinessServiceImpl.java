@@ -16,11 +16,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
-* 院方业务资质定义 service 实现
-*
-* @author chenchen
-* @version 1.0
-*/
+ * 院方业务资质定义 service 实现
+ *
+ * @author chenchen
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class CertificateHospitalBusinessServiceImpl extends BaseServiceImpl<CertificateHospitalBusinessMapper, CertificateHospitalBusiness> implements CertificateHospitalBusinessService {
@@ -40,6 +40,7 @@ public class CertificateHospitalBusinessServiceImpl extends BaseServiceImpl<Cert
     public IPage<CertificateHospitalBusiness> page(CertificateHospitalBusinessQueryRequest request) {
         return this.baseMapper.page(request.getPage(),request);
     }
+
 
     @Override
     public boolean save(CertificateHospitalBusiness entity) {

@@ -116,6 +116,10 @@
                     layer.confirm('确定通过么', function (index) {
 
                         $http.post(`/base/supplier_applicants/pass/` + data.id).then(resp => {
+                            if(!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
                             layer.msg(resp.data.msg, {icon: 1})
                             window.reloadTable()
                         })

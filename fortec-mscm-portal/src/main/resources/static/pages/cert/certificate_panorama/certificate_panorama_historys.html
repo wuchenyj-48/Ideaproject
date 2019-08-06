@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>资质历史版本管理</title>
+    </head>
+    <body>
+
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <table id="listTable" lay-filter="listTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/html" id="viewTpl">
+            <a class="layui-btn layui-btn-xs" data-index="{{d.LAY_TABLE_INDEX}}" lay-event="view">查看</a>
+        </script>
+
+        <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
+
+        <script>
+
+            extendParentScriptsAndStyles(() => {
+                let table = layui.table, $ = layui.$, form = layui.form;
+
+
+                let params = $global.getUrlParams()
+                table.render({
+                    id: "listTable",
+                    elem: '#listTable',
+                    title: '资质历史版本信息',
+                    height: 'full-80',
+                    url: '/cert/certificate_repository_historys/page',
+                    page: {limit: 30},
+                    where: {
+                        certificateRepositoryId: params.certificateRepositoryId
+                    },
+                    cols: [[ //表头
+                        {type: 'numbers', align: 'center', fixed: 'left'},
+                        {field: 'certificateNo', title: '资质编号', align: 'center'},
+                        {field: 'expiryDate', title: '有效期', align: 'center'},
+                        {field: 'certificateSign', title: '签发方', align: 'center'},
+                        {field: 'certificateSignTo', title: '签发给', align: 'center'},
+                        {field: 'docIds', title: '资质文件', align: 'center', templet: "#viewTpl"},
+                        {field: 'version', title: '当前版本号', align: 'center'},
+                    ]]
+                });
+
+                layui.$("[lay-id='listTable']").on("click", ".layui-btn", function () {
+                    let layevent = this.getAttribute("lay-event");
+                    if (layevent != 'view') {
+                        return
+                    }
+                    // 获取行索引
+                    let index = this.getAttribute("data-index")
+                    let rows = layui.table.getRows('listTable')
+                    let row = rows[index]
+
+                    layer.photos({
+                        photos: {
+                            data: JSON.parse(row.docIds).map(o => {
+                                return {
+                                    src: `/doc/files/${o}?preview`
+                                }
+                            })
+                        },
+                        anim: 2
+                    });
+                });
+
+            })
+
+        </script>
+    </body>
+
+
+</html>
+    
+    

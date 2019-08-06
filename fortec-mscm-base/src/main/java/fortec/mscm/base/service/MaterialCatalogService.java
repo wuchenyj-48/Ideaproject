@@ -1,9 +1,8 @@
 
 package fortec.mscm.base.service;
 
-import fortec.mscm.base.entity.MaterialCatalog;
-
 import fortec.common.core.service.ITreeService;
+import fortec.mscm.base.entity.MaterialCatalog;
 
 
 /**
@@ -13,7 +12,6 @@ import fortec.common.core.service.ITreeService;
 * @version 1.0
 */
 public interface MaterialCatalogService extends ITreeService<MaterialCatalog> {
-
 
 
 }

@@ -41,6 +41,8 @@
 
             let mainFunction = () => {
                 let form = layui.form, treeTable = layui.treeTable, $ = layui.$
+
+                let businessTypeCode = null;
                 let materialCatalogTree = treeTable.render({
                     elem: '#materialCatalogTree',
                     data: [],
@@ -95,11 +97,21 @@
                  * @param data
                  */
                 window.edit = (data) => {
+                    console.log(data.level)
+                    if (data.level == 0){
+                        businessTypeCode = 21
+                    }
+                    if (data.level == 1){
+                        businessTypeCode = 22
+                    }
+                    if (data.level == 2){
+                        businessTypeCode = 23
+                    }
                     layer.open({
                         title: "品类信息",
                         type: 2,
                         area: ['960px', '400px'],
-                        content: ['./catalog_certificate_repository_form.html', 'no'],
+                        content: ['./catalog_certificate_repository_form.html?businessTypeCode='+businessTypeCode, 'no'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]
 
@@ -129,14 +141,8 @@
                 window.reloadTable()
 
                 // 事件监听
-                treeTable.on('tree(add)', (obj) => {
-                    window.edit({parentId: obj.item.id})
-                })
                 treeTable.on('tree(edit)', (obj) => {
                     window.edit(obj.item)
-                })
-                treeTable.on('tree(del)', (obj) => {
-                    window.deleteById(obj.item)
                 })
 
                 $('.refresh').click(function () {
