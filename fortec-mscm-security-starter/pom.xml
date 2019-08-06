@@ -9,20 +9,42 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fortec-mscm-oauth</artifactId>
+    <artifactId>fortec-mscm-security-starter</artifactId>
 
     <dependencies>
+        <!-- inner dependency begin  -->
+
         <dependency>
             <groupId>fortec</groupId>
-            <artifactId>fortec-common-oauth</artifactId>
+            <artifactId>fortec-common-security-starter</artifactId>
             <version>${fortec.common.version}</version>
         </dependency>
+        <!-- inner dependency end  -->
 
+        <!-- spring security begin     resource server must have -->
         <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
             <version>${springsecurity.oauth2.autoconfigure.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <!-- spring security end     resource server must have -->
+
+
+        <!--  assist tools begin -->
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--  assist tools end -->
+
     </dependencies>
-    
 </project>
