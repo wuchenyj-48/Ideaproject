@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.mscm.base.consts.CommonConsts;
+import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.request.HospitalSupplierQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;

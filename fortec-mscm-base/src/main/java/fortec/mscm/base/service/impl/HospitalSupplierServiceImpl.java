@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.StringUtils;
-import fortec.mscm.base.consts.CommonConsts;
+import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.mapper.HospitalSupplierMapper;
 import fortec.mscm.base.request.HospitalSupplierQueryRequest;

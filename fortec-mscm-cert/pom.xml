@@ -26,6 +26,12 @@
             <version>${fortec.common.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>fortec</groupId>
+            <artifactId>fortec-mscm-core</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
         <!-- inner dependency end  -->
 
         <!-- springboot begin -->

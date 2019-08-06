@@ -19,6 +19,7 @@
         <module>fortec-mscm-cert</module>
         <module>fortec-mscm-doc</module>
         <module>fortec-mscm-security-starter</module>
+        <module>fortec-mscm-core</module>
     </modules>
 
     <properties>

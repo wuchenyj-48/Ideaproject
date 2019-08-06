@@ -209,7 +209,7 @@
                         accept: {
                             extensions: limitFileExtension
                         },
-                        auto: false,
+                        auto: true,
                         fileSizeLimit:  1024 * maxiumFileSize,
                         support: {
                             uploader: ".uploader.uploader1",  //上传区域容器选择器
@@ -242,7 +242,7 @@
 
 
                 // 渲染日期、时间 数据
-                layui.laydate.render({elem: "input[name='expiryDate']", type: 'datetime', trigger: 'click', min: 0});
+                layui.laydate.render({elem: "input[name='expiryDate']", type: 'date', trigger: 'click', min: 0});
 
                 $(".form-reset").click(() => {
                     $("form")[0].reset()

@@ -9,7 +9,7 @@ import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
-import fortec.mscm.base.consts.CommonConsts;
+import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.base.entity.*;
 import fortec.mscm.base.mapper.MaterialApplicantMapper;
 import fortec.mscm.base.request.MaterialApplicantQueryRequest;

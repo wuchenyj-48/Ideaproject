@@ -9,7 +9,7 @@ import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
 import fortec.common.core.utils.StringUtils;
-import fortec.mscm.base.consts.CommonConsts;
+import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.base.entity.Manufacturer;
 import fortec.mscm.base.request.ManufacturerQueryRequest;
 import fortec.mscm.base.service.ManufacturerService;
@@ -49,9 +49,9 @@ public class ManufacturerController extends BaseController {
     public PageResult page(ManufacturerQueryRequest request) {
         request.setSupplierId(CommonConsts.SUPPLIER_ID);
         IPage page = manufacturerService.page(request.getPage(), Wrappers.<Manufacturer>query()
-                .eq(request.getSupplierId() != null, "supplier_id", request.getSupplierId())
-                .like(request.getCompanyCode() != null, "company_code", request.getCompanyCode())
-                .like(request.getName() != null, "name", request.getName())
+                .eq(StringUtils.isNotBlank(request.getSupplierId()), "supplier_id", request.getSupplierId())
+                .like(StringUtils.isNotBlank(request.getCompanyCode()), "company_code", request.getCompanyCode())
+                .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
                 .orderByDesc("gmt_modified")
         );
 

@@ -171,8 +171,6 @@
                 layui.tableSelect.render({
                     elem: '#certificateName',	//定义输入框input对象 必填
                     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
-                    searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
                     table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
                         url: '/cert/certificates/page_by_keywords',
                         cols: [[
@@ -214,7 +212,7 @@
                         accept: {
                             extensions: limitFileExtension
                         },
-                        auto: false,
+                        auto: true,
                         fileSizeLimit:  1024 * maxiumFileSize,
                         support: {
                             uploader: ".uploader.uploader1",  //上传区域容器选择器
@@ -247,7 +245,7 @@
 
 
                 // 渲染日期、时间 数据
-                layui.laydate.render({elem: "input[name='expiryDate']", type: 'datetime', trigger: 'click', min: 0});
+                layui.laydate.render({elem: "input[name='expiryDate']", type: 'date', trigger: 'click', min: 0});
 
                 $(".form-reset").click(() => {
                     $("form")[0].reset()

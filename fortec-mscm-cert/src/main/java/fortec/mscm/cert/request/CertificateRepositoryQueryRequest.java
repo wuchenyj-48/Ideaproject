@@ -43,5 +43,6 @@ public class CertificateRepositoryQueryRequest extends PageRequest {
     private String supplierId;
 
 
+
 }
     

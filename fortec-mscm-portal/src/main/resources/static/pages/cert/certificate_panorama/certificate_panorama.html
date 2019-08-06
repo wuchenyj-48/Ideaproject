@@ -48,7 +48,7 @@
                 let ztreeObj = null
                 //模拟数据1
                 let zNodes = []
-                $http.get(`/cert/overall_viewer/list_supplier_cert_cnt/businessTypeCode=10`).then(resp => {
+                $http.get(`/cert/overall_viewer/list_supplier_cert_cnt/`).then(resp => {
                     let supplierArr = resp.data.data
                     for (let i = 0; i < supplierArr.length; i++) {
                         zNodes.push({
@@ -96,8 +96,7 @@
                  */
                 function loadManufacture(treeNode){
                     // 拉取厂商数据
-                    debugger
-                    $http.get("/cert/overall_viewer/list_manufacturer_cert_cnt/businessTypeCode=20&" + treeNode.id).then(resp => {
+                    $http.get("/cert/overall_viewer/list_manufacturer_cert_cnt/" + treeNode.id).then(resp => {
                         let manufacturerArr = resp.data.data
                         let children = []
                         for (let i = 0; i < manufacturerArr.length; i++) {

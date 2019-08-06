@@ -77,12 +77,6 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-                        {
-                            field: 'businessTypeCode', title: '资质类型', align: 'center',
-                            templet(item) {
-                                return `<div>${$global.getDictLabel('cert_business_type', item.businessTypeCode)}</div>`;
-                            }
-                        },
                         { field: 'certificateName', title: '资质名称', align: 'center'},
                         { field: 'certificateNo', title: '资质编号', align: 'center'},
                         { field: 'expiryDate', title: '有效期', align: 'center'},

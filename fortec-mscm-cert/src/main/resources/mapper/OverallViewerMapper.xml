@@ -56,7 +56,7 @@
             from
             certificate_hospital_business chb
             inner join certificate c on chb.certificate_id = c.id
-            where chb.hospital_id = #{hospitalId} and chb.business_type_code = #{businessTypeCode}
+            where chb.hospital_id = #{hospitalId} and chb.business_type_code = 10
         ) tmp
         left join certificate_repository cr on cr.certificate_id = tmp.certificate_id
         <if test="targetDescribeId != null and targetDescribeId != ''">
