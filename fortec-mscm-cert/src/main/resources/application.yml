@@ -47,8 +47,9 @@ spring:
         #loginByPassword-password: admin
       connection-properties: config.decrypt=false;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJDSTJx3OWh1q/TPdqSEpB5RrZRmcb3nGfkEqCTyEQmdcXSvuPVz2409AJMj+4u24KUchq3IhLgiXmQGfegP/rcCAwEAAQ==
       filters: stat,wall
-  main:
-    allow-bean-definition-overriding: true
+  redis:
+    host: demo-mscm.forten-tech.com
+    port: 6379
 
 
 

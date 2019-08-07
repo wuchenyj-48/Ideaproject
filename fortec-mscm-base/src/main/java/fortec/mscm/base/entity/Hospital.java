@@ -2,6 +2,7 @@
 
 package fortec.mscm.base.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
 import lombok.Data;
@@ -23,9 +24,13 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class Hospital extends DataEntity  implements Serializable {
 
+    /** 机构ID */
+    @JSONField(serialize = false,deserialize = false)
+    private String officeId;
+
     /** 医院代码 */
-    @NotBlank(message="医院代码不能为空")
-    @Length(min=1, max=7, message="医院代码长度必须介于 1 和 7 之间")
+//    @NotBlank(message="医院代码不能为空")
+//    @Length(min=1, max=7, message="医院代码长度必须介于 1 和 7 之间")
     private String code;
 
     /** 医院名称 */

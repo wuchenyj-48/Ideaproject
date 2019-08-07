@@ -2,7 +2,7 @@ package fortec.mscm.security.userdetails;
 
 import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.userdetails.OAuthUser;
-import fortec.common.core.utils.StringUtils;
+import fortec.mscm.base.feign.vo.HospitalVO;
 import fortec.mscm.base.feign.vo.SupplierVO;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,24 +27,24 @@ public class ExtOAuthUser extends OAuthUser {
     /**
      * 医院ID
      */
-    private String hospitalId;
+    private HospitalVO hospital;
 
-    public ExtOAuthUser(String id, String username, String password, String officeId, SupplierVO supplier, String hospitalId, Collection<? extends GrantedAuthority> authorities) {
+    public ExtOAuthUser(String id, String username, String password, String officeId, SupplierVO supplier, HospitalVO hospital, Collection<? extends GrantedAuthority> authorities) {
         super(id, username, password, officeId, authorities);
         this.supplier = supplier;
-        this.hospitalId = hospitalId;
+        this.hospital = hospital;
     }
 
-    public ExtOAuthUser(OAuthUser oAuthUser, SupplierVO supplier, String hospitalId) {
+    public ExtOAuthUser(OAuthUser oAuthUser, SupplierVO supplier, HospitalVO hospital) {
         super(oAuthUser.getId(), oAuthUser.getUserKey(), oAuthUser.getPassword(), oAuthUser.getOfficeId(), oAuthUser.getAuthorities());
         this.supplier = supplier;
-        this.hospitalId = hospitalId;
+        this.hospital = hospital;
     }
 
-    public ExtOAuthUser(String id, String username, String password, String officeId, SupplierVO supplier, String hospitalId, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+    public ExtOAuthUser(String id, String username, String password, String officeId, SupplierVO supplier, HospitalVO hospital, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(id, username, password, officeId, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.supplier = supplier;
-        this.hospitalId = hospitalId;
+        this.hospital = hospital;
     }
 
     public boolean isSupplier() {
@@ -52,7 +52,7 @@ public class ExtOAuthUser extends OAuthUser {
     }
 
     public boolean isHospital() {
-        return StringUtils.isNotBlank(hospitalId);
+        return hospital != null;
     }
 
 
@@ -67,6 +67,6 @@ public class ExtOAuthUser extends OAuthUser {
         if (!isHospital()) {
             throw new BusinessException("当前用户非医院身份，不允许操作");
         }
-        return hospitalId;
+        return hospital.getId();
     }
 }

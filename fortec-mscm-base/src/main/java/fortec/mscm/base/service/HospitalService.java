@@ -14,7 +14,12 @@ import fortec.common.core.service.IBaseService;
 */
 public interface HospitalService extends IBaseService<Hospital> {
 
-
+    /**
+     * 通过组织机构查询医院信息
+     * @param officeId
+     * @return
+     */
+    Hospital findByOfficeId(String officeId);
 
 }
     

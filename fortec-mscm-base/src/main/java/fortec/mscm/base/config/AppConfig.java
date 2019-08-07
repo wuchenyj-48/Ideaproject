@@ -5,12 +5,14 @@ import fortec.common.feign.clients.UserClient;
 import fortec.common.security.annotation.EnableDefaultSecurityCommonConfig;
 import fortec.common.security.annotation.EnableDefaultSecurityResourceConfig;
 import fortec.mscm.feign.annotation.EnableMscmFeignConfig;
+import fortec.mscm.feign.clients.HospitalClient;
 import fortec.mscm.feign.clients.SupplierClient;
 import fortec.mscm.security.userdetails.MscmUserDetailsServiceImpl;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -28,9 +30,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableDefaultSecurityResourceConfig
 public class AppConfig {
 
+    @Primary
     @Bean
-    public UserDetailsService userDetailsService(UserClient userClient, SupplierClient supplierClient) {
-        return new MscmUserDetailsServiceImpl(userClient, supplierClient);
+    public UserDetailsService mscmUserDetailsService(UserClient userClient, SupplierClient supplierClient, HospitalClient hospitalClient) {
+        return new MscmUserDetailsServiceImpl(userClient, supplierClient,hospitalClient);
     }
 
 }

@@ -27,7 +27,7 @@
                             <span class="required-star">*</span> 医院代码
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="code" required lay-verify="required" placeholder="请输入医院代码"
+                            <input type="text" name="code" readonly placeholder="保存后自动生成"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -72,10 +72,10 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            区域id
+                            联系人
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="regionId" lay-verify="" placeholder="请输入区域id"
+                            <input type="text" name="contactor" lay-verify="" placeholder="请输入联系人"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -94,15 +94,6 @@
                 </div>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            联系人
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="contactor" lay-verify="" placeholder="请输入联系人"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
 
 
                     <div class="layui-col-xs6">
@@ -114,10 +105,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
                             电话
@@ -127,8 +114,8 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
                 </div>
+
                 <div class="block"></div>
                 <div class="layui-row ">
                     <div class="layui-form-item">
@@ -210,7 +197,7 @@
                             height: 300,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                {field: 'locationName', title: '收货地点', align: 'center',templet: "#locationNameTpl"},
+                                {field: 'locationName', title: '收货地点', align: 'center', templet: "#locationNameTpl"},
                                 {
                                     field: 'LAY_CELL_TOOLBAR',
                                     title: '操作',
@@ -224,7 +211,7 @@
                 }
 
                 //医院生成大写首字母
-                $("input[name='name']").bind("input propertychange", ()=> {
+                $("input[name='name']").bind("input propertychange", () => {
                     let allFirstLetter = $pinyins.getAllFirstLetter($("input[name='name']").val())
                     $("input[name='pinyin']").val(allFirstLetter);
                 })
@@ -346,11 +333,13 @@
                     }
 
                     promise.then(resp => {
-                        if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1})
+                        let data = resp.data
+                        if (data.success) {
+                            layer.msg(data.msg, {icon: 1})
+                            initForm(layui.$.extend(model, {id: data.id, code: data.code}))
                             parent.reloadTable()
                         } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                            layer.msg(data.msg, {icon: 5})
                         }
                     })
 

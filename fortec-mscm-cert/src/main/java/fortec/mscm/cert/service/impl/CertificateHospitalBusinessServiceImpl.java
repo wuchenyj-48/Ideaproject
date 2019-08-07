@@ -9,7 +9,7 @@ import fortec.mscm.cert.entity.CertificateHospitalBusiness;
 import fortec.mscm.cert.mapper.CertificateHospitalBusinessMapper;
 import fortec.mscm.cert.request.CertificateHospitalBusinessQueryRequest;
 import fortec.mscm.cert.service.CertificateHospitalBusinessService;
-import fortec.mscm.core.consts.CommonConsts;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +44,7 @@ public class CertificateHospitalBusinessServiceImpl extends BaseServiceImpl<Cert
 
     @Override
     public boolean save(CertificateHospitalBusiness entity) {
-        entity.setHospitalId(CommonConsts.HOSPITAL_ID);
+        entity.setHospitalId(UserUtils.getHospitalId());
         return super.save(entity);
     }
 

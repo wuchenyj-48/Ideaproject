@@ -8,7 +8,7 @@ import fortec.mscm.cert.vo.OverAllCatalog;
 import fortec.mscm.cert.vo.OverAllManufacturer;
 import fortec.mscm.cert.vo.OverAllMaterial;
 import fortec.mscm.cert.vo.OverAllSupplier;
-import fortec.mscm.core.consts.CommonConsts;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,27 +31,27 @@ public class OverallViewSeriveImpl implements OverallViewerService {
 
     @Override
     public List<OverAllSupplier> listSupplierCertCnt() {
-        return overallViewerMapper.listSupplierCertCnt(CommonConsts.HOSPITAL_ID);
+        return overallViewerMapper.listSupplierCertCnt(UserUtils.getHospitalId());
     }
 
     @Override
     public List<OverAllManufacturer> listManufacturerCertCnt(String supplierId) {
-        return overallViewerMapper.listManufacturerCertCnt(CommonConsts.HOSPITAL_ID, supplierId);
+        return overallViewerMapper.listManufacturerCertCnt(UserUtils.getHospitalId(), supplierId);
     }
 
     @Override
     public List<OverAllCatalog> listCatalogCertCnt(String manufacturerId) {
-        return overallViewerMapper.listCatalogCertCnt(CommonConsts.HOSPITAL_ID, manufacturerId);
+        return overallViewerMapper.listCatalogCertCnt(UserUtils.getHospitalId(), manufacturerId);
     }
 
     @Override
     public List<OverAllMaterial> listMaterialCertCnt(String catalogId) {
-        return overallViewerMapper.listMaterialCertCnt(CommonConsts.HOSPITAL_ID, catalogId);
+        return overallViewerMapper.listMaterialCertCnt(UserUtils.getHospitalId(), catalogId);
     }
 
     @Override
     public IPage pageOverAll(OverallViewerQueryRequest request) {
-        request.setHospitalId(CommonConsts.HOSPITAL_ID);
+        request.setHospitalId(UserUtils.getHospitalId());
         return overallViewerMapper.pageOverAll(request.getPage(), request);
     }
 }

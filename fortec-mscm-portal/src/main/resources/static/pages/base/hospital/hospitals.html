@@ -73,6 +73,7 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
+                        { field: 'code', title: '医院代码', align: 'center'},
                         { field: 'name', title: '医院名称', align: 'center'},
                         { field: 'shortName', title: '简称', align: 'center'},
                         { field: 'pinyin', title: '拼音', align: 'center'},
@@ -80,8 +81,6 @@
                         { field: 'contactor', title: '联系人', align: 'center'},
                         { field: 'email', title: '邮箱', align: 'center'},
                         { field: 'phone', title: '电话', align: 'center'},
-                        { field: 'creator', title: '创建人', align: 'center'},
-                        { field: 'gmtModified', title: '修改时间', align: 'center'},
                         {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });
@@ -108,7 +107,7 @@
 
                         $http.delete(`/base/hospitals/` + data.id).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
-                            table.reload('listTable')
+                            window.reloadTable()
 
                             layer.close(index)
                         })

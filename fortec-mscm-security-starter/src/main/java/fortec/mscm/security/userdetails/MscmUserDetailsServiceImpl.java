@@ -4,7 +4,9 @@ import fortec.common.feign.clients.UserClient;
 import fortec.common.feign.dto.UserInfoDTO;
 import fortec.common.feign.model.CommonResult;
 import fortec.common.security.userdetails.UserDetailsServiceImpl;
+import fortec.mscm.base.feign.vo.HospitalVO;
 import fortec.mscm.base.feign.vo.SupplierVO;
+import fortec.mscm.feign.clients.HospitalClient;
 import fortec.mscm.feign.clients.SupplierClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,10 +32,13 @@ public class MscmUserDetailsServiceImpl extends UserDetailsServiceImpl {
 
     private SupplierClient supplierClient;
 
-    public MscmUserDetailsServiceImpl(UserClient userClient, SupplierClient supplierClient) {
+    private HospitalClient hospitalClient;
+
+    public MscmUserDetailsServiceImpl(UserClient userClient, SupplierClient supplierClient,HospitalClient hospitalClient) {
         super(userClient);
         this.userClient = userClient;
         this.supplierClient = supplierClient;
+        this.hospitalClient = hospitalClient;
     }
 
 
@@ -64,6 +69,10 @@ public class MscmUserDetailsServiceImpl extends UserDetailsServiceImpl {
 
         SupplierVO supplier = supplierClient.findByOfficeId(user.getOfficeId());
 
-        return new ExtOAuthUser(user.getId(), username, user.getUserPassword(), user.getOfficeId(), supplier == null ? null : supplier, "", authorities);
+        if(supplier != null){
+            return new ExtOAuthUser(user.getId(), username, user.getUserPassword(), user.getOfficeId(), supplier, null, authorities);
+        }
+        HospitalVO hospital = hospitalClient.findByOfficeId(user.getOfficeId());
+        return new ExtOAuthUser(user.getId(), username, user.getUserPassword(), user.getOfficeId(), null ,hospital, authorities);
     }
 }

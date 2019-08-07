@@ -25,7 +25,6 @@ public class SupplierServiceImpl extends BaseServiceImpl<SupplierMapper, Supplie
 
     @Override
     public Supplier findByOfficeId(String officeId) {
-
         return this.getOne(Wrappers.<Supplier>query().eq("office_id",officeId));
     }
 }

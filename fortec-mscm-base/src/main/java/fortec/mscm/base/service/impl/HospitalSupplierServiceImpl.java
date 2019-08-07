@@ -9,7 +9,6 @@ import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.mapper.HospitalSupplierMapper;
 import fortec.mscm.base.request.HospitalSupplierQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
-import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class HospitalSupplierServiceImpl extends BaseServiceImpl<HospitalSupplie
 
     @Override
     public IPage<HospitalSupplier> pageForHospital(HospitalSupplierQueryRequest request) {
-        request.setHospitalId(CommonConsts.HOSPITAL_ID);
+        request.setHospitalId(UserUtils.getHospitalId());
         return this.baseMapper.page(request.getPage(),request);
     }
 

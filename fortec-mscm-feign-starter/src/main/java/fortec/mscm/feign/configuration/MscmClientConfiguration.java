@@ -11,6 +11,7 @@ import feign.codec.Encoder;
 import fortec.common.feign.annotation.EnableDefaultFeignConfig;
 import fortec.common.feign.interceptor.TokenInterceptor;
 import fortec.mscm.core.consts.ServiceNames;
+import fortec.mscm.feign.clients.HospitalClient;
 import fortec.mscm.feign.clients.SupplierClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
@@ -33,6 +34,7 @@ public class MscmClientConfiguration {
 
     private SupplierClient supplierClient;
 
+    private HospitalClient hospitalClient;
 
     public MscmClientConfiguration(Decoder decoder, Encoder encoder, Client client, Contract contract,
                                    TokenInterceptor tokenInterceptor, @Autowired(required = false) FeignTracingTransmitter feignTracingTransmitter) {
@@ -60,6 +62,10 @@ public class MscmClientConfiguration {
         return this.supplierClient;
     }
 
+    @Bean
+    public HospitalClient hospitalClient() {
+        return this.hospitalClient;
+    }
 
 
 }
