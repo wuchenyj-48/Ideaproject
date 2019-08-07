@@ -11,6 +11,9 @@
         left join hospital h on sa.hospital_id = h.id
         left join supplier s on sa.supplier_id = s.id
         <where>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and s.id like concat( '%', #{request.supplierId}, '%')
+            </if>
             <if test="request.code != null and request.code != ''">
                 and sa.code like concat( '%', #{request.code}, '%')
             </if>
@@ -30,6 +33,9 @@
         left join hospital h on sa.hospital_id = h.id
         left join supplier s on sa.supplier_id = s.id
         <where>
+            <if test="request.hospitalId != null and request.hospitalId != ''">
+                and h.id = #{request.hospitalId}
+            </if>
             <if test="request.code != null and request.code != ''">
                 and sa.code like concat( '%', #{request.code}, '%')
             </if>

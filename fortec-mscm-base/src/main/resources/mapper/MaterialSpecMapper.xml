@@ -15,7 +15,7 @@
         inner join material m on ms.material_id = m.id
         <where>
             <if test="request.supplierId != null and request.supplierId != ''">
-                and m.supplier_id like concat('%',#{request.supplierId},'%')
+                and m.supplier_id = #{request.supplierId}
             </if>
             <if test="request.keywords != null and request.keywords != ''">
                 and ms.material_spec like concat('%',#{request.keywords},'%')

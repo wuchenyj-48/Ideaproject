@@ -125,18 +125,6 @@
                     </div>
                 </div>
 
-<!--                <div class="layui-row layui-col-space5 layui-form-item">-->
-<!--                    <div class="layui-col-xs6">-->
-<!--                        <label class="layui-form-label">-->
-<!--                            区域id-->
-<!--                        </label>-->
-<!--                        <div class="layui-input-block">-->
-<!--                            <input type="text" name="regionId" lay-verify="" placeholder="请输入区域id"-->
-<!--                                   autocomplete="off" class="layui-input">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
@@ -156,7 +144,6 @@
                         <div class="layui-input-block">
                             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">提交</button>
                             <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
-                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
                         </div>
                     </div>
                 </div>
@@ -214,8 +201,6 @@
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     let field = data.field
-                    console.log(Number.parseInt(field.isDrug) , Number.parseInt(field.isConsumable) , Number.parseInt(field.isReagent))
-                    console.log(Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent))
                     if((Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent)) == 0){
                         layer.msg("药品/耗材/试剂供应商 至少选中一个", {icon: 5})
                         return false;

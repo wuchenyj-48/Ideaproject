@@ -53,6 +53,12 @@ public class MscmClientConfiguration {
                 .requestInterceptors(requestInterceptors)
                 .target(SupplierClient.class, "http://" + ServiceNames.BASE);
 
+        this.hospitalClient = Feign.builder().client(client)
+                .encoder(encoder)
+                .decoder(decoder)
+                .contract(contract)
+                .requestInterceptors(requestInterceptors)
+                .target(HospitalClient.class, "http://" + ServiceNames.BASE);
     }
 
 

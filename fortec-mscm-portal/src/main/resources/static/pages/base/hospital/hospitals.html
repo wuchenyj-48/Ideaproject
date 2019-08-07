@@ -108,7 +108,6 @@
                         $http.delete(`/base/hospitals/` + data.id).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
                             window.reloadTable()
-
                             layer.close(index)
                         })
                     });

@@ -23,6 +23,13 @@ public interface MaterialApplicantService extends IBaseService<MaterialApplicant
     IPage<MaterialApplicant> page(MaterialApplicantQueryRequest request);
 
     /**
+     * 供货申请审核
+     * @param request
+     * @return
+     */
+    IPage<MaterialApplicant> pageAudit(MaterialApplicantQueryRequest request);
+
+    /**
      * 获取当前供应商的关联医院
      * @param entity
      * @return

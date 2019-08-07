@@ -12,9 +12,6 @@
                     <div class="layui-card">
                         <div class="layui-card-header">供应商审核</div>
                         <div class="layui-card-body">
-                            <!--<button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                                <i class="layui-icon layui-icon-add-1"></i> 新增
-                            </button>-->
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
                                     <input type="text" name="companyCode" placeholder="请输入统一社会信用代码" autocomplete="off"
@@ -96,8 +93,8 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-                        {field: 'companyCode', title: '统一社会信用代码', align: 'center'},
-                        {field: 'name', title: '供应商名称', align: 'center'},
+                        {field: 'companyCode', title: '统一社会信用代码', align: 'center',width : 145},
+                        {field: 'name', title: '供应商名称', align: 'center',width : 200},
                         {field: 'applicant', title: '申请人', align: 'center'},
                         {field: 'applicantMobile', title: '申请人手机', align: 'center'},
                         {field: 'applicantEmail', title: '申请人邮箱', align: 'center'},
@@ -127,13 +124,11 @@
                             }
                         },
                         {field: 'cancelReason', title: '审核备注', align: 'center'},
-                        {field: 'modifier', title: '修改人', align: 'center'},
-                        {field: 'gmtModified', title: '修改时间', align: 'center'},
                         {
                             field: "LAY_CELL_TOOLBAR",
                             title: '操作',
                             templet: '#cellToolbar',
-                            width: 150,
+                            width: 130,
                             align: 'center',
                             fixed: 'right'
                         }

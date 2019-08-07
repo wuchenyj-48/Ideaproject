@@ -13,7 +13,10 @@ import lombok.experimental.Accessors;
 public class HospitalMaterialQueryRequest extends PageRequest {
 
     /** 医院标识 */
-    private Long hospitalId;
+    private String hospitalId;
+
+    /** 供应商标识 */
+    private String supplierId;
 
     /** 商品名称 */
     private String materialName;

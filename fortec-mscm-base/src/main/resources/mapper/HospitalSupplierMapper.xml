@@ -14,8 +14,8 @@
             <if test="request.hospitalId != null and request.hospitalName != ''">
                 and hs.hospital_id = #{request.hospitalId}
             </if>
-            <if test="request.supplierID != null and request.supplierID != ''">
-                and hs.supplier_id = #{request.supplierId}
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and s.id = #{request.supplierId}
             </if>
             <if test="request.hospitalName != null and request.hospitalName != ''">
                 and h.name like concat( '%', #{request.hospitalName}, '%')

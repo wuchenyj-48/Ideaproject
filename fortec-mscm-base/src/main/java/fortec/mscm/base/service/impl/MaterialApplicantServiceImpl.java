@@ -65,7 +65,13 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
 
     @Override
     public IPage<MaterialApplicant> page(MaterialApplicantQueryRequest request) {
+        request.setSupplierId(UserUtils.getSupplierId());
+        return this.baseMapper.page(request.getPage(), request);
+    }
 
+    @Override
+    public IPage<MaterialApplicant> pageAudit(MaterialApplicantQueryRequest request) {
+        request.setHospitalId(UserUtils.getHospitalId());
         return this.baseMapper.page(request.getPage(), request);
     }
 

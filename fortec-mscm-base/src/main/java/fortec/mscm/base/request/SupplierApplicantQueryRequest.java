@@ -18,6 +18,12 @@ public class SupplierApplicantQueryRequest extends PageRequest {
     /** 单据状态 */
     private Integer status;
 
+    /** 供应商标识 */
+    private String supplierId;
+
+    /** 医院标识 */
+    private String hospitalId;
+
 
     /** 排除状态，多个以 , 隔开 */
     private String excludeStatus;

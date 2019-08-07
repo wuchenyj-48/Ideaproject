@@ -536,17 +536,17 @@
                 layui.table.on('tool(material_spec_table)', function (obj) {
                     // 获取行索引
                     let index = obj.tr[0].getAttribute("data-index")
-                    var data = obj.data;
+                    let data = obj.data;
                     if (obj.event === 'newDel') {
                         // 未在数据库中存在，直接从界面移除即可
-                        obj.del()
+                        layui.table.deleteRow('material_spec_table', index)
                         return
                     }
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/base/material_specs/` + data.id).then(resp => {
                                 layer.msg(resp.data.msg, {icon: 1})
-                                obj.del()
+                                layui.table.deleteRow('material_spec_table', index)
                             })
                         });
                         return

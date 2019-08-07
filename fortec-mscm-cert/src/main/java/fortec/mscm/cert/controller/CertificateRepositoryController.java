@@ -113,5 +113,10 @@ public class CertificateRepositoryController extends BaseController {
         return CommonResult.ok("关闭成功");
     }
 
+    @PostMapping("/upgrade")
+    public CommonResult upgrade(@RequestBody @Valid CertificateRepository entity) {
+        certificateRepositoryService.upgrade(entity);
+        return CommonResult.ok("升级成功");
+    }
 
 }

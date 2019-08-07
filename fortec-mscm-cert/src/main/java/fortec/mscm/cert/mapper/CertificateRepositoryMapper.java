@@ -26,6 +26,5 @@ public interface CertificateRepositoryMapper extends BaseMapper<CertificateRepos
 
     IPage<CertificateRepository> pageForWarning(IPage page, @Param("request") CertificateRepositoryQueryRequest request);
 
-    IPage<CertificateRepository> pageForAll(IPage page, @Param("request") CertificateRepositoryQueryRequest request);
 }
     
