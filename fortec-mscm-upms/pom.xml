@@ -18,6 +18,12 @@
             <groupId>fortec</groupId>
             <artifactId>fortec-common-upms</artifactId>
             <version>${fortec.common.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+                    <groupId>org.springframework.security.oauth.boot</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

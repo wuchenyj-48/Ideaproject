@@ -13,10 +13,12 @@
 
 
     <dependencies>
+
         <dependency>
             <groupId>fortec</groupId>
             <artifactId>fortec-common-gateway</artifactId>
             <version>${fortec.common.version}</version>
         </dependency>
+
     </dependencies>
 </project>

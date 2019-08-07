@@ -127,3 +127,7 @@ tx-lcn:
     username: root
     password: 34821015
 
+
+ignore:
+  urls:
+    - /feign/**

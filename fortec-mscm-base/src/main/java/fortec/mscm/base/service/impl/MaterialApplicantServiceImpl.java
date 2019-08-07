@@ -9,11 +9,11 @@ import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
-import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.base.entity.*;
 import fortec.mscm.base.mapper.MaterialApplicantMapper;
 import fortec.mscm.base.request.MaterialApplicantQueryRequest;
 import fortec.mscm.base.service.*;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -74,7 +74,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     public boolean saveHospital(MaterialApplicant entity) {
 
         //供应商id，单据号，单据状态，医院id
-        entity.setSupplierId(CommonConsts.SUPPLIER_ID)
+        entity.setSupplierId(UserUtils.getSupplierId())
                 .setCode(SerialUtils.generateCode("base_material_applicant_code"))
                 .setStatus(MaterialApplicant.STATUS_UNSUBMIT);
         return this.save(entity);

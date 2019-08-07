@@ -14,7 +14,12 @@ import fortec.common.core.service.IBaseService;
 */
 public interface SupplierService extends IBaseService<Supplier> {
 
-
+    /**
+     * 根据机构ID获取供应商信息
+     * @param officeId
+     * @return
+     */
+    Supplier findByOfficeId(String officeId);
 
 }
     

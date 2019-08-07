@@ -8,7 +8,7 @@ import fortec.mscm.cert.entity.CertificateRepository;
 import fortec.mscm.cert.mapper.CertificateRepositoryMapper;
 import fortec.mscm.cert.request.CertificateRepositoryQueryRequest;
 import fortec.mscm.cert.service.CertificateRepositoryService;
-import fortec.mscm.core.consts.CommonConsts;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -38,13 +38,13 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     @Override
     public IPage<CertificateRepository> pageForSupplier(CertificateRepositoryQueryRequest request) {
 
-        request.setTargetDescribeId(CommonConsts.SUPPLIER_ID);
+        request.setTargetDescribeId(UserUtils.getSupplierId());
         return this.page(request);
     }
 
     @Override
     public IPage<CertificateRepository> pageForWarning(CertificateRepositoryQueryRequest request) {
-        request.setSupplierId(CommonConsts.SUPPLIER_ID);
+        request.setSupplierId(UserUtils.getSupplierId());
         return this.baseMapper.pageForWarning(request.getPage(),request);
     }
 
@@ -55,18 +55,18 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
     @Override
     public boolean addForSupplier(CertificateRepository entity) {
-        entity.setSupplierId(CommonConsts.SUPPLIER_ID)
+        entity.setSupplierId(UserUtils.getSupplierId())
                 .setManufacturerId("0")
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setBusinessTypeCode("10")
-                .setTargetDescribeId(CommonConsts.SUPPLIER_ID)
+                .setTargetDescribeId(UserUtils.getSupplierId())
                 .setVersion(1);
         return this.saveOrUpdate(entity);
     }
 
     @Override
     public boolean addForMaterial(CertificateRepository entity) {
-        entity.setSupplierId(CommonConsts.SUPPLIER_ID)
+        entity.setSupplierId(UserUtils.getSupplierId())
                 .setBusinessTypeCode("20")
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setVersion(1);
@@ -75,7 +75,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
     @Override
     public boolean addForManufacturer(CertificateRepository entity) {
-        entity.setSupplierId(CommonConsts.SUPPLIER_ID)
+        entity.setSupplierId(UserUtils.getSupplierId())
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setBusinessTypeCode("30")
                 .setVersion(1);
@@ -84,7 +84,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
     @Override
     public boolean addForCatalog(CertificateRepository entity) {
-        entity.setSupplierId(CommonConsts.SUPPLIER_ID)
+        entity.setSupplierId(UserUtils.getSupplierId())
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setVersion(1);
         return this.saveOrUpdate(entity);

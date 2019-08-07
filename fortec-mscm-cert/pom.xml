@@ -22,14 +22,14 @@
 
         <dependency>
             <groupId>fortec</groupId>
-            <artifactId>fortec-common-security-starter</artifactId>
-            <version>${fortec.common.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>fortec</groupId>
-            <artifactId>fortec-mscm-core</artifactId>
+            <artifactId>fortec-mscm-security-starter</artifactId>
             <version>${parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+                    <groupId>org.springframework.security.oauth.boot</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- inner dependency end  -->

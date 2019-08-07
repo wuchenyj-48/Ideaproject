@@ -9,10 +9,11 @@ import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
 import fortec.common.core.utils.StringUtils;
-import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.base.entity.Manufacturer;
 import fortec.mscm.base.request.ManufacturerQueryRequest;
 import fortec.mscm.base.service.ManufacturerService;
+import fortec.mscm.core.consts.CommonConsts;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +48,7 @@ public class ManufacturerController extends BaseController {
 
     @GetMapping("/page")
     public PageResult page(ManufacturerQueryRequest request) {
-        request.setSupplierId(CommonConsts.SUPPLIER_ID);
+        request.setSupplierId(UserUtils.getSupplierId());
         IPage page = manufacturerService.page(request.getPage(), Wrappers.<Manufacturer>query()
                 .eq(StringUtils.isNotBlank(request.getSupplierId()), "supplier_id", request.getSupplierId())
                 .like(StringUtils.isNotBlank(request.getCompanyCode()), "company_code", request.getCompanyCode())

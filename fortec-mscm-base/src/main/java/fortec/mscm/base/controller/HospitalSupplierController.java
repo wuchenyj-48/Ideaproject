@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.request.HospitalSupplierQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,7 +61,7 @@ public class HospitalSupplierController extends BaseController {
 
     @GetMapping("/page_by_keywords")
     public CommonResult pageByKeywords(HospitalSupplierQueryRequest request){
-        request.setSupplierId(CommonConsts.SUPPLIER_ID);
+        request.setSupplierId(UserUtils.getSupplierId());
         IPage<HospitalSupplier> page = hospitalSupplierService.pageByKeywords(request);
         return PageResult.ok("", page.getRecords(),page.getTotal());
     }

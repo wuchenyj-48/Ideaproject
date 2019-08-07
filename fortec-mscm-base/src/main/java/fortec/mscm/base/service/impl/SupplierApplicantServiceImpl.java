@@ -14,7 +14,7 @@ import fortec.mscm.base.mapper.SupplierApplicantMapper;
 import fortec.mscm.base.request.SupplierApplicantQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
 import fortec.mscm.base.service.SupplierApplicantService;
-import fortec.mscm.base.userdetails.ExtOAuthUser;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -55,15 +55,12 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     @Override
     public boolean applicant(SupplierApplicant entity) {
-        ExtOAuthUser currentUser = (ExtOAuthUser) SecurityUtils.getCurrentUser();
-        if(!currentUser.isSupplier()){
-            throw new BusinessException("当前非供应商用户，不允许申请");
-        }
+
 
         //申请表中是否存在
         SupplierApplicant applicantServiceOne = this.getOne(Wrappers.<SupplierApplicant>query()
                 .eq("hospital_id", entity.getHospitalId())
-                .eq("supplier_id", currentUser.getSupplierId())
+                .eq("supplier_id", UserUtils.getSupplierId())
                 .notIn("status", SupplierApplicant.STATUS_CANCELED, SupplierApplicant.STATUS_UNSUBMIT)
         );
         if (applicantServiceOne != null) {
@@ -76,7 +73,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
 
         //供应商，单据号，单据状态
-        entity.setSupplierId(currentUser.getSupplierId())
+        entity.setSupplierId(UserUtils.getUser().getSupplierId())
                 .setCode(SerialUtils.generateCode("base_supplier_applicant_code"))
                 .setStatus(SupplierApplicant.STATUS_UNSUBMIT);
         return this.saveOrUpdate(entity);

@@ -18,7 +18,20 @@
             <groupId>fortec</groupId>
             <artifactId>fortec-common-security-starter</artifactId>
             <version>${fortec.common.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+                    <groupId>org.springframework.security.oauth.boot</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>fortec</groupId>
+            <artifactId>fortec-mscm-feign-starter</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
         <!-- inner dependency end  -->
 
         <!-- spring security begin     resource server must have -->

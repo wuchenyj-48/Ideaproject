@@ -9,22 +9,32 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fortec-mscm-core</artifactId>
+    <artifactId>fortec-mscm-feign-starter</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>fortec</groupId>
-            <artifactId>fortec-common-core</artifactId>
+            <artifactId>fortec-common-feign-starter</artifactId>
             <version>${fortec.common.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security.oauth.boot</groupId>
-            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-            <version>${springsecurity.oauth2.autoconfigure.version}</version>
-            <optional>true</optional>
+            <groupId>fortec</groupId>
+            <artifactId>fortec-mscm-base-feign</artifactId>
+            <version>${parent.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.netflix.ribbon</groupId>
+            <artifactId>ribbon-loadbalancer</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
 </project>

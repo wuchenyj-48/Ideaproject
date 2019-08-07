@@ -20,6 +20,8 @@
         <module>fortec-mscm-doc</module>
         <module>fortec-mscm-security-starter</module>
         <module>fortec-mscm-core</module>
+        <module>fortec-mscm-base-feign</module>
+        <module>fortec-mscm-feign-starter</module>
     </modules>
 
     <properties>

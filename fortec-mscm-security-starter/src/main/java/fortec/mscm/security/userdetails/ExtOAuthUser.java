@@ -1,7 +1,9 @@
 package fortec.mscm.security.userdetails;
 
+import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.userdetails.OAuthUser;
 import fortec.common.core.utils.StringUtils;
+import fortec.mscm.base.feign.vo.SupplierVO;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -20,36 +22,51 @@ public class ExtOAuthUser extends OAuthUser {
     /**
      * 供应商ID
      */
-    private String supplierId;
+    private SupplierVO supplier;
 
     /**
      * 医院ID
      */
     private String hospitalId;
 
-    public ExtOAuthUser(String id,  String username, String password, String officeId, String supplierId, String hospitalId, Collection<? extends GrantedAuthority> authorities) {
-        super(id,  username, password, officeId, authorities);
-        this.supplierId = supplierId;
+    public ExtOAuthUser(String id, String username, String password, String officeId, SupplierVO supplier, String hospitalId, Collection<? extends GrantedAuthority> authorities) {
+        super(id, username, password, officeId, authorities);
+        this.supplier = supplier;
         this.hospitalId = hospitalId;
     }
 
-    public ExtOAuthUser(OAuthUser oAuthUser, String supplierId, String hospitalId) {
+    public ExtOAuthUser(OAuthUser oAuthUser, SupplierVO supplier, String hospitalId) {
         super(oAuthUser.getId(), oAuthUser.getUserKey(), oAuthUser.getPassword(), oAuthUser.getOfficeId(), oAuthUser.getAuthorities());
-        this.supplierId = supplierId;
+        this.supplier = supplier;
         this.hospitalId = hospitalId;
     }
 
-    public ExtOAuthUser(String id, String username, String password, String officeId, String supplierId, String hospitalId, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-        super(id,  username, password, officeId, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        this.supplierId = supplierId;
+    public ExtOAuthUser(String id, String username, String password, String officeId, SupplierVO supplier, String hospitalId, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+        super(id, username, password, officeId, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        this.supplier = supplier;
         this.hospitalId = hospitalId;
     }
 
     public boolean isSupplier() {
-        return StringUtils.isNotBlank(supplierId);
+        return supplier != null;
     }
 
     public boolean isHospital() {
         return StringUtils.isNotBlank(hospitalId);
+    }
+
+
+    public String getSupplierId() {
+        if (!isSupplier()) {
+            throw new BusinessException("当前用户非供应商身份，不允许操作");
+        }
+        return supplier.getId();
+    }
+
+    public String getHospitalId() {
+        if (!isHospital()) {
+            throw new BusinessException("当前用户非医院身份，不允许操作");
+        }
+        return hospitalId;
     }
 }

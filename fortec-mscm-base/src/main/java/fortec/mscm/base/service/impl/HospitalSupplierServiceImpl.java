@@ -5,11 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.StringUtils;
-import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.mapper.HospitalSupplierMapper;
 import fortec.mscm.base.request.HospitalSupplierQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
+import fortec.mscm.core.consts.CommonConsts;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,7 @@ public class HospitalSupplierServiceImpl extends BaseServiceImpl<HospitalSupplie
 
     @Override
     public IPage<HospitalSupplier> pageForSupplier(HospitalSupplierQueryRequest request) {
-        request.setSupplierId(CommonConsts.SUPPLIER_ID);
+        request.setSupplierId(UserUtils.getSupplierId());
         return this.baseMapper.page(request.getPage(),request);
     }
 
