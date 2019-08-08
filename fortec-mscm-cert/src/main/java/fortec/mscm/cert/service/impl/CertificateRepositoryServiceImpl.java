@@ -51,8 +51,14 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     }
 
     @Override
-    public IPage<CertificateRepository> pageForWarning(CertificateRepositoryQueryRequest request) {
+    public IPage<CertificateRepository> pageForSupplierWarning(CertificateRepositoryQueryRequest request) {
         request.setSupplierId(UserUtils.getSupplierId());
+        return this.baseMapper.pageForWarning(request.getPage(), request);
+    }
+
+    @Override
+    public IPage<CertificateRepository> pageForHospitalWarning(CertificateRepositoryQueryRequest request) {
+        request.setHospitalId(UserUtils.getHospitalId());
         return this.baseMapper.pageForWarning(request.getPage(), request);
     }
 

@@ -35,7 +35,14 @@ public interface CertificateRepositoryService extends IBaseService<CertificateRe
      * @param request
      * @return
      */
-    IPage<CertificateRepository> pageForWarning(CertificateRepositoryQueryRequest request);
+    IPage<CertificateRepository> pageForSupplierWarning(CertificateRepositoryQueryRequest request);
+
+    /**
+     * 供应商效期预警列表页
+     * @param request
+     * @return
+     */
+    IPage<CertificateRepository> pageForHospitalWarning(CertificateRepositoryQueryRequest request);
 
 
     /**
