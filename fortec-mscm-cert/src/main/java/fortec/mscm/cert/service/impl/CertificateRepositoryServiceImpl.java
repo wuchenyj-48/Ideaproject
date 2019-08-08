@@ -2,14 +2,18 @@
 package fortec.mscm.cert.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.service.BaseServiceImpl;
+import fortec.mscm.cert.consts.BusinessTypeConsts;
+import fortec.mscm.cert.entity.Certificate;
 import fortec.mscm.cert.entity.CertificateRepository;
 import fortec.mscm.cert.entity.CertificateRepositoryHistory;
 import fortec.mscm.cert.mapper.CertificateRepositoryMapper;
 import fortec.mscm.cert.request.CertificateRepositoryQueryRequest;
 import fortec.mscm.cert.service.CertificateRepositoryHistoryService;
 import fortec.mscm.cert.service.CertificateRepositoryService;
+import fortec.mscm.cert.service.CertificateService;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +35,25 @@ import java.util.List;
 public class CertificateRepositoryServiceImpl extends BaseServiceImpl<CertificateRepositoryMapper, CertificateRepository> implements CertificateRepositoryService {
 
     private CertificateRepositoryHistoryService certificateRepositoryHistoryService;
+    private CertificateService certificateService;
+
+
+    private void assertCertUnique(String certificateId, String targetId) {
+        Certificate certificate = certificateService.getById(certificateId);
+
+        //判断所选资质是否限制唯一
+        if (certificate.getLimitUnique() != 0) {
+            List<CertificateRepository> list = this.list(Wrappers.<CertificateRepository>query()
+                    .eq("certificate_id", certificateId)
+                    .eq("supplier_id", UserUtils.getSupplierId())
+                    .eq("target_describe_id", targetId));
+
+            //查询该资质是否已经上传
+            if (list.size() != 0) {
+                throw new BusinessException("所选资质已经上传过，请重新选择");
+            }
+        }
+    }
 
     @Override
     public List<CertificateRepository> list(CertificateRepositoryQueryRequest request) {
@@ -65,10 +88,12 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
     @Override
     public boolean addForSupplier(CertificateRepository entity) {
+        //判断资质是否已上传
+        this.assertCertUnique(entity.getCertificateId(), UserUtils.getSupplierId());
         entity.setSupplierId(UserUtils.getSupplierId())
                 .setManufacturerId("0")
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
-                .setBusinessTypeCode("10")
+                .setBusinessTypeCode(BusinessTypeConsts.SUPPLIER)
                 .setTargetDescribeId(UserUtils.getSupplierId())
                 .setVersion(1);
         return this.saveOrUpdate(entity);
@@ -76,8 +101,10 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
     @Override
     public boolean addForMaterial(CertificateRepository entity) {
+        this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+
         entity.setSupplierId(UserUtils.getSupplierId())
-                .setBusinessTypeCode("20")
+                .setBusinessTypeCode(BusinessTypeConsts.MATERIAL)
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setVersion(1);
         return this.saveOrUpdate(entity);
@@ -85,15 +112,19 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
     @Override
     public boolean addForManufacturer(CertificateRepository entity) {
+        this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+
         entity.setSupplierId(UserUtils.getSupplierId())
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
-                .setBusinessTypeCode("30")
+                .setBusinessTypeCode(BusinessTypeConsts.MANUFACTURER)
                 .setVersion(1);
         return this.saveOrUpdate(entity);
     }
 
     @Override
     public boolean addForCatalog(CertificateRepository entity) {
+        this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+
         entity.setSupplierId(UserUtils.getSupplierId())
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
                 .setVersion(1);

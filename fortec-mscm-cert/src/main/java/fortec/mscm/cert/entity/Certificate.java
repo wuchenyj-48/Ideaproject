@@ -51,5 +51,9 @@ public class Certificate extends DataEntity  implements Serializable {
     @Length(min=1, max=30, message="限制文件类型长度必须介于 1 和 30 之间")
     private String limitFileExtension;
 
+    /** 限制唯一 */
+    @NotNull(message = "限制唯一不能为空")
+    private Integer limitUnique;
+
 }
     

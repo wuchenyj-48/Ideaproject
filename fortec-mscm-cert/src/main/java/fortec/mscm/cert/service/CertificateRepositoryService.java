@@ -2,10 +2,9 @@
 package fortec.mscm.cert.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import fortec.common.core.service.IBaseService;
 import fortec.mscm.cert.entity.CertificateRepository;
 import fortec.mscm.cert.request.CertificateRepositoryQueryRequest;
-
-import fortec.common.core.service.IBaseService;
 
 import java.util.List;
 
@@ -16,6 +15,7 @@ import java.util.List;
 * @version 1.0
 */
 public interface CertificateRepositoryService extends IBaseService<CertificateRepository> {
+
 
     List<CertificateRepository> list(CertificateRepositoryQueryRequest request);
 

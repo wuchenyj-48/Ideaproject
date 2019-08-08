@@ -90,6 +90,18 @@
                    </div>
 
                 </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span>  是否限制唯一
+                        </label>
+                        <div class="layui-input-block">
+                            <select name="limitUnique">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
                 <div class="block"></div>
                 <div class="layui-row ">
                     <div class="layui-form-item">
@@ -123,6 +135,9 @@
                 // 渲染下拉框 数据
                 $global.getDictDataList('sys_yes_no').forEach(o => {
                     $("select[name='needExpiryDate']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                $global.getDictDataList('sys_yes_no').forEach(o => {
+                    $("select[name='limitUnique']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
                 form.render('select')
 
