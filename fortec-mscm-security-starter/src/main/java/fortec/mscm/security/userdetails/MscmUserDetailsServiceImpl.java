@@ -1,14 +1,15 @@
 package fortec.mscm.security.userdetails;
 
+import feign.FeignException;
 import fortec.common.feign.clients.UserClient;
-import fortec.common.feign.dto.UserInfoDTO;
-import fortec.common.feign.model.CommonResult;
 import fortec.common.security.userdetails.UserDetailsServiceImpl;
+import fortec.common.upms.feign.vo.UserInfoVO;
 import fortec.mscm.base.feign.vo.HospitalVO;
 import fortec.mscm.base.feign.vo.SupplierVO;
 import fortec.mscm.feign.clients.HospitalClient;
 import fortec.mscm.feign.clients.SupplierClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,19 +47,22 @@ public class MscmUserDetailsServiceImpl extends UserDetailsServiceImpl {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("load current user info....");
 
-        CommonResult<UserInfoDTO> result = userClient.findByUserKey(username);
+        UserInfoVO infoVO = null;
 
-        if (!result.isSuccess()) {
+        try {
+            infoVO = userClient.findInfoByLoginKey(username);
+        } catch (FeignException e) {
+            e.printStackTrace();
+            throw new InsufficientAuthenticationException("令牌已过期或用户服务内部错误");
+        }
+
+        if (infoVO == null) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
 
-        UserInfoDTO userInfo = result.getData();
-
-        UserInfoDTO.User user = userInfo.getUser();
-
         Set<String> authSet = new HashSet<>();
-        String[] roles = userInfo.getRoles() == null ? new String[]{} : userInfo.getRoles();
-        String[] permissions = userInfo.getPermissions() == null ? new String[]{} : userInfo.getPermissions();
+        String[] roles = infoVO.getRoles() == null ? new String[]{} : infoVO.getRoles();
+        String[] permissions = infoVO.getPermissions() == null ? new String[]{} : infoVO.getPermissions();
 
         Arrays.asList(roles).forEach(r -> authSet.add("ROLE_" + r));
         Arrays.asList(permissions).forEach(p -> authSet.add(p));
@@ -67,12 +71,12 @@ public class MscmUserDetailsServiceImpl extends UserDetailsServiceImpl {
                 = AuthorityUtils.createAuthorityList(authSet.toArray(new String[0]));
 
 
-        SupplierVO supplier = supplierClient.findByOfficeId(user.getOfficeId());
+        SupplierVO supplier = supplierClient.findByOfficeId(infoVO.getOfficeId());
 
         if(supplier != null){
-            return new ExtOAuthUser(user.getId(), username, user.getUserPassword(), user.getOfficeId(), supplier, null, authorities);
+            return new ExtOAuthUser(infoVO.getId(), username, infoVO.getPassword(), infoVO.getOfficeId(), supplier, null, authorities);
         }
-        HospitalVO hospital = hospitalClient.findByOfficeId(user.getOfficeId());
-        return new ExtOAuthUser(user.getId(), username, user.getUserPassword(), user.getOfficeId(), null ,hospital, authorities);
+        HospitalVO hospital = hospitalClient.findByOfficeId(infoVO.getOfficeId());
+        return new ExtOAuthUser(infoVO.getId(), username, infoVO.getPassword(), infoVO.getOfficeId(), null ,hospital, authorities);
     }
 }

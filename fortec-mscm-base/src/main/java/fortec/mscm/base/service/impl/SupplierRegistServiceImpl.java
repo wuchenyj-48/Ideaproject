@@ -3,21 +3,29 @@ package fortec.mscm.base.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
+import com.google.common.collect.Maps;
 import fortec.common.core.exceptions.BusinessException;
+import fortec.common.core.msg.domain.SceneMessage;
+import fortec.common.core.msg.enums.ReceiverType;
+import fortec.common.core.msg.provider.MsgPushProvider;
 import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
+import fortec.common.core.utils.DateUtils;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.feign.clients.OfficeClient;
 import fortec.common.feign.clients.UserClient;
-import fortec.common.feign.dto.OfficeDTO;
-import fortec.common.feign.dto.UserDTO;
-import fortec.common.feign.model.CommonResult;
+import fortec.common.upms.feign.dto.OfficeDTO;
+import fortec.common.upms.feign.dto.UserInfoDTO;
+import fortec.common.upms.feign.vo.OfficeVO;
+import fortec.common.upms.feign.vo.UserInfoVO;
 import fortec.mscm.base.entity.Supplier;
 import fortec.mscm.base.entity.SupplierRegist;
 import fortec.mscm.base.mapper.SupplierRegistMapper;
 import fortec.mscm.base.service.SupplierRegistService;
 import fortec.mscm.base.service.SupplierService;
 import fortec.mscm.base.utils.PinYinUtils;
+import fortec.mscm.core.consts.MsgConsts;
+import fortec.mscm.core.consts.SerialRuleConsts;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 
 
 /**
@@ -43,6 +52,9 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
 
     private final UserClient userClient;
     private final OfficeClient officeClient;
+
+
+    private final MsgPushProvider msgPushProvider;
 
     @Transactional(rollbackFor = Exception.class)
     @LcnTransaction
@@ -73,35 +85,33 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
         // 添加机构
         OfficeDTO officeDTO = new OfficeDTO();
         officeDTO.setCode(regist.getCompanyCode())
-                .setName(regist.getName())
-                .setType("SUPPLIER");
-        CommonResult<OfficeDTO> result = officeClient.addOffice(officeDTO);
-        if (!result.isSuccess()) {
-            throw new BusinessException(result.getMsg());
+                .setName(regist.getName());
+        OfficeVO officeVO = officeClient.addForSupplier(officeDTO);
+        if (officeVO == null) {
+            throw new BusinessException("机构添加失败");
         }
 
-        officeDTO = result.getData();
 
         // 添加用户，供应商编号作为主账户
-        String supplierCode = SerialUtils.generateCode("base_supplier_code");
+        String supplierCode = SerialUtils.generateCode(SerialRuleConsts.BASE_SUPPLIER_CODE);
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setOfficeId(officeDTO.getId())
-                .setUserKey(supplierCode)
-                .setUserName(regist.getApplicant())
-                .setUserEmail(regist.getApplicantEmail())
-                .setUserMobile(regist.getApplicantMobile())
-                .setUserRemark("供应商" + regist.getName() + "主账号");
-        CommonResult<UserDTO> userResult = userClient.addUser(userDTO);
-        if (!userResult.isSuccess()) {
-            throw new BusinessException(userResult.getMsg());
+        UserInfoDTO infoDTO = new UserInfoDTO();
+        infoDTO.setOfficeId(officeVO.getId())
+                .setLoginKey(supplierCode)
+                .setNickname(regist.getName())
+                .setEmail(regist.getApplicantEmail())
+                .setMobile(regist.getApplicantMobile())
+                .setRemark("供应商" + regist.getName() + "主账号");
+        UserInfoVO vo = userClient.addUser(infoDTO);
+        if (vo == null) {
+            throw new BusinessException("主用户添加失败");
         }
 
         // 添加正式信息到供应商表
         supplier = new Supplier();
         BeanUtils.copyProperties(regist, supplier);
         supplier
-                .setOfficeId(officeDTO.getId())
+                .setOfficeId(officeVO.getId())
                 .setMobile(regist.getApplicantMobile())
                 .setPinyin(PinYinUtils.getAlpha(supplier.getName()))
                 .setContactor(regist.getApplicant())
@@ -110,7 +120,19 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
                 .setId(null);
         supplierService.save(supplier);
 
+        /**
+         * 发送通知邮件
+         */
+        HashMap<String, Object> params = Maps.newHashMap();
+        params.put("account",infoDTO.getLoginKey());
+        params.put("password","123456");
+        params.put("login_url","http://www.baidu.com");
+        params.put("send_date", DateUtils.format(new Date(),"yyyy-MM-dd"));
 
+        SceneMessage sm = new SceneMessage();
+        sm.setSceneCode(MsgConsts.SCENE_SUPPLLIER_REG_SUCCESS).setReceiver(infoDTO.getLoginKey())
+                .setReceiverType(ReceiverType.USER).setParams(params);
+        msgPushProvider.push(sm);
     }
 
     @Override
