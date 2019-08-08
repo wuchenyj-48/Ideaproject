@@ -21,6 +21,9 @@ public class MaterialQueryRequest extends PageRequest {
     /** 商品名 */
     private String materialTradeName;
 
+    /** 供应商标识 */
+    private String supplierId;
+
 
 }
     

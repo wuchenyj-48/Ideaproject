@@ -20,7 +20,6 @@
             <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
                 <input type="hidden" name="catalogId"/>
-                <input type="hidden" name="supplierId"/>
                 <input type="hidden" name="manufacturerId"/>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
@@ -37,14 +36,15 @@
 
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>供应商
+                            <span class="required-star">*</span>生产厂商
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="supplierName" id="supplierName" placeholder="请选择供应商"
-                                   lay-verify="required" readonly
-                                   class="layui-input"/>
+                            <input type="text" name="manufacturerName" id="manufacturerName" lay-verify="required"
+                                   placeholder="请选择生产厂商" readonly
+                                   autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
                 </div>
 
 
@@ -146,19 +146,6 @@
 
                 </div>
 
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            <span class="required-star">*</span>生产厂商
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="manufacturerName" id="manufacturerName" lay-verify="required"
-                                   placeholder="请选择生产厂商" readonly
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-
-                </div>
                 <div class="block"></div>
                 <div class="layui-row ">
                     <div class="layui-form-item">
@@ -388,7 +375,6 @@
                         $(".child-tab").show()
                         window.reloadMaterialSpecTable && window.reloadMaterialSpecTable()
                     } else {
-                        $("input[name='manufacturerName']").attr("disabled", true)
                         $(".child-tab").hide()
                     }
                 }
@@ -424,7 +410,7 @@
                 });
 
                 //渲染供应商
-                layui.tableSelect.render({
+                /*layui.tableSelect.render({
                     elem: '#supplierName',	//定义输入框input对象 必填
                     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
                     searchKey: 'keywords',	//搜索输入框的name值 默认keyword
@@ -454,9 +440,8 @@
                         //渲染生产厂商
                         getManufacturerName()
                     }
-                })
+                })*/
 
-                function getManufacturerName() {
                     //渲染生产厂商
                     layui.tableSelect.render({
                         elem: '#manufacturerName',	//定义输入框input对象 必填
@@ -464,7 +449,7 @@
                         searchKey: 'keywords',	//搜索输入框的name值 默认keyword
                         searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
                         table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                            url: '/base/manufacturers/page_by_keywords?supplierId=' + $("form input[name='supplierId']").val(),
+                            url: '/base/manufacturers/page_by_keywords',
                             cols: [[
                                 {type: 'radio'},
                                 {field: 'name', title: '厂商名称'},
@@ -480,7 +465,7 @@
                             })
                         }
                     })
-                }
+
 
 
                 // 渲染下拉框 数据

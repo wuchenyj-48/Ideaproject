@@ -22,5 +22,6 @@ public interface MaterialService extends IBaseService<Material> {
      */
     IPage<Material> page(MaterialQueryRequest request);
 
+
 }
     

@@ -26,7 +26,7 @@ import java.io.Serializable;
 public class Material extends DataEntity  implements Serializable {
 
     /** 供应商标识 */
-    @NotNull(message="供应商标识不能为空")
+    /*@NotNull(message="供应商标识不能为空")*/
     private String supplierId;
 
     /** 品类ID */
