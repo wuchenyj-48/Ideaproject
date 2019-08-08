@@ -42,7 +42,6 @@ public class CertificateHospitalBusinessServiceImpl extends BaseServiceImpl<Cert
         return this.baseMapper.page(request.getPage(),request);
     }
 
-
     @Override
     public boolean save(CertificateHospitalBusiness entity) {
         entity.setHospitalId(UserUtils.getHospitalId());

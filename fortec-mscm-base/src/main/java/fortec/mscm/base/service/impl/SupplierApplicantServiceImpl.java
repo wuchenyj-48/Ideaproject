@@ -53,6 +53,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         return this.baseMapper.page(request.getPage(), request);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean applicant(SupplierApplicant entity) {
 
