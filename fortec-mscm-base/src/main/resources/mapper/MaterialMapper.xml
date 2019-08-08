@@ -14,6 +14,9 @@
         left join material_catalog c on m.catalog_id = c.id
         left join manufacturer f on m.manufacturer_id = f.id
         <where>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and s.id = #{request.supplierId}
+            </if>
             <if test="request.materialTypeCode != null and request.materialTypeCode != ''">
                 and m.material_type_code like concat( '%', #{request.materialTypeCode}, '%')
             </if>

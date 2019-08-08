@@ -101,9 +101,15 @@ public class CertificateRepositoryController extends BaseController {
     }
 
 
-    @GetMapping("/page_for_warning")
-    public PageResult pageForWarning(CertificateRepositoryQueryRequest request) {
-        IPage page = certificateRepositoryService.pageForWarning(request);
+    @GetMapping("/page_for_supplier_warning")
+    public PageResult pageForSupplierWarning(CertificateRepositoryQueryRequest request) {
+        IPage page = certificateRepositoryService.pageForSupplierWarning(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
+    @GetMapping("/page_for_hospital_warning")
+    public PageResult pageForHospitalWarning(CertificateRepositoryQueryRequest request) {
+        IPage page = certificateRepositoryService.pageForHospitalWarning(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
@@ -113,5 +119,10 @@ public class CertificateRepositoryController extends BaseController {
         return CommonResult.ok("关闭成功");
     }
 
+    @PostMapping("/upgrade")
+    public CommonResult upgrade(@RequestBody @Valid CertificateRepository entity) {
+        certificateRepositoryService.upgrade(entity);
+        return CommonResult.ok("升级成功");
+    }
 
 }

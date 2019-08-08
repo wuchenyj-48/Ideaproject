@@ -83,24 +83,19 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-                        { field: 'catalogName', title: '品类', align: 'center'},
-                        { field: 'supplierName', title: '供应商', align: 'center'},
+                        { field: 'supplierName', title: '供应商', align: 'center',width : 190},
+                        { field: 'catalogName', title: '品类', align: 'center',width : 220},
                         {
-                            field: 'materialTypeCode', title: '商品类型', align: 'center',
+                            field: 'materialTypeCode', title: '商品类型', align: 'center',width : 90,
                             templet(item) {
                                 return `<div>${$global.getDictLabel('base_material_type', item.materialTypeCode)}</div>`;
                             }
                         },
                         { field: 'materialName', title: '品名', align: 'center'},
                         { field: 'materialTradeName', title: '商品名', align: 'center'},
-                        { field: 'materialErpCode', title: 'ERP代码', align: 'center'},
-                        { field: 'pinyin', title: '助记码', align: 'center'},
                         { field: 'certificateNo', title: '注册证号', align: 'center'},
                         { field: 'certificateExpiredDate', title: '注册证效期', align: 'center'},
-                        { field: 'approvalNo', title: '批准文号', align: 'center'},
                         { field: 'manufacturerName', title: '生产厂商', align: 'center'},
-                        { field: 'modifier', title: '修改人', align: 'center'},
-                        { field: 'gmtModified', title: '修改时间', align: 'center'},
                         {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });

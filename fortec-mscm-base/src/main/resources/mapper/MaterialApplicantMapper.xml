@@ -17,6 +17,12 @@
             <if test="request.supplierName != null and request.supplierName != ''">
                 and s.name like concat('%',#{request.supplierName},'%')
             </if>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and s.id = #{request.supplierId}
+            </if>
+            <if test="request.hospitalId != null and request.hospitalId != ''">
+                and h.id = #{request.hospitalId}
+            </if>
             <if test="request.code != null and request.code != ''">
                 and ma.code like concat('%',#{request.code},'%')
             </if>

@@ -48,6 +48,12 @@ public class MaterialApplicantController extends BaseController {
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
+    @GetMapping("/pageAudit")
+    public PageResult pageAudit(MaterialApplicantQueryRequest request) {
+        IPage page = materialApplicantService.pageAudit(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
     @GetMapping("/list")
     public CommonResult list(MaterialApplicantQueryRequest request) {
         List<MaterialApplicant> list = materialApplicantService.list(request);

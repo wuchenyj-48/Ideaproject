@@ -10,12 +10,16 @@
         hospital_material hm
         inner join hospital h on hm.hospital_id = h.id
         inner join material_spec ms on hm.material_spec_id = ms.id
+        inner join material m on ms.material_id = m.id
         <where>
             <if test="request.hospitalName != null and request.hospitalName != ''">
                 and h.name like concat( '%', #{request.hospitalName}, '%')
             </if>
             <if test="request.materialSpec != null and request.materialSpec != ''">
                 and ms.material_spec like concat( '%', #{request.materialSpec}, '%')
+            </if>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and m.supplier_id = #{request.supplierId}
             </if>
             <if test="request.price != null and request.price != ''">
                 and ms.price like concat( '%', #{request.price}, '%')

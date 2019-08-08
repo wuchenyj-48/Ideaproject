@@ -28,7 +28,7 @@ public class HospitalSupplierQueryRequest extends PageRequest {
     private String keywords;
 
     /** 停用标志 */
-    private String inactive;
+    private Integer inactive;
 
 
 }

@@ -34,12 +34,12 @@
     </select>
     <select id="list" resultType="fortec.mscm.cert.entity.CertificateRepository">
         select
-        cr.*,
-        c.name as certificate_name,
-        c.need_expiry_date as need_expiry_date,
-        c.maxium_file_size as maxium_file_size,
-        c.maxium_file_count as maxium_file_count,
-        c.limit_file_extension as limit_file_extension
+            cr.*,
+            c.name as certificate_name,
+            c.need_expiry_date as need_expiry_date,
+            c.maxium_file_size as maxium_file_size,
+            c.maxium_file_count as maxium_file_count,
+            c.limit_file_extension as limit_file_extension
         from
         certificate_repository cr
         inner join certificate c on cr.certificate_id = c.id
@@ -66,7 +66,11 @@
     <select id="pageForWarning" resultType="fortec.mscm.cert.entity.CertificateRepository">
         select
             cr.*,
-            c.name as certificate_name
+            c.name as certificate_name,
+            c.need_expiry_date as need_expiry_date,
+            c.maxium_file_size as maxium_file_size,
+            c.maxium_file_count as maxium_file_count,
+            c.limit_file_extension as limit_file_extension
         from
         certificate_repository cr
         inner join certificate c on cr.certificate_id = c.id
@@ -92,20 +96,6 @@
         </where>
         order by cr.gmt_modified desc
     </select>
-    <select id="pageForAll" resultType="fortec.mscm.cert.entity.CertificateRepository">
-        select
-            cr.*,
-            c.name as certificate_name
-        from
-        certificate_repository cr
-        inner join certificate c on cr.certificate_id = c.id
-        <where>
-            <if test="request.targetDescribeId != null and request.targetDescribeId != ''">
-                and cr.target_describe_id = #{request.targetDescribeId}
-            </if>
-            and cr.close_flag = 0
-        </where>
-        order by cr.gmt_modified desc
-    </select>
+
 
 </mapper>

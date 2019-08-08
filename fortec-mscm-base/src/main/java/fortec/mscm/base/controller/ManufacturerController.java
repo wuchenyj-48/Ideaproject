@@ -12,7 +12,6 @@ import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.entity.Manufacturer;
 import fortec.mscm.base.request.ManufacturerQueryRequest;
 import fortec.mscm.base.service.ManufacturerService;
-import fortec.mscm.core.consts.CommonConsts;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -85,9 +84,9 @@ public class ManufacturerController extends BaseController {
     }
 
     @GetMapping("/page_by_keywords")
-    public PageResult page(ManufacturerQueryRequest request, @RequestParam(value = "keywords", required = false) String keywords) {
+    public PageResult pageByKeywords(ManufacturerQueryRequest request, @RequestParam(value = "keywords", required = false) String keywords) {
         IPage page = manufacturerService.page(request.getPage(), Wrappers.<Manufacturer>query()
-                .eq(StringUtils.isNotBlank(CommonConsts.SUPPLIER_ID), "supplier_id", CommonConsts.SUPPLIER_ID)
+                .eq("supplier_id",UserUtils.getSupplierId())
                 .like(StringUtils.isNotBlank(keywords), "company_code", keywords)
                 .like(StringUtils.isNotBlank(keywords), "name", keywords)
                 .orderByDesc("gmt_modified")

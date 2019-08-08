@@ -9,6 +9,7 @@ import fortec.mscm.base.entity.HospitalMaterial;
 import fortec.mscm.base.mapper.HospitalMaterialMapper;
 import fortec.mscm.base.request.HospitalMaterialQueryRequest;
 import fortec.mscm.base.service.HospitalMaterialService;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,7 @@ public class HospitalMaterialServiceImpl extends BaseServiceImpl<HospitalMateria
 
     @Override
     public IPage<HospitalMaterial> page(HospitalMaterialQueryRequest request) {
+        request.setSupplierId(UserUtils.getSupplierId());
         return this.baseMapper.page(request.getPage(), request);
     }
 

@@ -15,6 +15,9 @@
         INNER JOIN `mscm-base`.hospital h on chb.hospital_id = h.id
         INNER JOIN certificate c ON chb.certificate_id = c.id
         <where>
+            <if test="request.hospitalId != null and request.hospitalId != ''">
+                and chb.hospital_id = #{request.hospitalId}
+            </if>
             <if test="request.businessTypeCode != null and request.businessTypeCode != ''">
                 and chb.business_type_code = #{request.businessTypeCode}
             </if>

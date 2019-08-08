@@ -64,7 +64,7 @@
 
                     layer.photos({
                         photos: {
-                            data: JSON.parse(row.docIds).map(o => {
+                            data: row.docIds.map(o => {
                                 return {
                                     src: `/doc/files/${o}?preview`
                                 }

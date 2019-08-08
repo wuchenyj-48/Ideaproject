@@ -32,13 +32,13 @@ public class MaterialController extends BaseController {
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid Material entity) {
-        boolean bSave = materialService.saveCascadeById(entity);
+        boolean bSave = materialService.saveOrUpdate(entity);
         return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
     }
 
     @PutMapping
     public CommonResult update(@RequestBody @Valid Material entity) {
-        boolean bUpdate = materialService.updateCascadeById(entity);
+        boolean bUpdate = materialService.saveOrUpdate(entity);
         return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 

@@ -49,7 +49,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     @Override
     public IPage<SupplierApplicant> page(SupplierApplicantQueryRequest request) {
-
+        request.setSupplierId(UserUtils.getSupplierId());
         return this.baseMapper.page(request.getPage(), request);
     }
 
@@ -136,6 +136,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     @Override
     public IPage<SupplierApplicant> pageAudit(SupplierApplicantQueryRequest request) {
+        request.setHospitalId(UserUtils.getHospitalId());
         return this.baseMapper.pageAudit(request.getPage(), request);
     }
 

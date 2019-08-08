@@ -42,6 +42,11 @@ public class CertificateRepositoryQueryRequest extends PageRequest {
      */
     private String supplierId;
 
+    /**
+     * 医院标识
+     */
+    private String hospitalId;
+
 
 
 }

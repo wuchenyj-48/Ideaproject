@@ -80,7 +80,7 @@
                     elem: '#listTable',
                     title: '供应商资质仓库信息',
                     height: 'full-160',
-                    url: '/cert/certificate_repositorys/page_for_warning',
+                    url: '/cert/certificate_repositorys/page_for_supplier_warning',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
@@ -142,7 +142,22 @@
                     });
                 }
 
+                window.upgradeCert = (data) => {
+                    let index = layer.open({
+                        title: "资质升级",
+                        type: 2,
+                        area: ['950px', '520px'],
+                        content: ['./supplier_certificate_warning_form.html'],
+                        success(layero, index) {
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm(data)
+                            layer.iframeAuto(index)
+                        }
+                    });
+                }
+
                 window.viewCert = (data,rowIndex) => {
+                    debugger
                         layer.photos({
                             photos: {
                                 data: data.docIds.map(o => {
@@ -197,6 +212,8 @@
                         window.openHistory(obj.data, rowIndex)
                     } else if (obj.event === 'cert') {
                         window.viewCert(obj.data, rowIndex)
+                    }else if (obj.event === 'upgrade') {
+                        window.upgradeCert(obj.data)
                     }
                 });
 

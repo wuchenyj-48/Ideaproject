@@ -50,7 +50,7 @@
 
         <script type="text/html" id="inactiveTpl">
             <input type="checkbox" name="inactive" data-id="{{d.id}}" value="{{d.inactive}}" lay-skin="switch" lay-text="正常|停用"
-                   lay-filter="inactive" {{ d.id== 0 ? 'checked' : '' }}>
+                   lay-filter="inactive" {{ d.inactive== 0 ? 'checked' : '' }}>
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>

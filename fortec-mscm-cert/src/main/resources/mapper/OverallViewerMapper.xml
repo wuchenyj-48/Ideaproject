@@ -46,7 +46,7 @@
     </select>
     <select id="pageOverAll" resultType="fortec.mscm.cert.entity.CertificateRepository">
         select
-            tmp.certificate_name,tmp.business_type_code,cr.id,cr.certificate_no,cr.expiry_date,cr.certificate_sign,cr.certificate_sign_to,cr.version
+            tmp.certificate_name,tmp.business_type_code,cr.id,cr.certificate_no,cr.expiry_date,cr.certificate_sign,cr.certificate_sign_to,cr.version,cr.doc_ids
         from
         (
             select

@@ -35,14 +35,14 @@ public interface CertificateRepositoryService extends IBaseService<CertificateRe
      * @param request
      * @return
      */
-    IPage<CertificateRepository> pageForWarning(CertificateRepositoryQueryRequest request);
+    IPage<CertificateRepository> pageForSupplierWarning(CertificateRepositoryQueryRequest request);
 
     /**
-     * 全景查看页面
+     * 供应商效期预警列表页
      * @param request
      * @return
      */
-    IPage<CertificateRepository> pageForAll(CertificateRepositoryQueryRequest request);
+    IPage<CertificateRepository> pageForHospitalWarning(CertificateRepositoryQueryRequest request);
 
 
     /**
@@ -78,6 +78,12 @@ public interface CertificateRepositoryService extends IBaseService<CertificateRe
      * @param id
      */
     void close(String id);
+
+    /**
+     * 供应商资质升级
+     * @param entity
+     */
+    void upgrade(CertificateRepository entity);
 
 }
     

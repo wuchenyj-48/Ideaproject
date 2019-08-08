@@ -30,6 +30,5 @@ public class SupplierRegistQueryRequest extends PageRequest {
     /** 审核状态 : 0：未提交，1：待审核，2：审核通过。字典类型：base_supplier_regist_astatus */
     private Integer astatus;
 
-
 }
     

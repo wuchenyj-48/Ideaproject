@@ -38,6 +38,7 @@ public class CertificateHospitalBusinessServiceImpl extends BaseServiceImpl<Cert
 
     @Override
     public IPage<CertificateHospitalBusiness> page(CertificateHospitalBusinessQueryRequest request) {
+        request.setHospitalId(UserUtils.getHospitalId());
         return this.baseMapper.page(request.getPage(),request);
     }
 

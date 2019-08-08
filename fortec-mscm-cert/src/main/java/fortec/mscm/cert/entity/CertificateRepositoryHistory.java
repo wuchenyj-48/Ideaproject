@@ -2,6 +2,7 @@
 
 package fortec.mscm.cert.entity;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
 import lombok.Data;
@@ -69,7 +70,7 @@ public class CertificateRepositoryHistory extends DataEntity  implements Seriali
     private String certificateSignTo;
 
     /** 文档IDs */
-    private String docIds;
+    private JSONArray docIds;
 
     /** 当前版本号 */
     @NotNull(message="当前版本号不能为空")

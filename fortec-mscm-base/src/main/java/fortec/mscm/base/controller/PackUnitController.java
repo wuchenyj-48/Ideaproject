@@ -48,8 +48,8 @@ public class PackUnitController extends BaseController {
     @GetMapping("/page")
     public PageResult page(PackUnitQueryRequest request) {
         IPage page = packUnitService.page(request.getPage(), Wrappers.<PackUnit>query()
-                    .eq(StringUtils.isNotBlank(request.getId()), "id", request.getId())
-                    .eq(StringUtils.isNotBlank(request.getName()), "name", request.getName())
+                    .like(StringUtils.isNotBlank(request.getId()), "id", request.getId())
+                    .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
                      .orderByDesc("gmt_modified")
                 );
 
