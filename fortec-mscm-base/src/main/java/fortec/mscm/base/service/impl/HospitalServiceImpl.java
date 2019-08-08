@@ -8,9 +8,10 @@ import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.feign.clients.OfficeClient;
 import fortec.common.feign.clients.UserClient;
-import fortec.common.feign.dto.OfficeDTO;
-import fortec.common.feign.dto.UserDTO;
-import fortec.common.feign.model.CommonResult;
+import fortec.common.upms.feign.dto.OfficeDTO;
+import fortec.common.upms.feign.dto.UserInfoDTO;
+import fortec.common.upms.feign.vo.OfficeVO;
+import fortec.common.upms.feign.vo.UserInfoVO;
 import fortec.mscm.base.entity.Hospital;
 import fortec.mscm.base.mapper.HospitalMapper;
 import fortec.mscm.base.service.HospitalService;
@@ -42,31 +43,29 @@ public class HospitalServiceImpl extends BaseServiceImpl<HospitalMapper, Hospita
         // 添加机构
         OfficeDTO officeDTO = new OfficeDTO();
         officeDTO.setCode(entity.getCode())
-                .setName(entity.getName())
-                .setType("HOSPITAL");
-        CommonResult<OfficeDTO> result = officeClient.addOffice(officeDTO);
-        if (!result.isSuccess()) {
-            throw new BusinessException(result.getMsg());
+                .setName(entity.getName());
+        OfficeVO result = officeClient.addForHospital(officeDTO);
+        if (result == null) {
+            throw new BusinessException("机构添加失败");
         }
 
-        officeDTO = result.getData();
-        entity.setOfficeId(officeDTO.getId());
+        entity.setOfficeId(result.getId());
 
 
         // 添加用户，供应商编号作为主账户
         String hospitalCode = SerialUtils.generateCode("base_hospital_code");
         entity.setCode(hospitalCode);
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setOfficeId(officeDTO.getId())
-                .setUserKey(hospitalCode)
-                .setUserName(entity.getName())
-                .setUserEmail(entity.getEmail())
-                .setUserMobile(entity.getPhone())
-                .setUserRemark("医院" + entity.getName() + "主账号");
-        CommonResult<UserDTO> userResult = userClient.addUser(userDTO);
-        if (!userResult.isSuccess()) {
-            throw new BusinessException(userResult.getMsg());
+        UserInfoDTO userDTO = new UserInfoDTO();
+        userDTO.setOfficeId(result.getId())
+                .setLoginKey(hospitalCode)
+                .setNickname(entity.getName())
+                .setEmail(entity.getEmail())
+                .setMobile(entity.getPhone())
+                .setRemark("医院" + entity.getName() + "主账号");
+        UserInfoVO vo = userClient.addUser(userDTO);
+        if (vo == null) {
+            throw new BusinessException("用户添加失败");
         }
         return super.saveCascadeById(entity);
     }
