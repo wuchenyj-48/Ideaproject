@@ -189,9 +189,11 @@
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
                     $("form input:hidden").val('')
-                    $("select[name='isDrug']").val("0")
-                    $("select[name='isConsumable']").val("0")
-                    $("select[name='isReagent']").val("0")
+                    form.val("editForm",{
+                        isDrug: "0" ,
+                        isConsumable: "0" ,
+                        isReagent: "0"
+                    })
                 })
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);

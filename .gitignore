@@ -26,3 +26,5 @@ logs/*
 
 .prefs
 **/.settings/*
+
+.txlcn
