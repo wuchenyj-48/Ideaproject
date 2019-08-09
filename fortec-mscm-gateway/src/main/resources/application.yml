@@ -63,6 +63,9 @@ zuul:
     doc-service:
       path: /doc/**
       serviceId: fortec-common-doc
+    msg-service:
+      path: /msg/**
+      serviceId: fortec-common-msg
     base-service:
       path: /base/**
       serviceId: fortec-mscm-base

@@ -2,11 +2,14 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: fortec-mscm-portal
   resources:
     cache:
       cachecontrol:
         no-cache: true
         no-store: true
+    static-locations: classpath:/static
 eureka:
   instance:
     hostname: 127.0.0.1
@@ -14,7 +17,7 @@ eureka:
     appname: fortec-mscm-portal
     # 必须设置，网关路由时将依据此参数的值获取服务列表，相关连接参考：
     # com.netflix.discovery.shared.Applications.getInstancesByVirtualHostName
-    virtual-host-name: fortec-mscm-portal
+    virtual-host-name: ${spring.application.name}
   client:
     register-with-eureka: true
     fetch-registry: true
