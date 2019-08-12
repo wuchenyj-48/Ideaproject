@@ -1,0 +1,51 @@
+server:
+  port: 8070
+
+
+spring:
+  application:
+    name: fortec-common-tx-manager
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      url: jdbc:mysql://mysql.forten-tech.com:3366/common-tm?useUnicode=true&autoReconnect=true&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+      username: root
+      password: 34821015
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  redis:
+    host: demo-mscm.forten-tech.com
+    port: 6379
+
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: true
+    appname: fortec-common-tx-manager
+    virtual-host-name: fortec-common-tx-manager
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 30
+    service-url:
+      defaultZone: http://127.0.0.1:5001/eureka/
+
+tx-lcn:
+  manager:
+    host: 127.0.0.1
+    port: 8070
+    # 心跳检测时间(ms). 默认为 300000
+    heart-time: 30000
+    # 分布式事务执行总时间(ms). 默认为36000
+    dtx-time: 8000
+    admin-key: admin
+  logger:
+    enabled: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://mysql.forten-tech.com:3366/common-tm?useUnicode=true&autoReconnect=true&allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 34821015
+

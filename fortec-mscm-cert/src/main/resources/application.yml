@@ -67,7 +67,7 @@ eureka:
     fetch-registry: true
     registry-fetch-interval-seconds: 30
     service-url:
-      defaultZone: http://${eureka.instance.hostname}:5001/eureka/
+      defaultZone: http://127.0.0.1:5001/eureka/
 
 #mybatis
 mybatis-plus:
@@ -119,7 +119,7 @@ tx-lcn:
       dtx:
         enabled: true
   client:
-    manager-address: 127.0.0.1:8070
+    manager-address: spring.forten-tech.com:8070
     chain-level: 3
   logger:
     enabled: true

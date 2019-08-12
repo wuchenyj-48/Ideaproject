@@ -6,6 +6,8 @@ logging:
     org.springframework: info
 
 spring:
+  application:
+    name: fortec-mscm-gateway
   servlet:
     multipart:
       enabled: true
@@ -16,13 +18,14 @@ eureka:
   instance:
     hostname: 127.0.0.1
     prefer-ip-address: true
-    appname: fortec-mscm-gateway
+    appname: ${spring.application.name}
+    virtual-host-name: ${spring.application.name}
   client:
     register-with-eureka: true
     fetch-registry: true
     registry-fetch-interval-seconds: 30
     service-url:
-      defaultZone: http://${eureka.instance.hostname}:5001/eureka/
+      defaultZone: http://127.0.0.1:5001/eureka/
 
 zuul:
   socket-timeout-millis: 10000

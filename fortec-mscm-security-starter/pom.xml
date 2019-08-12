@@ -16,12 +16,6 @@
 
         <dependency>
             <groupId>fortec</groupId>
-            <artifactId>fortec-common-feign-starter</artifactId>
-            <version>${fortec.common.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>fortec</groupId>
             <artifactId>fortec-common-security-starter</artifactId>
             <version>${fortec.common.version}</version>
             <exclusions>

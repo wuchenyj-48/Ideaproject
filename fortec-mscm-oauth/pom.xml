@@ -25,6 +25,24 @@
         </dependency>
 
         <dependency>
+            <groupId>fortec</groupId>
+            <artifactId>fortec-mscm-security-starter</artifactId>
+            <version>${parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+                    <groupId>org.springframework.security.oauth.boot</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>fortec</groupId>
+            <artifactId>fortec-mscm-feign-starter</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
             <version>${springsecurity.oauth2.autoconfigure.version}</version>
@@ -33,8 +51,6 @@
 
     <build>
         <plugins>
-
-
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
