@@ -36,7 +36,7 @@ public class ExtOAuthUser extends OAuthUser {
     }
 
     public ExtOAuthUser(OAuthUser oAuthUser, SupplierVO supplier, HospitalVO hospital) {
-        super(oAuthUser.getId(), oAuthUser.getUserKey(), oAuthUser.getPassword(), oAuthUser.getOfficeId(), oAuthUser.getAuthorities());
+        super(oAuthUser.getId(), oAuthUser.getLoginKey(), oAuthUser.getPassword(), oAuthUser.getOfficeId(), oAuthUser.getAuthorities());
         this.supplier = supplier;
         this.hospital = hospital;
     }
