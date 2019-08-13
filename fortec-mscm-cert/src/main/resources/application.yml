@@ -132,3 +132,9 @@ tx-lcn:
     max-pool-size: 10
 
 
+msg:
+  push:
+    provider:
+      rabbit:
+        exchange: msg.direct
+        routing-key: msg.routing.test
