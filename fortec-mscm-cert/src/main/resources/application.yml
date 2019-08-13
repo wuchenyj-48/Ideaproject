@@ -52,7 +52,16 @@ spring:
   redis:
     host: demo-mscm.forten-tech.com
     port: 6379
-
+  rabbitmq:
+    host: demo-mscm.forten-tech.com
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        concurrency: 10
+        max-concurrency: 100
+        prefetch: 5
 
 
 
