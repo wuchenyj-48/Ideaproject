@@ -28,6 +28,7 @@ eureka:
       defaultZone: http://127.0.0.1:5001/eureka/
 
 zuul:
+  set-content-length: true
   socket-timeout-millis: 10000
   connect-timeout-millis: 5000
   # 以下请求头不传递到下游服务器，默认 "Cookie", "Set-Cookie", "Authorization"

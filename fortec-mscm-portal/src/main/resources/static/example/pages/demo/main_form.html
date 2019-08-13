@@ -173,7 +173,7 @@
         <script type="text/html" id="testSelectTpl">
             <select data-name="testSelect" lay-filter="testSelect" lay-event="testSelect"
                     data-index="{{d.LAY_TABLE_INDEX}}">
-                {{# layui.each($global.getDictDataList('sys_yes_no'), function(index, item){ }}
+                {{# layui.each($global.getDictDataList('common_yes_no'), function(index, item){ }}
                 <option value="{{item.value}}" {{item.value== d.testSelect ?
                 'selected' : ''}}>{{item.label}}</option>
                 {{# }) }}
@@ -255,15 +255,15 @@
                 }
 
                 // 渲染下拉框 数据
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("select[name='testSelect']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
 
                 // 渲染单选框/多选框 数据
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("#testRadioDiv").append(`<input type="radio" name="testRadio" value="${o.value}" title="${o.label}" /> `)
                 })
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("#testCheckboxDiv").append(`<input type="checkbox" name="testCheckbox" value="${o.value}" title="${o.label}" /> `)
                 })
                 form.render('radio')

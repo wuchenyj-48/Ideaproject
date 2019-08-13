@@ -93,19 +93,19 @@
                         {
                             field: 'isDrug', title: '药品供应商', align: 'center',width : 100,
                             templet(item) {
-                                return `<div>${$global.getDictLabel('sys_yes_no', item.isDrug)}</div>`;
+                                return `<div>${$global.getDictLabel('common_yes_no', item.isDrug)}</div>`;
                             }
                         },
                         {
                             field: 'isConsumable', title: '耗材供应商', align: 'center',width : 100,
                             templet(item) {
-                                return `<div>${$global.getDictLabel('sys_yes_no', item.isConsumable)}</div>`;
+                                return `<div>${$global.getDictLabel('common_yes_no', item.isConsumable)}</div>`;
                             }
                         },
                         {
                             field: 'isReagent', title: '试剂供应商', align: 'center',width : 100,
                             templet(item) {
-                                return `<div>${$global.getDictLabel('sys_yes_no', item.isReagent)}</div>`;
+                                return `<div>${$global.getDictLabel('common_yes_no', item.isReagent)}</div>`;
                             }
                         },
                         { field: 'address', title: '地址', align: 'center'},
@@ -117,13 +117,13 @@
                 });
 
                  // 渲染下拉框 数据
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("select[name='isDrug']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("select[name='isConsumable']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("select[name='isReagent']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
                 form.render('select')

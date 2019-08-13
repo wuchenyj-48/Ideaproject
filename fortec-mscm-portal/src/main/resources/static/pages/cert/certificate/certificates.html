@@ -86,7 +86,7 @@
                         {
                             field: 'needExpiryDate', title: '需要有效期', align: 'center',
                             templet(item) {
-                                return `<div>${$global.getDictLabel('sys_yes_no', item.needExpiryDate)}</div>`;
+                                return `<div>${$global.getDictLabel('common_yes_no', item.needExpiryDate)}</div>`;
                             }
                         },
                         {field: 'maxiumFileSize', title: '最大文件长度(KB)', align: 'center'},
@@ -95,7 +95,7 @@
                         {
                             field: 'limitUnique', title: '限制唯一', align: 'center',
                             templet(item) {
-                                return `<div>${$global.getDictLabel('sys_yes_no', item.limitUnique)}</div>`;
+                                return `<div>${$global.getDictLabel('common_yes_no', item.limitUnique)}</div>`;
                             }
                         },
                         {field: 'gmtModified', title: '修改时间', align: 'center'},
@@ -111,7 +111,7 @@
                 });
 
                 // 渲染下拉框 数据
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("select[name='needExpiryDate']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
                 form.render('select')

@@ -144,13 +144,13 @@
                 // 渲染下拉框 数据
 
                 // 渲染单选框/多选框 数据
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("#spIsDrugDiv").append(`<input type="radio" name="spIsDrug" value="${o.value}" title="${o.label}" /> `)
                 })
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("#spIsConsumeableDiv").append(`<input type="radio" name="spIsConsumeable" value="${o.value}" title="${o.label}" /> `)
                 })
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("#spIsReagentDiv").append(`<input type="radio" name="spIsReagent" value="${o.value}" title="${o.label}" /> `)
                 })
                 form.render('radio')

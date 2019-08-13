@@ -133,10 +133,10 @@
                 }
 
                 // 渲染下拉框 数据
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("select[name='needExpiryDate']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("select[name='limitUnique']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
                 form.render('select')

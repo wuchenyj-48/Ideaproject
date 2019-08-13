@@ -22,6 +22,7 @@
         <module>fortec-mscm-core</module>
         <module>fortec-mscm-base-feign</module>
         <module>fortec-mscm-feign-starter</module>
+        <module>fortec-mscm-msg</module>
     </modules>
 
     <properties>

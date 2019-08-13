@@ -171,13 +171,13 @@
                 form.render('select')
 
                 // 渲染单选框/多选框 数据
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("#isDrugDiv").append(`<input type="radio" name="isDrug" value="${o.value}" title="${o.label}" /> `)
                 })
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("#isConsumableDiv").append(`<input type="radio" name="isConsumable" value="${o.value}" title="${o.label}" /> `)
                 })
-                $global.getDictDataList('sys_yes_no').forEach(o => {
+                $global.getDictDataList('common_yes_no').forEach(o => {
                     $("#isReagentDiv").append(`<input type="radio" name="isReagent" value="${o.value}" title="${o.label}" /> `)
                 })
                 //默认选中

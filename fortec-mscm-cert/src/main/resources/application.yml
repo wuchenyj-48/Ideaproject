@@ -17,9 +17,11 @@ spring:
     sampler:
       probability: 1
   zipkin:
-    base-url: http://fortec-common-zipkin
+    base-url: http://spring.forten-tech.com:9411/zipkin/
     sender:
       type: web
+    service:
+      name: ${spring.application.name}
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
