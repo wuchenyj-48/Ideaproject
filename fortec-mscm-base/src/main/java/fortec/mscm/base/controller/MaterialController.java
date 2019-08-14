@@ -44,12 +44,6 @@ public class MaterialController extends BaseController {
 
     @GetMapping("/page")
     public PageResult page(MaterialQueryRequest request) {
-//        IPage page = materialService.page(request.getPage(), Wrappers.<Material>query()
-//                    .eq(request.getMaterialTypeCode() != null, "material_type_code", request.getMaterialTypeCode())
-//                    .like(StringUtils.isNotBlank(request.getMaterialName()), "material_name", request.getMaterialName())
-//                    .like(StringUtils.isNotBlank(request.getMaterialTradeName()), "material_trade_name", request.getMaterialTradeName())
-//                     .orderByDesc("gmt_modified")
-//                );
         IPage<Material> page = materialService.page(request);
 
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());

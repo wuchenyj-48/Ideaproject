@@ -130,7 +130,7 @@ tx-lcn:
       dtx:
         enabled: true
   client:
-    manager-address: spring.forten-tech.com:8070
+    manager-address: 127.0.0.1:8070
     chain-level: 3
   logger:
     enabled: true

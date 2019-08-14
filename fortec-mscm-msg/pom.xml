@@ -14,9 +14,48 @@
     <dependencies>
         <dependency>
             <groupId>fortec</groupId>
-            <artifactId>fortec-mscm-msg</artifactId>
-            <version>${parent.version}</version>
+            <artifactId>fortec-common-msg</artifactId>
+            <version>${fortec.common.version}</version>
         </dependency>
+
+
+        <!-- spring security begin     resource server must have -->
+
+        <dependency>
+            <groupId>org.springframework.security.oauth.boot</groupId>
+            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+            <version>${springsecurity.oauth2.autoconfigure.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <!-- spring security end     resource server must have -->
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <mainClass>fortec.common.starter.MainApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import com.google.common.collect.Maps;
 import fortec.common.core.exceptions.BusinessException;
+import fortec.common.core.global.GlobalParamService;
 import fortec.common.core.msg.domain.SceneMessage;
 import fortec.common.core.msg.enums.ReceiverType;
 import fortec.common.core.msg.provider.MsgPushProvider;
@@ -55,6 +56,7 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
 
 
     private final MsgPushProvider msgPushProvider;
+    private final GlobalParamService globalParamService;
 
     @Transactional(rollbackFor = Exception.class)
     @LcnTransaction
@@ -124,10 +126,10 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
          * 发送通知邮件
          */
         HashMap<String, Object> params = Maps.newHashMap();
-        params.put("account",infoDTO.getLoginKey());
-        params.put("password","123456");
-        params.put("login_url","http://www.baidu.com");
-        params.put("send_date", DateUtils.format(new Date(),"yyyy-MM-dd"));
+        params.put("account", infoDTO.getLoginKey());
+        params.put("password", "123456");
+        params.put("login_url", globalParamService.getProperty("upms.user.login.url", "http://localhost:5060/pages/login.html"));
+        params.put("send_date", DateUtils.format(new Date(), "yyyy-MM-dd"));
 
         SceneMessage sm = new SceneMessage();
         sm.setSceneCode(MsgConsts.SCENE_SUPPLLIER_REG_SUCCESS).setReceiver(infoDTO.getLoginKey())
