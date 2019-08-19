@@ -49,6 +49,15 @@
 
         <!-- spring security end     resource server must have -->
 
+        <!--        weixin begin -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+            <version>3.5.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--        weixin end -->
 
         <dependency>
             <groupId>com.xuxueli</groupId>

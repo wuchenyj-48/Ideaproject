@@ -3,7 +3,7 @@
 <mapper namespace="fortec.mscm.cert.mapper.CertificateMapper">
     <select id="pageByKeywords" resultType="fortec.mscm.cert.entity.Certificate">
         select
-        c.*
+            c.*
         from
         certificate c
         <where>

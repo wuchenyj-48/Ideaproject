@@ -1,9 +1,8 @@
 package fortec.mscm.security.configuration;
 
-import fortec.common.feign.clients.UserClient;
 import fortec.mscm.feign.clients.HospitalClient;
 import fortec.mscm.feign.clients.SupplierClient;
-import fortec.mscm.security.userdetails.MscmUserDetailsServiceImpl;
+import fortec.mscm.security.userdetails.MscmIntegrationUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -21,8 +20,8 @@ public class MscmSecurityCommonConfiguration {
 
     @Primary
     @Bean("mscmUserDetailsService")
-    public UserDetailsService mscmUserDetailsService(UserClient userClient, SupplierClient supplierClient, HospitalClient hospitalClient) {
-        return new MscmUserDetailsServiceImpl(userClient, supplierClient, hospitalClient);
+    public UserDetailsService mscmUserDetailsService( SupplierClient supplierClient, HospitalClient hospitalClient) {
+        return new MscmIntegrationUserDetailsService( supplierClient, hospitalClient);
     }
 
 }

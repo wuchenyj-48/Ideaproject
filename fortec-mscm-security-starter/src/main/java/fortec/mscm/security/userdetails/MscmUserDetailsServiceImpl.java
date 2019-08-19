@@ -26,6 +26,7 @@ import java.util.Set;
  * @CreateDate: 2019/7/26 9:41
  * @Version: 1.0
  */
+@Deprecated
 @Slf4j
 public class MscmUserDetailsServiceImpl extends UserDetailsServiceImpl {
 

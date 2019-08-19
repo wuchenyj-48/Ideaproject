@@ -16,8 +16,13 @@
             <groupId>fortec</groupId>
             <artifactId>fortec-common-msg</artifactId>
             <version>${fortec.common.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+                    <groupId>org.springframework.security.oauth.boot</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
 
         <!-- spring security begin     resource server must have -->
 

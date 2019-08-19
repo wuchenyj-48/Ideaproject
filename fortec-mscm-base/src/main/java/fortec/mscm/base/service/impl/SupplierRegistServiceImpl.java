@@ -133,7 +133,7 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
 
         SceneMessage sm = new SceneMessage();
         sm.setSceneCode(MsgConsts.SCENE_SUPPLLIER_REG_SUCCESS).setReceiver(infoDTO.getLoginKey())
-                .setReceiverType(ReceiverType.USER).setParams(params);
+                .setReceiverType(ReceiverType.USER).params(params);
         msgPushProvider.push(sm);
     }
 
