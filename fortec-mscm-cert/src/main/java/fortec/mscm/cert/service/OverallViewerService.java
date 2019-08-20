@@ -1,6 +1,7 @@
 package fortec.mscm.cert.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import fortec.mscm.cert.entity.CertificateRepository;
 import fortec.mscm.cert.request.OverallViewerQueryRequest;
 import fortec.mscm.cert.vo.OverAllCatalog;
 import fortec.mscm.cert.vo.OverAllManufacturer;
@@ -48,5 +49,5 @@ public interface OverallViewerService {
      * @param request
      * @return
      */
-    IPage pageOverAll(OverallViewerQueryRequest request);
+    IPage<CertificateRepository> pageOverAll(OverallViewerQueryRequest request);
 }

@@ -151,14 +151,13 @@
                 $(".form-cancel").click(() => {
                     layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
 
-                        $http.post(`/base/material_applicants/cancel/` + data.id + "/" + val).then(resp => {
+                        $http.post(`/base/material_applicants/cancel/` + model.id + "/" + val).then(resp => {
                             if (!resp.data.success){
                                 layer.msg(resp.data.msg, {icon: 5})
                                 return
                             }
                             layer.msg(resp.data.msg, {icon: 1})
-                            window.reloadTable()
-                            layer.close(index)
+                            parent.reloadTable()
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         })

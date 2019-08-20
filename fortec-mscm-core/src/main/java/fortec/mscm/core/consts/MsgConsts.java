@@ -13,4 +13,16 @@ public interface MsgConsts {
      */
     String SCENE_SUPPLLIER_REG_SUCCESS = "supplier_reg_success";
 
+    /**
+     * 资质过期升级提醒
+     */
+    String SCENE_NOTICE_UPGRADE_CERT = "cert_notice_upgrade_cert";
+
+    /**
+     * 资质上传提醒
+     */
+    String SCENE_NOTICE_UPLOAD_CERT= "cert_notice_upload_cert";
+
+
+
 }

@@ -145,6 +145,7 @@
                     // 必须要重新创建对象，原因未知
                     let data = $.extend({}, formData)
 
+                    console.log(data)
                     form.val("editForm", data)
                     model = data
 
@@ -155,6 +156,7 @@
                     }
 
                     window.renderExpiryDate(data.needExpiryDate)
+
 
                 }
 
@@ -178,7 +180,30 @@
                     layui.form.render()
                 }
 
-                //渲染资质
+                //渲染生产厂商
+                layui.tableSelect.render({
+                    elem: '#manufacturerName',	//定义输入框input对象 必填
+                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                        url: '/base/manufacturers/page_by_keywords',
+                        cols: [[
+                            {type: 'radio'},
+                            {field: 'name', title: '厂商名称'},
+                            {field: 'companyCode', title: '统一社会信用代码'}
+                        ]]
+                    },
+                    done(elem, data) {
+                        let selectedRow = data.data.length > 0 ? data.data[0] : null
+                        if (!selectedRow) {
+                            return
+                        }
+                        model.manufacturerId = selectedRow.id
+                        $("form input[name='manufacturerId']").val(model.manufacturerId)
+                        elem.val(selectedRow.name)
+                    }
+                })
+
+                //渲资质染
                 layui.tableSelect.render({
                     elem: '#certificateName',	//定义输入框input对象 必填
                     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
@@ -208,31 +233,7 @@
                     }
                 })
 
-                //渲染生产厂商
-                layui.tableSelect.render({
-                    elem: '#manufacturerName',	//定义输入框input对象 必填
-                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                        url: '/base/manufacturers/page_by_keywords',
-                        cols: [[
-                            {type: 'radio'},
-                            {field: 'name', title: '厂商名称'},
-                            {field: 'companyCode', title: '统一社会信用代码'}
-                        ]]
-                    },
-                    done(elem, data) {
-                        let selectedRow = data.data.length > 0 ? data.data[0] : null
-                        if (!selectedRow) {
-                            return
-                        }
-                        model.manufacturerId = selectedRow.id
-                        model.manufacturerName = selectedRow.name
-                        layui.each(data.data, function (index, item) {
-                            $("form input[name='manufacturerId']").val(model.manufacturerId)
-                            elem.val(item.name)
-                        })
-                    }
-                })
+
 
                 let uploader = null
                 window.renderUploader = (limitFileExtension, maxiumFileSize, maxiumFileCount) => {
@@ -300,6 +301,7 @@
                     data.field = layui.$.extend({docIds: model.docIds,
                         targetDescribeId : params.targetDescribeId,
                         businessTypeCode : params.businessTypeCode,
+                        manufacturerName : model.manufacturerName,
                         manufacturerId : model.manufacturerId}, data.field)
 
                     let promise = $http.post("/cert/certificate_repositorys/save_for_catalog", data.field)

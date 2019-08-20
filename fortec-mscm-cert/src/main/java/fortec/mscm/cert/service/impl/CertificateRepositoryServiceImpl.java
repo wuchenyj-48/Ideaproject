@@ -3,9 +3,21 @@ package fortec.mscm.cert.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.google.common.collect.Maps;
 import fortec.common.core.exceptions.BusinessException;
+import fortec.common.core.global.GlobalDictService;
+import fortec.common.core.msg.domain.SceneMessage;
+import fortec.common.core.msg.enums.ReceiverType;
+import fortec.common.core.msg.provider.MsgPushProvider;
 import fortec.common.core.service.BaseServiceImpl;
+import fortec.common.core.utils.DateUtils;
+import fortec.mscm.base.feign.vo.CatalogVO;
+import fortec.mscm.base.feign.vo.ManufacturerVO;
+import fortec.mscm.base.feign.vo.MaterialVO;
+import fortec.mscm.base.feign.vo.SupplierVO;
 import fortec.mscm.cert.consts.BusinessTypeConsts;
+import fortec.mscm.cert.dto.NoticeUpgradeCertDTO;
+import fortec.mscm.cert.dto.NoticeUploadCertDTO;
 import fortec.mscm.cert.entity.Certificate;
 import fortec.mscm.cert.entity.CertificateRepository;
 import fortec.mscm.cert.entity.CertificateRepositoryHistory;
@@ -14,12 +26,19 @@ import fortec.mscm.cert.request.CertificateRepositoryQueryRequest;
 import fortec.mscm.cert.service.CertificateRepositoryHistoryService;
 import fortec.mscm.cert.service.CertificateRepositoryService;
 import fortec.mscm.cert.service.CertificateService;
+import fortec.mscm.core.consts.MsgConsts;
+import fortec.mscm.feign.clients.CatalogClient;
+import fortec.mscm.feign.clients.ManufacturerClient;
+import fortec.mscm.feign.clients.MaterialClient;
+import fortec.mscm.feign.clients.SupplierClient;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -34,9 +53,21 @@ import java.util.List;
 @Service
 public class CertificateRepositoryServiceImpl extends BaseServiceImpl<CertificateRepositoryMapper, CertificateRepository> implements CertificateRepositoryService {
 
-    private CertificateRepositoryHistoryService certificateRepositoryHistoryService;
-    private CertificateService certificateService;
+    private final CertificateRepositoryHistoryService certificateRepositoryHistoryService;
 
+    private final CertificateService certificateService;
+
+    private final SupplierClient supplierClient;
+
+    private final MsgPushProvider msgPushProvider;
+
+    private final ManufacturerClient manufacturerClient;
+
+    private final CatalogClient catalogClient;
+
+    private final MaterialClient materialClient;
+
+    private final GlobalDictService globalDictService;
 
     private void assertCertUnique(String certificateId, String targetId) {
         Certificate certificate = certificateService.getById(certificateId);
@@ -76,13 +107,19 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     @Override
     public IPage<CertificateRepository> pageForSupplierWarning(CertificateRepositoryQueryRequest request) {
         request.setSupplierId(UserUtils.getSupplierId());
-        return this.baseMapper.pageForWarning(request.getPage(), request);
+        return this.baseMapper.pageForSupplierWarning(request.getPage(), request);
     }
 
     @Override
     public IPage<CertificateRepository> pageForHospitalWarning(CertificateRepositoryQueryRequest request) {
         request.setHospitalId(UserUtils.getHospitalId());
-        return this.baseMapper.pageForWarning(request.getPage(), request);
+        return this.baseMapper.pageForHospitalWarning(request.getPage(), request);
+    }
+
+    @Override
+    public List<CertificateRepository> pageForAudit(CertificateRepositoryQueryRequest request) {
+       return this.baseMapper.pageForAudit(request);
+
     }
 
 
@@ -191,6 +228,101 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         ;
 
         certificateRepositoryHistoryService.save(crh);
+    }
+
+    @Override
+    public void noticeUpgrade(NoticeUpgradeCertDTO dto) {
+
+        CertificateRepository repository = this.getById(dto.getRepositoryId());
+
+        if (repository == null) {
+            throw new BusinessException("数据错误");
+        }
+
+        Certificate certificate = certificateService.getById(repository.getCertificateId());
+        SupplierVO supplierVO = supplierClient.findById(repository.getSupplierId());
+        ManufacturerVO manufacturerVO = manufacturerClient.findById(repository.getManufacturerId());
+
+        HashMap<String, Object> params = Maps.newHashMap();
+        params.put("business_type", globalDictService.getDictLabel( "cert_business_type",repository.getBusinessTypeCode(),"unknown"));
+        params.put("cert_name", certificate.getName());
+        params.put("supplier_name", supplierVO.getName());
+        params.put("send_date", DateUtils.format(new Date(), "yyyy-MM-dd"));
+
+        String scene = MsgConsts.SCENE_NOTICE_UPGRADE_CERT;
+        switch (dto.getBusinessTypeCode()) {
+            case BusinessTypeConsts.SUPPLIER:
+                break;
+            case BusinessTypeConsts.MANUFACTURER:
+                params.put("manufacturer_name", manufacturerVO.getName());
+                break;
+            case BusinessTypeConsts.CATALOG_LEVEL1:
+                CatalogVO catalogVO = catalogClient.findById(repository.getTargetDescribeId());
+                params.put("manufacturer_name", manufacturerVO.getName());
+                params.put("catalog_name", catalogVO.getName());
+                break;
+            case BusinessTypeConsts.MATERIAL:
+                params.put("manufacturer_name", manufacturerVO.getName());
+                MaterialVO materialVO = materialClient.findById(repository.getTargetDescribeId());
+                params.put("material_name", materialVO.getMaterialName());
+                break;
+        }
+
+        SceneMessage sm = new SceneMessage();
+        sm.setSceneCode(scene).setReceiver(supplierVO.getCode())
+                .setReceiverType(ReceiverType.USER).params(params);
+        msgPushProvider.push(sm);
+    }
+
+
+    @Override
+    public void noticeUpload(NoticeUploadCertDTO dto) {
+
+        Certificate certificate = certificateService.getById(dto.getCertificateId());
+
+        SupplierVO supplierVO = supplierClient.findById(dto.getSupplierId());
+
+
+
+        /**
+         * 发送提醒上传通知文件
+         */
+        HashMap<String, Object> params = Maps.newHashMap();
+        params.put("business_type", globalDictService.getDictLabel( "cert_business_type",dto.getBusinessTypeCode(),"unknown"));
+        params.put("supplier_name", supplierVO.getName());
+        params.put("cert_name", certificate.getName());
+        params.put("send_date", DateUtils.format(new Date(), "yyyy-MM-dd"));
+
+        ManufacturerVO manufacturerVO;
+
+        String scene = MsgConsts.SCENE_NOTICE_UPLOAD_CERT;
+        switch (dto.getBusinessTypeCode()) {
+            case BusinessTypeConsts.SUPPLIER:
+                break;
+            case BusinessTypeConsts.MANUFACTURER:
+                manufacturerVO = manufacturerClient.findById(dto.getManufacturerId());
+                params.put("manufacturer_name", manufacturerVO.getName());
+                break;
+            case BusinessTypeConsts.CATALOG_LEVEL1:
+                CatalogVO catalogVO = catalogClient.findById(dto.getTargetDescribeId());
+                params.put("catalog_name", catalogVO.getName());
+                manufacturerVO = manufacturerClient.findById(dto.getManufacturerId());
+                params.put("manufacturer_name", manufacturerVO.getName());
+                break;
+            case BusinessTypeConsts.MATERIAL:
+                MaterialVO materialVO = materialClient.findById(dto.getTargetDescribeId());
+                params.put("material_name", materialVO.getMaterialName());
+                manufacturerVO = manufacturerClient.findById(dto.getManufacturerId());
+                params.put("manufacturer_name", manufacturerVO.getName());
+                break;
+        }
+
+        SceneMessage message = new SceneMessage();
+        message.setSceneCode(scene).setReceiver(supplierVO.getCode())
+                .setReceiverType(ReceiverType.USER).params(params);
+
+        msgPushProvider.push(message);
+
     }
 
 }

@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
+import fortec.mscm.cert.dto.NoticeUpgradeCertDTO;
+import fortec.mscm.cert.dto.NoticeUploadCertDTO;
 import fortec.mscm.cert.entity.CertificateRepository;
 import fortec.mscm.cert.request.CertificateRepositoryQueryRequest;
 import fortec.mscm.cert.service.CertificateRepositoryService;
@@ -123,6 +125,31 @@ public class CertificateRepositoryController extends BaseController {
     public CommonResult upgrade(@RequestBody @Valid CertificateRepository entity) {
         certificateRepositoryService.upgrade(entity);
         return CommonResult.ok("升级成功");
+    }
+
+    @PostMapping("/notice_upgrade")
+    public CommonResult noticeUpgrade(@RequestBody NoticeUpgradeCertDTO dto) {
+        certificateRepositoryService.noticeUpgrade(dto);
+        return CommonResult.ok("提醒成功");
+    }
+
+
+    @PostMapping("/notice_upload")
+    public CommonResult noticeUpload(@RequestBody NoticeUploadCertDTO dto) {
+        certificateRepositoryService.noticeUpload(dto);
+        return CommonResult.ok("提醒成功");
+    }
+
+    /**
+     * 供方资格审核，查看资质页
+     * @param request
+     * @return
+     */
+    @GetMapping("/list_for_audit")
+    public CommonResult listForAudit(CertificateRepositoryQueryRequest request){
+        List<CertificateRepository> list = certificateRepositoryService.pageForAudit(request);
+        return CommonResult.ok("查询成功",list);
+
     }
 
 }

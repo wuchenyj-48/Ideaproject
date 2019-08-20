@@ -34,10 +34,10 @@
         </div>
 
         <script type="text/html" id="cellToolbar">
-            {{#  if(!d.expiryDate){ }}
-                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="upgrade">提醒上传</a>
+            {{#  if(!d.id){ }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="noticeUpload">提醒上传</a>
             {{#  } else { }}
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="upgrade">提醒升级</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="noticeUpgrade">提醒升级</a>
                 <a class="layui-btn layui-btn-xs" lay-event="cert">资质</a>
                 <a class="layui-btn layui-btn-xs layui-btn-cyan" lay-event="history">历史</a>
             {{#  } }}
@@ -51,6 +51,7 @@
             let mainFunction = () => {
                 let table = layui.table, form = layui.form;
                 let laydate = layui.laydate;
+                let targetId,supplierId,manufacturerId ;
 
                 let ztreeObj = null
                 let zNodes = []
@@ -87,9 +88,11 @@
                                 if(treeNode.level == 0){
                                     // 企业资质类型
                                     businessTypeCode = 10
+                                    supplierId = treeNode.id
                                 }else if(treeNode.level == 1){
                                     // 厂商资质类型
                                     businessTypeCode = 30
+                                    manufacturerId = treeNode.id
                                 }else if(treeNode.level == 2){
                                     // 一级品类资质类型
                                     businessTypeCode = 21
@@ -97,6 +100,8 @@
                                     // 品名资质类型
                                     businessTypeCode = 20
                                 }
+
+                                targetId = treeNode.id
 
                                 layui.table.reload('listTable', {
                                     where: {
@@ -208,7 +213,7 @@
                         {
                             title: '状态', align: 'center',
                             templet(item) {
-                                if(!item.expiryDate){
+                                if(!item.id){
                                     return '<div><span class="layui-color-orange">未上传</span></div>'
                                 }
 
@@ -232,10 +237,13 @@
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
+
                     // 获取当前行索引
                     let rowIndex = obj.tr[0].getAttribute("data-index")
-                    if (obj.event === 'close') {
-                        window.closeCert(obj.data, rowIndex)
+                    if (obj.event === 'noticeUpgrade') {
+                        window.noticeUpgrade(obj.data)
+                    } else if (obj.event === 'noticeUpload') {
+                        window.noticeUpload(obj.data)
                     } else if (obj.event === 'history') {
                         window.openHistory(obj.data, rowIndex)
                     } else if (obj.event === 'cert') {
@@ -243,17 +251,63 @@
                     }
                 });
 
+                /**
+                 * 提醒升级
+                 * @param data
+                 * @param rowIndex
+                 */
+                window.noticeUpgrade = (data) => {
+                    layer.confirm('确定提醒升级么', function (index) {
+                        $http.post(`/cert/certificate_repositorys/notice_upgrade`,{
+                            repositoryId: data.id,
+                            businessTypeCode: data.businessTypeCode
+                        }).then(resp => {
+                            layer.close(index)
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    });
+                }
+
+                /**
+                 * 提醒上传
+                 * @param data
+                 * @param rowIndex
+                 */
+                window.noticeUpload = (data,rowIndex) => {
+                    layer.confirm('确定提醒上传么', function (index) {
+                        $http.post(`/cert/certificate_repositorys/notice_upload`,{
+                            supplierId : supplierId,
+                            manufacturerId : manufacturerId,
+                            targetDescribeId : targetId,
+                            certificateId : data.certificateId,
+                            businessTypeCode : data.businessTypeCode
+                        }).then(resp => {
+                            layer.close(index)
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+                                window.reloadTable()
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    });
+                }
+
                 window.viewCert = (data, rowIndex) => {
-                    debugger
-                    layer.photos({
-                        photos: {
-                            data: data.docIds.map(o => {
-                                return {
-                                    src: `/doc/files/${o}?preview`
-                                }
-                            })
-                        },
-                        anim: 2
+                    let index = layer.open({
+                        title: "资质查看",
+                        type: 2,
+                        area: ['950px', '520px'],
+                        content: ['./viewCert.html'],
+                        success(layero, index) {
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm(data)
+                            layer.iframeAuto(index)
+                        }
                     });
                 }
 

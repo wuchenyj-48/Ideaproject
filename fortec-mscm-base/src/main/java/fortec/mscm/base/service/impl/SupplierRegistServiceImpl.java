@@ -58,6 +58,12 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
     private final MsgPushProvider msgPushProvider;
     private final GlobalParamService globalParamService;
 
+    @Override
+    public boolean checkPhoneValid(String phone) {
+        return this.count(Wrappers.<SupplierRegist>query().eq("applicant_mobile", phone)) == 0;
+    }
+
+
     @Transactional(rollbackFor = Exception.class)
     @LcnTransaction
     @Override

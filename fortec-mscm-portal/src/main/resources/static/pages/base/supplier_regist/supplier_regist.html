@@ -11,7 +11,8 @@
             .custom-form .layui-input-block {
                 margin-left: 160px;
             }
-            .layui-form{
+
+            .layui-form {
                 margin-top: 30px;
                 margin-left: 30px;
             }
@@ -96,7 +97,6 @@
                         </div>
                     </div>
                 </div>
-
 
 
                 <div class="layui-row layui-col-space5 layui-form-item">
@@ -189,9 +189,9 @@
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
                     $("form input:hidden").val('')
-                    form.val("editForm",{
-                        isDrug: "0" ,
-                        isConsumable: "0" ,
+                    form.val("editForm", {
+                        isDrug: "0",
+                        isConsumable: "0",
                         isReagent: "0"
                     })
                 })
@@ -200,10 +200,11 @@
                     parent.layer.close(index);
                 })
 
+
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     let field = data.field
-                    if((Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent)) == 0){
+                    if ((Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent)) == 0) {
                         layer.msg("药品/耗材/试剂供应商 至少选中一个", {icon: 5})
                         return false;
                     }

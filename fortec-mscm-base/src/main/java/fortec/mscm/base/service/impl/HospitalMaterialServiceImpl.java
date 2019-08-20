@@ -40,7 +40,7 @@ public class HospitalMaterialServiceImpl extends BaseServiceImpl<HospitalMateria
 
     @Override
     public IPage<HospitalMaterial> page(HospitalMaterialQueryRequest request) {
-        request.setSupplierId(UserUtils.getSupplierId());
+        request.setHospitalId(UserUtils.getHospitalId());
         return this.baseMapper.page(request.getPage(), request);
     }
 

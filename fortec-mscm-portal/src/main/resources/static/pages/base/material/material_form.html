@@ -595,7 +595,6 @@
                         if (resp.data.success) {
                             layer.msg(resp.data.msg, {icon: 1})
                             parent.reloadTable()
-
                             window.initForm($.extend(model ,resp.data.data,{isNew: false}))
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})

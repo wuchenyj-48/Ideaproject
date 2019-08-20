@@ -115,7 +115,11 @@
                 }
 
                 window.deleteById = (data) => {
-                    layer.confirm('真的删除行么', function (index) {
+                    if (!data.is_end){
+                        layer.msg("已经有下属商品的品类不能删除", {icon: 5})
+                        return
+                    }
+                    layer.confirm('确定删除么', function (index) {
                         $http.delete(`/base/material_catalogs/${data.id}`).then(resp => {
                             layer.close(index)
                             if (resp.data.success) {
@@ -131,6 +135,10 @@
 
                 // 事件监听
                 treeTable.on('tree(add)', (obj) => {
+                    if (obj.item.level >= 4){
+                        layer.msg("最多支持5级分类", {icon: 5})
+                        return
+                    }
                     window.edit({parentId: obj.item.id})
                 })
                 treeTable.on('tree(edit)', (obj) => {

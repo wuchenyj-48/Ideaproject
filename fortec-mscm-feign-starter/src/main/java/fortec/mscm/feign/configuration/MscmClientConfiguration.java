@@ -11,8 +11,7 @@ import feign.codec.Encoder;
 import fortec.common.feign.annotation.EnableDefaultFeignConfig;
 import fortec.common.feign.interceptor.TokenInterceptor;
 import fortec.mscm.core.consts.ServiceNames;
-import fortec.mscm.feign.clients.HospitalClient;
-import fortec.mscm.feign.clients.SupplierClient;
+import fortec.mscm.feign.clients.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +34,12 @@ public class MscmClientConfiguration {
     private SupplierClient supplierClient;
 
     private HospitalClient hospitalClient;
+
+    private ManufacturerClient manufacturerClient;
+
+    private CatalogClient catalogClient;
+
+    private MaterialClient materialClient;
 
     public MscmClientConfiguration(Decoder decoder, Encoder encoder, Client client, Contract contract,
                                    TokenInterceptor tokenInterceptor, @Autowired(required = false) FeignTracingTransmitter feignTracingTransmitter) {
@@ -59,6 +64,27 @@ public class MscmClientConfiguration {
                 .contract(contract)
                 .requestInterceptors(requestInterceptors)
                 .target(HospitalClient.class, "http://" + ServiceNames.BASE);
+
+        this.manufacturerClient = Feign.builder().client(client)
+                .encoder(encoder)
+                .decoder(decoder)
+                .contract(contract)
+                .requestInterceptors(requestInterceptors)
+                .target(ManufacturerClient.class, "http://" + ServiceNames.BASE);
+
+        this.catalogClient = Feign.builder().client(client)
+                .encoder(encoder)
+                .decoder(decoder)
+                .contract(contract)
+                .requestInterceptors(requestInterceptors)
+                .target(CatalogClient.class, "http://" + ServiceNames.BASE);
+
+        this.materialClient = Feign.builder().client(client)
+                .encoder(encoder)
+                .decoder(decoder)
+                .contract(contract)
+                .requestInterceptors(requestInterceptors)
+                .target(MaterialClient.class, "http://" + ServiceNames.BASE);
     }
 
 
@@ -71,6 +97,21 @@ public class MscmClientConfiguration {
     @Bean
     public HospitalClient hospitalClient() {
         return this.hospitalClient;
+    }
+
+    @Bean
+    public ManufacturerClient manufacturerClient(){
+        return this.manufacturerClient;
+    }
+
+    @Bean
+    public CatalogClient catalogClient(){
+        return this.catalogClient;
+    }
+
+    @Bean
+    public MaterialClient materialClient(){
+        return this.materialClient;
     }
 
 

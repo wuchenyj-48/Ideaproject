@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.cert.mapper.CertificateRepositoryHistoryMapper">
+    <select id="page" resultType="fortec.mscm.cert.entity.CertificateRepositoryHistory">
+        select
+            crh.*,
+            c.name as certificate_name,
+            c.need_expiry_date as need_expiry_date,
+            c.maxium_file_size as maxium_file_size,
+            c.maxium_file_count as maxium_file_count,
+            c.limit_file_extension as limit_file_extension
+        from
+        certificate_repository_history crh
+        inner join certificate c on crh.certificate_id = c.id
+        <where>
+            <if test="request.certificateRepositoryId != null and request.certificateRepositoryId != ''">
+                and crh.certificate_repository_id = #{request.certificateRepositoryId}
+            </if>
+            <if test="request.businessTypeCode != null and request.businessTypeCode != ''">
+                and crh.business_type_code = #{request.businessTypeCode}
+            </if>
+        </where>
+        order by crh.gmt_modified desc
+    </select>
+</mapper>

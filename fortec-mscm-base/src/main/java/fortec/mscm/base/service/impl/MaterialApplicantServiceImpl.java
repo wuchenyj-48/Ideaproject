@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
@@ -81,7 +80,8 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
 
         //供应商id，单据号，单据状态，医院id
         entity.setSupplierId(UserUtils.getSupplierId())
-                .setCode(SerialUtils.generateCode("base_material_applicant_code"))
+                /*.setCode(SerialUtils.generateCode("base_material_applicant_code"))*/
+                .setCode(StringUtils.getRandomStr(20))
                 .setStatus(MaterialApplicant.STATUS_UNSUBMIT);
         return this.save(entity);
     }

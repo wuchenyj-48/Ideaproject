@@ -12,7 +12,7 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">供应商资质预警</div>
+                        <div class="layui-card-header">医院资质预警</div>
                         <div class="layui-card-body">
                             <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
                                 <i class="layui-icon layui-icon-add-1"></i> 新增
@@ -141,16 +141,17 @@
                 }
 
                 window.viewCert = (data,rowIndex) => {
-                        layer.photos({
-                            photos: {
-                                data: data.docIds.map(o => {
-                                    return {
-                                        src: `/doc/files/${o}?preview`
-                                    }
-                                })
-                            },
-                            anim: 2
-                        });
+                    let index = layer.open({
+                        title: "资质查看",
+                        type: 2,
+                        area: ['950px', '520px'],
+                        content: ['./viewCert.html'],
+                        success(layero, index) {
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm(data)
+                            layer.iframeAuto(index)
+                        }
+                    });
                 }
 
                 // 监听表单重置

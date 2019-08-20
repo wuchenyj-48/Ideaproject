@@ -4,7 +4,6 @@ package fortec.mscm.base.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
@@ -75,7 +74,8 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
         //供应商，单据号，单据状态
         entity.setSupplierId(UserUtils.getUser().getSupplierId())
-                .setCode(SerialUtils.generateCode("base_supplier_applicant_code"))
+//                .setCode(SerialUtils.generateCode("base_supplier_applicant_code"))
+                .setCode(StringUtils.getRandomStr(20))
                 .setStatus(SupplierApplicant.STATUS_UNSUBMIT);
         return this.saveOrUpdate(entity);
     }

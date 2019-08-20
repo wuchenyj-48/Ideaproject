@@ -72,19 +72,39 @@ public class SupplierRegistController extends BaseController {
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
+    /**
+     * 供应商注册
+     * @param entity
+     * @return
+     */
     @PostMapping("/regist")
     public CommonResult regist(@RequestBody @Valid SupplierRegist entity) {
+        boolean valid = supplierRegistService.checkPhoneValid(entity.getApplicantMobile());
+        if(!valid){
+            return CommonResult.error("注册失败，手机号已注册");
+        }
         entity.setAuditStatus(SupplierRegist.AUDIT_STATUS_SUBMITED);
         boolean bSave = supplierRegistService.saveCascadeById(entity);
         return bSave ? CommonResult.ok("注册成功", entity) : CommonResult.error("注册失败");
     }
 
+    /**
+     * 供应商审核通过
+     * @param id
+     * @return
+     */
     @PostMapping("/pass/{id}")
     public CommonResult pass(@PathVariable("id") String id) {
         supplierRegistService.pass(id);
         return CommonResult.ok("审核通过");
     }
 
+    /**
+     * 供应商审核取消
+     * @param id
+     * @param request
+     * @return
+     */
     @PostMapping("/cancel/{id}")
     public CommonResult cancel(@PathVariable("id") String id, @RequestBody SupplierRegistCancelRequest request) {
         supplierRegistService.cancel(id, request.getReason());
