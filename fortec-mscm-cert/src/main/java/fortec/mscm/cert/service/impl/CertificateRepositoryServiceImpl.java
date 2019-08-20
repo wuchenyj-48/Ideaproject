@@ -230,6 +230,10 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         certificateRepositoryHistoryService.save(crh);
     }
 
+    /**
+     * 提醒资质升级
+     * @param dto
+     */
     @Override
     public void noticeUpgrade(NoticeUpgradeCertDTO dto) {
 
@@ -243,6 +247,9 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         SupplierVO supplierVO = supplierClient.findById(repository.getSupplierId());
         ManufacturerVO manufacturerVO = manufacturerClient.findById(repository.getManufacturerId());
 
+        /**
+         * 发送提醒升级通知文件
+         */
         HashMap<String, Object> params = Maps.newHashMap();
         params.put("business_type", globalDictService.getDictLabel( "cert_business_type",repository.getBusinessTypeCode(),"unknown"));
         params.put("cert_name", certificate.getName());
@@ -275,6 +282,10 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     }
 
 
+    /**
+     * 提醒上传
+     * @param dto
+     */
     @Override
     public void noticeUpload(NoticeUploadCertDTO dto) {
 

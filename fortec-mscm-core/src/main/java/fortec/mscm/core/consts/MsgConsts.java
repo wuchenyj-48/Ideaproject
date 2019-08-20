@@ -23,6 +23,20 @@ public interface MsgConsts {
      */
     String SCENE_NOTICE_UPLOAD_CERT= "cert_notice_upload_cert";
 
+    /**
+     * 供方资格申请审核通过
+     */
+    String SCENE_SUPPLIER_APP_SUCCESS = "base_sp_app_success";
+
+    /**
+     * 供应商注册成功
+     */
+    String SCENE_SUPPLIER_REGITST_SUCCESS = "base_sup_reg_success";
+
+    /**
+     * 供货资格申请审核通过
+     */
+    String SCENE_MATERIAL_APPLICANT_SUCCESS = "base_material_app_success";
 
 
 }

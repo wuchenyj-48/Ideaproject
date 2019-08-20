@@ -4,14 +4,20 @@ package fortec.mscm.base.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import fortec.common.core.exceptions.BusinessException;
+import fortec.common.core.msg.domain.SceneMessage;
+import fortec.common.core.msg.enums.ReceiverType;
+import fortec.common.core.msg.provider.MsgPushProvider;
 import fortec.common.core.service.BaseServiceImpl;
+import fortec.common.core.utils.DateUtils;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.entity.*;
 import fortec.mscm.base.mapper.MaterialApplicantMapper;
 import fortec.mscm.base.request.MaterialApplicantQueryRequest;
 import fortec.mscm.base.service.*;
+import fortec.mscm.core.consts.MsgConsts;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -42,6 +49,10 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     private final MaterialSpecService materialSpecService;
 
     private final MaterialService materialService;
+
+    private final MsgPushProvider msgPushProvider;
+
+    private final SupplierService supplierService;
 
 
     @Override
@@ -167,6 +178,20 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
 
         // 批量保存
         hospitalMaterialService.saveBatch(hms);
+
+        //发送审核消息给供应商
+        Supplier supplier = supplierService.getById(ma.getSupplierId());
+
+        HashMap<String, Object> params = Maps.newHashMap();
+        params.put("hospital_name",hospital.getName());
+        params.put("code", ma.getCode());
+        params.put("send_date", DateUtils.format(new Date(), "yyyy-MM-dd"));
+
+        SceneMessage message = new SceneMessage();
+        message.setSceneCode(MsgConsts.SCENE_MATERIAL_APPLICANT_SUCCESS).setReceiver(supplier.getCode())
+                .setReceiverType(ReceiverType.USER).params(params);
+
+        msgPushProvider.push(message);
     }
 
     @Transactional(rollbackFor = Exception.class)
