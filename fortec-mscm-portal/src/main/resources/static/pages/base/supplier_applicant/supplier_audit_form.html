@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>供应商资质</title>
+    </head>
+    <body>
+
+        <div class="layui-fluid">
+            <form  class="layui-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="hospitalId" class="layui-input"/>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                             医院
+                        </label>
+                        <div class="layui-input-block">
+                            <input disabled type="text" name="hospitalName" id="hospitalName" required lay-verify="required"
+                                   placeholder="请选择医院"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs12">
+                        <label class="layui-form-label">
+                            说明
+                        </label>
+                        <div class="layui-input-block">
+
+                            <textarea disabled name="remark" placeholder="请输入说明" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn form-pass" type="button">通过</button>
+                            <button class="layui-btn layui-btn-danger form-cancel" type="button">取消</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <table id="listTable" lay-filter="listTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/html" id="viewTpl">
+            <a class="layui-btn layui-btn-xs" data-index="{{d.LAY_TABLE_INDEX}}" lay-event="view">查看</a>
+        </script>
+
+        <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
+
+        <script>
+
+            extendParentScriptsAndStyles(() => {
+                let table = layui.table, $ = layui.$, form = layui.form;
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+
+                    if(model.status != 1){
+                        $(".form-pass").hide()
+                        $(".form-cancel").hide()
+                    }
+
+                    window.reloadMaterialApplicantItemTable && window.reloadMaterialApplicantItemTable()
+
+                }
+
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                $(".form-pass").click(() => {
+                    layer.confirm('确定通过么', function (index) {
+                        $http.post(`/base/supplier_applicants/pass/` + model.id).then(resp => {
+                            if(!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        })
+                    });
+                })
+
+                $(".form-cancel").click(() => {
+                    layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
+
+                        $http.post(`/base/supplier_applicants/cancel/` + model.id + "/" + val).then(resp => {
+                            if (!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                            let index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        })
+                    });
+                })
+
+                let params = $global.getUrlParams()
+                table.render({
+                    id: "listTable",
+                    elem: '#listTable',
+                    title: '供应商资质列表',
+                    height: '400px',
+                    url: '/cert/certificate_repositorys/list_for_audit',
+                    where: {
+                        supplierId: params.supplierId
+                    },
+                    cols: [[ //表头
+                        {type: 'numbers', align: 'center', fixed: 'left'},
+                        {field: 'certificateNo', title: '资质编号', align: 'center'},
+                        {field: 'certificateName', title: '资质名称', align: 'center'},
+                        {field: 'expiryDate', title: '有效期', align: 'center'},
+                        {field: 'certificateSign', title: '签发方', align: 'center'},
+                        {field: 'certificateSignTo', title: '签发给', align: 'center'},
+                        {field: 'docIds', title: '资质文件', align: 'center', templet: "#viewTpl"},
+                        {field: 'version', title: '当前版本号', align: 'center'},
+                    ]]
+                });
+
+                layui.$("[lay-id='listTable']").on("click", ".layui-btn", function () {
+                    let layevent = this.getAttribute("lay-event");
+                    if (layevent != 'view') {
+                        return
+                    }
+                    // 获取行索引
+                    let index = this.getAttribute("data-index")
+                    let rows = layui.table.getRows('listTable')
+                    let row = rows[index]
+
+                    parent.layer.open({
+                        title: "资质查看",
+                        type: 2,
+                        area: ['950px', '520px'],
+                        content: ['./viewCert.html'],
+                        success(layero, index) {
+                            var iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm(row)
+                            layer.iframeAuto(index)
+                        }
+                    });
+                });
+
+            })
+
+        </script>
+    </body>
+
+
+</html>
+    
+    

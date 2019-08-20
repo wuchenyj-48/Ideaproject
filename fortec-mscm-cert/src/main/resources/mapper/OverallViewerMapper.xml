@@ -7,7 +7,9 @@
             s.id as supplier_id,
             s.`name` supplier_name,
             (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = hs.hospital_id AND chb.business_type_code = 10) as require_cnt,
-            (SELECT count(1) from certificate_repository cr where  cr.target_describe_id = s.id AND cr.business_type_code = 10) as uploaded_cnt
+            (SELECT count(1) from certificate_repository cr
+        inner JOIN certificate_hospital_business chb on chb.certificate_id = cr.certificate_id and chb.business_type_code = 10 and chb.hospital_id = #{hospitalId}
+        where  cr.target_describe_id = s.id AND cr.business_type_code = 10 and cr.close_flag = 0) as uploaded_cnt
         from
         `mscm-base`.supplier s
         inner join `mscm-base`.hospital_supplier hs on s.id = hs.supplier_id
@@ -18,7 +20,9 @@
             m.id as manufacturer_id,
             m.name as manufacturer_name,
             (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = #{hospitalId} AND chb.business_type_code = 30) as require_cnt,
-            (SELECT count(1) from certificate_repository cr where cr.supplier_id = m.supplier_id and cr.target_describe_id = m.id AND cr.business_type_code = 30) as uploaded_cnt
+            (SELECT count(1) from certificate_repository cr
+        inner JOIN certificate_hospital_business chb on chb.certificate_id = cr.certificate_id and chb.business_type_code = 30 and chb.hospital_id = #{hospitalId}
+        where cr.supplier_id = m.supplier_id and cr.target_describe_id = m.id AND cr.business_type_code = 30 and cr.close_flag = 0) as uploaded_cnt
         from
         `mscm-base`.manufacturer m
         where m.supplier_id = #{supplierId}
@@ -28,7 +32,13 @@
             DISTINCT
             mc.id as catalog_id,mc.name as catalog_name,
             (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = #{hospitalId} AND chb.business_type_code = 21) as require_cnt,
-            (SELECT count(1) from certificate_repository cr1 where cr1.supplier_id = cr.supplier_id and  cr1.target_describe_id = mc.id AND cr1.business_type_code = 21) as uploaded_cnt
+        (SELECT
+        count(1)
+        from certificate_repository cr1
+        inner JOIN certificate_hospital_business chb on chb.certificate_id = cr1.certificate_id
+        and chb.business_type_code = 21 and chb.hospital_id = #{hospitalId}
+        where cr1.manufacturer_id = cr.manufacturer_id and  cr1.target_describe_id = mc.id AND cr1.business_type_code = 21 and cr.close_flag = 0
+        ) as uploaded_cnt
         from
         `mscm-base`.material_catalog mc INNER JOIN certificate_repository cr on cr.target_describe_id = mc.id
         where mc.parent_id = 0 and cr.manufacturer_id = #{manufacturerId}
@@ -38,7 +48,9 @@
             DISTINCT
             m.id as material_id,m.material_name as material_name,
             (SELECT count(1) from certificate_hospital_business chb inner join certificate c on chb.certificate_id = c.id where chb.hospital_id = #{hospitalId} AND chb.business_type_code = 20) as require_cnt,
-            (SELECT count(1) from certificate_repository cr1 where cr1.manufacturer_id = cr.manufacturer_id and  cr1.target_describe_id = m.id AND cr1.business_type_code = 20) as uploaded_cnt
+            (SELECT count(1) from certificate_repository cr1
+        inner JOIN certificate_hospital_business chb on chb.certificate_id = cr1.certificate_id and chb.business_type_code = 20 and chb.hospital_id = #{hospitalId}
+        where cr1.manufacturer_id = cr.manufacturer_id and  cr1.target_describe_id = m.id AND cr1.business_type_code = 20 and cr.close_flag = 0) as uploaded_cnt
         from
         `mscm-base`.material m INNER JOIN certificate_repository cr on cr.target_describe_id = m.id
         inner join `mscm-base`.material_catalog mc on m.catalog_id = mc.id
@@ -46,7 +58,7 @@
     </select>
     <select id="pageOverAll" resultType="fortec.mscm.cert.entity.CertificateRepository">
         select
-            tmp.certificate_name,tmp.business_type_code,cr.id,cr.certificate_no,cr.expiry_date,cr.certificate_sign,cr.certificate_sign_to,cr.version,cr.doc_ids
+            tmp.certificate_id,tmp.certificate_name,tmp.business_type_code,cr.id,cr.certificate_no,cr.expiry_date,cr.certificate_sign,cr.certificate_sign_to,cr.version,cr.doc_ids,cr.target_describe_id
         from
         (
             select
@@ -58,7 +70,6 @@
         ) tmp
         left join certificate_repository cr
         on tmp.certificate_id = cr.certificate_id and tmp.business_type_code = cr.business_type_code and cr.target_describe_id = #{request.targetDescribeId} and  cr.close_flag = 0
-
 
     </select>
 

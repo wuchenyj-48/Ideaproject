@@ -3,6 +3,7 @@
 package fortec.mscm.cert.entity;
 
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
 import lombok.Data;
@@ -75,6 +76,26 @@ public class CertificateRepositoryHistory extends DataEntity  implements Seriali
     /** 当前版本号 */
     @NotNull(message="当前版本号不能为空")
     private Integer version;
+
+    /** 资质名称 */
+    @TableField(exist = false)
+    private String certificateName;
+
+    /** 限制文件类型 */
+    @TableField(exist = false)
+    private String limitFileExtension;
+
+    /** 是否需要有效期 */
+    @TableField(exist = false)
+    private String needExpiryDate;
+
+    /** 文件大小上限 */
+    @TableField(exist = false)
+    private String maxiumFileSize;
+
+    /** 文件数上限 */
+    @TableField(exist = false)
+    private String maxiumFileCount;
 
 
 }

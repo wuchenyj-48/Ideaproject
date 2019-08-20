@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>供方资格申请</title>
+        <title></title>
     </head>
     <body>
 
@@ -10,11 +10,9 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">供方资格申请</div>
+                        <div class="layui-card-header">供方资格审核</div>
                         <div class="layui-card-body">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                                <i class="layui-icon layui-icon-add-1"></i> 新增申请
-                            </button>
+
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
                                     <input type="text" name="code" placeholder="请输入单据号" autocomplete="off"
@@ -51,14 +49,20 @@
         </script>
 
         <script type="text/html" id="cellToolbar">
-            {{#  if(d.status == 0){ }}
-            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="subm">提交</a>
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            {{#  } if(d.status == 1){ }}
-            <!-- 提交待审核  -->
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">撤销申请</a>
-            {{#  } }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">查看</a>
         </script>
+
+        <!--<script type="text/html" id="cellToolbar">
+            {{#  if(d.status == 3){ }}
+
+            {{# }if(d.status == 1) { }}
+            <a class="layui-btn layui-btn-xs" lay-event="pass">通过</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cancel">取消</a>
+            {{# }if(d.status == 2) { }}
+
+            {{#  } }}
+
+        </script>-->
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
 
@@ -78,7 +82,7 @@
                     elem: '#listTable',
                     title: 'SupplierApplicant信息',
                     height: 'full-160',
-                    url: '/base/supplier_applicants/page',
+                    url: '/base/supplier_applicants/pageAudit',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
@@ -107,49 +111,53 @@
                 });
 
                 // 渲染下拉框 数据
-                // 渲染下拉框 数据
                 $global.getDictDataList('base_supplier_applicant_status').forEach(o => {
                     $("select[name='status']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
                 form.render('select')
 
+                //查看
                 window.edit = (data) => {
-                    layer.open({
-                        title: "编辑供方申请信息",
+                    let index = layer.open({
+                        title: data.supplierName+"资质信息",
                         type: 2,
-                        area: ['950px', '500px'],
-                        content: ['./supplier_applicant_form.html', 'no'],
+                        area: ['950px', '400px'],
+                        content: ['./supplier_audit_form.html?supplierId='+data.supplierId],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
-
-                            // layer.iframeAuto(index)
                         }
                     });
+                    layer.full(index)
                 }
 
-                window.deleteById = (data) => {
-                    layer.confirm('真的撤销行么', function (index) {
+                /*window.pass = (data) => {
+                    layer.confirm('确定通过么', function (index) {
 
-                        $http.delete(`/base/supplier_applicants/` + data.id).then(resp => {
+                        $http.post(`/base/supplier_applicants/pass/` + data.id).then(resp => {
+                            if(!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
                             layer.msg(resp.data.msg, {icon: 1})
-                            window.reloadTable();
-                            layer.close(index)
+                            window.reloadTable()
+                            parent.reloadTable()
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
                         })
                     });
                 }
 
-                window.subm = (data, rowIndex) => {
-                    layer.confirm('真的提交行么', function (index) {
-                        $http.post(`/base/supplier_applicants/submit/` + data.id).then(resp => {
+                window.cancel = (data) => {
+                    layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
+
+                        $http.post(`/base/supplier_applicants/cancel/` + data.id + "/" + val).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
-                            // 提交成功后状态会变更为 1：提交待审核，刷新单行
-                            layui.table.renderSpecRow('listTable', rowIndex, {id: data.id, status: 1})
+                            window.reloadTable()
                             layer.close(index)
                         })
-
-                    })
-                }
+                    });
+                }*/
                 // 监听表单重置
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
@@ -172,19 +180,11 @@
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
-                    console.log(obj)
-                    let rowIndex = obj.tr[0].getAttribute("data-index")
-
-                    if (obj.event === 'del') {
-                        window.deleteById(obj.data)
-                    } else if (obj.event === 'edit') {
+                    var data = obj.data;
+                    if (obj.event === 'edit') {
                         window.edit(obj.data)
-                    } else if (obj.event === 'subm') {
-                        window.subm(obj.data, rowIndex)
                     }
                 });
-
-
             })
 
         </script>

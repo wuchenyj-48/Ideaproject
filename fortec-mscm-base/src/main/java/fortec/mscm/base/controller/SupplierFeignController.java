@@ -34,4 +34,16 @@ public class SupplierFeignController extends BaseController implements SupplierF
 
         return vo;
     }
+
+    @Override
+    public SupplierVO findById(String id) {
+        Supplier supplier = supplierService.getById(id);
+        if(supplier == null){
+            return null;
+        }
+        SupplierVO vo = new SupplierVO();
+        BeanUtils.copyProperties(supplier, vo);
+
+        return vo;
+    }
 }

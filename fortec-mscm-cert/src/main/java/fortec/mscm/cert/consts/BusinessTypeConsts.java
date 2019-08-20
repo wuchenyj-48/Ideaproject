@@ -19,6 +19,11 @@ public interface BusinessTypeConsts {
     String MATERIAL = "20";
 
     /**
+     * 一级品类资质
+     */
+    String CATALOG_LEVEL1 = "21";
+
+    /**
      * 厂商资质
      */
     String MANUFACTURER = "30";

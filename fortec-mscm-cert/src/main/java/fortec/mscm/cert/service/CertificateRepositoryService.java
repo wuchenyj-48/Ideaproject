@@ -3,6 +3,8 @@ package fortec.mscm.cert.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.service.IBaseService;
+import fortec.mscm.cert.dto.NoticeUpgradeCertDTO;
+import fortec.mscm.cert.dto.NoticeUploadCertDTO;
 import fortec.mscm.cert.entity.CertificateRepository;
 import fortec.mscm.cert.request.CertificateRepositoryQueryRequest;
 
@@ -44,6 +46,8 @@ public interface CertificateRepositoryService extends IBaseService<CertificateRe
      */
     IPage<CertificateRepository> pageForHospitalWarning(CertificateRepositoryQueryRequest request);
 
+    List<CertificateRepository> pageForAudit(CertificateRepositoryQueryRequest request);
+
 
     /**
      * 添加供应商资质
@@ -67,7 +71,7 @@ public interface CertificateRepositoryService extends IBaseService<CertificateRe
     boolean addForManufacturer(CertificateRepository entity);
 
     /**
-     * 添加厂商资质
+     * 添加品类资质
      * @param entity
      * @return
      */
@@ -84,6 +88,19 @@ public interface CertificateRepositoryService extends IBaseService<CertificateRe
      * @param entity
      */
     void upgrade(CertificateRepository entity);
+
+    /**
+     * 提醒升级资质文件
+     * @param dto
+     */
+    void noticeUpgrade(NoticeUpgradeCertDTO dto);
+
+
+    /**
+     * 提醒上传资质文件
+     * @param dto
+     */
+    void noticeUpload(NoticeUploadCertDTO dto);
 
 }
     

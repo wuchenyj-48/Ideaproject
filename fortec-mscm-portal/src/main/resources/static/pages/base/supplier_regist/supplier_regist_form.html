@@ -65,7 +65,7 @@
                         <div class="layui-input-block">
                             <input type="text" name="applicantMobile" required lay-verify="phone|required"
                                    placeholder="请输入申请人手机"
-                                   autocomplete="off" class="layui-input">
+                                   class="layui-input">
                         </div>
                     </div>
 
@@ -190,10 +190,6 @@
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
                     $("form input:hidden").val('')
-                })
-                $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
                 })
 
                 // 监听表单提交事件

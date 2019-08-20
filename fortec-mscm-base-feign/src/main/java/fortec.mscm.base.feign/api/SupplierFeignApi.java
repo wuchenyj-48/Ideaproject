@@ -2,6 +2,7 @@ package fortec.mscm.base.feign.api;
 
 import fortec.mscm.base.feign.vo.SupplierVO;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -19,5 +20,9 @@ public interface SupplierFeignApi {
      */
     @GetMapping("/feign/suppliers/find_by_office_id")
     SupplierVO findByOfficeId(@RequestParam("officeId") String officeId);
+
+
+    @GetMapping("/feign/suppliers/{id}")
+    SupplierVO findById(@PathVariable("id") String id);
 
 }

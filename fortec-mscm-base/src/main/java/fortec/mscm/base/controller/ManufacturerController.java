@@ -35,13 +35,13 @@ public class ManufacturerController extends BaseController {
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid Manufacturer entity) {
-        boolean bSave = manufacturerService.saveCascadeById(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
+        boolean bSave = manufacturerService.add(entity);
+        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("该供应商下，社会信用代码已存在");
     }
 
     @PutMapping
     public CommonResult update(@RequestBody @Valid Manufacturer entity) {
-        boolean bUpdate = manufacturerService.updateCascadeById(entity);
+        boolean bUpdate = manufacturerService.update(entity);
         return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 

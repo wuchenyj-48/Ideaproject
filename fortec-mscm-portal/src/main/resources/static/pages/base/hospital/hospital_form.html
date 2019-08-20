@@ -101,7 +101,7 @@
                             邮箱
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="email" lay-verify="" placeholder="请输入邮箱"
+                            <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                             电话
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="phone" lay-verify="" placeholder="请输入电话"
+                            <input type="text" name="phone" lay-verify="phone" placeholder="请输入电话"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -336,7 +336,9 @@
                         let data = resp.data
                         if (data.success) {
                             layer.msg(data.msg, {icon: 1})
-                            initForm(layui.$.extend(model, {id: data.id, code: data.code}))
+                            if ($strings.isBlank(data.field.id)) {
+                                initForm(layui.$.extend(model, data.field, {id: data.id, code: data.code}))
+                            }
                             parent.reloadTable()
                         } else {
                             layer.msg(data.msg, {icon: 5})

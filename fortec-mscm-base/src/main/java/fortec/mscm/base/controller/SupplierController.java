@@ -11,6 +11,7 @@ import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.entity.Supplier;
 import fortec.mscm.base.request.SupplierQueryRequest;
 import fortec.mscm.base.service.SupplierService;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +54,16 @@ public class SupplierController extends BaseController {
                     .eq(request.getIsReagent() != null, "is_reagent", request.getIsReagent())
                      .orderByDesc("gmt_modified")
                 );
+
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
+    @GetMapping("/page_for_supplier")
+    public PageResult pageForSupplier(SupplierQueryRequest request) {
+        IPage page = supplierService.page(request.getPage(), Wrappers.<Supplier>query()
+                .eq(StringUtils.isNotBlank(UserUtils.getSupplierId()),"id",UserUtils.getSupplierId())
+                .orderByDesc("gmt_modified")
+        );
 
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }

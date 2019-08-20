@@ -16,6 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 public interface SupplierRegistService extends IBaseService<SupplierRegist> {
 
     /**
+     * 检查申请人手机号是否可用，
+     * @param phone
+     * @return 如果可用，返回{@code true}，否则返回 {@code false}
+     */
+    boolean checkPhoneValid(String phone);
+
+    /**
      * 审核通过
      * @param id
      */

@@ -98,6 +98,10 @@ public class CertificateRepository extends DataEntity  implements Serializable {
     /** 厂商id */
     private String manufacturerId;
 
+    /** 厂商名称 */
+    @TableField(exist = false)
+    private String manufacturerName;
+
     public static final int CLOSE_FLAG_NORMAL = 0;
     public static final int CLOSE_FLAG_CLOSED = 1;
 

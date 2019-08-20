@@ -13,6 +13,7 @@ import fortec.mscm.base.entity.Hospital;
 import fortec.mscm.base.request.HospitalQueryRequest;
 import fortec.mscm.base.service.HospitalService;
 
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,16 @@ public class HospitalController extends BaseController {
         IPage page = hospitalService.page(request.getPage(), Wrappers.<Hospital>query()
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
+                .orderByDesc("gmt_modified")
+        );
+
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
+    @GetMapping("/page_for_hospital")
+    public PageResult pageForHospital(HospitalQueryRequest request) {
+        IPage page = hospitalService.page(request.getPage(), Wrappers.<Hospital>query()
+                .eq(StringUtils.isNotBlank(UserUtils.getHospitalId()),"id",UserUtils.getHospitalId())
                 .orderByDesc("gmt_modified")
         );
 

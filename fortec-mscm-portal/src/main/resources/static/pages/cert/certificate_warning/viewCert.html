@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+
+        <link href="/lib/webuploader/webuploader.css" rel="stylesheet">
+        <link href="/lib/webuploader/webuploader.support.css" rel="stylesheet">
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="certificateId" class="layui-input"/>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span>资质名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" disabled name="certificateName" id="certificateName" lay-verify="required"
+                                   placeholder="请选择资质" readonly
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            资质编号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" readonly name="certificateNo" lay-verify="" placeholder="请输入资质编号"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            签发方
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" readonly name="certificateSign" lay-verify="" placeholder="请输入签发方"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            签发给
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" readonly name="certificateSignTo" lay-verify="" placeholder="请输入签发给"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            <span class="required-star" id="expiryDateStar">*</span>有效期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" disabled  name="expiryDate" placeholder="请选择有效期" readonly autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs12">
+                        <label class="layui-form-label">
+                            <span class="required-star">*</span>资质文件
+                        </label>
+                        <div class="layui-input-block" readonly="readonly">
+                            <div class="uploader uploader1">
+
+                                <div class="wrapper">
+                                    <div class="file-list"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                let uploader = null
+                window.renderUploader = (limitFileExtension, maxiumFileSize, maxiumFileCount) => {
+                    if (uploader != null) {
+                        uploader.getSupports().$fns.getUploader().destroy()
+                        $(".file-item.thumbnail").remove()
+                        uploader = null
+                        model.docIds = []
+                    }
+
+                    uploader = new WebUploaderSupport({
+                        server: "/doc/files/upload",
+                        paste: document.body,
+                        swf: '/lib/webuploader/Uploader.swf',  // swf文件所处路径
+                        accept: {
+                            extensions: limitFileExtension
+                        },
+                        auto: true,
+                        fileSizeLimit:  1024 * maxiumFileSize,
+                        support: {
+                            uploader: ".uploader.uploader1",  //上传区域容器选择器
+                            edit: false,
+                            fileSize: maxiumFileCount,  //文件总个数, -1时无限制
+                            // [{name:string, src: string, attrs: {}}]
+                            serverFiles: model.docIds == null ? [] : model.docIds.map(o => {
+                                return {
+                                    id: o,
+                                    name: `${o}.jpg`,
+                                    src: `/doc/files/${o}`
+                                }
+                            })
+                        }
+                    });
+                }
+
+                let model = {}
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        renderUploader(data.limitFileExtension, data.maxiumFileSize, data.maxiumFileCount)
+                    }
+
+                }
+
+
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(['/lib/webuploader/webuploader.js', '/lib/webuploader/webuploader.support.js', "/lib/tableSelect.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    
