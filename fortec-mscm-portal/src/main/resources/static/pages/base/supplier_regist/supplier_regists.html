@@ -193,7 +193,11 @@
                         $http.post(`/base/supplier_regists/cancel/${data.id}`, {
                             reason: val
                         }).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            if (resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 1})
+                            }else{
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
                             window.reloadTable()
                             layer.close(index)
                         })

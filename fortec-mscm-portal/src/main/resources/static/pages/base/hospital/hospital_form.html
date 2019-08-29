@@ -245,6 +245,10 @@
                             return
                         }
                         let rows = layui.table.getRows('hospital_location_table')
+                        if (rows.length == 0){
+                            return;
+                        }
+
                         rows.forEach(o => o.hospitalId = model.id)
                         $http.put("/base/hospital_locations/batch_save", rows).then(resp => {
                             if (resp.data.success) {
@@ -269,14 +273,14 @@
                     var data = obj.data;
                     if (obj.event === 'newDel') {
                         // 未在数据库中存在，直接从界面移除即可
-                        obj.del()
+                        layui.table.deleteRow('hospital_location_table', index)
                         return
                     }
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/base/hospital_locations/` + data.id).then(resp => {
+                                window.reloadHospitalLocationTable()
                                 layer.msg(resp.data.msg, {icon: 1})
-                                obj.del()
                             })
                         });
                         return
@@ -336,9 +340,7 @@
                         let data = resp.data
                         if (data.success) {
                             layer.msg(data.msg, {icon: 1})
-                            if ($strings.isBlank(data.field.id)) {
-                                initForm(layui.$.extend(model, data.field, {id: data.id, code: data.code}))
-                            }
+                            window.initForm($.extend(model ,resp.data.data,{isNew: false}))
                             parent.reloadTable()
                         } else {
                             layer.msg(data.msg, {icon: 5})

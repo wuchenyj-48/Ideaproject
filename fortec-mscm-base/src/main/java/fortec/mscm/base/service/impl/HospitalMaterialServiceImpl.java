@@ -12,7 +12,6 @@ import fortec.mscm.base.service.HospitalMaterialService;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,7 +43,6 @@ public class HospitalMaterialServiceImpl extends BaseServiceImpl<HospitalMateria
         return this.baseMapper.page(request.getPage(), request);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void active(String id) {
         HospitalMaterial hm = this.getById(id);
@@ -58,11 +56,11 @@ public class HospitalMaterialServiceImpl extends BaseServiceImpl<HospitalMateria
         }
 
         //修改状态为正常状态
-        hm.setInactive(HospitalMaterial.ACTIVATE);
-        this.updateById(hm);
+        HospitalMaterial hospitalMaterial = new HospitalMaterial();
+        hospitalMaterial.setInactive(HospitalMaterial.ACTIVATE).setId(hm.getId());
+        this.updateById(hospitalMaterial);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deactive(String id) {
         HospitalMaterial hm = this.getById(id);
@@ -76,8 +74,9 @@ public class HospitalMaterialServiceImpl extends BaseServiceImpl<HospitalMateria
         }
 
         //修改状态为停用状态
-        hm.setInactive(HospitalMaterial.DEACTIVATE);
-        this.updateById(hm);
+        HospitalMaterial hospitalMaterial = new HospitalMaterial();
+        hospitalMaterial.setInactive(HospitalMaterial.DEACTIVATE).setId(hm.getId());
+        this.updateById(hospitalMaterial);
     }
 }
     

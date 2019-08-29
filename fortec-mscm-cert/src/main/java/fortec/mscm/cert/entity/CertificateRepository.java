@@ -95,6 +95,9 @@ public class CertificateRepository extends DataEntity  implements Serializable {
     /** 关闭状态 */
     private Integer closeFlag;
 
+    /** 关闭状态 */
+    private Integer submitFlag;
+
     /** 厂商id */
     private String manufacturerId;
 
@@ -104,6 +107,9 @@ public class CertificateRepository extends DataEntity  implements Serializable {
 
     public static final int CLOSE_FLAG_NORMAL = 0;
     public static final int CLOSE_FLAG_CLOSED = 1;
+
+    public static final int SUBMIT_FLAG_UNSUBMIT = 0;
+    public static final int SUBMIT_FLAG_SUBMITED = 1;
 
 }
     

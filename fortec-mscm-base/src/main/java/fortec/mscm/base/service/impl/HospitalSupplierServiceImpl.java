@@ -59,7 +59,6 @@ public class HospitalSupplierServiceImpl extends BaseServiceImpl<HospitalSupplie
         return this.baseMapper.pageByKeywords(request.getPage(),request);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void enable(String id) {
         HospitalSupplier hs = this.getById(id);
@@ -73,8 +72,9 @@ public class HospitalSupplierServiceImpl extends BaseServiceImpl<HospitalSupplie
         }
 
         //修改状态为正常状态
-        hs.setInactive(HospitalSupplier.ENABLE);
-        this.updateById(hs);
+        HospitalSupplier hospitalSupplier = new HospitalSupplier();
+        hospitalSupplier.setInactive(HospitalSupplier.ENABLE).setId(hs.getId());
+        this.updateById(hospitalSupplier);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -91,8 +91,9 @@ public class HospitalSupplierServiceImpl extends BaseServiceImpl<HospitalSupplie
         }
 
         //修改状态为停用状态
-        hs.setInactive(HospitalSupplier.DISABLE);
-        this.updateById(hs);
+        HospitalSupplier hospitalSupplier = new HospitalSupplier();
+        hospitalSupplier.setInactive(HospitalSupplier.DISABLE).setId(hs.getId());
+        this.updateById(hospitalSupplier);
     }
 
 

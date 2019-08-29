@@ -50,9 +50,16 @@ public class MaterialCatalogController extends BaseController {
                     .eq(request.getMaterialTypeCode() != null, "material_type_code", request.getMaterialTypeCode())
                     .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                     .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
+                    .eq(StringUtils.isNotBlank(request.getParentId()),"parent_id",request.getParentId())
                      .orderByDesc("gmt_modified")
                 );
 
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
+    @GetMapping("/page_for_tree")
+    public PageResult listForTree(MaterialCatalogQueryRequest request) {
+        IPage page = materialCatalogService.pageForTree(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
@@ -72,8 +79,8 @@ public class MaterialCatalogController extends BaseController {
 
 
     @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") Long id) {
-        boolean bRemove = materialCatalogService.removeCascadeById(id);
+    public CommonResult deleteById(@PathVariable("id") String id) {
+        boolean bRemove = materialCatalogService.deleteById(id);
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 

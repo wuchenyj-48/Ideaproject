@@ -4,16 +4,20 @@ package fortec.mscm.base.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.serial.SerialUtils;
+import fortec.common.core.msg.domain.SceneMessage;
+import fortec.common.core.msg.enums.ReceiverType;
+import fortec.common.core.msg.provider.MsgPushProvider;
 import fortec.common.core.service.BaseServiceImpl;
+import fortec.common.core.utils.DateUtils;
 import fortec.common.core.utils.SecurityUtils;
 import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.entity.*;
 import fortec.mscm.base.mapper.MaterialApplicantMapper;
 import fortec.mscm.base.request.MaterialApplicantQueryRequest;
 import fortec.mscm.base.service.*;
-import fortec.mscm.core.consts.SerialRuleConsts;
+import fortec.mscm.core.consts.MsgConsts;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,6 +49,10 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     private final MaterialSpecService materialSpecService;
 
     private final MaterialService materialService;
+
+    private final MsgPushProvider msgPushProvider;
+
+    private final SupplierService supplierService;
 
 
     @Override
@@ -82,7 +91,8 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
 
         //供应商id，单据号，单据状态，医院id
         entity.setSupplierId(UserUtils.getSupplierId())
-                .setCode(SerialUtils.generateCode(SerialRuleConsts.BASE_MATERIAL_APPLICANT_CODE))
+                /*.setCode(SerialUtils.generateCode("base_material_applicant_code"))*/
+                .setCode(StringUtils.getRandomStr(20))
                 .setStatus(MaterialApplicant.STATUS_UNSUBMIT);
         return this.save(entity);
     }
@@ -90,8 +100,12 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void submit(String id) {
-        //当前状态是否为制单状态
+
         MaterialApplicant ma = this.getById(id);
+        if (ma == null){
+            return;
+        }
+        //当前状态是否为制单状态
         if (ma.getStatus() != MaterialApplicant.STATUS_UNSUBMIT) {
             throw new BusinessException("当前状态不是制单状态");
         }
@@ -110,16 +124,21 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         }
 
         //修改状态为提交待审核
-        ma.setStatus(MaterialApplicant.STATUS_SUBMITED);
-        this.updateById(ma);
+        MaterialApplicant materialApplicant = new MaterialApplicant();
+        materialApplicant.setStatus(MaterialApplicant.STATUS_SUBMITED).setId(ma.getId());
+        this.updateById(materialApplicant);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void pass(String id) {
 
-        // 当前状态是否为提交待审核
         MaterialApplicant ma = this.getById(id);
+        if (ma == null){
+            return;
+        }
+
+        // 当前状态是否为提交待审核
         if (ma.getStatus() != MaterialApplicant.STATUS_SUBMITED) {
             throw new BusinessException("当前状态不是待审核状态");
         }
@@ -132,10 +151,12 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         }
 
         // 修改申请单状态为通过
-        ma.setStatus(MaterialApplicant.STATUS_PASSED)
+        MaterialApplicant materialApplicant = new MaterialApplicant();
+        materialApplicant.setStatus(MaterialApplicant.STATUS_PASSED)
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
-                .setGmtAudited(new Date());
-        this.updateById(ma);
+                .setGmtAudited(new Date())
+                .setId(ma.getId());
+        this.updateById(materialApplicant);
 
         // 向医院商品插入数据
         List<HospitalMaterial> hms = Lists.newArrayListWithCapacity(list.size());
@@ -168,14 +189,32 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
 
         // 批量保存
         hospitalMaterialService.saveBatch(hms);
+
+        //发送审核消息给供应商
+        Supplier supplier = supplierService.getById(ma.getSupplierId());
+
+        HashMap<String, Object> params = Maps.newHashMap();
+        params.put("hospital_name",hospital.getName());
+        params.put("code", ma.getCode());
+        params.put("send_date", DateUtils.format(new Date(), "yyyy-MM-dd"));
+
+        SceneMessage message = new SceneMessage();
+        message.setSceneCode(MsgConsts.SCENE_MATERIAL_APPLICANT_SUCCESS).setReceiver(supplier.getCode())
+                .setReceiverType(ReceiverType.USER).params(params);
+
+        msgPushProvider.push(message);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void cancel(String id,String reason) {
 
-        //当前状态是否为提交待审核
         MaterialApplicant ma = this.getById(id);
+        if (ma == null){
+            return;
+        }
+
+        //当前状态是否为提交待审核
         if (ma.getStatus() != MaterialApplicant.STATUS_SUBMITED){
             throw new BusinessException("当前状态不是待审核状态");
         }
@@ -188,11 +227,13 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         }
 
         //修改申请单状态为已取消，并提交
-        ma.setStatus(MaterialApplicant.STATUS_CANCELED)
+        MaterialApplicant materialApplicant = new MaterialApplicant();
+        materialApplicant.setStatus(MaterialApplicant.STATUS_CANCELED)
                 .setAuditedRemark(reason)
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
-                .setGmtAudited(new Date());
-        this.updateById(ma);
+                .setGmtAudited(new Date())
+                .setId(ma.getId());
+        this.updateById(materialApplicant);
     }
 
 

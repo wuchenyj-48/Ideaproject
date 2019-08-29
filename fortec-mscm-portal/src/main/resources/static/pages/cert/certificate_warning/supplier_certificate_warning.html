@@ -14,9 +14,6 @@
                     <div class="layui-card">
                         <div class="layui-card-header">供应商资质预警</div>
                         <div class="layui-card-body">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                                <i class="layui-icon layui-icon-add-1"></i> 新增
-                            </button>
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <input type="hidden" name="beginExpiryDate">
                                 <input type="hidden" name="endExpiryDate">
@@ -192,14 +189,6 @@
                 layui.form.on('submit(list)', (data) => {
                     window.reloadTable()
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-                });
-
-
-                layui.$(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({isNew: true});
-                    }
                 });
 
                 //监听行工具事件

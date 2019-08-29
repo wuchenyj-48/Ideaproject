@@ -37,19 +37,19 @@ public interface MaterialApplicantService extends IBaseService<MaterialApplicant
     boolean saveHospital(MaterialApplicant entity);
 
     /**
-     * 制单状态提交为待审核状态
+     * 提交供货申请 制单状态提交为待审核状态
      * @param id
      */
     void submit(String id);
 
     /**
-     * 通过
+     * 供货申请审核通过 已提交状态 修改为 已审核状态
      * @param id
      */
     void pass(String id);
 
     /**
-     * 取消
+     * 供货申请审核不通过 已提交状态 修改为 取消状态
      * @param id
      * @param reason
      */

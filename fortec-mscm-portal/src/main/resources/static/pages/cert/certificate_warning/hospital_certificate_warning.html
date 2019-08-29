@@ -14,9 +14,6 @@
                     <div class="layui-card">
                         <div class="layui-card-header">医院资质预警</div>
                         <div class="layui-card-body">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                                <i class="layui-icon layui-icon-add-1"></i> 新增
-                            </button>
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <input type="hidden" name="beginExpiryDate">
                                 <input type="hidden" name="endExpiryDate">
@@ -166,21 +163,11 @@
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
 
-
-                layui.$(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({isNew: true});
-                    }
-                });
-
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
                     // 获取当前行索引
                     let rowIndex = obj.tr[0].getAttribute("data-index")
-                    if (obj.event === 'close') {
-                        window.closeCert(obj.data, rowIndex)
-                    } else if (obj.event === 'history') {
+                    if (obj.event === 'history') {
                         window.openHistory(obj.data, rowIndex)
                     } else if (obj.event === 'cert') {
                         window.viewCert(obj.data, rowIndex)

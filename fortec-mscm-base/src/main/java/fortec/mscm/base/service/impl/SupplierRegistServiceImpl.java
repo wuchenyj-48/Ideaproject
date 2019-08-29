@@ -52,12 +52,18 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
     private final SupplierService supplierService;
 
     private final UserClient userClient;
+
     private final OfficeClient officeClient;
 
-
     private final MsgPushProvider msgPushProvider;
+
     private final GlobalParamService globalParamService;
 
+    /**
+     * 检查申请人手机号是否可用
+     * @param phone
+     * @return
+     */
     @Override
     public boolean checkPhoneValid(String phone) {
         return this.count(Wrappers.<SupplierRegist>query().eq("applicant_mobile", phone)) == 0;
@@ -70,9 +76,12 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
     public void pass(String id) {
 
         SupplierRegist regist = this.getById(id);
+
         if (regist == null) {
             throw new BusinessException("供应商注册信息不存在", null);
         }
+
+        //判断当前状态是否是待审核
         if (regist.getAuditStatus() != SupplierRegist.AUDIT_STATUS_SUBMITED) {
             throw new BusinessException("当前状态不支持审核", null);
         }
@@ -145,15 +154,26 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
 
     @Override
     public void cancel(String id, String reason) {
+
         SupplierRegist supplierRegist = this.getById(id);
+
+        if (supplierRegist == null){
+            return;
+        }
+
+        //判断当前状态是否待审核
         if (supplierRegist.getAuditStatus() != SupplierRegist.AUDIT_STATUS_SUBMITED) {
             throw new BusinessException("当前状态不支持取消", null);
         }
-        supplierRegist.setAuditStatus(SupplierRegist.AUDIT_STATUS_CANCELED)
+
+        SupplierRegist regist = new SupplierRegist();
+        regist.setAuditStatus(SupplierRegist.AUDIT_STATUS_CANCELED)
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
                 .setGmtAudited(new Date())
-                .setCancelReason(reason);
-        this.updateById(supplierRegist);
+                .setCancelReason(reason)
+                .setId(supplierRegist.getId())
+        ;
+        this.updateById(regist);
     }
 
 

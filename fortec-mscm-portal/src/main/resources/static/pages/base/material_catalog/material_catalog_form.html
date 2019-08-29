@@ -1,5 +1,3 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -17,16 +15,17 @@
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">父级品类</label>
                         <div class="layui-input-block">
-                            <input type="text" name="parentName" id="parentName" class="layui-input" lay-filter="tree"/>
+                            <input type="text" name="parentName" id="parentName" class="layui-input"
+                                   placeholder="点击选择品类" lay-filter="tree"/>
                         </div>
                     </div>
                 </div>
 
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  商品类型
+                            <span class="required-star">*</span> 商品类型
                         </label>
                         <div class="layui-input-block">
                             <select name="materialTypeCode" required lay-verify="required">
@@ -34,57 +33,56 @@
                             </select>
 
                         </div>
-                   </div>
+                    </div>
 
 
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  品类代码
+                            <span class="required-star">*</span> 品类代码
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="code" required lay-verify="abc|required" placeholder="请输入品类代码"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  品类名称
+                            <span class="required-star">*</span> 品类名称
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="name" required lay-verify="required" placeholder="请输入品类名称"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
 
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  品类全称
+                            <span class="required-star">*</span> 品类全称
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="fullName" required lay-verify="required" placeholder="请输入品类全称"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
 
 
-
                 <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  排序
+                            <span class="required-star">*</span> 排序
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="sort" required lay-verify="required" placeholder="请输入排序"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
                 <div class="block"></div>
@@ -106,7 +104,7 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$
+                let form = layui.form, $ = layui.$, dtree = layui.dtree, DTree
 
                 let model = {}
                 window.initForm = (formData) => {
@@ -117,29 +115,29 @@
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                     }
+
                 }
 
-                // 渲染父级菜单
-                layui.treeSelect.render({
-                    elem: '#parentName',
-                    url: '/base/material_catalogs/tree',
-                    search: true,
-                    style: {
-                        folder: {enable: true},
-                        line: {enable: true}
+                //渲染父级菜单
+                dtree.renderOpenTree({
+                    title: "选择树",
+                    elem: "#parentName",
+                    url: "/base/material_catalogs/tree",
+                    allowClear:true,
+                    allowSearch: true,
+                    onClear(){
+                        $("input[name='parentId']").val("");
+                        $("input[name='parentName']").val("");
                     },
-                    click(d) {
-                        model.parentId = d.current.id
-                        $("form input[name='parentId']").val(model.parentId)
-                    },
-                    clear(){
-                        model.parentId = null
-                        $("form input[name='parentId']").val(model.parentId)
-                    },
-                    success(d) {
-                        layui.treeSelect.checkNode('tree', $strings.defaultString(model.parentId, '0'))
+                    onConfirm(node){
+                        if (node.level >= 5) {
+                            layer.msg("最多支持5级分类", {icon: 5})
+                            return
+                        }
+                        $("input[name='parentId']").val(node.nodeId);
+                        $("input[name='parentName']").val(node.context);
                     }
-                });
+                })
 
                 // 渲染下拉框 数据
                 $global.getDictDataList('base_material_type').forEach(o => {
@@ -190,7 +188,8 @@
 
             extendParentScriptsAndStyles(() => {
                 // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
-                loadAllJs(["/lib/treeSelect.js"], mainFunction)
+                loadAllJs(["/lib/layui_ext/dtree/dtree.js"], mainFunction)
+                loadAllCss(["/lib/layui_ext/dtree/dtree.css", "/lib/layui_ext/dtree/font/dtreefont.css"])
             })
 
         </script>

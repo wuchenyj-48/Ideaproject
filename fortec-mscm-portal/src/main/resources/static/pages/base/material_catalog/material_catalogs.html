@@ -1,5 +1,3 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,92 +7,195 @@
     <body>
 
         <div class="layui-fluid">
-            <div class="layui-row layui-col-space15">
-                <div class="layui-col-md12">
+            <div class="layui-row layui-col-space10">
+
+                <div class="layui-col-xs3">
                     <div class="layui-card">
-                        <div class="layui-card-header">商品品类管理</div>
-                        <div class="layui-card-body">
-                            <div class="layui-btn-container">
-                                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew" onclick="edit({})">
-                                    <i class="layui-icon layui-icon-add-1"></i>新增
-                                </button>
-                                <button class="layui-btn layui-btn-sm layui-btn-primary refresh"  >
-                                    <i class="layui-icon layui-icon-refresh"></i>
-                                    刷新
-                                </button>
-                                <button class="layui-btn layui-btn-sm layui-btn-primary open-all"  >
-                                    <i class="far fa-folder-open"></i>
-                                    全部展开
-                                </button>
-                                <button class="layui-btn layui-btn-sm layui-btn-primary close-all">
-                                    <i class="far  fa-folder"></i>
-                                    全部关闭
-                                </button>
+
+                        <div class="layui-card-header">
+                            <span>品类管理</span>
+                            <div class="pull-right">
+                                <a href="javascript:void(0)" id="reloadTree" class="layui-color-blue">
+                                    <i class="layui-icon layui-icon-refresh"></i> 刷新
+                                </a>
                             </div>
-                            <table id="materialCatalogTree" lay-filter="materialCatalogTree" class="layui-table layui-form"></table>
+                        </div>
+                        <div class="layui-card-body" style="overflow:auto">
+                            <ul id="catelogTree" class="dtree" data-id="0"></ul>
                         </div>
                     </div>
                 </div>
+                <div class="layui-col-xs9">
+                    <div class="layui-card">
+
+                        <div class="layui-card-header">品类管理</div>
+                        <div class="layui-card-body">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="addNew" lay-filter="addNew">
+                                <i class="layui-icon layui-icon-add-1"></i> 新增
+                            </button>
+                            <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
+                                <input type="hidden" name="parentId">
+                                <div class="layui-input-inline">
+
+                                    <select name="materialTypeCode">
+                                        <option value="">请选择商品类型</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="name" placeholder="请输入品类名称" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="code" placeholder="请输入品类代码" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+
+                                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
+                                        lay-filter="list">
+                                    <i class="layui-icon layui-icon-search"></i> 查询
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="reset">
+                                    <i class="layui-icon "></i> 重置
+                                </button>
+
+                            </form>
+                            <table id="listTable" lay-filter="listTable"></table>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
         </div>
+
+        <script type="text/html" id="cellToolbar">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">添加</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
 
         <script src="/scripts/utils/common.js"></script>
 
-        <script>
-
+        <script type="text/javascript">
             let mainFunction = () => {
-                let form = layui.form, treeTable = layui.treeTable, $ = layui.$
-                let materialCatalogTree = treeTable.render({
-                    elem: '#materialCatalogTree',
-                    data: [],
-                    icon_key: 'name',
-                    primary_key: 'id',
-                    parent_key: 'parentId',
-                    cols: [
-                        { key: 'name', title: '品类名称'},
-                        {
-                            key: 'materialTypeCode',
-                            title: '商品类型',
-                            align: 'center',
-                            template(item) {
-                                return `${$global.getDictLabel('base_material_type', item.materialTypeCode)}`;
+                let layer = layui.layer, table = layui.table,
+                    dtree = layui.dtree, form = layui.form, $ = layui.$
+
+                //加载树
+                let treeIns = dtree.render({
+                    elem: "#catelogTree",
+                    url: "/base/material_catalogs/tree",
+                    // data: [],
+                    height: "full-160",
+                    allowSearch: true,
+                    done(data, obj){
+                        $("#filterText").change(() =>{
+                            let value = $("#filterText").val();
+                            if($strings.isNotBlank(value)){
+                                treeIns.searchNode(value);
+                            } else {
+                                treeIns.menubarMethod().refreshTree(); // 内置方法刷新树
                             }
-                        },
-                        { key: 'code', title: '品类代码', align: 'center'},
-                        { key: 'fullName', title: '品类全称', align: 'center'},
-                        { key: 'sort', title: '排序', align: 'center'},
-                        { key: 'modifier', title: '修改人', align: 'center'},
-                        { key: 'gmtModified', title: '修改时间', align: 'center'},
-                        {
-                            title: '操作',
-                            align: 'center',
-                            template(item) {
-                                return '<a class="layui-btn layui-btn-xs layui-btn-normal" lay-filter="add">添加</a>' +
-                                    '<a class="layui-btn layui-btn-xs" lay-filter="edit">编辑</a>' +
-                                    '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-filter="del">删除</a>';
-                            }
-                        },
-                    ],
-                    end(e) {
-                        form.render();
+                        });
                     }
                 });
 
-                /**
-                 * 刷新列表数据
-                 */
+                //点击节点
+                dtree.on("node(catelogTree)", function (obj) {
+                    $("[name='parentId']").val(obj.param.nodeId)
+                    window.reloadTable()
+                })
+
+                //刷新列表
                 window.reloadTable = () => {
-                    $http.get('/base/material_catalogs/list').then(resp => {
-                        // 加载列表数据
-                        materialCatalogTree.data = resp.data.data
-                        treeTable.render(materialCatalogTree)
+                    table.reload('listTable', {
+                        where: layui.$('#queryForm').serializeObject()
                     })
                 }
 
-                /**
-                 * 编辑按钮
-                 * @param data
-                 */
+                //加载列表
+                table.render({
+                    id: "listTable",
+                    elem: '#listTable',
+                    title: '编辑品类信息',
+                    height: 'full-160',
+                    url: '/base/material_catalogs/page_for_tree',
+                    page: {limit: 30},
+                    cols: [[
+                        {type: 'numbers', align: 'center', fixed: 'left'},
+                        {field: 'name', title: '品类名称', align: 'center'},
+                        {
+                            field: 'materialTypeCode',
+                            title: '商品类型',
+                            align: 'center',
+                            templet(item) {
+                                return `${$global.getDictLabel('base_material_type', item.materialTypeCode)}`;
+                            }
+                        },
+                        {field: 'code', title: '品类代码', align: 'center'},
+                        {field: 'fullName', title: '品类全称', align: 'center'},
+                        {field: 'sort', title: '排序', align: 'center'},
+                        {
+                            field: "LAY_CELL_TOOLBAR",
+                            title: '操作',
+                            templet: '#cellToolbar',
+                            align: 'center',
+                            fixed: 'right'
+                        }
+                    ]]
+                })
+
+                // 渲染下拉框 数据
+                $global.getDictDataList('base_material_type').forEach(o => {
+                    $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                form.render('select')
+
+                // 监听表单重置
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+
+                // 监听表头
+                $("#addNew").click(() => {
+                    window.edit()
+                })
+
+                // 刷新树结构
+                $("#reloadTree").click(() => {
+                    treeIns.menubarMethod().refreshTree(); // 内置方法刷新树
+                })
+
+                // 监听表单提交事件
+                layui.form.on('submit(list)', (data) => {
+                    window.reloadTable()
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+
+                //监听行工具事件
+                table.on('tool(listTable)', function (obj) {
+                    var data = obj.data;
+                    if (obj.event === 'del') {
+                        window.deleteById(data)
+                    } else if (obj.event === 'edit') {
+                        window.edit(data)
+                    } else if (obj.event === 'add') {
+                        window.add(data)
+                    }
+                });
+
+                //行新增
+                window.add = (data) => {
+                    let ids = data.parentIds.split(",")
+                    if (ids.length >= 7) {
+                        layer.msg("最多支持5级分类", {icon: 5})
+                        return
+                    }
+                    window.edit({parentId: data.id,parentName:data.name})
+                }
+
+                //行编辑
                 window.edit = (data) => {
                     layer.open({
                         title: "编辑品类信息",
@@ -102,23 +203,15 @@
                         area: ['960px', '400px'],
                         content: ['./material_catalog_form.html', 'no'],
                         success(layero, index) {
-                            var iframeWin = window[layero.find('iframe')[0]['name']]
-
-                            if ($strings.isNotBlank(data.parentId)) {
-                                let parentNames = materialCatalogTree.data.filter(o => o.id == data.parentId).map(o => o.name)
-                                data.parentName = parentNames.length > 0 ? parentNames[0] : ''
-                            }
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
-                            layer.iframeAuto(index)
                         }
                     });
                 }
 
+                //行删除
                 window.deleteById = (data) => {
-                    if (!data.is_end){
-                        layer.msg("已经有下属商品的品类不能删除", {icon: 5})
-                        return
-                    }
+
                     layer.confirm('确定删除么', function (index) {
                         $http.delete(`/base/material_catalogs/${data.id}`).then(resp => {
                             layer.close(index)
@@ -131,32 +224,7 @@
                         })
                     });
                 }
-                window.reloadTable()
 
-                // 事件监听
-                treeTable.on('tree(add)', (obj) => {
-                    if (obj.item.level >= 4){
-                        layer.msg("最多支持5级分类", {icon: 5})
-                        return
-                    }
-                    window.edit({parentId: obj.item.id})
-                })
-                treeTable.on('tree(edit)', (obj) => {
-                    window.edit(obj.item)
-                })
-                treeTable.on('tree(del)', (obj) => {
-                    window.deleteById(obj.item)
-                })
-
-                $('.refresh').click(function () {
-                    window.reloadTable()
-                })
-                $('.open-all').click(function () {
-                    treeTable.openAll(materialCatalogTree);
-                })
-                $('.close-all').click(function () {
-                    treeTable.closeAll(materialCatalogTree);
-                })
             }
 
             /**
@@ -164,10 +232,11 @@
              */
             extendParentScriptsAndStyles(() => {
                 // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
-                loadSingleJs("/lib/treeTable.js", mainFunction)
+                loadAllJs(["/lib/layui_ext/dtree/dtree.js"], mainFunction)
+                loadAllCss(["/lib/layui_ext/dtree/dtree.css", "/lib/layui_ext/dtree/font/dtreefont.css"])
             })
-
         </script>
+
     </body>
 
 

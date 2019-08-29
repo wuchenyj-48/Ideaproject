@@ -102,5 +102,11 @@ public interface CertificateRepositoryService extends IBaseService<CertificateRe
      */
     void noticeUpload(NoticeUploadCertDTO dto);
 
+    /**
+     * 资质提交，修改状态为已提交
+     * @param id
+     */
+    void certificateSubmit(String id);
+
 }
     
