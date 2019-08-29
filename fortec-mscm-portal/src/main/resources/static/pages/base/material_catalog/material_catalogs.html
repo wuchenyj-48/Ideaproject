@@ -85,8 +85,7 @@
                 let treeIns = dtree.render({
                     elem: "#catelogTree",
                     url: "/base/material_catalogs/tree",
-                    // data: [],
-                    height: "full-160",
+                    height: "full-110",
                     allowSearch: true,
                     done(data, obj){
                         $("#filterText").change(() =>{
@@ -232,8 +231,8 @@
              */
             extendParentScriptsAndStyles(() => {
                 // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
-                loadAllJs(["/lib/layui_ext/dtree/dtree.js"], mainFunction)
-                loadAllCss(["/lib/layui_ext/dtree/dtree.css", "/lib/layui_ext/dtree/font/dtreefont.css"])
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
+                loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
             })
         </script>
 
