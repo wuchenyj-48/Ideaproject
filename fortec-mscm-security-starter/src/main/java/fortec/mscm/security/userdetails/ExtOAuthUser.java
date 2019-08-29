@@ -1,5 +1,6 @@
 package fortec.mscm.security.userdetails;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.userdetails.OAuthUser;
 import fortec.mscm.base.feign.vo.HospitalVO;
@@ -47,15 +48,18 @@ public class ExtOAuthUser extends OAuthUser {
         this.hospital = hospital;
     }
 
+    @JSONField(serialize = false,deserialize = false)
     public boolean isSupplier() {
         return supplier != null;
     }
 
+    @JSONField(serialize = false,deserialize = false)
     public boolean isHospital() {
         return hospital != null;
     }
 
 
+    @JSONField(serialize = false,deserialize = false)
     public String getSupplierId() {
         if (!isSupplier()) {
             throw new BusinessException("当前用户非供应商身份，不允许操作");
@@ -63,6 +67,7 @@ public class ExtOAuthUser extends OAuthUser {
         return supplier.getId();
     }
 
+    @JSONField(serialize = false,deserialize = false)
     public String getHospitalId() {
         if (!isHospital()) {
             throw new BusinessException("当前用户非医院身份，不允许操作");
