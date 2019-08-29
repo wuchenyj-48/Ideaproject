@@ -86,7 +86,8 @@
                     elem: "#catelogTree",
                     url: "/base/material_catalogs/tree",
                     height: "full-110",
-                    allowSearch: true,
+                    allowFilter: true,
+                    filterMode: 'pinyin',
                     done(data, obj){
                         $("#filterText").change(() =>{
                             let value = $("#filterText").val();
