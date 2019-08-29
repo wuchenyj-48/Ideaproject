@@ -6,7 +6,7 @@ import fortec.mscm.security.userdetails.MscmIntegrationUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.core.annotation.Order;
 
 /**
  * @Description:
@@ -15,12 +15,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * @Version: 1.0
  */
 @Configuration
+@Order(-100)
 public class MscmSecurityCommonConfiguration {
 
 
     @Primary
     @Bean("mscmUserDetailsService")
-    public UserDetailsService mscmUserDetailsService( SupplierClient supplierClient, HospitalClient hospitalClient) {
+    public MscmIntegrationUserDetailsService mscmUserDetailsService( SupplierClient supplierClient, HospitalClient hospitalClient) {
         return new MscmIntegrationUserDetailsService( supplierClient, hospitalClient);
     }
 

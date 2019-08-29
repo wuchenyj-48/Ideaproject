@@ -15,6 +15,7 @@ import fortec.common.upms.feign.vo.UserInfoVO;
 import fortec.mscm.base.entity.Hospital;
 import fortec.mscm.base.mapper.HospitalMapper;
 import fortec.mscm.base.service.HospitalService;
+import fortec.mscm.core.consts.SerialRuleConsts;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class HospitalServiceImpl extends BaseServiceImpl<HospitalMapper, Hospita
 
 
         // 添加用户，供应商编号作为主账户
-        String hospitalCode = SerialUtils.generateCode("base_hospital_code");
+        String hospitalCode = SerialUtils.generateCode(SerialRuleConsts.BASE_HOSPITAL_CODE);
         entity.setCode(hospitalCode);
 
         UserInfoDTO userDTO = new UserInfoDTO();

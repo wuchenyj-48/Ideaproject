@@ -9,7 +9,7 @@ import feign.RequestInterceptor;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import fortec.common.feign.annotation.EnableDefaultFeignConfig;
-import fortec.common.feign.interceptor.TokenInterceptor;
+import fortec.common.feign.interceptor.TransistTokenInterceptor;
 import fortec.mscm.core.consts.ServiceNames;
 import fortec.mscm.feign.clients.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +42,13 @@ public class MscmClientConfiguration {
     private MaterialClient materialClient;
 
     public MscmClientConfiguration(Decoder decoder, Encoder encoder, Client client, Contract contract,
-                                   TokenInterceptor tokenInterceptor, @Autowired(required = false) FeignTracingTransmitter feignTracingTransmitter) {
+                                   TransistTokenInterceptor transistTokenInterceptor, @Autowired(required = false) FeignTracingTransmitter feignTracingTransmitter) {
 
         ArrayList<RequestInterceptor> requestInterceptors = null;
         if(feignTracingTransmitter == null){
-            requestInterceptors =  Lists.newArrayList(tokenInterceptor);
+            requestInterceptors =  Lists.newArrayList(transistTokenInterceptor);
         }else{
-            requestInterceptors =  Lists.newArrayList(tokenInterceptor, feignTracingTransmitter);
+            requestInterceptors =  Lists.newArrayList(transistTokenInterceptor, feignTracingTransmitter);
         }
 
         this.supplierClient = Feign.builder().client(client)

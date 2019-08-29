@@ -11,4 +11,10 @@ public interface SerialRuleConsts {
     /** 供应商编号 */
     String BASE_SUPPLIER_CODE = "base_supplier_code";
 
+    String BASE_HOSPITAL_CODE = "base_hospital_code";
+
+    String BASE_SUPPLIER_APPLICANT_CODE = "base_supplier_applicant_code";
+
+    String BASE_MATERIAL_APPLICANT_CODE = "base_material_applicant_code";
+
 }
