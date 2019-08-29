@@ -20,9 +20,6 @@
                                 </a>
                             </div>
                         </div>
-                        <div style="margin-top: 10px;margin-left: 5px;margin-right: 5px">
-                            <input class="layui-input" id="filterText" value="" placeholder="输入关键字进行过滤" autocomplete="off" >
-                        </div>
                         <div class="layui-card-body" style="overflow:auto">
                             <ul id="catelogTree" class="dtree" data-id="0"></ul>
                         </div>
@@ -90,6 +87,7 @@
                     url: "/base/material_catalogs/tree",
                     // data: [],
                     height: "full-160",
+                    allowSearch: true,
                     done(data, obj){
                         $("#filterText").change(() =>{
                             let value = $("#filterText").val();

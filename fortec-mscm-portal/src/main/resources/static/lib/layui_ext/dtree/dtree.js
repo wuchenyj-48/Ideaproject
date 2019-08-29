@@ -1244,6 +1244,7 @@ layui.define(['jquery', 'layer', 'form'], function (exports) {
             //先将ul中的元素清空
             _this.obj.html("");
 
+
             setTimeout(function () {
                 // 加载完毕后执行树解析前的回调
                 _this.success(_this.data, _this.obj);
@@ -1362,6 +1363,18 @@ layui.define(['jquery', 'layer', 'form'], function (exports) {
                     _this.complete(XMLHttpRequest, textStatus);
                 }
             });
+
+        }
+
+        // 增加 内容过滤
+        _this.obj.parent().find("div[id='searchDiv']").remove();
+        if (_this.options.allowSearch) {
+            _this.obj.parent().prepend("<div id='searchDiv' style='margin: 10px'><input type='text' id='searchKeywords' autocomplete='off' class='layui-input' placeholder='请输入关键词过滤'></div>")
+            _this.obj.parent().find("div[id='searchDiv'] #searchKeywords").bind("input propertychange",function() {
+                let value = this.value;
+                let treeId = event.getElemId(_this.options)
+                DTrees[treeId] && DTrees[treeId].searchNode(value);
+            })
         }
     };
 
@@ -1421,7 +1434,6 @@ layui.define(['jquery', 'layer', 'form'], function (exports) {
                     if (typeof result === 'string') {
                         result = $.parseJSON(result);
                     }
-                    console.log(result)
                     let code = "";
                     if (_this.dataStyle == 'layuiStyle') {
                         code = result[_this.response.statusName];
@@ -3094,6 +3106,11 @@ layui.define(['jquery', 'layer', 'form'], function (exports) {
 
     //模糊查询该值，展开该值节点
     DTree.prototype.searchNode = function (value) {
+        if($strings.isBlank(value)){
+            _this.obj.find(".dtree-nav-item").removeClass("layui-hide")
+            return
+        }
+
         var _this = this;
         var b = false;
         var $lis = [];
@@ -3134,6 +3151,15 @@ layui.define(['jquery', 'layer', 'form'], function (exports) {
             for (var i = 0; i < $lis.length; i++) {
                 _this.obj.append($lis[i]);
             }
+
+            // _this.obj.find(".dtree-nav-item").addClass("layui-hide")
+            // _this.obj.find(".dtree-nav-item  .dtree-nav-div").addClass("layui-hide")
+            // for (var i = 0; i < $lis.length; i++) {
+            //     let dataId = $($lis[i]).attr("data-id")
+            //
+            //     _this.obj.find(`.dtree-nav-item[data-id='${dataId}']`).removeClass("layui-hide")
+            //     _this.obj.find(`.dtree-nav-item[data-id='${dataId}'] .dtree-nav-div`).removeClass("layui-hide")
+            // }
         }
         return b;
     };
@@ -4479,71 +4505,96 @@ layui.define(['jquery', 'layer', 'form'], function (exports) {
             var dTree = null;
             var id = event.getElemId(options);
             if (id == "") {
-                layer.msg("页面中未找到绑定id", {icon: 5});
-            } else {
-                dTree = DTrees[id];
-                if (typeof dTree === 'object') {
-                    dTree.reloadSetting(options);
-                    dTree.initTreePlus();
-                    dTree.openTreePlus();
-                    dTree.initNodeParam();
-                    dTree.init();
-                    dTree.unbindBrowserEvent();
-                    dTree.bindBrowserEvent();
-                } else {
-                    // 创建树
-                    dTree = new DTree(options);
-                    // 添加到树数组中去
-                    DTrees[id] = dTree;
-                    dTree.initTreePlus();
-                    dTree.openTreePlus();
-                    dTree.init();
-                    dTree.bindBrowserEvent();
-                }
+                console.error("页面中未找到绑定id");
+                return
             }
+            dTree = DTrees[id];
+            $("#searchKeywords").hide()
+            let allowSearch = options.allowSearch;
+            if (allowSearch) {
+                $("#searchKeywords").show()
+            }
+
+            if (typeof dTree === 'object') {
+                dTree.reloadSetting(options);
+                dTree.initTreePlus();
+                dTree.openTreePlus();
+                dTree.initNodeParam();
+                dTree.init();
+                dTree.unbindBrowserEvent();
+                dTree.bindBrowserEvent();
+            } else {
+                // 创建树
+                dTree = new DTree(options);
+                // 添加到树数组中去
+                DTrees[id] = dTree;
+                dTree.initTreePlus();
+                dTree.openTreePlus();
+                dTree.init();
+                dTree.bindBrowserEvent();
+            }
+
 
             return dTree;
         },
-        renderOpenTree:function (options) { 初始加载树
-            var id = event.getElemId(options);
+        renderOpenTree: function (options) {
+            //初始加载树
+            let id = event.getElemId(options);
             if (id == "") {
-                layer.msg("页面中未找到绑定id", {icon: 5});
+                console.error("页面中未找到绑定id");
                 return;
             }
+            let treeId = "openTree-" + $("ul[id*='openTree-']").length
+            let treeIns = null
+
+            let btns = ['取消', '清除', '刷新', '确认']
+            let btnConfirmIndex = 3
+            let btnCallbaks = [
+                (index, layero) => {
+                    layer.close(index);
+                },
+                (index, layero) => {
+                    let fnOnClear = options.onClear
+                    fnOnClear && typeof (fnOnClear) === 'function' && fnOnClear()
+                },
+                (index, layero) => {
+                    treeIns.menubarMethod().refreshTree(); // 内置方法刷新树
+                    return false;
+                },
+                (index, layero) => {
+                    let node = treeIns.getNowParam(`${treeId}`)
+                    let fnOnConfirm = options.onConfirm
+                    fnOnConfirm && typeof (fnOnConfirm) === 'function' && fnOnConfirm(node)
+                }
+            ]
+            if (!options.allowClear) {
+                btns.splice(1, 1)
+                btnCallbaks.splice(1, 1)
+                btnConfirmIndex = 2
+            }
+
             $(options.elem).click(function () {
-                layer.open({
+                let openOptions = {
                     type: 1,  //type:0 也行
                     title: options.title,
                     area: ["400px", "80%"],
-                    content: '<ul id="openTree1" class="dtree" data-id="0"></ul>',
-                    btn: ['取消', '清除', '刷新', '确认'],
-                    btnConfirmIndex: 3,
+                    content: `<ul id="${treeId}" class="dtree" data-id="0"></ul>`,
+                    btn: btns,
+                    btnConfirmIndex,
                     success: function (layero, index) {
-                        DTree = dtree.render({
-                            elem: "#openTree1",
-                            url: options.url,
+                        let treeOptions = layui.$.extend(options, {elem: "#" + treeId})
+                        treeIns = dtree.render(treeOptions);
+                        dtree.on(`nodedblclick('${treeId}')`, function (obj) {
+                            let fnOnConfirm = options.onConfirm
+                            fnOnConfirm && typeof (fnOnConfirm) === 'function' && fnOnConfirm(obj.param)
+                            layer.close(index)
                         });
                     },
-                    btn1: function (index, layero) {
-                        layer.close(index);
-                    }, btn2: function (index, layero) {
-                        $("input[name='parentId']").val("");
-                        $("input[name='parentName']").val("");
-                        layer.close(index);
-                    }, btn3: function (index, layero) {
-                        DTree.menubarMethod().refreshTree(); // 内置方法刷新树
-                        return false;
-                    }, btn4: function (index, layero) {
-                        var param = dtree.getNowParam("openTree1"); // 获取当前选中节点
-                        if (param.level >= 5) {
-                            layer.msg("最多支持5级分类", {icon: 5})
-                            return
-                        }
-                        $("input[name='parentId']").val(param.nodeId);
-                        $("input[name='parentName']").val(param.context);
-                        layer.close(index);
-                    }
-                })
+                }
+                for (let i = 1; i <= btnCallbaks.length; i++) {
+                    openOptions["btn" + i] = btnCallbaks[i - 1]
+                }
+                layer.open(openOptions)
             })
         },
         reload: function (dTree, options) {  // 重新加载树

@@ -122,43 +122,22 @@
                 dtree.renderOpenTree({
                     title: "选择树",
                     elem: "#parentName",
-                    url: "/base/material_catalogs/tree"
-                })
-                /*$("#parentName").click(function () {
-                    layer.open({
-                        type: 1,  //type:0 也行
-                        title: "选择树",
-                        area: ["400px", "80%"],
-                        content: '<ul id="openTree1" class="dtree" data-id="0"></ul>',
-                        btn: ['取消', '清除', '刷新', '确认'],
-                        btnConfirmIndex: 3,
-                        success: function (layero, index) {
-                            DTree = dtree.render({
-                                elem: "#openTree1",
-                                url: "/base/material_catalogs/tree",
-                            });
-                        },
-                        btn1: function (index, layero) {
-                            layer.close(index);
-                        }, btn2: function (index, layero) {
-                            $("input[name='parentId']").val("");
-                            $("input[name='parentName']").val("");
-                            layer.close(index);
-                        }, btn3: function (index, layero) {
-                            DTree.menubarMethod().refreshTree(); // 内置方法刷新树
-                            return false;
-                        }, btn4: function (index, layero) {
-                            var param = dtree.getNowParam("openTree1"); // 获取当前选中节点
-                            if (param.level >= 5) {
-                                layer.msg("最多支持5级分类", {icon: 5})
-                                return
-                            }
-                            $("input[name='parentId']").val(param.nodeId);
-                            $("input[name='parentName']").val(param.context);
-                            layer.close(index);
+                    url: "/base/material_catalogs/tree",
+                    allowClear:true,
+                    allowSearch: true,
+                    onClear(){
+                        $("input[name='parentId']").val("");
+                        $("input[name='parentName']").val("");
+                    },
+                    onConfirm(node){
+                        if (node.level >= 5) {
+                            layer.msg("最多支持5级分类", {icon: 5})
+                            return
                         }
-                    });
-                });*/
+                        $("input[name='parentId']").val(node.nodeId);
+                        $("input[name='parentName']").val(node.context);
+                    }
+                })
 
                 // 渲染下拉框 数据
                 $global.getDictDataList('base_material_type').forEach(o => {
