@@ -44,7 +44,7 @@
         from
         certificate_repository cr
         inner join certificate c on cr.certificate_id = c.id
-        inner join `mscm-base`.manufacturer m on m.id = cr.manufacturer_id
+        left join `mscm-base`.manufacturer m on m.id = cr.manufacturer_id
         <where>
             <if test="request.targetDescribeId != null and request.targetDescribeId != ''">
                 and cr.target_describe_id = #{request.targetDescribeId}
@@ -96,7 +96,7 @@
                     and cr.expiry_date &gt;= date_add(now(), interval 6 month)
                 </when>
             </choose>
-            and cr.close_flag = 0
+            and cr.close_flag = 0 and cr.submit_flag = 1
         </where>
         order by cr.gmt_modified desc
     </select>
@@ -130,7 +130,7 @@
                     and cr.expiry_date &gt;= date_add(now(), interval 6 month)
                 </when>
             </choose>
-            and cr.close_flag = 0
+            and cr.close_flag = 0 and cr.submit_flag = 1
         </where>
         order by cr.gmt_modified desc
     </select>
@@ -145,7 +145,7 @@
             <if test="request.supplierId != null and request.supplierId != ''">
                 and cr.supplier_id = #{request.supplierId} and cr.target_describe_id = #{request.supplierId}
             </if>
-            and cr.close_flag = 0
+            and cr.close_flag = 0 and cr.submit_flag = 1
         </where>
     </select>
 

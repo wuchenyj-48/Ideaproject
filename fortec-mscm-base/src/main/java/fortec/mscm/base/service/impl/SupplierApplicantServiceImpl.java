@@ -46,8 +46,11 @@ import java.util.List;
 public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplicantMapper, SupplierApplicant> implements SupplierApplicantService {
 
     private final HospitalSupplierService hospitalSupplierService;
+
     private final SupplierService supplierService;
+
     private final MsgPushProvider msgPushProvider;
+
     private final HospitalService hospitalService;
 
     @Override
@@ -70,7 +73,6 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
     @Override
     public boolean applicant(SupplierApplicant entity) {
 
-
         //申请表中是否存在
         SupplierApplicant applicantServiceOne = this.getOne(Wrappers.<SupplierApplicant>query()
                 .eq("hospital_id", entity.getHospitalId())
@@ -81,10 +83,8 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
             throw new BusinessException("不可重复申请", null);
         }
 
-
         //关系表中是否存在
         assertHasExist(entity);
-
 
         //供应商，单据号，单据状态
         entity.setSupplierId(UserUtils.getUser().getSupplierId())
@@ -96,8 +96,13 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     @Override
     public void submit(String id) {
-        //状态是否是制单状态
+
         SupplierApplicant supplierApplicant = this.getById(id);
+        if (supplierApplicant == null){
+            return;
+        }
+
+        //状态是否是制单状态
         if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_UNSUBMIT) {
             throw new BusinessException("当前状态不支持提交");
         }
@@ -105,27 +110,34 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         assertHasExist(supplierApplicant);
 
         //修改状态为提交待审核
-        supplierApplicant.setStatus(SupplierApplicant.STATUS_SUBMITED);
-        this.updateById(supplierApplicant);
+        SupplierApplicant tmp = new SupplierApplicant();
+        tmp.setStatus(SupplierApplicant.STATUS_SUBMITED).setId(supplierApplicant.getId());
+        this.updateById(tmp);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void pass(String id) {
-        //状态是否是提交待审核
+
         SupplierApplicant supplierApplicant = this.getById(id);
+        if (supplierApplicant == null){
+            return;
+        }
+
+        //状态是否是提交待审核
         if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_SUBMITED) {
             throw new BusinessException("当前状态不支持审核");
         }
 
+        //关系表中是否存在
         assertHasExist(supplierApplicant);
 
         //修改状态为已审核
-        supplierApplicant
-                .setStatus(SupplierApplicant.STATUS_PASSED)
+        SupplierApplicant applicant = new SupplierApplicant();
+        applicant.setStatus(SupplierApplicant.STATUS_PASSED)
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
                 .setGmtAudited(new Date());
-        this.updateById(supplierApplicant);
+        this.updateById(applicant);
 
         //添加信息到关系表
         HospitalSupplier hospitalSupplier = new HospitalSupplier();
@@ -151,17 +163,25 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     @Override
     public void cancel(String id, String auditedRemark) {
-        //状态是否是提交待审核
+
         SupplierApplicant supplierApplicant = this.getById(id);
+
+        if (supplierApplicant == null){
+            return;
+        }
+
+        //状态是否是提交待审核
         if (supplierApplicant.getStatus() != SupplierApplicant.STATUS_SUBMITED) {
             throw new BusinessException("当前状态不支持取消", null);
         }
+
         //修改状态为已取消
-        supplierApplicant.setStatus(SupplierApplicant.STATUS_CANCELED)
-                .setAuditor(SecurityUtils.getCurrentUser().getId())
+        SupplierApplicant applicant = new SupplierApplicant();
+        applicant.setStatus(SupplierApplicant.STATUS_CANCELED)
                 .setGmtAudited(new Date())
+                .setAuditor(SecurityUtils.getCurrentUser().getId())
                 .setAuditedRemark(auditedRemark);
-        this.updateById(supplierApplicant);
+        this.updateById(applicant);
     }
 
     @Override

@@ -48,6 +48,11 @@ public class MaterialApplicantController extends BaseController {
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
+    /**
+     * 供货申请审核页
+     * @param request
+     * @return
+     */
     @GetMapping("/pageAudit")
     public PageResult pageAudit(MaterialApplicantQueryRequest request) {
         IPage page = materialApplicantService.pageAudit(request);
@@ -66,24 +71,45 @@ public class MaterialApplicantController extends BaseController {
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
+    /**
+     * 供应商选择医院，保存
+     * @param entity
+     * @return
+     */
     @PostMapping("/saveHospital")
     public CommonResult saveHospital(@RequestBody @Valid MaterialApplicant entity) {
         boolean bSave = materialApplicantService.saveHospital(entity);
         return bSave ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
+    /**
+     * 提交供货申请，制单状态 修改为 已提交状态
+     * @param id
+     * @return
+     */
     @PostMapping("/submit/{id}")
     public CommonResult submit(@PathVariable("id") String id){
         materialApplicantService.submit(id);
         return CommonResult.ok("提交成功");
     }
 
+    /**
+     * 供货申请审核通过 已提交状态 修改为 已审核状态
+     * @param id
+     * @return
+     */
     @PostMapping("/pass/{id}")
     public CommonResult pass(@PathVariable("id") String id){
         materialApplicantService.pass(id);
         return CommonResult.ok("审核通过");
     }
 
+    /**
+     * 供货申请审核不通过 已提交状态 修改为 取消状态
+     * @param id
+     * @param reason
+     * @return
+     */
     @PostMapping("/cancel/{id}/{reason}")
     public CommonResult cancel(@PathVariable("id") String id,@PathVariable("reason") String reason){
         materialApplicantService.cancel(id,reason);

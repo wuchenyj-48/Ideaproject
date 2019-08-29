@@ -47,7 +47,6 @@ import java.util.List;
  * @author chenchen
  * @version 1.0
  */
-@Transactional(rollbackFor = Exception.class)
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -69,15 +68,22 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
     private final GlobalDictService globalDictService;
 
+    /**
+     * 判断资质是否已经上传
+     * @param certificateId
+     * @param targetId
+     */
     private void assertCertUnique(String certificateId, String targetId) {
         Certificate certificate = certificateService.getById(certificateId);
 
         //判断所选资质是否限制唯一
         if (certificate.getLimitUnique() != 0) {
             List<CertificateRepository> list = this.list(Wrappers.<CertificateRepository>query()
+                    .eq("close_flag", CertificateRepository.CLOSE_FLAG_NORMAL)
                     .eq("certificate_id", certificateId)
                     .eq("supplier_id", UserUtils.getSupplierId())
-                    .eq("target_describe_id", targetId));
+                    .eq("target_describe_id", targetId))
+                    ;
 
             //查询该资质是否已经上传
             if (list.size() != 0) {
@@ -97,6 +103,11 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
     }
 
 
+    /**
+     * 获取当前企业资质
+     * @param request
+     * @return
+     */
     @Override
     public IPage<CertificateRepository> pageForSupplier(CertificateRepositoryQueryRequest request) {
 
@@ -104,25 +115,44 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         return this.page(request);
     }
 
+    /**
+     * 供应商资质效期预警
+     * @param request
+     * @return
+     */
     @Override
     public IPage<CertificateRepository> pageForSupplierWarning(CertificateRepositoryQueryRequest request) {
         request.setSupplierId(UserUtils.getSupplierId());
         return this.baseMapper.pageForSupplierWarning(request.getPage(), request);
     }
 
+    /**
+     * 医院资质效期预警
+     * @param request
+     * @return
+     */
     @Override
     public IPage<CertificateRepository> pageForHospitalWarning(CertificateRepositoryQueryRequest request) {
         request.setHospitalId(UserUtils.getHospitalId());
         return this.baseMapper.pageForHospitalWarning(request.getPage(), request);
     }
 
+    /**
+     * 供方资格审核，显示供应商资质
+     * @param request
+     * @return
+     */
     @Override
     public List<CertificateRepository> pageForAudit(CertificateRepositoryQueryRequest request) {
        return this.baseMapper.pageForAudit(request);
 
     }
 
-
+    /**
+     * 添加供应商资质
+     * @param entity
+     * @return
+     */
     @Override
     public boolean addForSupplier(CertificateRepository entity) {
         //判断资质是否已上传
@@ -136,6 +166,11 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         return this.saveOrUpdate(entity);
     }
 
+    /**
+     * 添加品名资质
+     * @param entity
+     * @return
+     */
     @Override
     public boolean addForMaterial(CertificateRepository entity) {
         this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
@@ -147,6 +182,11 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         return this.saveOrUpdate(entity);
     }
 
+    /**
+     * 添加厂商资质
+     * @param entity
+     * @return
+     */
     @Override
     public boolean addForManufacturer(CertificateRepository entity) {
         this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
@@ -158,6 +198,11 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         return this.saveOrUpdate(entity);
     }
 
+    /**
+     * 添加品类资质
+     * @param entity
+     * @return
+     */
     @Override
     public boolean addForCatalog(CertificateRepository entity) {
         this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
@@ -168,17 +213,30 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         return this.saveOrUpdate(entity);
     }
 
+    /**
+     * 关闭资质，将关闭状态close_flag从 正常状态0 修改为 已关闭状态1
+     * @param id
+     */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void close(String id) {
         //关闭
         CertificateRepository cr = this.getById(id);
+
+        if (cr == null){
+            return;
+        }
+
         //当前状态是否正常
         if (cr.getCloseFlag() != CertificateRepository.CLOSE_FLAG_NORMAL) {
             throw new BusinessException("当前状态不是正常状态");
         }
 
-        cr.setCloseFlag(CertificateRepository.CLOSE_FLAG_CLOSED);
-        this.updateById(cr);
+        //修改关闭状态为已关闭 创建对象防止覆盖
+        CertificateRepository certificateRepository = new CertificateRepository();
+        certificateRepository.setCloseFlag(CertificateRepository.CLOSE_FLAG_CLOSED)
+                .setId(cr.getId());
+        this.updateById(certificateRepository);
 
         //保存一条记录到历史表
         CertificateRepositoryHistory crh = new CertificateRepositoryHistory();
@@ -198,17 +256,25 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         certificateRepositoryHistoryService.save(crh);
     }
 
+    /**
+     * 升级资质
+     * @param entity
+     */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void upgrade(CertificateRepository entity) {
 
         CertificateRepository old = this.getById(entity.getId());
+
         if (old == null) {
             return;
         }
 
-
-        entity.setVersion(old.getVersion() + 1);
-        this.updateById(entity);
+        //当前版本号+1
+        CertificateRepository certificateRepository = new CertificateRepository();
+        certificateRepository.setVersion(old.getVersion() + 1)
+                .setId(old.getId());
+        this.updateById(certificateRepository);
 
         //保存一条记录到历史表
         CertificateRepositoryHistory crh = new CertificateRepositoryHistory();
@@ -244,7 +310,9 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         }
 
         Certificate certificate = certificateService.getById(repository.getCertificateId());
+
         SupplierVO supplierVO = supplierClient.findById(repository.getSupplierId());
+
         ManufacturerVO manufacturerVO = manufacturerClient.findById(repository.getManufacturerId());
 
         /**
@@ -283,7 +351,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
 
     /**
-     * 提醒上传
+     * 提醒资质上传
      * @param dto
      */
     @Override
@@ -292,8 +360,6 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         Certificate certificate = certificateService.getById(dto.getCertificateId());
 
         SupplierVO supplierVO = supplierClient.findById(dto.getSupplierId());
-
-
 
         /**
          * 发送提醒上传通知文件
@@ -334,6 +400,31 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
         msgPushProvider.push(message);
 
+    }
+
+    /**
+     * 资质提交 提交状态 未提交0 修改为 已提交1
+     * @param id
+     */
+    @Override
+    public void certificateSubmit(String id) {
+
+        CertificateRepository certificateRepository = this.getById(id);
+
+        if (certificateRepository == null){
+            throw new BusinessException("数据异常");
+        }
+
+        //判断当前状态是否未提交
+        if (certificateRepository.getSubmitFlag() != CertificateRepository.SUBMIT_FLAG_UNSUBMIT){
+            throw  new BusinessException("当前状态不适合提交");
+        }
+
+        //提交状态修改为已提交
+        CertificateRepository repository = new CertificateRepository();
+        repository.setSubmitFlag(CertificateRepository.SUBMIT_FLAG_SUBMITED)
+                .setId(certificateRepository.getId());
+        this.updateById(repository);
     }
 
 }

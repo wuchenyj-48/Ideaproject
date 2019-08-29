@@ -109,8 +109,7 @@
 
                         $http.delete(`/base/pack_units/` + data.id).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
-                            table.reload('listTable')
-
+                            window.reloadTable()
                             layer.close(index)
                         })
                     });

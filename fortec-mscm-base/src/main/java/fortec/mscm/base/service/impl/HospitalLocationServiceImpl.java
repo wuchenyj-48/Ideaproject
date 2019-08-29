@@ -42,5 +42,7 @@ public class HospitalLocationServiceImpl extends BaseServiceImpl<HospitalLocatio
         );
         return page;
     }
+
+
 }
     

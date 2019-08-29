@@ -327,6 +327,10 @@
                             return
                         }
                         let rows = layui.table.getRows('manufacturer_table')
+                        if (rows.length == 0){
+                            return;
+                        }
+
                         rows.forEach(o => o.supplierId = model.id)
                         $http.put("/base/manufacturers/batch_save", rows).then(resp => {
                             if (resp.data.success) {
@@ -366,8 +370,8 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/base/manufacturers/` + data.id).then(resp => {
+                                window.reloadManufacturerTable()
                                 layer.msg(resp.data.msg, {icon: 1})
-                                obj.del()
                             })
                         });
                         return

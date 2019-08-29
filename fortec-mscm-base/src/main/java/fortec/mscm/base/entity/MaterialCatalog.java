@@ -2,6 +2,7 @@
 
 package fortec.mscm.base.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.TreeEntity;
 import lombok.Data;
@@ -42,6 +43,10 @@ public class MaterialCatalog extends TreeEntity  implements Serializable {
     @NotBlank(message="品类全称不能为空")
     @Length(min=1, max=50, message="品类全称长度必须介于 1 和 50 之间")
     private String fullName;
+
+    /** 父级品类名称 */
+    @TableField(exist = false)
+    private String parentName;
 
 }
     

@@ -37,14 +37,14 @@ public interface SupplierApplicantService extends IBaseService<SupplierApplicant
     void submit(String id);
 
     /**
-     * 医院审核
+     * 供方资格申请审核通过 提交待审核状态 修改为 已审核状态
      * @param id
      */
     @Transactional
     void pass(String id);
 
     /**
-     * 取消审核
+     * 供方资格申请审核不通过 提交待审核状态 修改为 取消状态
      * @param id
      * @param auditedRemark
      */

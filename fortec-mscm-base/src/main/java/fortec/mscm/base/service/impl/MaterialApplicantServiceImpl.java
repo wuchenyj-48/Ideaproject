@@ -100,8 +100,12 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void submit(String id) {
-        //当前状态是否为制单状态
+
         MaterialApplicant ma = this.getById(id);
+        if (ma == null){
+            return;
+        }
+        //当前状态是否为制单状态
         if (ma.getStatus() != MaterialApplicant.STATUS_UNSUBMIT) {
             throw new BusinessException("当前状态不是制单状态");
         }
@@ -120,16 +124,21 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         }
 
         //修改状态为提交待审核
-        ma.setStatus(MaterialApplicant.STATUS_SUBMITED);
-        this.updateById(ma);
+        MaterialApplicant materialApplicant = new MaterialApplicant();
+        materialApplicant.setStatus(MaterialApplicant.STATUS_SUBMITED).setId(ma.getId());
+        this.updateById(materialApplicant);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void pass(String id) {
 
-        // 当前状态是否为提交待审核
         MaterialApplicant ma = this.getById(id);
+        if (ma == null){
+            return;
+        }
+
+        // 当前状态是否为提交待审核
         if (ma.getStatus() != MaterialApplicant.STATUS_SUBMITED) {
             throw new BusinessException("当前状态不是待审核状态");
         }
@@ -142,10 +151,12 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         }
 
         // 修改申请单状态为通过
-        ma.setStatus(MaterialApplicant.STATUS_PASSED)
+        MaterialApplicant materialApplicant = new MaterialApplicant();
+        materialApplicant.setStatus(MaterialApplicant.STATUS_PASSED)
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
-                .setGmtAudited(new Date());
-        this.updateById(ma);
+                .setGmtAudited(new Date())
+                .setId(ma.getId());
+        this.updateById(materialApplicant);
 
         // 向医院商品插入数据
         List<HospitalMaterial> hms = Lists.newArrayListWithCapacity(list.size());
@@ -198,8 +209,12 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     @Override
     public void cancel(String id,String reason) {
 
-        //当前状态是否为提交待审核
         MaterialApplicant ma = this.getById(id);
+        if (ma == null){
+            return;
+        }
+
+        //当前状态是否为提交待审核
         if (ma.getStatus() != MaterialApplicant.STATUS_SUBMITED){
             throw new BusinessException("当前状态不是待审核状态");
         }
@@ -212,11 +227,13 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         }
 
         //修改申请单状态为已取消，并提交
-        ma.setStatus(MaterialApplicant.STATUS_CANCELED)
+        MaterialApplicant materialApplicant = new MaterialApplicant();
+        materialApplicant.setStatus(MaterialApplicant.STATUS_CANCELED)
                 .setAuditedRemark(reason)
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
-                .setGmtAudited(new Date());
-        this.updateById(ma);
+                .setGmtAudited(new Date())
+                .setId(ma.getId());
+        this.updateById(materialApplicant);
     }
 
 

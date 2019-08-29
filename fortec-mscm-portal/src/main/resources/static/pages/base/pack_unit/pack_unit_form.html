@@ -24,7 +24,7 @@
                             <span class="required-star">*</span>  单位编码
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="id" readonly required lay-verify="required" placeholder="请输入单位编码"
+                            <input type="text" name="id" required lay-verify="required" placeholder="请输入单位编码"
                                    autocomplete="off" class="layui-input">
                         </div>
                    </div>
@@ -68,6 +68,7 @@
                     model = data
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
+                        $("input[name = 'id']").attr("readonly","readonly")
                     }
                 }
 

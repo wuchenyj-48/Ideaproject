@@ -50,8 +50,12 @@
 
 
         <script type="text/html" id="cellToolbar">
+            {{# if(d.submitFlag == 0){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="subm">提交</a>
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            {{# }else { }}
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="close">关闭</a>
+            {{# } }}
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -83,6 +87,12 @@
                         { field: 'certificateSign', title: '签发方', align: 'center'},
                         { field: 'certificateSignTo', title: '签发给', align: 'center'},
                         { field: 'version', title: '当前版本号', align: 'center'},
+                        {
+                            field: 'submitFlag', title: '提交状态', align: 'center',
+                            templet(item) {
+                                return `<div>${$global.getDictLabel('cert_submit_flag', item.submitFlag)}</div>`;
+                            }
+                        },
                         {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });
@@ -104,6 +114,7 @@
                 })
                 form.render('select')
 
+                //编辑
                 window.edit = (data,rowIndex) => {
                     layer.open({
                         title: "编辑企业资质信息",
@@ -118,13 +129,29 @@
                     });
                 }
 
+                //关闭
                 window.closeCert = (data,rowIndex) => {
-                    layer.confirm('真的关闭么', function (index) {
+                    layer.confirm('确定关闭么', function (index) {
 
                         $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
                             window.reloadTable()
 
+                            layer.close(index)
+                        })
+                    });
+                }
+
+                //提交
+                window.subm = (data,rowIndex) => {
+                    layer.confirm('确定提交么', function (index) {
+
+                        $http.post(`/cert/certificate_repositorys/certificate_submit/` + data.id).then(resp => {
+                            if (!resp.success) {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
                             layer.close(index)
                         })
                     });
@@ -157,6 +184,8 @@
                         window.closeCert(obj.data, rowIndex)
                     } else if (obj.event === 'edit') {
                         window.edit(obj.data, rowIndex)
+                    }else if (obj.event === 'subm') {
+                        window.subm(obj.data, rowIndex)
                     }
                 });
 

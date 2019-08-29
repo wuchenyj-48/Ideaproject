@@ -61,24 +61,45 @@ public class SupplierApplicantController extends BaseController {
 
     }
 
+    /**
+     * 供方资格申请提交 制单状态 修改为 提交待审核状态
+     * @param id
+     * @return
+     */
     @PostMapping("/submit/{id}")
     public CommonResult submit(@PathVariable("id") String id){
         supplierApplicantService.submit(id);
         return CommonResult.ok("提交申请成功");
     }
 
+    /**
+     * 供方资格申请审核通过 提交待审核状态 修改为 已审核状态
+     * @param id
+     * @return
+     */
     @PostMapping("/pass/{id}")
     public CommonResult pass(@PathVariable("id") String id){
         supplierApplicantService.pass(id);
         return CommonResult.ok("审核通过");
     }
 
+    /**
+     * 供方资格申请审核不通过 提交待审核状态 修改为 取消状态
+     * @param id
+     * @param auditedRemark
+     * @return
+     */
     @PostMapping("/cancel/{id}/{auditedRemark}")
     public CommonResult cancel(@PathVariable("id") String id,@PathVariable("auditedRemark") String auditedRemark){
         supplierApplicantService.cancel(id,auditedRemark);
         return CommonResult.ok("取消成功");
     }
 
+    /**
+     * 审核页
+     * @param request
+     * @return
+     */
     @GetMapping("/pageAudit")
     public PageResult pageAudit(SupplierApplicantQueryRequest request) {
         IPage page = supplierApplicantService.pageAudit(request);

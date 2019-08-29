@@ -21,6 +21,9 @@ public class MaterialCatalogQueryRequest extends PageRequest {
     /** 品类名称 */
     private String name;
 
+    /** 上级id */
+    private String parentId;
+
 
 }
     

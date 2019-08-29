@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HospitalServiceImpl extends BaseServiceImpl<HospitalMapper, Hospital> implements HospitalService {
 
     private final OfficeClient officeClient;
+
     private final UserClient userClient;
 
     @LcnTransaction

@@ -130,8 +130,12 @@
         </div>
 
         <script type="text/html" id="cellToolbar">
+            {{# if(d.submitFlag == 0){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="subm">提交</a>
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            {{# } else if(d.submitFlag == 1){ }}
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="close">关闭</a>
+            {{# } }}
         </script>
 
         <script src="/scripts/utils/common.js"></script>
@@ -168,6 +172,12 @@
                                 { field: 'certificateSign', title: '签发方', align: 'center'},
                                 { field: 'certificateSignTo', title: '签发给', align: 'center'},
                                 { field: 'version', title: '当前版本号', align: 'center'},
+                                {
+                                    field: 'submitFlag', title: '提交状态', align: 'center',
+                                    templet(item){
+                                        return `<div>${$global.getDictLabel('cert_submit_flag',item.submitFlag)}</div>`
+                                    }
+                                },
                                 {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                             ]]
                         });
@@ -196,6 +206,7 @@
                     edit({isNew: true});
                 })
 
+                //品类资质编辑
                 window.edit = (data,rowIndex) => {
                     layer.open({
                         title: "商品资质信息",
@@ -215,6 +226,7 @@
                     });
                 }
 
+                //品类资质关闭
                 window.closeCert = (data,rowIndex) => {
                     layer.confirm('真的关闭么', function (index) {
 
@@ -227,6 +239,16 @@
                     });
                 }
 
+                //品类资质提交
+                window.subm = (data) => {
+                    layer.confirm('确定提交吗',(index) => {
+                        $http.post(`/cert/certificate_repositorys/certificate_submit/` + data.id).then(resp => {
+                            layer.msg(resp.data.msg, {icon:1})
+                            window.reloadMaterialSpecTable()
+                            layer.close(index)
+                        })
+                    })
+                }
 
                     //监听行工具事件
                     table.on('tool(listTable)', function (obj) {
@@ -236,6 +258,8 @@
                             window.closeCert(obj.data, rowIndex)
                         } else if (obj.event === 'edit') {
                             window.edit(obj.data, rowIndex)
+                        } else if (obj.event === 'subm' ){
+                            window.subm(obj.data)
                         }
                     });
 

@@ -5,7 +5,7 @@
         <title>资质全景视图</title>
 
         <style>
-            #navTree{
+            #navTree {
                 overflow-x: auto;
             }
         </style>
@@ -35,11 +35,11 @@
 
         <script type="text/html" id="cellToolbar">
             {{#  if(!d.id){ }}
-                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="noticeUpload">提醒上传</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="noticeUpload">提醒上传</a>
             {{#  } else { }}
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="noticeUpgrade">提醒升级</a>
-                <a class="layui-btn layui-btn-xs" lay-event="cert">资质</a>
-                <a class="layui-btn layui-btn-xs layui-btn-cyan" lay-event="history">历史</a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="noticeUpgrade">提醒升级</a>
+            <a class="layui-btn layui-btn-xs" lay-event="cert">资质</a>
+            <a class="layui-btn layui-btn-xs layui-btn-cyan" lay-event="history">历史</a>
             {{#  } }}
 
         </script>
@@ -51,7 +51,7 @@
             let mainFunction = () => {
                 let table = layui.table, form = layui.form;
                 let laydate = layui.laydate;
-                let targetId,supplierId,manufacturerId ;
+                let targetId, supplierId, manufacturerId;
 
                 let ztreeObj = null
                 let zNodes = []
@@ -85,18 +85,18 @@
                             },
                             onClick(event, treeId, treeNode) {
                                 let businessTypeCode = null
-                                if(treeNode.level == 0){
+                                if (treeNode.level == 0) {
                                     // 企业资质类型
                                     businessTypeCode = 10
                                     supplierId = treeNode.id
-                                }else if(treeNode.level == 1){
+                                } else if (treeNode.level == 1) {
                                     // 厂商资质类型
                                     businessTypeCode = 30
                                     manufacturerId = treeNode.id
-                                }else if(treeNode.level == 2){
+                                } else if (treeNode.level == 2) {
                                     // 一级品类资质类型
                                     businessTypeCode = 21
-                                }else if(treeNode.level == 3){
+                                } else if (treeNode.level == 3) {
                                     // 品名资质类型
                                     businessTypeCode = 20
                                 }
@@ -117,9 +117,9 @@
                     window.reloadTable()
                 })
 
-                function updateNode(treeNode){
+                function updateNode(treeNode) {
                     let tmp = ztreeObj.getNodeByTId(treeNode.tId)
-                    if(tmp.children == null || tmp.children.length == 0){
+                    if (tmp.children == null || tmp.children.length == 0) {
                         tmp.isParent = false
                         ztreeObj.updateNode(tmp)
                     }
@@ -213,7 +213,7 @@
                         {
                             title: '状态', align: 'center',
                             templet(item) {
-                                if(!item.id){
+                                if (!item.id) {
                                     return '<div><span class="layui-color-orange">未上传</span></div>'
                                 }
 
@@ -258,7 +258,7 @@
                  */
                 window.noticeUpgrade = (data) => {
                     layer.confirm('确定提醒升级么', function (index) {
-                        $http.post(`/cert/certificate_repositorys/notice_upgrade`,{
+                        $http.post(`/cert/certificate_repositorys/notice_upgrade`, {
                             repositoryId: data.id,
                             businessTypeCode: data.businessTypeCode
                         }).then(resp => {
@@ -277,14 +277,14 @@
                  * @param data
                  * @param rowIndex
                  */
-                window.noticeUpload = (data,rowIndex) => {
+                window.noticeUpload = (data, rowIndex) => {
                     layer.confirm('确定提醒上传么', function (index) {
-                        $http.post(`/cert/certificate_repositorys/notice_upload`,{
-                            supplierId : supplierId,
-                            manufacturerId : manufacturerId,
-                            targetDescribeId : targetId,
-                            certificateId : data.certificateId,
-                            businessTypeCode : data.businessTypeCode
+                        $http.post(`/cert/certificate_repositorys/notice_upload`, {
+                            supplierId: supplierId,
+                            manufacturerId: manufacturerId,
+                            targetDescribeId: targetId,
+                            certificateId: data.certificateId,
+                            businessTypeCode: data.businessTypeCode
                         }).then(resp => {
                             layer.close(index)
                             if (resp.data.success) {
