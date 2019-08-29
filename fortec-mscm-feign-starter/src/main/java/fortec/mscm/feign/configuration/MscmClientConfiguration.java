@@ -42,13 +42,13 @@ public class MscmClientConfiguration {
     private MaterialClient materialClient;
 
     public MscmClientConfiguration(Decoder decoder, Encoder encoder, Client client, Contract contract,
-                                   TransistTokenInterceptor tokenInterceptor, @Autowired(required = false) FeignTracingTransmitter feignTracingTransmitter) {
+                                   TransistTokenInterceptor transistTokenInterceptor, @Autowired(required = false) FeignTracingTransmitter feignTracingTransmitter) {
 
         ArrayList<RequestInterceptor> requestInterceptors = null;
         if(feignTracingTransmitter == null){
-            requestInterceptors =  Lists.newArrayList(tokenInterceptor);
+            requestInterceptors =  Lists.newArrayList(transistTokenInterceptor);
         }else{
-            requestInterceptors =  Lists.newArrayList(tokenInterceptor, feignTracingTransmitter);
+            requestInterceptors =  Lists.newArrayList(transistTokenInterceptor, feignTracingTransmitter);
         }
 
         this.supplierClient = Feign.builder().client(client)
