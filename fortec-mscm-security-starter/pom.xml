@@ -29,7 +29,7 @@
         <dependency>
             <groupId>fortec</groupId>
             <artifactId>fortec-mscm-feign-starter</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <!-- inner dependency end  -->

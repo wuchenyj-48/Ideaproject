@@ -27,7 +27,7 @@
         <dependency>
             <groupId>fortec</groupId>
             <artifactId>fortec-mscm-security-starter</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-security-oauth2-autoconfigure</artifactId>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>fortec</groupId>
             <artifactId>fortec-mscm-feign-starter</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>

@@ -1,0 +1,11 @@
+apollo:
+  bootstrap:
+    # will inject 'application' namespace in bootstrap phase
+    enabled: true
+    namespaces: common.yml,pd.common.txmanager,application
+  eagerLoad:
+    # put apollo initialization before logging system initialization
+    enabled: true
+  # Mac/Linux: /opt/data/{appId}/config-cache
+  # Windows: C:\opt\data\{appId}\config-cache
+  # cacheDir: F:\\data\100001\config-cache

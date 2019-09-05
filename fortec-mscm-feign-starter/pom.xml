@@ -21,7 +21,7 @@
         <dependency>
             <groupId>fortec</groupId>
             <artifactId>fortec-mscm-base-feign</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
 

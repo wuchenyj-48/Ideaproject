@@ -12,6 +12,7 @@
     <artifactId>fortec-mscm-msg</artifactId>
 
     <dependencies>
+        
         <dependency>
             <groupId>fortec</groupId>
             <artifactId>fortec-common-msg</artifactId>
@@ -23,6 +24,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>fortec</groupId>
+            <artifactId>fortec-mscm-security-starter</artifactId>
+            <version>${project.parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+                    <groupId>org.springframework.security.oauth.boot</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 
         <!-- spring security begin     resource server must have -->
 
