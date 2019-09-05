@@ -8,6 +8,7 @@ import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.msg.domain.SceneMessage;
 import fortec.common.core.msg.enums.ReceiverType;
 import fortec.common.core.msg.provider.MsgPushProvider;
+import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.DateUtils;
 import fortec.common.core.utils.SecurityUtils;
@@ -23,6 +24,7 @@ import fortec.mscm.base.service.HospitalSupplierService;
 import fortec.mscm.base.service.SupplierApplicantService;
 import fortec.mscm.base.service.SupplierService;
 import fortec.mscm.core.consts.MsgConsts;
+import fortec.mscm.core.consts.SerialRuleConsts;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,8 +90,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
         //供应商，单据号，单据状态
         entity.setSupplierId(UserUtils.getUser().getSupplierId())
-//                .setCode(SerialUtils.generateCode("base_supplier_applicant_code"))
-                .setCode(StringUtils.getRandomStr(20))
+                .setCode(SerialUtils.generateCode(SerialRuleConsts.BASE_SUPPLIER_APPLICANT_CODE))
                 .setStatus(SupplierApplicant.STATUS_UNSUBMIT);
         return this.saveOrUpdate(entity);
     }
@@ -136,7 +137,8 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         SupplierApplicant applicant = new SupplierApplicant();
         applicant.setStatus(SupplierApplicant.STATUS_PASSED)
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
-                .setGmtAudited(new Date());
+                .setGmtAudited(new Date())
+                .setId(supplierApplicant.getId());
         this.updateById(applicant);
 
         //添加信息到关系表
@@ -180,7 +182,8 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         applicant.setStatus(SupplierApplicant.STATUS_CANCELED)
                 .setGmtAudited(new Date())
                 .setAuditor(SecurityUtils.getCurrentUser().getId())
-                .setAuditedRemark(auditedRemark);
+                .setAuditedRemark(auditedRemark)
+                .setId(supplierApplicant.getId());
         this.updateById(applicant);
     }
 

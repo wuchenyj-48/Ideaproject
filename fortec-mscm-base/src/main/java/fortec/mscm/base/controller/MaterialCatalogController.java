@@ -3,12 +3,10 @@ package fortec.mscm.base.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.model.TreeModel;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.entity.MaterialCatalog;
 import fortec.mscm.base.request.MaterialCatalogQueryRequest;
 import fortec.mscm.base.service.MaterialCatalogService;
@@ -46,34 +44,19 @@ public class MaterialCatalogController extends BaseController {
 
     @GetMapping("/page")
     public PageResult page(MaterialCatalogQueryRequest request) {
-        IPage page = materialCatalogService.page(request.getPage(), Wrappers.<MaterialCatalog>query()
-                    .eq(request.getMaterialTypeCode() != null, "material_type_code", request.getMaterialTypeCode())
-                    .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
-                    .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
-                    .eq(StringUtils.isNotBlank(request.getParentId()),"parent_id",request.getParentId())
-                     .orderByDesc("gmt_modified")
-                );
-
-        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
-    }
-
-    @GetMapping("/page_for_tree")
-    public PageResult listForTree(MaterialCatalogQueryRequest request) {
         IPage page = materialCatalogService.pageForTree(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(MaterialCatalogQueryRequest request) {
-        List<MaterialCatalog> list = materialCatalogService.list(Wrappers.<MaterialCatalog>query().orderByDesc("gmt_modified"));
+        List<MaterialCatalog> list = materialCatalogService.list(request);
         return CommonResult.ok("查询成功", list);
     }
 
     @GetMapping("/tree")
     public CommonResult tree(MaterialCatalogQueryRequest request) {
-        List<MaterialCatalog> list = materialCatalogService.list(Wrappers.<MaterialCatalog>query());
-
-        TreeModel<MaterialCatalog> treeModel = new TreeModel<MaterialCatalog>(list, "name");
+        TreeModel<MaterialCatalog> treeModel = materialCatalogService.tree(request);
         return CommonResult.ok("查询成功", treeModel.asList());
     }
 

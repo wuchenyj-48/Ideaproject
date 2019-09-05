@@ -45,7 +45,6 @@ public class HospitalLocationController extends BaseController {
     @GetMapping("/page")
     public PageResult page(HospitalLocationQueryRequest request) {
         IPage page = hospitalLocationService.page(request);
-
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 

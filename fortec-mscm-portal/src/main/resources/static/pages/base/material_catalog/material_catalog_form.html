@@ -123,13 +123,14 @@
                     title: "选择树",
                     elem: "#parentName",
                     url: "/base/material_catalogs/tree",
-                    allowClear:true,
-                    allowSearch: true,
-                    onClear(){
+                    allowClear: true,
+                    allowFilter: true,
+                    filterMode: "pinyin",
+                    onClear() {
                         $("input[name='parentId']").val("");
                         $("input[name='parentName']").val("");
                     },
-                    onConfirm(node){
+                    onConfirm(node) {
                         if (node.level >= 5) {
                             layer.msg("最多支持5级分类", {icon: 5})
                             return
@@ -188,8 +189,7 @@
 
             extendParentScriptsAndStyles(() => {
                 // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
-                loadAllJs(["/lib/layui_ext/dtree/dtree.js"], mainFunction)
-                loadAllCss(["/lib/layui_ext/dtree/dtree.css", "/lib/layui_ext/dtree/font/dtreefont.css"])
+                mainFunction()
             })
 
         </script>

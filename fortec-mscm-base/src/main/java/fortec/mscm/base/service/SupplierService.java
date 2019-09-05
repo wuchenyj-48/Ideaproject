@@ -1,9 +1,13 @@
 
 package fortec.mscm.base.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.mscm.base.entity.Supplier;
 
 import fortec.common.core.service.IBaseService;
+import fortec.mscm.base.request.SupplierQueryRequest;
+
+import java.util.List;
 
 
 /**
@@ -21,5 +25,23 @@ public interface SupplierService extends IBaseService<Supplier> {
      */
     Supplier findByOfficeId(String officeId);
 
+    IPage<Supplier> page(SupplierQueryRequest request);
+
+    /**
+     * 获取当前供应商
+     * @param request
+     * @return
+     */
+    IPage<Supplier> pageForSupplier(SupplierQueryRequest request);
+
+    List<Supplier> list(SupplierQueryRequest request);
+
+    /**
+     * 获取供应商，关键字搜索
+     * @param request
+     * @param keywords
+     * @return
+     */
+    IPage<Supplier> pageByKeywords(SupplierQueryRequest request,String keywords);
 }
     

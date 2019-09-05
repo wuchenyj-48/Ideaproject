@@ -72,7 +72,7 @@ public class MaterialApplicantController extends BaseController {
     }
 
     /**
-     * 供应商选择医院，保存
+     * 供应商选择医院并保存
      * @param entity
      * @return
      */

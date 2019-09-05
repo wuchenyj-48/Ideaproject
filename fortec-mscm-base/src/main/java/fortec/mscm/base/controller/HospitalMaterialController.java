@@ -60,12 +60,22 @@ public class HospitalMaterialController extends BaseController {
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
+    /**
+     * 医院商品启用
+     * @param id
+     * @return
+     */
     @PostMapping("/active/{id}")
     public CommonResult active(@PathVariable("id") String id){
         hospitalMaterialService.active(id);
         return CommonResult.ok("启用成功");
     }
 
+    /**
+     * 医院商品停用
+     * @param id
+     * @return
+     */
     @PostMapping("/deactive/{id}")
     public CommonResult deactive(@PathVariable("id") String id){
         hospitalMaterialService.deactive(id);

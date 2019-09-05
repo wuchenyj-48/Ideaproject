@@ -5,17 +5,53 @@
         <title>资质全景视图</title>
 
         <style>
-            #navTree {
+            .dtree {
                 overflow-x: auto;
+            }
+
+            .dtree {
+                width: 300px;
             }
         </style>
     </head>
     <body>
 
         <div class="layui-fluid">
-            <div class="layui-card">
-                <div class="layui-card">
+            <div class="layui-row layui-col-space10">
 
+                <div class="layui-col-xs3">
+                    <div class="layui-card">
+
+                        <div class="layui-card-header">
+                            <span>资质管理</span>
+                            <div class="pull-right">
+                                <a href="javascript:void(0)" id="reloadTree" class="layui-color-blue">
+                                    <i class="layui-icon layui-icon-refresh"></i> 刷新
+                                </a>
+                            </div>
+                        </div>
+                        <div class="layui-card-body" style="overflow:auto">
+                            <ul id="certTree" class="dtree" data-id="0"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs9">
+                    <div class="layui-card">
+
+                        <div class="layui-card-header">资质全景</div>
+                        <div class="layui-card-body">
+                            <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
+                                <input type="hidden" name="targetDescribeId">
+                                <input type="hidden" name="businessTypeCode">
+
+                            </form>
+                            <table id="listTable" lay-filter="listTable"></table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--<div class="layui-card">
                     <div class="layui-card-header">资质全景</div>
                     <div class="layui-card-body">
                         <div class="layui-row layui-col-space5">
@@ -28,9 +64,8 @@
                         </div>
 
                     </div>
-                </div>
-
-            </div>
+                </div>-->
+        </div>
         </div>
 
         <script type="text/html" id="cellToolbar">
@@ -49,144 +84,163 @@
         <script>
 
             let mainFunction = () => {
-                let table = layui.table, form = layui.form;
+                let table = layui.table, form = layui.form, dtree = layui.dtree;
                 let laydate = layui.laydate;
                 let targetId, supplierId, manufacturerId;
 
-                let ztreeObj = null
-                let zNodes = []
+
+                let dNodes = []
+                let treeIns = null
+
                 $http.get(`/cert/overall_viewer/list_supplier_cert_cnt/`).then(resp => {
                     let supplierArr = resp.data.data
                     for (let i = 0; i < supplierArr.length; i++) {
-                        zNodes.push({
+                        dNodes.push({
                             id: supplierArr[i].supplierId,
-                            name: `${supplierArr[i].supplierName} (${supplierArr[i].uploadedCnt}/${supplierArr[i].requireCnt})`,
-                            isParent: true
+                            title: `${supplierArr[i].supplierName} (${supplierArr[i].uploadedCnt}/${supplierArr[i].requireCnt})`,
+                            last: false,
+                            parentId: 0
                         })
                     }
-                    let setting = {
-                        callback: {
-                            onExpand(event, treeId, treeNode) {
-                                if (treeNode.children && treeNode.children.length != 0) {
-                                    return
-                                }
-                                switch (treeNode.level) {
-                                    case 0:
-                                        loadManufacture(treeNode)
-                                        break
-                                    case 1:
-                                        loadLevel1Catelog(treeNode)
-                                        break
-                                    case 2:
-                                        loadMaterial(treeNode)
-                                        break
-                                }
 
-                            },
-                            onClick(event, treeId, treeNode) {
-                                let businessTypeCode = null
-                                if (treeNode.level == 0) {
-                                    // 企业资质类型
-                                    businessTypeCode = 10
-                                    supplierId = treeNode.id
-                                } else if (treeNode.level == 1) {
-                                    // 厂商资质类型
-                                    businessTypeCode = 30
-                                    manufacturerId = treeNode.id
-                                } else if (treeNode.level == 2) {
-                                    // 一级品类资质类型
-                                    businessTypeCode = 21
-                                } else if (treeNode.level == 3) {
-                                    // 品名资质类型
-                                    businessTypeCode = 20
-                                }
+                    treeIns = dtree.render({
+                        elem: "#certTree",
+                        data: dNodes,
+                        height: "full-110",
+                        allowFilter: true,
+                        filterMode: 'pinyin',
+                        initLevel: 1
+                    });
 
-                                targetId = treeNode.id
+                })
 
-                                layui.table.reload('listTable', {
-                                    where: {
-                                        businessTypeCode,
-                                        targetDescribeId: treeNode.id
-                                    }
-                                })
 
-                            }
-                        }
+                //点击节点
+                dtree.on("node(certTree)", function (obj) {
+                    let level = obj.param.level
+                    let id = obj.param.nodeId
+                    let businessTypeCode = null
+                    if (level == 1) {
+                        // 企业资质类型
+                        businessTypeCode = 10
+                        supplierId = id
+                    } else if (level == 2) {
+                        // 厂商资质类型
+                        businessTypeCode = 30
+                        manufacturerId = id
+                    } else if (level == 3) {
+                        // 一级品类资质类型
+                        businessTypeCode = 21
+                    } else if (level == 4) {
+                        // 品名资质类型
+                        businessTypeCode = 20
                     }
-                    ztreeObj = $.fn.zTree.init($("#navTree"), setting, zNodes);
+
+                    targetId = id;
+
+                    layui.$("#queryForm [name='businessTypeCode']").val(businessTypeCode)
+                    layui.$("#queryForm [name='targetDescribeId']").val(id)
                     window.reloadTable()
                 })
 
-                function updateNode(treeNode) {
-                    let tmp = ztreeObj.getNodeByTId(treeNode.tId)
-                    if (tmp.children == null || tmp.children.length == 0) {
-                        tmp.isParent = false
-                        ztreeObj.updateNode(tmp)
-                    }
+                //刷新列表
+                window.reloadTable = () => {
+                    table.reload('listTable', {
+                        where: layui.$('#queryForm').serializeObject()
+                    })
                 }
+
+                //展开/收缩树节点
+                dtree.on("changeTree('certTree')", function (obj) {
+                    if (!obj.show) {
+                        return;
+                    }
+                    let currentNode = treeIns.getParam(obj.param.nodeId)
+
+                    var child = dtree.getChildParam(treeIns, currentNode.nodeId);
+                    if (child.length != 0){
+                        return;
+                    }
+                    if (currentNode.loaded) {
+                        return
+                    }
+                    switch (currentNode.level) {
+                        case "1":
+                            loadManufacture(currentNode)
+                            break
+                        case "2":
+                            loadLevel1Catelog(currentNode)
+                            break
+                        case "3":
+                            loadMaterial(currentNode)
+                            break
+                    }
+
+                    let $i_spread = treeIns.getNodeDom(currentNode.nodeId).fnode()
+                    let $i_node = treeIns.getNodeDom(currentNode.nodeId).snode()
+                    treeIns.operateIcon($i_spread, $i_node).closeWithLeaf();
+                });
 
                 /**
                  * 拉取厂商信息
-                 * @param treeNode
+                 * @param currentNode
                  */
-                function loadManufacture(treeNode) {
+                function loadManufacture(currentNode) {
                     // 拉取厂商数据
-                    $http.get("/cert/overall_viewer/list_manufacturer_cert_cnt/" + treeNode.id).then(resp => {
+                    $http.get("/cert/overall_viewer/list_manufacturer_cert_cnt/" + currentNode.nodeId).then(resp => {
                         let manufacturerArr = resp.data.data
                         let children = []
                         for (let i = 0; i < manufacturerArr.length; i++) {
                             children.push({
                                 id: manufacturerArr[i].manufacturerId,
-                                name: `${manufacturerArr[i].manufacturerName} (${manufacturerArr[i].uploadedCnt}/${manufacturerArr[i].requireCnt})`,
-                                isParent: true
+                                title: `${manufacturerArr[i].manufacturerName} (${manufacturerArr[i].uploadedCnt}/${manufacturerArr[i].requireCnt})`,
+                                parentId: currentNode.nodeId,
+                                last: false
                             })
+
                         }
-                        ztreeObj.addNodes(treeNode, children)
-                        updateNode(treeNode)
+                        treeIns.addNodes({id: currentNode.nodeId}, -1, children)
                     })
                 }
 
                 /**
                  * 拉去一级品类信息
-                 * @param treeNode
+                 * @param currentNode
                  */
-                function loadLevel1Catelog(treeNode) {
+                function loadLevel1Catelog(currentNode) {
                     // 拉取一级品类数据
-                    $http.get(`/cert/overall_viewer/list_catalog_cert_cnt/` + treeNode.id).then(resp => {
+                    $http.get(`/cert/overall_viewer/list_catalog_cert_cnt/` + currentNode.nodeId).then(resp => {
                         let catalogArr = resp.data.data
                         let children = []
                         for (let i = 0; i < catalogArr.length; i++) {
                             children.push({
                                 id: catalogArr[i].catalogId,
-                                name: `${catalogArr[i].catalogName} (${catalogArr[i].uploadedCnt}/${catalogArr[i].requireCnt})`,
-                                isParent: true
+                                title: `${catalogArr[i].catalogName} (${catalogArr[i].uploadedCnt}/${catalogArr[i].requireCnt})`,
+                                parentId: currentNode.nodeId,
+                                last: false
                             })
                         }
-                        ztreeObj.addNodes(treeNode, children)
-                        updateNode(treeNode)
-
+                        treeIns.addNodes({id: currentNode.nodeId}, -1, children)
                     })
                 }
 
                 /**
                  * 拉去商品信息
-                 * @param treeNode
+                 * @param currentNode
                  */
-                function loadMaterial(treeNode) {
+                function loadMaterial(currentNode) {
                     // 拉取商品数据
-                    $http.get(`/cert/overall_viewer/list_material_cert_cnt/` + treeNode.id).then(resp => {
+                    $http.get(`/cert/overall_viewer/list_material_cert_cnt/` + currentNode.nodeId).then(resp => {
                         let materialArr = resp.data.data
                         let children = []
                         for (let i = 0; i < materialArr.length; i++) {
                             children.push({
                                 id: materialArr[i].materialId,
-                                name: `${materialArr[i].materialName} (${materialArr[i].uploadedCnt}/${materialArr[i].requireCnt})`,
-                                isParent: false
+                                title: `${materialArr[i].materialName} (${materialArr[i].uploadedCnt}/${materialArr[i].requireCnt})`,
+                                parentId: currentNode.nodeId
                             })
                         }
-                        ztreeObj.addNodes(treeNode, children)
-                        updateNode(treeNode)
-
+                        treeIns.addNodes({id: currentNode.nodeId}, -1, children)
                     })
                 }
 
@@ -331,8 +385,11 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadAllCss(["https://cdn.bootcss.com/zTree.v3/3.5.40/css/zTreeStyle/zTreeStyle.css"])
-                loadAllJs(["https://cdn.bootcss.com/zTree.v3/3.5.40/js/jquery.ztree.core.js"], mainFunction)
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
+                loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
+
+                /*loadAllCss(["https://cdn.bootcss.com/zTree.v3/3.5.40/css/zTreeStyle/zTreeStyle.css"])
+                loadAllJs(["https://cdn.bootcss.com/zTree.v3/3.5.40/js/jquery.ztree.core.js"], mainFunction)*/
 
             })
 

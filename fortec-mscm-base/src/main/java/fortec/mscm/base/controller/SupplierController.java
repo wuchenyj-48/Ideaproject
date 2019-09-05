@@ -3,15 +3,12 @@ package fortec.mscm.base.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.entity.Supplier;
 import fortec.mscm.base.request.SupplierQueryRequest;
 import fortec.mscm.base.service.SupplierService;
-import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,31 +43,24 @@ public class SupplierController extends BaseController {
 
     @GetMapping("/page")
     public PageResult page(SupplierQueryRequest request) {
-        IPage page = supplierService.page(request.getPage(), Wrappers.<Supplier>query()
-                    .like(StringUtils.isNotBlank(request.getCompanyCode()), "company_code", request.getCompanyCode())
-                    .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
-                    .eq(request.getIsDrug() != null, "is_drug", request.getIsDrug())
-                    .eq(request.getIsConsumable() != null, "is_consumable", request.getIsConsumable())
-                    .eq(request.getIsReagent() != null, "is_reagent", request.getIsReagent())
-                     .orderByDesc("gmt_modified")
-                );
-
+        IPage page = supplierService.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
+    /**
+     * 获取当前供应商
+     * @param request
+     * @return
+     */
     @GetMapping("/page_for_supplier")
     public PageResult pageForSupplier(SupplierQueryRequest request) {
-        IPage page = supplierService.page(request.getPage(), Wrappers.<Supplier>query()
-                .eq(StringUtils.isNotBlank(UserUtils.getSupplierId()),"id",UserUtils.getSupplierId())
-                .orderByDesc("gmt_modified")
-        );
-
+        IPage page = supplierService.pageForSupplier(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(SupplierQueryRequest request) {
-        List<Supplier> list = supplierService.list(Wrappers.<Supplier>query().orderByDesc("gmt_modified"));
+        List<Supplier> list = supplierService.list(request);
         return CommonResult.ok("查询成功", list);
     }
 
@@ -81,17 +71,15 @@ public class SupplierController extends BaseController {
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
+    /**
+     * 获取供应商，关键字搜索
+     * @param request
+     * @param keywords
+     * @return
+     */
     @GetMapping("/page_by_keywords")
-    public PageResult page(SupplierQueryRequest request, @RequestParam(value = "keywords",required = false) String keywords) {
-        IPage page = supplierService.page(request.getPage(), Wrappers.<Supplier>query()
-                .like(StringUtils.isNotBlank(keywords), "company_code", keywords)
-                .or()
-                .like(StringUtils.isNotBlank(keywords), "code", keywords)
-                .or()
-                .like(StringUtils.isNotBlank(keywords), "name", keywords)
-                .orderByDesc("gmt_modified")
-        );
-
+    public PageResult pageByKeywords(SupplierQueryRequest request, @RequestParam(value = "keywords",required = false) String keywords) {
+        IPage page = supplierService.pageByKeywords(request,keywords);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
