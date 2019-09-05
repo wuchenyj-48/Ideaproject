@@ -4,6 +4,7 @@ package fortec.mscm.base.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.exceptions.BusinessException;
+import fortec.common.core.model.TreeModel;
 import fortec.common.core.service.TreeServiceImpl;
 import fortec.mscm.base.entity.MaterialCatalog;
 import fortec.mscm.base.mapper.MaterialCatalogMapper;
@@ -11,6 +12,8 @@ import fortec.mscm.base.request.MaterialCatalogQueryRequest;
 import fortec.mscm.base.service.MaterialCatalogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -37,6 +40,20 @@ public class MaterialCatalogServiceImpl extends TreeServiceImpl<MaterialCatalogM
     @Override
     public IPage pageForTree(MaterialCatalogQueryRequest request) {
         return this.baseMapper.pageForTree(request.getPage(),request);
+    }
+
+    @Override
+    public List<MaterialCatalog> list(MaterialCatalogQueryRequest request) {
+        List<MaterialCatalog> list = this.list(Wrappers.<MaterialCatalog>query()
+                .orderByDesc("gmt_modified")
+        );
+        return list;
+    }
+
+    @Override
+    public TreeModel<MaterialCatalog> tree(MaterialCatalogQueryRequest request) {
+        List<MaterialCatalog> list = this.list(Wrappers.<MaterialCatalog>query());
+        return new TreeModel<>(list, "name");
     }
 
 

@@ -204,7 +204,6 @@ public class CertificateRepositoryController extends BaseController {
     public CommonResult listForAudit(CertificateRepositoryQueryRequest request){
         List<CertificateRepository> list = certificateRepositoryService.pageForAudit(request);
         return CommonResult.ok("查询成功",list);
-
     }
 
     /**

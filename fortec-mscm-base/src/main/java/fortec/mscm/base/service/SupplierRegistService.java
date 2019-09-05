@@ -1,10 +1,14 @@
 
 package fortec.mscm.base.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.mscm.base.entity.SupplierRegist;
 
 import fortec.common.core.service.IBaseService;
+import fortec.mscm.base.request.SupplierRegistQueryRequest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 /**
@@ -36,6 +40,10 @@ public interface SupplierRegistService extends IBaseService<SupplierRegist> {
      */
     @Transactional
     void cancel(String id,String reason);
+
+    IPage<SupplierRegist> page(SupplierRegistQueryRequest request);
+
+    List<SupplierRegist> list(SupplierRegistQueryRequest request);
 
 }
     

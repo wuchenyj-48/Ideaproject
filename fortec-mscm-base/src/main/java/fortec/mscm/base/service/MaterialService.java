@@ -6,6 +6,8 @@ import fortec.common.core.service.IBaseService;
 import fortec.mscm.base.entity.Material;
 import fortec.mscm.base.request.MaterialQueryRequest;
 
+import java.util.List;
+
 
 /**
 * 商品 service 接口
@@ -21,6 +23,8 @@ public interface MaterialService extends IBaseService<Material> {
      * @return
      */
     IPage<Material> page(MaterialQueryRequest request);
+
+    List<Material> list(MaterialQueryRequest request);
 
 
 }

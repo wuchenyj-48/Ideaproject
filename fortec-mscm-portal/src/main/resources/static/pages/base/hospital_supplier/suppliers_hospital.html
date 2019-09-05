@@ -71,6 +71,11 @@
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
                         { field: 'hospitalName', title: '医院名称', align: 'center'},
+                        { field: 'inactive', title: '停用标志', align: 'center',
+                            templet(item) {
+                                return `<div>${$global.getDictLabel('common_inactive', item.inactive)}</div>`;
+                            }
+                        },
                         { field: 'creator', title: '创建人', align: 'center'},
                         { field: 'gmtCreate', title: '创建时间', align: 'center'},
                         { field: 'modifier', title: '修改人', align: 'center'},

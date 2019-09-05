@@ -87,17 +87,7 @@
                     url: "/base/material_catalogs/tree",
                     height: "full-110",
                     allowFilter: true,
-                    filterMode: 'pinyin',
-                    done(data, obj){
-                        $("#filterText").change(() =>{
-                            let value = $("#filterText").val();
-                            if($strings.isNotBlank(value)){
-                                treeIns.searchNode(value);
-                            } else {
-                                treeIns.menubarMethod().refreshTree(); // 内置方法刷新树
-                            }
-                        });
-                    }
+                    filterMode: 'pinyin'
                 });
 
                 //点击节点
@@ -119,7 +109,7 @@
                     elem: '#listTable',
                     title: '编辑品类信息',
                     height: 'full-160',
-                    url: '/base/material_catalogs/page_for_tree',
+                    url: '/base/material_catalogs/page',
                     page: {limit: 30},
                     cols: [[
                         {type: 'numbers', align: 'center', fixed: 'left'},

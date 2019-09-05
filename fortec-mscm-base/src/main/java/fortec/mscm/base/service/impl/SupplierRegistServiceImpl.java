@@ -1,6 +1,7 @@
 
 package fortec.mscm.base.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import com.google.common.collect.Maps;
@@ -13,6 +14,7 @@ import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.DateUtils;
 import fortec.common.core.utils.SecurityUtils;
+import fortec.common.core.utils.StringUtils;
 import fortec.common.feign.clients.OfficeClient;
 import fortec.common.feign.clients.UserClient;
 import fortec.common.upms.feign.dto.OfficeDTO;
@@ -22,6 +24,7 @@ import fortec.common.upms.feign.vo.UserInfoVO;
 import fortec.mscm.base.entity.Supplier;
 import fortec.mscm.base.entity.SupplierRegist;
 import fortec.mscm.base.mapper.SupplierRegistMapper;
+import fortec.mscm.base.request.SupplierRegistQueryRequest;
 import fortec.mscm.base.service.SupplierRegistService;
 import fortec.mscm.base.service.SupplierService;
 import fortec.mscm.base.utils.PinYinUtils;
@@ -35,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -174,6 +178,28 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
                 .setId(supplierRegist.getId())
         ;
         this.updateById(regist);
+    }
+
+    @Override
+    public IPage<SupplierRegist> page(SupplierRegistQueryRequest request) {
+        IPage page = this.page(request.getPage(), Wrappers.<SupplierRegist>query()
+                .like(StringUtils.isNotBlank(request.getCompanyCode()), "company_code", request.getCompanyCode())
+                .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
+                .eq(request.getIsDrug() != null, "is_drug", request.getIsDrug())
+                .eq(request.getIsConsumable() != null, "is_consumable", request.getIsConsumable())
+                .eq(request.getIsReagent() != null, "is_reagent", request.getIsReagent())
+                .eq(request.getAstatus() != null, "audit_status", request.getAstatus())
+                .orderByDesc("gmt_modified")
+        );
+        return page;
+    }
+
+    @Override
+    public List<SupplierRegist> list(SupplierRegistQueryRequest request) {
+        List<SupplierRegist> list = this.list(Wrappers.<SupplierRegist>query()
+                .orderByDesc("gmt_modified")
+        );
+        return list;
     }
 
 

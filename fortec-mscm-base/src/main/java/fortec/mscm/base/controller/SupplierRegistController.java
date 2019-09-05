@@ -3,11 +3,9 @@ package fortec.mscm.base.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.entity.SupplierRegist;
 import fortec.mscm.base.request.SupplierRegistCancelRequest;
 import fortec.mscm.base.request.SupplierRegistQueryRequest;
@@ -46,22 +44,13 @@ public class SupplierRegistController extends BaseController {
 
     @GetMapping("/page")
     public PageResult page(SupplierRegistQueryRequest request) {
-        IPage page = supplierRegistService.page(request.getPage(), Wrappers.<SupplierRegist>query()
-                .like(StringUtils.isNotBlank(request.getCompanyCode()), "company_code", request.getCompanyCode())
-                .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
-                .eq(request.getIsDrug() != null, "is_drug", request.getIsDrug())
-                .eq(request.getIsConsumable() != null, "is_consumable", request.getIsConsumable())
-                .eq(request.getIsReagent() != null, "is_reagent", request.getIsReagent())
-                .eq(request.getAstatus() != null, "audit_status", request.getAstatus())
-                .orderByDesc("gmt_modified")
-        );
-
+        IPage page = supplierRegistService.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(SupplierRegistQueryRequest request) {
-        List<SupplierRegist> list = supplierRegistService.list(Wrappers.<SupplierRegist>query().orderByDesc("gmt_modified"));
+        List<SupplierRegist> list = supplierRegistService.list(request);
         return CommonResult.ok("查询成功", list);
     }
 

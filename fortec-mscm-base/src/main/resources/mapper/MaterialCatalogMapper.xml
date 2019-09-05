@@ -5,7 +5,7 @@
         select
             mc.*,mc2.name as parent_name
          from material_catalog mc
-        inner join material_catalog mc2 on mc.parent_id = mc2.id
+        left join material_catalog mc2 on mc.parent_id = mc2.id
         <where>
             <if test="request.materialTypeCode != null and request.materialTypeCode != ''">
                 and mc.material_type_code = #{request.materialTypeCode}

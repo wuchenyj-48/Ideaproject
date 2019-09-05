@@ -44,6 +44,7 @@
             <if test="request.supplierId != null and request.supplierId != ''">
                 and hs.supplier_id = #{request.supplierId}
             </if>
+            and hs.inactive = 0
         </where>
     </select>
 </mapper>

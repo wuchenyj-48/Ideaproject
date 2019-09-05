@@ -59,6 +59,11 @@ public class MaterialApplicantItemController extends BaseController {
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
+    /**
+     * 批量保存供货明细
+     * @param children
+     * @return
+     */
     @PutMapping("/batch_save")
     public CommonResult batchSave(@RequestBody @Valid MaterialApplicantItem[] children) {
         if (children == null || children.length == 0) {

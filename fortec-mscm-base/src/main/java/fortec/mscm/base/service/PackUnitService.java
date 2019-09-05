@@ -1,9 +1,13 @@
 
 package fortec.mscm.base.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.mscm.base.entity.PackUnit;
 
 import fortec.common.core.service.IBaseService;
+import fortec.mscm.base.request.PackUnitQueryRequest;
+
+import java.util.List;
 
 
 /**
@@ -14,7 +18,7 @@ import fortec.common.core.service.IBaseService;
 */
 public interface PackUnitService extends IBaseService<PackUnit> {
 
+    IPage<PackUnit> page(PackUnitQueryRequest request);
 
-
+    List<PackUnit> list(PackUnitQueryRequest request);
 }
-    

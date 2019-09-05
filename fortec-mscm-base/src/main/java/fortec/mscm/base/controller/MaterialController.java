@@ -3,7 +3,6 @@ package fortec.mscm.base.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
@@ -45,13 +44,12 @@ public class MaterialController extends BaseController {
     @GetMapping("/page")
     public PageResult page(MaterialQueryRequest request) {
         IPage<Material> page = materialService.page(request);
-
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(MaterialQueryRequest request) {
-        List<Material> list = materialService.list(Wrappers.<Material>query().orderByDesc("gmt_modified"));
+        List<Material> list = materialService.list(request);
         return CommonResult.ok("查询成功", list);
     }
 

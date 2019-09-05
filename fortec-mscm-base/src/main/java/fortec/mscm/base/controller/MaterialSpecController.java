@@ -2,18 +2,14 @@
 package fortec.mscm.base.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.common.core.utils.StringUtils;
-
 import fortec.mscm.base.entity.MaterialSpec;
 import fortec.mscm.base.request.MaterialSpecQueryRequest;
 import fortec.mscm.base.service.MaterialSpecService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,24 +44,13 @@ public class MaterialSpecController extends BaseController {
 
     @GetMapping("/page")
     public PageResult page(MaterialSpecQueryRequest request) {
-        IPage page = materialSpecService.page(request.getPage(), Wrappers.<MaterialSpec>query()
-                .like(StringUtils.isNotBlank(request.getMaterialSpec()), "material_spec", request.getMaterialSpec())
-                .between(request.getBeginPrice() != null && request.getEndPrice() != null, "price", request.getBeginPrice(), request.getEndPrice())
-                .orderByDesc("gmt_modified")
-        );
-
+        IPage page = materialSpecService.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(MaterialSpecQueryRequest request) {
-        List<MaterialSpec> list = materialSpecService.list(Wrappers.<MaterialSpec>query()
-                .and(StringUtils.isNotBlank(request.getMaterialId()), q -> q.eq("material_id", request.getMaterialId()))
-                .like(StringUtils.isNotBlank(request.getMaterialSpec()), "material_spec", request.getMaterialSpec())
-                        .between(request.getBeginPrice() != null && request.getEndPrice() != null, "price", request.getBeginPrice(), request.getEndPrice())
-
-                .orderByDesc("gmt_modified")
-        );
+        List<MaterialSpec> list = materialSpecService.list(request);
         return CommonResult.ok("查询成功", list);
     }
 
@@ -85,6 +70,11 @@ public class MaterialSpecController extends BaseController {
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
     }
 
+    /**
+     * 供货申请明细，关键字搜索
+     * @param request
+     * @return
+     */
     @GetMapping("/page_by_keywords")
     public PageResult pageByKeywords(MaterialSpecQueryRequest request) {
         IPage<MaterialSpec> page = materialSpecService.pageByKeywords(request);

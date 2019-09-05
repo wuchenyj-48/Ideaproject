@@ -2,9 +2,12 @@
 package fortec.mscm.base.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import fortec.common.core.model.TreeModel;
 import fortec.common.core.service.ITreeService;
 import fortec.mscm.base.entity.MaterialCatalog;
 import fortec.mscm.base.request.MaterialCatalogQueryRequest;
+
+import java.util.List;
 
 
 /**
@@ -28,6 +31,10 @@ public interface MaterialCatalogService extends ITreeService<MaterialCatalog> {
      * @return
      */
     IPage pageForTree(MaterialCatalogQueryRequest request);
+
+    List<MaterialCatalog> list(MaterialCatalogQueryRequest request);
+
+    TreeModel<MaterialCatalog> tree(MaterialCatalogQueryRequest request);
 
 }
     

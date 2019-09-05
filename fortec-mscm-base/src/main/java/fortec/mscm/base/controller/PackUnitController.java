@@ -2,17 +2,13 @@
 package fortec.mscm.base.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-import fortec.common.core.utils.StringUtils;
-
 import fortec.mscm.base.entity.PackUnit;
 import fortec.mscm.base.request.PackUnitQueryRequest;
 import fortec.mscm.base.service.PackUnitService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,18 +43,13 @@ public class PackUnitController extends BaseController {
 
     @GetMapping("/page")
     public PageResult page(PackUnitQueryRequest request) {
-        IPage page = packUnitService.page(request.getPage(), Wrappers.<PackUnit>query()
-                    .like(StringUtils.isNotBlank(request.getId()), "id", request.getId())
-                    .like(StringUtils.isNotBlank(request.getName()), "name", request.getName())
-                     .orderByDesc("gmt_modified")
-                );
-
+        IPage page = packUnitService.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(PackUnitQueryRequest request) {
-        List<PackUnit> list = packUnitService.list(Wrappers.<PackUnit>query().orderByDesc("gmt_modified"));
+        List<PackUnit> list = packUnitService.list(request);
         return CommonResult.ok("查询成功", list);
     }
 
