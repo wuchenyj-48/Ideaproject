@@ -30,6 +30,7 @@
         <main.basedir>${basedir}/../..</main.basedir>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <springboot.maven.plugin.version>2.1.6.RELEASE</springboot.maven.plugin.version>
 
         <txlcn.version>5.0.2.RELEASE</txlcn.version>
 
@@ -108,5 +109,18 @@
 
         </dependencies>
     </dependencyManagement>
+
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${springboot.maven.plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>
