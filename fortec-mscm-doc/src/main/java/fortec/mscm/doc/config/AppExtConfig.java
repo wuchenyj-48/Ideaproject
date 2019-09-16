@@ -1,3 +1,5 @@
+package fortec.mscm.doc.config;
+
 import fortec.mscm.feign.annotation.EnableMscmFeignConfig;
 import fortec.mscm.security.annotation.EnableMscmSecurityCommonConfig;
 import org.springframework.context.annotation.Configuration;

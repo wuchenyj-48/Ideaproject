@@ -2,7 +2,7 @@ apollo:
   bootstrap:
     # will inject 'application' namespace in bootstrap phase
     enabled: true
-    namespaces: application,common.yml,pd.common.portal
+    namespaces: application,pd.common.portal,common.yml
   eagerLoad:
     # put apollo initialization before logging system initialization
     enabled: true

@@ -128,7 +128,8 @@
                             注册证效期
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="certificateExpiredDate" placeholder="请选择注册证效期" autocomplete="off" readonly
+                            <input type="text" name="certificateExpiredDate" placeholder="请选择注册证效期" autocomplete="off"
+                                   readonly
                                    class="layui-input">
                         </div>
                     </div>
@@ -409,30 +410,29 @@
                     }
                 });
 
-                    //渲染生产厂商
-                    layui.tableSelect.render({
-                        elem: '#manufacturerName',	//定义输入框input对象 必填
-                        checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                        searchKey: 'keywords',	//搜索输入框的name值 默认keyword
-                        searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
-                        table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                            url: '/base/manufacturers/page_by_keywords',
-                            cols: [[
-                                {type: 'radio'},
-                                {field: 'name', title: '厂商名称'},
-                                {field: 'companyCode', title: '统一社会信用代码'}
-                            ]]
-                        },
-                        done(elem, data) {
-                            model.manufacturerId = data.data.length > 0 ? data.data[0].id : null
-                            model.manufacturerName = data.data.length > 0 ? data.data[0].name : null
-                            layui.each(data.data, function (index, item) {
-                                $("form input[name='manufacturerId']").val(model.manufacturerId)
-                                elem.val(item.name)
-                            })
-                        }
-                    })
-
+                //渲染生产厂商
+                layui.tableSelect.render({
+                    elem: '#manufacturerName',	//定义输入框input对象 必填
+                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
+                    searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
+                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                        url: '/base/manufacturers/page_by_keywords',
+                        cols: [[
+                            {type: 'radio'},
+                            {field: 'name', title: '厂商名称'},
+                            {field: 'companyCode', title: '统一社会信用代码'}
+                        ]]
+                    },
+                    done(elem, data) {
+                        model.manufacturerId = data.data.length > 0 ? data.data[0].id : null
+                        model.manufacturerName = data.data.length > 0 ? data.data[0].name : null
+                        layui.each(data.data, function (index, item) {
+                            $("form input[name='manufacturerId']").val(model.manufacturerId)
+                            elem.val(item.name)
+                        })
+                    }
+                })
 
 
                 // 渲染下拉框 数据
@@ -468,7 +468,7 @@
                             return
                         }
                         let rows = layui.table.getRows('material_spec_table')
-                        if (rows.length == 0){
+                        if (rows.length == 0) {
                             return;
                         }
 
@@ -566,7 +566,7 @@
                         if (resp.data.success) {
                             layer.msg(resp.data.msg, {icon: 1})
                             parent.reloadTable()
-                            window.initForm($.extend(model ,resp.data.data,{isNew: false}))
+                            window.initForm($.extend(model, resp.data.data, {isNew: false}))
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }
