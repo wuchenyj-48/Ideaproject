@@ -33,7 +33,7 @@ import java.util.List;
 @RequestMapping("<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s")
 public class ${className}Controller extends BaseController {
 
-    private ${className}Service ${className?uncap_first}Service;
+    private final  ${className}Service ${className?uncap_first}Service;
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid ${className} entity) {
@@ -61,7 +61,7 @@ public class ${className}Controller extends BaseController {
 
 
     @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") Long id) {
+    public CommonResult deleteById(@PathVariable("id") String id) {
         boolean bRemove = ${className?uncap_first}Service.removeCascadeById(id);
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }

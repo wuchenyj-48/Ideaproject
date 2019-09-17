@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>mapper-xml</name>
+    <fileDir>${genBaseDir}/mapper</fileDir>
+    <fileName>${className}Mapper.xml</fileName>
+    <content><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.mapper.${className}Mapper">
+    <select id="page" resultType="${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.vo.${className}VO">
+        SELECT
+            a.*,
+            p.name AS parent_name
+        FROM ${tableName} a
+        LEFT JOIN ${tableName} p on a.parent_id = p.id
+        <where>
+            <#list table.columns as c>
+                <#if c.isQuery?? && c.isQuery == 1 && c.queryType??>
+                   <#switch c.queryType>
+                       <#case "=">
+            <if test="request.${c.attrName} != null and request.${c.attrName} != ''">
+                and a.${c.columnName} = ${r'#'}{request.${c.attrName}}
+            </if>
+                            <#break>
+                        <#case "like">
+            <if test="request.${c.attrName} != null and request.${c.attrName} != ''">
+                and a.${c.columnName} LIKE CONCAT('%',${r'#'}{request.${c.attrName}},'%')
+            </if>
+                            <#break>
+                        <#case "between">
+            <if test="request.begin${c.attrName?cap_first} != null and request.end${c.attrName?cap_first} != ''">
+                and a.${c.columnName} between ${r'#'}{request.begin${c.attrName?cap_first}} and request.end${c.attrName?cap_first}
+            </if>
+                            <#break>
+                        <#default>
+                    </#switch>
+                </#if>
+            </#list>
+        </where>
+        order by a.sort asc
+    </select>
+</mapper>]]>
+    </content>
+</template>
+
+

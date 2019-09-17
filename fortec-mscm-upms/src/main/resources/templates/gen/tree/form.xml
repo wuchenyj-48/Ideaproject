@@ -2,14 +2,18 @@
 <template>
     <name>viewList</name>
     <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
-    <fileName>${uncamelClassName}_form.html</fileName>
-    <content>
-    <![CDATA[
+<fileName>${uncamelClassName}_form.html</fileName>
+<content>
+<![CDATA[
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {width: 120px}
+            .custom-form .layui-input-block {margin-left: 150px}
+        </style>
     </head>
     <body>
         <div class="layui-fluid" id="app">
@@ -22,7 +26,7 @@
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">父级${functionName}</label>
                         <div class="layui-input-block">
-                            <input type="text" name="parentName" id="parentName" class="layui-input" lay-filter="tree"/>
+                            <input type="text" name="parentName" id="parentName" class="layui-input" lay-filter="tree"  autocomplete="off" placeholder="点击选择"/>
                         </div>
                     </div>
                 </div>
@@ -126,7 +130,6 @@
                 </#if>
                 <div class="block"></div>
 
-                <div class="block"></div>
                 <div class="layui-row ">
                     <div class="layui-form-item">
                         <div class="layui-input-block">
@@ -143,7 +146,7 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$
+                let form = layui.form, $ = layui.$, dtree = layui.dtree
 
                 let model = {}
                 window.initForm = (formData) => {
@@ -156,31 +159,27 @@
                     }
                 }
 
-                // 渲染父级菜单
-                layui.treeSelect.render({
-                    elem: '#parentName',
-                    url: '/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/tree',
-                    search: true,
-                    style: {
-                        folder: {enable: true},
-                        line: {enable: true}
+                // 渲染父级${functionName}
+                dtree.renderOpenTree({
+                    title: "${functionName}选择",
+                    elem: "#parentName",
+                    url: "/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/tree",
+                    allowClear: true,
+                    allowSearch: true,
+                    onClear(){
+                        $("input[name='parentId']").val("");
+                        $("input[name='parentName']").val("");
                     },
-                    click(d) {
-                        model.parentId = d.current.id
-                        $("form input[name='parentId']").val(model.parentId)
-                    },
-                    clear(){
-                        model.parentId = null
-                        $("form input[name='parentId']").val(model.parentId)
-                    },
-                    success(d) {
-                        layui.treeSelect.checkNode('tree', $strings.defaultString(model.parentId, '0'))
+                    onConfirm(node){
+                        $("input[name='parentId']").val(node.nodeId);
+                        $("input[name='parentName']").val(node.context);
                     }
-                });
+                })
 
                 // 渲染下拉框 数据
                 <#list table.columns as c>
                     <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && c.showType == 'select'>
+                $("select[name='${c.attrName}']").empty()
                         <#if c.isNull == 1>
                 $("select[name='${c.attrName}']").append('<option>请选择</option>')
                         </#if>
@@ -193,6 +192,7 @@
                 // 渲染单选框/多选框 数据
                 <#list table.columns as c>
                     <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'radio' || c.showType == 'checkbox')>
+                $("#${c.attrName}Div").empty()
                         <#if c.isNull == 1>
                 $("#${c.attrName}Div").append('<option>请选择</option>')
                         </#if>
@@ -245,8 +245,7 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
-                loadAllJs(["/lib/treeSelect.js"], mainFunction)
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
             })
 
         </script>
@@ -254,7 +253,7 @@
     </body>
 </html>
     ]]>
-    </content>
+</content>
 </template>
 
 

@@ -3,8 +3,8 @@
     <name>viewList</name>
     <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
     <fileName>${uncamelClassName}s.html</fileName>
-    <content>
-    <![CDATA[
+<content>
+<![CDATA[
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -14,155 +14,226 @@
     <body>
 
         <div class="layui-fluid">
-            <div class="layui-row layui-col-space15">
-                <div class="layui-col-md12">
+            <div class="layui-row layui-col-space10">
+
+                <div class="layui-col-xs3">
                     <div class="layui-card">
+
+                        <div class="layui-card-header">
+                            <span>${functionName}管理</span>
+                            <div class="pull-right">
+                                <a href="javascript:void(0)" id="reloadTree" class="layui-color-blue">
+                                    <i class="layui-icon layui-icon-refresh"></i> 刷新
+                                </a>
+                            </div>
+                        </div>
+                        <div class="layui-card-body" style="overflow:auto">
+                            <ul id="${className?uncap_first}Tree" class="dtree" data-id="0"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs9">
+                    <div class="layui-card">
+
                         <div class="layui-card-header">${functionName}管理</div>
                         <div class="layui-card-body">
-                            <div class="layui-btn-container">
-                                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew" onclick="edit({})">
-                                    <i class="layui-icon layui-icon-add-1"></i>新增
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" id="addNew"
+                                    lay-event="addNew">
+                                <i class="layui-icon layui-icon-add-1"></i> 新增
+                            </button>
+                            <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
+                                <input type="hidden" name="parentId">
+                                <#-- 查询条件   开始 -->
+                                <#list table.columns as c>
+                                    <#if c.isQuery?? && c.isQuery == 1>
+                                        <#assign showType="${c.showType!''}">
+                                <div class="layui-input-inline">
+                                    <#if showType == "input" || showType == "textarea">
+                                    <input type="text" name="${c.attrName}" placeholder="请输入${c.comments}" autocomplete="off"
+                                           class="layui-input">
+                                    <#elseif showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
+                                    <select name="${c.attrName}">
+                                        <option value="">请选择${c.comments}</option>
+                                    </select>
+                                    </#if>
+                                </div>
+                                    </#if>
+                                </#list>
+                                 <#-- 查询条件   结束 -->
+
+                                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
+                                        lay-filter="list">
+                                    <i class="layui-icon layui-icon-search"></i> 查询
                                 </button>
-                                <button class="layui-btn layui-btn-sm layui-btn-primary refresh"  >
-                                    <i class="layui-icon layui-icon-refresh"></i>
-                                    刷新
+                                <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="reset">
+                                    <i class="layui-icon "></i> 重置
                                 </button>
-                                <button class="layui-btn layui-btn-sm layui-btn-primary open-all"  >
-                                    <i class="far fa-folder-open"></i>
-                                    全部展开
-                                </button>
-                                <button class="layui-btn layui-btn-sm layui-btn-primary close-all">
-                                    <i class="far  fa-folder"></i>
-                                    全部关闭
-                                </button>
-                            </div>
-                            <table id="${className?uncap_first}Tree" lay-filter="${className?uncap_first}Tree" class="layui-table layui-form"></table>
+
+                            </form>
+                            <table id="listTable" lay-filter="listTable"></table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <script type="text/html" id="cellToolbar">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">添加</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+
         <script src="/scripts/utils/common.js"></script>
 
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, treeTable = layui.treeTable, $ = layui.$
-                let ${className?uncap_first}Tree = treeTable.render({
-                    elem: '#${className?uncap_first}Tree',
-                    data: [],
-                    icon_key: 'name',
-                    primary_key: 'id',
-                    parent_key: 'parentId',
-                    cols: [
+                 let layer = layui.layer, table = layui.table,
+                    dtree = layui.dtree, form = layui.form, $ = layui.$
+
+                // 加载树
+                let treeIns = dtree.render({
+                    elem: "#${className?uncap_first}Tree",
+                    url: "/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/tree?autoAddRoot=true",
+                    height: "full-110",
+                    allowFilter: true,
+                    filterMode: 'pinyin'
+                });
+
+                //树节点单击事件
+                dtree.on("node(${className?uncap_first}Tree)", function (obj) {
+                    $("[name='parentId']").val(obj.param.nodeId)
+                    window.reloadTable()
+                })
+
+                // 刷新树结构
+                $("#reloadTree").click(() => {
+                    treeIns && treeIns.menubarMethod().refreshTree(); // 内置方法刷新树
+                })
+
+                // 刷新表结构
+                window.reloadTable = () => {
+                    table.reload('listTable', {
+                        where: layui.$('#queryForm').serializeObject()
+                    })
+                }
+
+                // 加载列表
+                table.render({
+                    id: "listTable",
+                    elem: '#listTable',
+                    title: '${functionName}信息',
+                    height: 'full-160',
+                    url: '/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/page',
+                    page: {limit: 30},
+                    cols: [[ //表头
+                        {type: 'numbers', align: 'center', fixed: 'left'},
+                        { field: 'parentName', title: '父级${functionName}', align: 'center'},
+
                         <#list table.columns as c>
                             <#if c.isList?? && c.isList == 1>
-                        <#assign showType="${c.showType!''}">
-                            <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
+                                <#assign showType="${c.showType!''}">
+                                <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
                         {
-                            key: '${c.attrName}', title: '${c.comments}', align: 'center',
+                            field: '${c.attrName}', title: '${c.comments}', align: 'center',
                             templet(item) {
                                 return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.${c.attrName})}</div>`;
                             }
                         },
-                            <#else>
-                        { key: '${c.attrName}', title: '${c.comments}', align: 'center'},
-                            </#if>
+                                <#else>
+                        { field: '${c.attrName}', title: '${c.comments}', align: 'center'},
+                                </#if>
                             </#if>
                         </#list>
-                        {
-                            title: '操作',
-                            align: 'center',
-                            template(item) {
-                                return '<a class="layui-btn layui-btn-xs layui-btn-normal" lay-filter="add">添加</a>' +
-                                    '<a class="layui-btn layui-btn-xs" lay-filter="edit">编辑</a>' +
-                                    '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-filter="del">删除</a>';
-                            }
-                        },
-                    ],
-                    end(e) {
-                        form.render();
-                    }
+                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                    ]]
                 });
 
-                /**
-                 * 刷新列表数据
-                 */
-                window.reloadTable = () => {
-                    $http.get('/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/list').then(resp => {
-                        // 加载列表数据
-                        ${className?uncap_first}Tree.data = resp.data.data
-                        treeTable.render(${className?uncap_first}Tree)
-                    })
-                }
+                 // 渲染下拉框 数据
+                <#list table.columns as c>
+                    <#if c.isQuery?? && c.isQuery == 1 && c.showType?? && (c.showType == "select" || c.showType == "select_multiple" || c.showType == "checkbox" || c.showType == "radio" || c.showType == "switch")>
+                $global.getDictDataList('${c.dictType!""}').forEach(o => {
+                    $("select[name='${c.attrName}']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                    </#if>
+                </#list>
+                form.render('select')
 
-                /**
-                 * 编辑按钮
-                 * @param data
-                 */
-                window.edit = (data) => {
-                    layer.open({
+
+                // 表格行编辑
+                window.edit = (data,rowIndex) => {
+                    let index = layer.open({
                         title: "编辑${functionName}",
                         type: 2,
-                        area: ['960px', '400px'],
-                        content: ['./${uncamelClassName}_form.html', 'no'],
+                        area: ['950px', '400px'],
+                        content: ['./${uncamelClassName}_form.html'],
                         success(layero, index) {
-                            var iframeWin = window[layero.find('iframe')[0]['name']]
-
-                            if ($strings.isNotBlank(data.parentId)) {
-                                let parentNames = ${className?uncap_first}Tree.data.filter(o => o.id == data.parentId).map(o => o.name)
-                                data.parentName = parentNames.length > 0 ? parentNames[0] : ''
-                            }
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
                             layer.iframeAuto(index)
+
                         }
                     });
                 }
 
-                window.deleteById = (data) => {
+                // 表格行删除
+                window.deleteById = (data,rowIndex) => {
                     layer.confirm('真的删除行么', function (index) {
-                        $http.delete(`/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/${r"$"}{data.id}`).then(resp => {
+
+                        $http.delete(`/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/` + data.id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+
                             layer.close(index)
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
-                                window.reloadTable()
-                            } else {
-                                layer.msg(resp.data.msg, {icon: 5})
-                            }
                         })
                     });
                 }
-                window.reloadTable()
 
-                // 事件监听
-                treeTable.on('tree(add)', (obj) => {
-                    window.edit({parentId: obj.item.id})
-                })
-                treeTable.on('tree(edit)', (obj) => {
-                    window.edit(obj.item)
-                })
-                treeTable.on('tree(del)', (obj) => {
-                    window.deleteById(obj.item)
+                // 表格行新增
+                window.add = (data) => {
+                    window.edit({parentId: data.id, parentName: data.name})
+                }
+
+                // 监听表单重置
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
                 })
 
-                $('.refresh').click(function () {
+                // 监听表单提交事件
+                layui.form.on('submit(list)', (data) => {
                     window.reloadTable()
-                })
-                $('.open-all').click(function () {
-                    treeTable.openAll(${className?uncap_first}Tree);
-                })
-                $('.close-all').click(function () {
-                    treeTable.closeAll(${className?uncap_first}Tree);
-                })
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+
+
+                layui.$(".layui-btn").on('click', function () {
+                    let layevent = this.getAttribute("lay-event");
+                    if (layevent == 'addNew') {
+                        edit({});
+                    }
+                });
+
+                //监听行工具事件
+                table.on('tool(listTable)', function (obj) {
+                     // 获取当前行索引
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+
+                    if (obj.event === 'del') {
+                        window.deleteById(obj.data,rowIndex)
+                    } else if (obj.event === 'edit') {
+                        window.edit(obj.data,rowIndex)
+                    } else if (obj.event === 'add') {
+                        window.add(obj.data)
+                    }
+                });
             }
 
             /**
              * 继承父页面所有脚本及样式
              */
             extendParentScriptsAndStyles(() => {
-                // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
-                loadSingleJs("/lib/treeTable.js", mainFunction)
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
             })
 
         </script>
@@ -171,7 +242,7 @@
 
 </html>
     ]]>
-    </content>
+</content>
 </template>
 
 

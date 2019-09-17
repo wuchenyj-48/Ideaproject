@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template>
     <name>entity</name>
-    <fileDir>${genBaseDir}/${packageName}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/entity</fileDir>
-    <fileName>${className}.java</fileName>
+    <fileDir>${genBaseDir}/${packageName}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/vo</fileDir>
+    <fileName>${className}VO.java</fileName>
     <content><![CDATA[
 
-package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity;
+package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.vo;
 
 import java.io.Serializable;
 
 import fortec.common.core.model.TreeEntity;
-import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,15 +21,16 @@ import lombok.experimental.Accessors;
 import ${i};
 </#list>
 /**
-* ${functionName}实体对象
+* ${functionName} VO 对象
 * @author ${functionAuthor}
 */
-@TableName("${tableName}")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 @Accessors(chain = true)
-public class ${className} extends TreeEntity  implements Serializable {
+public class ${className}VO extends TreeEntity  implements Serializable {
+
+    private String parentName;
 
     <#-- 生成字段属性 -->
     <#list table.columns as c>

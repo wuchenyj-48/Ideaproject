@@ -6,7 +6,7 @@
     <content><![CDATA[
 package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request;
 
-import fortec.common.core.model.PageRequest;
+import fortec.common.core.model.TreeRequest;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class ${className}QueryRequest extends PageRequest {
+public class ${className}QueryRequest extends TreeRequest {
 
      <#-- 生成字段属性 -->
     <#list table.columns as c>

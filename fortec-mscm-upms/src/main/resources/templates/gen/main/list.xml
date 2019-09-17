@@ -22,7 +22,7 @@
                                 <i class="layui-icon layui-icon-add-1"></i> 新增
                             </button>
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
-                                 <#-- 查询条件   开始 -->
+                                <#-- 查询条件   开始 -->
                                 <#list table.columns as c>
                                     <#if c.isQuery?? && c.isQuery == 1>
                                         <#assign showType="${c.showType!''}">

@@ -9,7 +9,11 @@ package ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.vo.${className}VO;
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request.${className}QueryRequest;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * ${functionName} mapper对象
@@ -19,6 +23,8 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface ${className}Mapper extends BaseMapper<${className}> {
+
+    IPage<${className}VO> page(IPage page, @Param("request") ${className}QueryRequest request);
 
 }]]>
     </content>

@@ -32,7 +32,7 @@ import java.util.List;
 @RequestMapping("<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s")
 public class ${className}Controller extends BaseController {
 
-    private ${className}Service ${className?uncap_first}Service;
+    private final  ${className}Service ${className?uncap_first}Service;
 
 
     @GetMapping("/page")

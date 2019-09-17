@@ -44,8 +44,8 @@
                 <#--输出新行信息-->
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs12">
-                        <label class="layui-form-label">
-                            <#if c.isNull == 0><span class="required-star">*</span> </#if> ${c.comments}
+                        <label class="layui-form-label <#if c.isNull == 0>layui-required</#if>">
+                             ${c.comments}
                         </label>
                         <div class="layui-input-block">
                             <#if showType == 'input'>
@@ -81,8 +81,8 @@
                         <#assign newRowFlag=false>
                    </#if>
                    <div class="layui-col-xs${c.colSpan}">
-                        <label class="layui-form-label">
-                            <#if c.isNull == 0><span class="required-star">*</span> </#if> ${c.comments}
+                        <label class="layui-form-label <#if c.isNull == 0>layui-required</#if>">
+                             ${c.comments}
                         </label>
                         <div class="layui-input-block">
                             <#if showType == 'input'>
@@ -263,6 +263,7 @@
                 // 渲染下拉框 数据
                 <#list table.columns as c>
                     <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && c.showType == 'select'>
+                $("select[name='${c.attrName}']").empty()
                         <#if c.isNull == 1>
                 $("select[name='${c.attrName}']").append('<option>请选择</option>')
                         </#if>
@@ -276,6 +277,7 @@
                 // 渲染单选框/多选框 数据
                 <#list table.columns as c>
                     <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'radio' || c.showType == 'checkbox')>
+                $("#${c.attrName}Div").empty()
                         <#if c.isNull == 1>
                 $("#${c.attrName}Div").append('<option>请选择</option>')
                         </#if>

@@ -12,11 +12,14 @@ import fortec.common.core.service.TreeServiceImpl;
 import fortec.common.core.utils.StringUtils;
 
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.vo.${className}VO;
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.mapper.${className}Mapper;
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.service.${className}Service;
+import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request.${className}QueryRequest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.List;
 */
 @Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ${className}ServiceImpl extends TreeServiceImpl<${className}Mapper, ${className}> implements ${className}Service {
 
     @Override
@@ -65,48 +69,14 @@ public class ${className}ServiceImpl extends TreeServiceImpl<${className}Mapper,
                     </#if>
                 </#if>
             </#list>
-            .orderByDesc("gmt_modified")
+            .orderByAsc("sort")
         );
         return list;
     }
 
     @Override
-    public IPage<${className}> page(${className}QueryRequest request) {
-        IPage page = this.page(request.getPage(), Wrappers.<${className}>query()
-             <#list table.columns as c>
-                <#if c.isQuery?? && c.isQuery == 1 && c.queryType??>
-                    <#if c.attrType == 'String'>
-                        <#switch c.queryType>
-                            <#case "=">
-                .eq(StringUtils.isNotBlank(request.get${c.attrName?cap_first}()), "${c.columnName}", request.get${c.attrName?cap_first}())
-                                <#break>
-                            <#case "like">
-                .like(StringUtils.isNotBlank(request.get${c.attrName?cap_first}()), "${c.columnName}", request.get${c.attrName?cap_first}())
-                                <#break>
-                            <#case "between">
-                .between(StringUtils.isNotBlank(request.getBegin${c.attrName?cap_first}()) && StringUtils.isNotBlank(request.getEnd${c.attrName?cap_first}()), "${c.columnName}", request.getBegin${c.attrName?cap_first}(), request.getEnd${c.attrName?cap_first}())
-                                <#break>
-                            <#default>
-                        </#switch>
-                    <#else>
-                        <#switch c.queryType>
-                            <#case "=">
-                .eq(request.get${c.attrName?cap_first}() != null, "${c.columnName}", request.get${c.attrName?cap_first}())
-                                <#break>
-                            <#case "like">
-                .like(request.get${c.attrName?cap_first}() != null, "${c.columnName}", request.get${c.attrName?cap_first}())
-                                <#break>
-                            <#case "between">
-                .between(request.getBegin${c.attrName?cap_first}() != null && request.getEnd${c.attrName?cap_first}() != null, "${c.columnName}", request.getBegin${c.attrName?cap_first}(), request.getEnd${c.attrName?cap_first}())
-                                <#break>
-                            <#default>
-                        </#switch>
-                    </#if>
-                </#if>
-            </#list>
-            .orderByDesc("gmt_modified")
-        );
-        return page;
+    public IPage<${className}VO> page(${className}QueryRequest request) {
+        return  this.baseMapper.page(request.getPage(), request);
     }
 
 }]]>
