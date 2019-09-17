@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.mscm.cert.entity.CertificateRepository;
 import fortec.mscm.cert.mapper.OverallViewerMapper;
 import fortec.mscm.cert.request.OverallViewerQueryRequest;
+import fortec.mscm.cert.service.CertificateRepositoryService;
 import fortec.mscm.cert.service.OverallViewerService;
 import fortec.mscm.cert.vo.OverAllCatalog;
 import fortec.mscm.cert.vo.OverAllManufacturer;
@@ -28,6 +29,8 @@ import java.util.List;
 public class OverallViewSeriveImpl implements OverallViewerService {
 
     private final OverallViewerMapper overallViewerMapper;
+
+    private final CertificateRepositoryService certificateRepositoryService;
 
 
     @Override
@@ -54,5 +57,30 @@ public class OverallViewSeriveImpl implements OverallViewerService {
     public IPage<CertificateRepository> pageOverAll(OverallViewerQueryRequest request) {
         request.setHospitalId(UserUtils.getHospitalId());
         return overallViewerMapper.pageOverAll(request.getPage(), request);
+    }
+
+    @Override
+    public List<OverAllSupplier> listSupplierBySupplier() {
+        return overallViewerMapper.listSupplierBySupplier(UserUtils.getSupplierId());
+    }
+
+    @Override
+    public List<OverAllManufacturer> listManufacturerBySupplier() {
+        return overallViewerMapper.listManufacturerForSupplier(UserUtils.getSupplierId());
+    }
+
+    @Override
+    public List<OverAllCatalog> listCatalogForSupplier(String manufacturerId) {
+        return overallViewerMapper.listCatalogForSupplier(manufacturerId);
+    }
+
+    @Override
+    public List<OverAllMaterial> listMaterialForSupplier(String catalogId) {
+        return overallViewerMapper.listMaterialForSupplier(catalogId);
+    }
+
+    @Override
+    public IPage<CertificateRepository> pageOverAllForSupplier(OverallViewerQueryRequest request) {
+        return overallViewerMapper.pageOverAllForSupplier(request.getPage(),request);
     }
 }

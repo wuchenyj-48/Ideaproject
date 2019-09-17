@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import fortec.common.core.consts.GlobalConsts;
 import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.msg.domain.SceneMessage;
 import fortec.common.core.msg.enums.ReceiverType;
@@ -184,6 +185,8 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
                     .setPrice(materialSpec.getPrice())
                     .setMiniumOrderQty(0.0)
                     .setMiniumRequestQty(0.0)
+                    .setIsConsignment((int) GlobalConsts.NO)
+                    .setIsOneThingOneYard((int) GlobalConsts.NO)
                     .setInactive(HospitalMaterial.DEACTIVATE);
             hms.add(hm);
         }

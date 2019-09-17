@@ -51,32 +51,15 @@
 
                 </div>
             </div>
-            <!--<div class="layui-card">
-                    <div class="layui-card-header">资质全景</div>
-                    <div class="layui-card-body">
-                        <div class="layui-row layui-col-space5">
-                            <div class="layui-col-md2">
-                                <div id="navTree" class="ztree"></div>
-                            </div>
-                            <div class="layui-col-md10">
-                                <table id="listTable" lay-filter="listTable"></table>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>-->
+           
         </div>
         </div>
 
         <script type="text/html" id="cellToolbar">
-            {{#  if(!d.id){ }}
-            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="noticeUpload">提醒上传</a>
-            {{#  } else { }}
-            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="noticeUpgrade">提醒升级</a>
+            <a class="layui-btn layui-btn-xs" lay-event="upgrade">升级</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="close">关闭</a>
             <a class="layui-btn layui-btn-xs" lay-event="cert">资质</a>
             <a class="layui-btn layui-btn-xs layui-btn-cyan" lay-event="history">历史</a>
-            {{#  } }}
-
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -92,12 +75,12 @@
                 let dNodes = []
                 let treeIns = null
 
-                $http.get(`/cert/overall_viewer/list_supplier_cert_cnt/`).then(resp => {
+                $http.get(`/cert/overall_viewer/list_supplier_by_supplier/`).then(resp => {
                     let supplierArr = resp.data.data
                     for (let i = 0; i < supplierArr.length; i++) {
                         dNodes.push({
                             id: supplierArr[i].supplierId,
-                            title: `${supplierArr[i].supplierName} (${supplierArr[i].uploadedCnt}/${supplierArr[i].requireCnt})`,
+                            title: `${supplierArr[i].supplierName}`,
                             last: false,
                             parentId: 0
                         })
@@ -135,8 +118,6 @@
                         // 品名资质类型
                         businessTypeCode = 20
                     }
-
-                    targetId = id;
 
                     layui.$("#queryForm [name='businessTypeCode']").val(businessTypeCode)
                     layui.$("#queryForm [name='targetDescribeId']").val(id)
@@ -187,13 +168,13 @@
                  */
                 function loadManufacture(currentNode) {
                     // 拉取厂商数据
-                    $http.get("/cert/overall_viewer/list_manufacturer_cert_cnt/" + currentNode.nodeId).then(resp => {
+                    $http.get("/cert/overall_viewer/list_manufacturer_by_supplier").then(resp => {
                         let manufacturerArr = resp.data.data
                         let children = []
                         for (let i = 0; i < manufacturerArr.length; i++) {
                             children.push({
                                 id: manufacturerArr[i].manufacturerId,
-                                title: `${manufacturerArr[i].manufacturerName} (${manufacturerArr[i].uploadedCnt}/${manufacturerArr[i].requireCnt})`,
+                                title: `${manufacturerArr[i].manufacturerName}`,
                                 parentId: currentNode.nodeId,
                                 last: false
                             })
@@ -209,13 +190,13 @@
                  */
                 function loadLevel1Catelog(currentNode) {
                     // 拉取一级品类数据
-                    $http.get(`/cert/overall_viewer/list_catalog_cert_cnt/` + currentNode.nodeId).then(resp => {
+                    $http.get(`/cert/overall_viewer/list_catalog_by_supplier/` + currentNode.nodeId).then(resp => {
                         let catalogArr = resp.data.data
                         let children = []
                         for (let i = 0; i < catalogArr.length; i++) {
                             children.push({
                                 id: catalogArr[i].catalogId,
-                                title: `${catalogArr[i].catalogName} (${catalogArr[i].uploadedCnt}/${catalogArr[i].requireCnt})`,
+                                title: `${catalogArr[i].catalogName}`,
                                 parentId: currentNode.nodeId,
                                 last: false
                             })
@@ -230,13 +211,13 @@
                  */
                 function loadMaterial(currentNode) {
                     // 拉取商品数据
-                    $http.get(`/cert/overall_viewer/list_material_cert_cnt/` + currentNode.nodeId).then(resp => {
+                    $http.get(`/cert/overall_viewer/list_material_by_supplier/` + currentNode.nodeId).then(resp => {
                         let materialArr = resp.data.data
                         let children = []
                         for (let i = 0; i < materialArr.length; i++) {
                             children.push({
                                 id: materialArr[i].materialId,
-                                title: `${materialArr[i].materialName} (${materialArr[i].uploadedCnt}/${materialArr[i].requireCnt})`,
+                                title: `${materialArr[i].materialName}`,
                                 parentId: currentNode.nodeId
                             })
                         }
@@ -249,7 +230,7 @@
                     elem: '#listTable',
                     title: '供应商资质仓库信息',
                     height: 'full-160',
-                    url: '/cert/overall_viewer/page_over_all',
+                    url: '/cert/overall_viewer/page_over_all_for_supplier',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
@@ -294,60 +275,42 @@
 
                     // 获取当前行索引
                     let rowIndex = obj.tr[0].getAttribute("data-index")
-                    if (obj.event === 'noticeUpgrade') {
-                        window.noticeUpgrade(obj.data)
-                    } else if (obj.event === 'noticeUpload') {
-                        window.noticeUpload(obj.data)
-                    } else if (obj.event === 'history') {
+                    if (obj.event === 'close') {
+                        window.closeCert(obj.data, rowIndex)
+                    }  else if (obj.event === 'history') {
                         window.openHistory(obj.data, rowIndex)
                     } else if (obj.event === 'cert') {
                         window.viewCert(obj.data, rowIndex)
+                    }else if (obj.event === 'upgrade') {
+                        window.upgradeCert(obj.data)
                     }
                 });
 
-                /**
-                 * 提醒升级
-                 * @param data
-                 * @param rowIndex
-                 */
-                window.noticeUpgrade = (data) => {
-                    layer.confirm('确定提醒升级么', function (index) {
-                        $http.post(`/cert/certificate_repositorys/notice_upgrade`, {
-                            repositoryId: data.id,
-                            businessTypeCode: data.businessTypeCode
-                        }).then(resp => {
+                //关闭
+                window.closeCert = (data,rowIndex) => {
+                    layer.confirm('真的关闭么', function (index) {
+
+                        $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+
                             layer.close(index)
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
-                            } else {
-                                layer.msg(resp.data.msg, {icon: 5})
-                            }
                         })
                     });
                 }
 
-                /**
-                 * 提醒上传
-                 * @param data
-                 * @param rowIndex
-                 */
-                window.noticeUpload = (data, rowIndex) => {
-                    layer.confirm('确定提醒上传么', function (index) {
-                        $http.post(`/cert/certificate_repositorys/notice_upload`, {
-                            supplierId: supplierId,
-                            manufacturerId: manufacturerId,
-                            targetDescribeId: targetId,
-                            certificateId: data.certificateId,
-                            businessTypeCode: data.businessTypeCode
-                        }).then(resp => {
-                            layer.close(index)
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
-                                window.reloadTable()
-                            } else {
-                                layer.msg(resp.data.msg, {icon: 5})
-                            }
-                        })
+                //升级
+                window.upgradeCert = (data) => {
+                    let index = layer.open({
+                        title: "资质升级",
+                        type: 2,
+                        area: ['950px', '520px'],
+                        content: ['./supplier_certificate_upgrade_form.html'],
+                        success(layero, index) {
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm(data)
+                            layer.iframeAuto(index)
+                        }
                     });
                 }
 

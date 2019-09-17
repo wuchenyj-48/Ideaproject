@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+             .custom-form .layui-form-label { width: 130px }
+             .custom-form .layui-input-block { margin-left: 160px}
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">当前供应商管理</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+                            <input type="hidden" name="id" class="layui-input"/>
+
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  识别码
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="code" required lay-verify="required" placeholder="请输入识别码"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  统一社会信用代码
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="companyCode" required lay-verify="number|required" placeholder="请输入统一社会信用代码"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  供应商名称
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="name" required lay-verify="required" placeholder="请输入供应商名称"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        助记码
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input  type="text" name="pinyin"  lay-verify="abc" placeholder="请输入助记码"
+                                                autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  药品供应商
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <div id="isDrugDiv"></div>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  耗材供应商
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <div id="isConsumableDiv"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  试剂供应商
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <div id="isReagentDiv"></div>
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        区域id
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="regionId"  lay-verify="" placeholder="请输入区域id"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  地址
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="address" required lay-verify="required" placeholder="请输入地址"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  联系人
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="contactor" required lay-verify="required" placeholder="请输入联系人"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span>  邮箱
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="email" required lay-verify="required|email" placeholder="请输入邮箱"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        电话
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="phone"  lay-verify="phone" placeholder="请输入电话"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        移动电话
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="mobile"  lay-verify="phone" placeholder="请输入移动电话"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="block"></div>
+                            <div class="layui-row ">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                                        <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                                        <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="layui-tab child-tab">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">厂商管理</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <div id="manufacturerToolbar">
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
+                                                lay-event="addNewLine">
+                                            <i class="layui-icon layui-icon-add-1"></i> 增行
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
+                                            <i class="layui-icon layui-icon-save"></i> 批量保存
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
+                                            <i class="layui-icon layui-icon-refresh"></i> 刷新
+                                        </button>
+                                    </div>
+                                    <div class="row-edit-table" id="manufacturer_table" lay-filter="manufacturer_table"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- 子表管理模板 开始  -->
+        <script type="text/html" id="nameTpl">
+            <input type="text" data-name="name" value="{{d.name ? d.name : ''}}" lay-filter="name"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="companyCodeTpl">
+            <input type="text" data-name="companyCode" value="{{d.companyCode ? d.companyCode : ''}}" lay-filter="companyCode"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="productionLicenceTpl">
+            <input type="text" data-name="productionLicence" value="{{d.productionLicence ? d.productionLicence : ''}}" lay-filter="productionLicence"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="abc"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="pinyinTpl">
+            <input type="text" data-name="pinyin" value="{{d.pinyin ? d.pinyin : ''}}" lay-filter="pinyin"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="abc"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="manufacturerCellToolbar">
+                {{#  if($strings.isBlank(d.id)){ }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
+                        class="fas fa-check"></i></a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
+                        class="far fa-trash-alt"></i></a>
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
+                        class="fas fa-save"></i></a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
+                        class="far fa-trash-alt"></i></a>
+                {{#  } }}
+            </script>
+        <!-- 子表管理模板 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$
+
+                $http.get("/base/suppliers/get_current_supplier").then(resp => {
+                    if (resp.data.success) {
+                        window.initForm(resp.data.data)
+                    } else {
+                        layui.layer.msg(resp.data.msg, {icon: 5})
+                    }
+                })
+
+                let model = {}
+
+                // 加载子表表格
+                window.reloadManufacturerTable = () => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    $http.get(`/base/manufacturers/list?supplierId=${model.id}`).then(resp => {
+                        layui.table.render({
+                            elem: '#manufacturer_table',
+                            data: resp.data.data,
+                            height: 250,
+                            cols: [[
+                                {type: 'numbers', align: 'center'},
+                                { field: 'name', title: '厂商名称', align: 'center', templet: "#nameTpl"},
+                                { field: 'companyCode', title: '社会信用代码', align: 'center', templet: "#companyCodeTpl"},
+                                { field: 'productionLicence', title: '生产许可证', align: 'center', templet: "#productionLicenceTpl"},
+                                { field: 'pinyin', title: '助记码', align: 'center', templet: "#pinyinTpl"},
+                                {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#manufacturerCellToolbar"},
+                            ]],
+                            done(){
+                                $editable.watch('manufacturer_table')
+                            }
+                        });
+                    })
+                }
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        $(".manufacturer-tab").show()
+                        window.reloadManufacturerTable && window.reloadManufacturerTable()
+                    } else {
+                        $(".child-tab").hide()
+                    }
+                }
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                $global.getDictDataList('common_yes_no').forEach(o => {
+                    $("#isDrugDiv").append(`<input type="radio" name="isDrug" value="${o.value}" title="${o.label}" /> `)
+                })
+                $global.getDictDataList('common_yes_no').forEach(o => {
+                    $("#isConsumableDiv").append(`<input type="radio" name="isConsumable" value="${o.value}" title="${o.label}" /> `)
+                })
+                $global.getDictDataList('common_yes_no').forEach(o => {
+                    $("#isReagentDiv").append(`<input type="radio" name="isReagent" value="${o.value}" title="${o.label}" /> `)
+                })
+                //默认选中
+                $("input:radio[value='0']").attr('checked','true')
+                form.render('radio')
+
+
+                // 渲染日期、时间 数据
+
+                //供应商生成大写首字母
+                $("input[name='name']").bind("input propertychange", ()=> {
+                    let allFirstLetter = $pinyins.getAllFirstLetter($("input[name='name']").val())
+                    $("input[name='pinyin']").val(allFirstLetter);
+                })
+
+                /*** 子表管理开始 */
+                $("#manufacturerToolbar button[lay-event='addNewLine']").click(() => {
+                    layui.table.addRow('manufacturer_table', 0, {})
+                    form.render('select')
+                })
+
+                $("#manufacturerToolbar button[lay-event='batchSave']").click(() => {
+                    $editable.validateAllRows('manufacturer_table', (valid, errors) => {
+                        if (!valid) {
+                            return
+                        }
+                        let rows = layui.table.getRows('manufacturer_table')
+                        if (rows.length == 0){
+                            return;
+                        }
+
+                        rows.forEach(o => o.supplierId = model.id)
+                        $http.put("/base/manufacturers/batch_save", rows).then(resp => {
+                            if (resp.data.success) {
+                                layui.layer.msg(resp.data.msg, {icon: 1})
+                                window.reloadManufacturerTable()
+                            } else {
+                                layui.layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                })
+
+                $("#manufacturerToolbar button[lay-event='refresh']").click(() => {
+                    window.reloadManufacturerTable()
+                })
+
+                // 监听厂商名称输入框
+                $(document).on('input propertychange',"input[data-name='name']",function() {
+                    let index = this.getAttribute("data-index")
+                    let row = layui.table.getRows('manufacturer_table')[index]
+                    row.pinyin = $pinyins.getAllFirstLetter(this.value)
+                    layui.table.renderSpecRow('manufacturer_table',index,{pinyin: row.pinyin,id: row.id})
+                })
+
+
+                // 监听子表的列工具栏
+                layui.table.on('tool(manufacturer_table)', function (obj) {
+                    // 获取行索引
+                    let index = obj.tr[0].getAttribute("data-index")
+                    let data = obj.data;
+
+                    if (obj.event === 'newDel') {
+                        // 未在数据库中存在，直接从界面移除即可
+                        layui.table.deleteRow('manufacturer_table', index)
+                        return
+                    }
+                    if (obj.event === 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $http.delete(`/base/manufacturers/` + data.id).then(resp => {
+                                window.reloadManufacturerTable()
+                                layer.msg(resp.data.msg, {icon: 1})
+                            })
+                        });
+                        return
+                    }
+
+                    // 校验并保存
+                    $editable.validateSingleRow("manufacturer_table", index, (valid, error) => {
+                        if (!valid) {
+                            return
+                        }
+                        let data = layui.table.cache.manufacturer_table[index]
+                        data.supplierId= model.id
+                        let promise = null
+                        if ($strings.isBlank(data.id)) {
+                            promise = $http.post("/base/manufacturers/", data)
+                        } else {
+                            promise = $http.put("/base/manufacturers/", data)
+                        }
+
+                        promise.then(resp => {
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1})
+
+                                // 重新渲染单行数据
+                                layui.table.renderSpecRow('manufacturer_table', index, {
+                                    id: resp.data.data.id
+                                })
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        })
+                    })
+                });
+
+                /*** 子表管理结束 */
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    top.closeThisTab()
+                })
+
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    let field = data.field
+                    if((Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent)) == 0){
+                        layer.msg("药品/耗材/试剂供应商 至少选中一个", {icon: 5})
+                        return false;
+                    }
+                    data.field = layui.$.extend({}, data.field)
+                    let promise = null
+                    if ($strings.isBlank(data.field.id)) {
+                        promise = $http.post("/base/suppliers", data.field)
+                    } else {
+                        promise = $http.put("/base/suppliers", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (resp.data.success) {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                        } else {
+                            layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+
+                    return false;
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadSingleJs("/scripts/utils/editable.js", mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

@@ -4,7 +4,6 @@ package fortec.mscm.base.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.model.TreeModel;
 import fortec.common.core.service.TreeServiceImpl;
 import fortec.mscm.base.entity.MaterialCatalog;
 import fortec.mscm.base.mapper.MaterialCatalogMapper;
@@ -17,11 +16,11 @@ import java.util.List;
 
 
 /**
-* 商品品类 service 实现
-*
-* @author chenchen
-* @version 1.0
-*/
+ * 商品品类 service 实现
+ *
+ * @author chenchen
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class MaterialCatalogServiceImpl extends TreeServiceImpl<MaterialCatalogMapper, MaterialCatalog> implements MaterialCatalogService {
@@ -31,7 +30,7 @@ public class MaterialCatalogServiceImpl extends TreeServiceImpl<MaterialCatalogM
     public boolean deleteById(String id) {
         //是否有下属商品
         int count = this.count(Wrappers.<MaterialCatalog>query().eq("parent_id", id));
-        if (count>0){
+        if (count > 0) {
             throw new BusinessException("已经有下属商品的品类不能删除");
         }
         return this.removeCascadeById(id);
@@ -39,7 +38,7 @@ public class MaterialCatalogServiceImpl extends TreeServiceImpl<MaterialCatalogM
 
     @Override
     public IPage pageForTree(MaterialCatalogQueryRequest request) {
-        return this.baseMapper.pageForTree(request.getPage(),request);
+        return this.baseMapper.pageForTree(request.getPage(), request);
     }
 
     @Override
@@ -50,11 +49,6 @@ public class MaterialCatalogServiceImpl extends TreeServiceImpl<MaterialCatalogM
         return list;
     }
 
-    @Override
-    public TreeModel<MaterialCatalog> tree(MaterialCatalogQueryRequest request) {
-        List<MaterialCatalog> list = this.list(Wrappers.<MaterialCatalog>query());
-        return new TreeModel<>(list, "name");
-    }
 
 
 }

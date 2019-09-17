@@ -7,8 +7,10 @@ import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
 import fortec.mscm.base.entity.Hospital;
+import fortec.mscm.base.feign.vo.HospitalVO;
 import fortec.mscm.base.request.HospitalQueryRequest;
 import fortec.mscm.base.service.HospitalService;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,6 +84,16 @@ public class HospitalController extends BaseController {
         IPage page = hospitalService.pageByKeywords(request,keywords);
         return PageResult.ok("查询成功",page.getRecords(),page.getTotal());
     }
+
+    /**
+     * 获取当前登录医院信息
+     */
+    @GetMapping("/get_current_hospital")
+    public CommonResult getCurrentHospital(){
+        HospitalVO hospital = UserUtils.getUser().getHospital();
+        return CommonResult.ok("查询成功",hospital);
+    }
+
 
 }
     

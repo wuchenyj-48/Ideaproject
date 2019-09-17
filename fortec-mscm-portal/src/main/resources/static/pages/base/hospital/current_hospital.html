@@ -16,143 +16,151 @@
     <body>
 
         <div class="layui-fluid" id="app">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">当前医院管理</div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" id="editForm" lay-filter="editForm">
+                            <input type="hidden" name="id" class="layui-input"/>
 
-            <form class="layui-form" id="editForm" lay-filter="editForm">
-                <input type="hidden" name="id" class="layui-input"/>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span> 医院代码
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="code" readonly placeholder="保存后自动生成"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
 
 
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            <span class="required-star">*</span> 医院代码
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="code" readonly placeholder="保存后自动生成"
-                                   autocomplete="off" class="layui-input">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span> 医院名称
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="name" required lay-verify="required" placeholder="请输入医院名称"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        简称
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="shortName" lay-verify="" placeholder="请输入简称"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        <span class="required-star">*</span> 拼音
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="pinyin" required lay-verify="abc|required" placeholder="请输入拼音"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        联系人
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="contactor" lay-verify="" placeholder="请输入联系人"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        地址
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="address" lay-verify="" placeholder="请输入地址"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="layui-row layui-col-space5 layui-form-item">
+
+
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        邮箱
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6">
+                                    <label class="layui-form-label">
+                                        电话
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="phone" lay-verify="phone" placeholder="请输入电话"
+                                               autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="block"></div>
+                            <div class="layui-row ">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                                        <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                                        <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!--   加载子表表格-->
+                        <div class="layui-tab child-tab">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">医院收货地点管理</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                                <div class="layui-tab-item layui-show">
+                                    <div id="hospitalLocationToolbar">
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
+                                                lay-event="addNewLine">
+                                            <i class="layui-icon layui-icon-add-1"></i> 增行
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
+                                            <i class="layui-icon layui-icon-save"></i> 批量保存
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
+                                            <i class="layui-icon layui-icon-refresh"></i> 刷新
+                                        </button>
+                                    </div>
+                                    <div class="row-edit-table" id="hospital_location_table"
+                                         lay-filter="hospital_location_table"></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            <span class="required-star">*</span> 医院名称
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="name" required lay-verify="required" placeholder="请输入医院名称"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            简称
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="shortName" lay-verify="" placeholder="请输入简称"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-
-
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            <span class="required-star">*</span> 拼音
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="pinyin" required lay-verify="abc|required" placeholder="请输入拼音"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            联系人
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="contactor" lay-verify="" placeholder="请输入联系人"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-
-
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            地址
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="address" lay-verify="" placeholder="请输入地址"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-
-
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            邮箱
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            电话
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="phone" lay-verify="phone" placeholder="请输入电话"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="block"></div>
-                <div class="layui-row ">
-                    <div class="layui-form-item">
-                        <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
-                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
-                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-
-            <!--   加载子表表格-->
-            <div class="layui-tab child-tab">
-                <ul class="layui-tab-title">
-                    <li class="layui-this">医院收货地点管理</li>
-                </ul>
-                <div class="layui-tab-content">
-                    <div class="layui-tab-item layui-show">
-                        <div id="hospitalLocationToolbar">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
-                                    lay-event="addNewLine">
-                                <i class="layui-icon layui-icon-add-1"></i> 增行
-                            </button>
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
-                                <i class="layui-icon layui-icon-save"></i> 批量保存
-                            </button>
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
-                                <i class="layui-icon layui-icon-refresh"></i> 刷新
-                            </button>
-                        </div>
-                        <div class="row-edit-table" id="hospital_location_table"
-                             lay-filter="hospital_location_table"></div>
                     </div>
                 </div>
             </div>
+
+
+
         </div>
 
         <!-- 子表管理模板 开始  -->
@@ -189,6 +197,14 @@
             let mainFunction = () => {
                 let form = layui.form, $ = layui.$
 
+                $http.get("/base/hospitals/get_current_hospital").then(resp => {
+                    if (resp.data.success) {
+                        window.initForm(resp.data.data)
+                    } else {
+                        layui.layer.msg(resp.data.msg, {icon: 5})
+                    }
+                })
+
                 let model = {}
 
                 // 加载子表表格
@@ -200,7 +216,7 @@
                         layui.table.render({
                             elem: '#hospital_location_table',
                             data: resp.data.data,
-                            height: 300,
+                            height: 400,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
                                 {field: 'code', title: '仓库代码', align: 'center', templet: "#codeTpl"},
@@ -329,8 +345,7 @@
                     $("form input:hidden").val('')
                 })
                 $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
+                    top.closeThisTab()
                 })
 
                 // 监听表单提交事件

@@ -4,10 +4,10 @@ package fortec.mscm.base.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.service.BaseServiceImpl;
-import fortec.mscm.base.entity.HospitalLocation;
-import fortec.mscm.base.mapper.HospitalLocationMapper;
-import fortec.mscm.base.request.HospitalLocationQueryRequest;
-import fortec.mscm.base.service.HospitalLocationService;
+import fortec.mscm.base.entity.HospitalWarehouse;
+import fortec.mscm.base.mapper.HospitalWarehouseMapper;
+import fortec.mscm.base.request.HospitalWarehouseQueryRequest;
+import fortec.mscm.base.service.HospitalWarehouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +22,12 @@ import java.util.List;
 */
 @Slf4j
 @Service
-public class HospitalLocationServiceImpl extends BaseServiceImpl<HospitalLocationMapper, HospitalLocation> implements HospitalLocationService {
+public class HospitalWarehouseServiceImpl extends BaseServiceImpl<HospitalWarehouseMapper, HospitalWarehouse> implements HospitalWarehouseService {
 
 
     @Override
-    public List<HospitalLocation> list(HospitalLocationQueryRequest request) {
-        List<HospitalLocation> list = this.list(Wrappers.<HospitalLocation>query()
+    public List<HospitalWarehouse> list(HospitalWarehouseQueryRequest request) {
+        List<HospitalWarehouse> list = this.list(Wrappers.<HospitalWarehouse>query()
                 .eq(request.getHospitalId() != null, "hospital_id", request.getHospitalId())
                 .orderByDesc("gmt_modified")
         );
@@ -35,8 +35,8 @@ public class HospitalLocationServiceImpl extends BaseServiceImpl<HospitalLocatio
     }
 
     @Override
-    public IPage<HospitalLocation> page(HospitalLocationQueryRequest request) {
-        IPage page = this.page(request.getPage(), Wrappers.<HospitalLocation>query()
+    public IPage<HospitalWarehouse> page(HospitalWarehouseQueryRequest request) {
+        IPage page = this.page(request.getPage(), Wrappers.<HospitalWarehouse>query()
                 .eq(request.getHospitalId() != null, "hospital_id", request.getHospitalId())
                 .orderByDesc("gmt_modified")
         );

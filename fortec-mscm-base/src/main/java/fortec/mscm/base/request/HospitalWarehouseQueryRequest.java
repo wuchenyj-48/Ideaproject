@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class HospitalLocationQueryRequest extends PageRequest {
+public class HospitalWarehouseQueryRequest extends PageRequest {
 
     /** 医院标识 */
     private Long hospitalId;

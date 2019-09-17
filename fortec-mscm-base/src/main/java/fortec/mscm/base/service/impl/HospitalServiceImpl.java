@@ -124,5 +124,6 @@ public class HospitalServiceImpl extends BaseServiceImpl<HospitalMapper, Hospita
         );
         return page;
     }
+
 }
     
