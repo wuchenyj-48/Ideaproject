@@ -24,6 +24,7 @@
         <module>fortec-mscm-feign-starter</module>
         <module>fortec-mscm-msg</module>
         <module>fortec-mscm-order</module>
+        <module>fortec-mscm-settlement</module>
     </modules>
 
     <properties>
