@@ -3,7 +3,7 @@ package fortec.mscm.base.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import fortec.mscm.base.entity.HospitalLocation;
+import fortec.mscm.base.entity.HospitalWarehouse;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @version 1.0
 */
 @Mapper
-public interface HospitalLocationMapper extends BaseMapper<HospitalLocation> {
+public interface HospitalWarehouseMapper extends BaseMapper<HospitalWarehouse> {
 
 }
     

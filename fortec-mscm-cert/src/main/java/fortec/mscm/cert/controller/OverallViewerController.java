@@ -38,6 +38,12 @@ public class OverallViewerController extends BaseController {
         return CommonResult.ok("查询成功",list);
     }
 
+    @GetMapping("/list_supplier_by_supplier")
+    public CommonResult listCurrentSupplierCertCnt(){
+        List<OverAllSupplier> list = overallViewerService.listSupplierBySupplier();
+        return CommonResult.ok("查询成功",list);
+    }
+
     @GetMapping("/list_manufacturer_cert_cnt/{supplierId}")
     public CommonResult listManufacturerCertCnt(@PathVariable("supplierId") String supplierId){
         List<OverAllManufacturer> list = overallViewerService.listManufacturerCertCnt(supplierId);
@@ -64,6 +70,35 @@ public class OverallViewerController extends BaseController {
     @GetMapping("/page_over_all")
     public PageResult pageOverAll(OverallViewerQueryRequest request) {
         IPage<CertificateRepository> page = overallViewerService.pageOverAll(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
+    @GetMapping("/list_manufacturer_by_supplier")
+    public CommonResult listManufacturerBySupplier(){
+        List<OverAllManufacturer> list = overallViewerService.listManufacturerBySupplier();
+        return CommonResult.ok("查询成功",list);
+    }
+
+    @GetMapping("/list_catalog_by_supplier/{manufacturerId}")
+    public CommonResult listCatalogForSupplier(@PathVariable("manufacturerId") String manufacturerId){
+        List<OverAllCatalog> list = overallViewerService.listCatalogForSupplier(manufacturerId);
+        return CommonResult.ok("查询成功",list);
+    }
+
+    @GetMapping("/list_material_by_supplier/{catalogId}")
+    public CommonResult listMaterialForSupplier(@PathVariable("catalogId") String catalogId){
+        List<OverAllMaterial> list = overallViewerService.listMaterialForSupplier(catalogId);
+        return CommonResult.ok("查询成功",list);
+    }
+
+    /**
+     * 全景视图查询
+     * @param request
+     * @return
+     */
+    @GetMapping("/page_over_all_for_supplier")
+    public PageResult pageOverAllForSupplier(OverallViewerQueryRequest request) {
+        IPage<CertificateRepository> page = overallViewerService.pageOverAllForSupplier(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 }

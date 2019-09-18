@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.model.TreeModel;
+import fortec.common.core.model.TreeNode;
 import fortec.common.core.mvc.controller.BaseController;
 import fortec.mscm.base.entity.MaterialCatalog;
 import fortec.mscm.base.request.MaterialCatalogQueryRequest;
@@ -56,7 +57,13 @@ public class MaterialCatalogController extends BaseController {
 
     @GetMapping("/tree")
     public CommonResult tree(MaterialCatalogQueryRequest request) {
-        TreeModel<MaterialCatalog> treeModel = materialCatalogService.tree(request);
+        List<MaterialCatalog> list = materialCatalogService.list(request);
+        TreeModel<MaterialCatalog> treeModel = new TreeModel<MaterialCatalog>(list, "name") {
+            @Override
+            protected void addExtraProperties(TreeNode node, MaterialCatalog entity) {
+                node.addProperty("materialTypeCode", entity.getMaterialTypeCode());
+            }
+        };
         return CommonResult.ok("查询成功", treeModel.asList());
     }
 

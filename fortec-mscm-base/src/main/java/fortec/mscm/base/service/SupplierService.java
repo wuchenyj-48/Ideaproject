@@ -43,5 +43,6 @@ public interface SupplierService extends IBaseService<Supplier> {
      * @return
      */
     IPage<Supplier> pageByKeywords(SupplierQueryRequest request,String keywords);
+
 }
     

@@ -65,6 +65,15 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
     /** 最小订单单位数量 */
     private Double miniumOrderQty;
 
+    /** 单位 */
+    private String unit;
+
+    /** 是否寄售 */
+    private Integer isConsignment;
+
+    /** 是否一物一码 */
+    private Integer isOneThingOneYard;
+
     /** 停用标志 */
     @NotNull(message="停用标志不能为空")
     private Integer inactive;
@@ -76,6 +85,7 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
     /**商品规格*/
     @TableField(exist = false)
     private String materialSpec;
+
 
     public static final int ACTIVATE = 0;
     public static final int DEACTIVATE = 1;

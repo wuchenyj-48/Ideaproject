@@ -49,12 +49,12 @@
 
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs6" >
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 商品类型
                         </label>
                         <div class="layui-input-block">
-                            <select name="materialTypeCode">
+                            <select id="materialTypeCode" name="materialTypeCode" disabled>
                                 <option value="">请选择商品类型</option>
                             </select>
                         </div>
@@ -128,8 +128,7 @@
                             注册证效期
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="certificateExpiredDate" placeholder="请选择注册证效期" autocomplete="off"
-                                   readonly
+                            <input type="text" name="certificateExpiredDate" placeholder="请选择注册证效期" autocomplete="off" readonly
                                    class="layui-input">
                         </div>
                     </div>
@@ -287,7 +286,7 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$
+                let form = layui.form, $ = layui.$, dtree = layui.dtree
 
                 let model = {}
 
@@ -381,34 +380,34 @@
                 }
 
                 // 渲染商品品类
-                layui.treeSelect.render({
-                    elem: '#catalogName',
-                    url: '/base/material_catalogs/tree',
-                    search: true,
-                    style: {
-                        folder: {enable: true},
-                        line: {enable: true}
+                dtree.renderOpenTree({
+                    title: "选择树",
+                    elem: "#catalogName",
+                    url: "/base/material_catalogs/tree",
+                    record: true,
+                    allowClear: true,
+                    allowFilter: true,
+                    filterMode: "pinyin",
+                    onClear() {
+                        $("input[name='catalogId']").val("");
+                        $("input[name='catalogName']").val("");
                     },
-                    click(d) {
-                        model.catalogId = d.current.id
-                        if (d.current.isParent) {
+                    onConfirm(node) {
+
+                        if (!node.leaf){
                             layui.layer.msg("只能选择末级品类", {icon: 5})
-                            layui.treeSelect.clear && layui.treeSelect.clear('catalogName')
-                            return
+                            return;
                         }
 
-                        $("form input[name='catalogId']").val(model.catalogId)
-                        $("form input[name='catalogName']").val(d.current.title)
+                        $("input[name='catalogId']").val(node.nodeId);
+                        $("input[name='catalogName']").val(node.context);
 
-                    },
-                    clear() {
-                        model.catalogId = null
-                        model.catalogName = null
-                    },
-                    success(d) {
-                        layui.treeSelect.checkNode('tree', $strings.defaultString(model.catalogId, '0'))
+                        let recordData = JSON.parse(node.recordData)
+                        let materialTypeCode = recordData.properties.materialTypeCode
+                        $("select[name='materialTypeCode']").val(materialTypeCode)
+                        form.render('select')
                     }
-                });
+                })
 
                 //渲染生产厂商
                 layui.tableSelect.render({
@@ -433,6 +432,7 @@
                         })
                     }
                 })
+
 
 
                 // 渲染下拉框 数据
@@ -468,7 +468,7 @@
                             return
                         }
                         let rows = layui.table.getRows('material_spec_table')
-                        if (rows.length == 0) {
+                        if (rows.length == 0){
                             return;
                         }
 
@@ -566,7 +566,7 @@
                         if (resp.data.success) {
                             layer.msg(resp.data.msg, {icon: 1})
                             parent.reloadTable()
-                            window.initForm($.extend(model, resp.data.data, {isNew: false}))
+                            window.initForm($.extend(model ,resp.data.data,{isNew: false}))
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }
@@ -577,7 +577,8 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadAllJs(["/scripts/utils/editable.js", "/lib/treeSelect.js", "/lib/tableSelect.js"], mainFunction)
+                loadAllJs(["/scripts/utils/editable.js", "/lib/treeSelect.js", "/lib/tableSelect.js","/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
+                loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
             })
 
         </script>

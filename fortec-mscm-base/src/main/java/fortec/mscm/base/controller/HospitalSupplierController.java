@@ -70,6 +70,17 @@ public class HospitalSupplierController extends BaseController {
     }
 
     /**
+     * 根据医院id获取供应商，关键字搜索
+     * @param request
+     * @return
+     */
+    @GetMapping("/page_by_keywords_for_hospital")
+    public CommonResult pageByKeywordsForHospital(HospitalSupplierQueryRequest request){
+        IPage<HospitalSupplier> page = hospitalSupplierService.pageByKeywordsForHospital(request);
+        return PageResult.ok("查询成功", page.getRecords(),page.getTotal());
+    }
+
+    /**
      * 医院启用供应商，状态设为正常
      * @param id
      * @return

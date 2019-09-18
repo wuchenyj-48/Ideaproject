@@ -58,4 +58,40 @@ public interface OverallViewerMapper{
      */
     IPage<CertificateRepository> pageOverAll(IPage page, @Param("request") OverallViewerQueryRequest request);
 
+
+    /**
+     * 查看供应商全景视图-当前供应商
+     * @param supplierId
+     * @return
+     */
+    List<OverAllSupplier> listSupplierBySupplier(@Param("supplierId") String supplierId);
+
+    /**
+     * 查看供应商全景视图-供应商的所有厂商
+     * @param supplierId
+     * @return
+     */
+    List<OverAllManufacturer> listManufacturerForSupplier(@Param("supplierId") String supplierId);
+
+    /**
+     * 查看供应商全景视图-厂商的所有一级品类
+     * @param manufacturerId
+     * @return
+     */
+    List<OverAllCatalog> listCatalogForSupplier(@Param("manufacturerId") String manufacturerId);
+
+    /**
+     * 查看供应商全景视图-一级品类的所有商品
+     * @param catalogId
+     * @return
+     */
+    List<OverAllMaterial> listMaterialForSupplier(@Param("catalogId") String catalogId);
+
+    /**
+     * 供应商全景视图查询功能
+     * @param page
+     * @param request
+     * @return
+     */
+    IPage<CertificateRepository> pageOverAllForSupplier(IPage page, @Param("request") OverallViewerQueryRequest request);
 }

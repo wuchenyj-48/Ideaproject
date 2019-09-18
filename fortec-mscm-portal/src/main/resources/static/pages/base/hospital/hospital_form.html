@@ -156,9 +156,15 @@
         </div>
 
         <!-- 子表管理模板 开始  -->
-        <script type="text/html" id="locationNameTpl">
-            <input type="text" data-name="locationName" value="{{d.locationName ? d.locationName : ''}}"
-                   lay-filter="locationName"
+        <script type="text/html" id="codeTpl">
+            <input type="text" data-name="code" value="{{d.code ? d.code : ''}}"
+                   lay-filter="code"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="nameTpl">
+            <input type="text" data-name="name" value="{{d.name ? d.name : ''}}"
+                   lay-filter="name"
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
                    class="layui-input custom-input"/>
         </script>
@@ -197,7 +203,8 @@
                             height: 300,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                {field: 'locationName', title: '收货地点', align: 'center', templet: "#locationNameTpl"},
+                                {field: 'code', title: '仓库代码', align: 'center', templet: "#codeTpl"},
+                                {field: 'name', title: '仓库名称', align: 'center', templet: "#nameTpl"},
                                 {
                                     field: 'LAY_CELL_TOOLBAR',
                                     title: '操作',

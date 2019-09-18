@@ -3,16 +3,23 @@ package fortec.mscm.base.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import fortec.common.core.model.BatchImportResult;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.utils.DateUtils;
+import fortec.common.core.utils.excel.ExportExcel;
 import fortec.mscm.base.entity.Supplier;
+import fortec.mscm.base.vo.SupplierVO;
 import fortec.mscm.base.request.SupplierQueryRequest;
 import fortec.mscm.base.service.SupplierService;
+import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -82,6 +89,31 @@ public class SupplierController extends BaseController {
         IPage page = supplierService.pageByKeywords(request,keywords);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
+
+    /**
+     * 获取当前登录供应商信息
+     */
+    @GetMapping("/get_current_supplier")
+    public CommonResult getCurrentSupplier(){
+        fortec.mscm.base.feign.vo.SupplierVO supplier = UserUtils.getUser().getSupplier();
+        return CommonResult.ok("查询成功",supplier);
+    }
+
+
+
+    @GetMapping({"/excel/export"})
+    public void export(SupplierQueryRequest request) throws IOException {
+        String fileName = "供应商信息" + DateUtils.format(DateUtils.now(), "yyyyMMddHHmmss") + ".xlsx";
+        List<Supplier> list = this.supplierService.list(request);
+
+        (new ExportExcel("供应商信息", SupplierVO.class)).setDataList(list).write(this.response(), fileName).dispose();
+    }
+
+    @PostMapping({"/excel/import"})
+    public BatchImportResult importExcel( MultipartFile file) throws IOException {
+        return this.supplierService.batchImport(file);
+    }
+
 
 }
     

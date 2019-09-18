@@ -61,6 +61,12 @@ public class HospitalSupplierServiceImpl extends BaseServiceImpl<HospitalSupplie
     }
 
     @Override
+    public IPage<HospitalSupplier> pageByKeywordsForHospital(HospitalSupplierQueryRequest request) {
+        request.setHospitalId(UserUtils.getHospitalId());
+        return this.baseMapper.pageByKeywordsForHospital(request.getPage(),request);
+    }
+
+    @Override
     public void enable(String id) {
         HospitalSupplier hs = this.getById(id);
         if (hs == null) {
