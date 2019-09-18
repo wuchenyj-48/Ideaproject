@@ -44,6 +44,13 @@ public interface HospitalSupplierService extends IBaseService<HospitalSupplier> 
     IPage<HospitalSupplier> pageByKeywords(HospitalSupplierQueryRequest request);
 
     /**
+     * 根据医院id获取供应商，关键字搜索
+     * @param request
+     * @return
+     */
+    IPage<HospitalSupplier> pageByKeywordsForHospital(HospitalSupplierQueryRequest request);
+
+    /**
      * 将医院供应商状态设为正常
      * @param id
      */

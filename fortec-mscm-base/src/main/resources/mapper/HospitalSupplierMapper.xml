@@ -47,4 +47,22 @@
             and hs.inactive = 0
         </where>
     </select>
+
+    <select id="pageByKeywordsForHospital" resultType="fortec.mscm.base.entity.HospitalSupplier">
+        select
+        s.id as supplier_id,
+        s.name as supplier_name
+        from
+        hospital_supplier hs
+        inner join supplier s on hs.supplier_id = s.id
+        <where>
+            <if test="request.keywords != null and request.keywords != ''">
+                and s.name like concat( '%', #{request.keywords}, '%')
+            </if>
+            <if test="request.hospitalId != null and request.hospitalId != ''">
+                and hs.hospital_id = #{request.hospitalId}
+            </if>
+            and hs.inactive = 0
+        </where>
+    </select>
 </mapper>

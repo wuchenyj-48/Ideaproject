@@ -19,7 +19,20 @@ import org.apache.ibatis.annotations.Param;
 public interface HospitalSupplierMapper extends BaseMapper<HospitalSupplier> {
     IPage<HospitalSupplier> page(IPage page, @Param("request") HospitalSupplierQueryRequest request);
 
+    /**
+     * 根据供应商获取医院
+     * @param page
+     * @param request
+     * @return
+     */
     IPage<HospitalSupplier> pageByKeywords(IPage page, @Param("request")HospitalSupplierQueryRequest request);
 
+    /**
+     * 根据医院获取供应商
+     * @param page
+     * @param request
+     * @return
+     */
+    IPage<HospitalSupplier> pageByKeywordsForHospital(IPage page, @Param("request")HospitalSupplierQueryRequest request);
 }
     
