@@ -34,5 +34,12 @@ public interface HospitalMaterialService extends IBaseService<HospitalMaterial> 
      */
     void deactive(String id);
 
+    /**
+     * 关键字搜索医院商品
+     * @param request
+     * @return
+     */
+    IPage<HospitalMaterial> pageByKeyword(HospitalMaterialQueryRequest request);
+
 }
     

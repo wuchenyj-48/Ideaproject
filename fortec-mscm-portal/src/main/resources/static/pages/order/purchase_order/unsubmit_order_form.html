@@ -20,6 +20,7 @@
             <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
                 <input type="hidden" name="supplierId" class="layui-input"/>
+                <input type="hidden" name="warehouseId" class="layui-input"/>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
@@ -27,7 +28,7 @@
                             订单编号
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="code" readonly  lay-verify="" placeholder="自动生成"
+                            <input type="text" name="code" readonly lay-verify="" placeholder="自动生成"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -37,7 +38,7 @@
                             制单时间
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="gmtCreate" readonly  lay-verify="" placeholder="" autocomplete="off"
+                            <input type="text" name="gmtCreate" readonly lay-verify="" placeholder="" autocomplete="off"
                                    class="layui-input">
                         </div>
                     </div>
@@ -56,20 +57,22 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span> 供应商名称
+                            供应商名称
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="supplierName" id="supplierName" required lay-verify="required" placeholder="请输入供应商名称"
+                            <input type="text" name="supplierName" id="supplierName" readonly required
+                                   lay-verify="required" placeholder="请输入供应商名称"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span> 送达地点名称
+                             送达地点名称
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="warehouseName" required lay-verify="required"
+                            <input type="text" name="warehouseName" id="warehouseName" readonly required
+                                   lay-verify="required"
                                    placeholder="请输入送达地点名称"
                                    autocomplete="off" class="layui-input">
                         </div>
@@ -77,10 +80,11 @@
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span> 最晚送达日期
+                             最晚送达日期
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="latestDeliveryDate" required lay-verify="required"
+                            <input type="text" name="latestDeliveryDate" id="latestDeliveryDate" required
+                                   lay-verify="required"
                                    placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -89,23 +93,16 @@
 
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            <span class="required-star">*</span> 一物一码
+                        <label class="layui-form-label ">
+
                         </label>
                         <div class="layui-input-block">
-                            <div id="isOneThingOneYardDiv"></div>
+                            <input type="checkbox" name="isOneThingOneYard" title="一物一码" lay-skin="primary" value="1">
+                            <input type="checkbox" name="isConsignment" title="寄售" lay-skin="primary" value="1">
+
                         </div>
                     </div>
 
-
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            <span class="required-star">*</span> 寄售
-                        </label>
-                        <div class="layui-input-block">
-                            <div id="isConsignmentDiv"></div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="block"></div>
@@ -113,6 +110,7 @@
                     <div class="layui-form-item">
                         <div class="layui-input-block">
                             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn  form-submit-order" type="button">提交</button>
                             <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
                             <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
                         </div>
@@ -147,88 +145,26 @@
         </div>
 
         <!-- 子表管理模板 开始  -->
-        <script type="text/html" id="poIdTpl">
-            <input type="text" data-name="poId" value="{{d.poId ? d.poId : ''}}" lay-filter="poId"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
+        <script type="text/html" id="itemSelectTpl">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" data-name="itemSelect"
+               lay-filter="itemSelect"
+               data-index="{{d.LAY_TABLE_INDEX}}" title="选择"><i
+                    class="fas fa-search"></i></a>
         </script>
-        <script type="text/html" id="materialSpecIdTpl">
-            <input type="text" data-name="materialSpecId" value="{{d.materialSpecId ? d.materialSpecId : ''}}"
-                   lay-filter="materialSpecId"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="materialCodeTpl">
-            <input type="text" data-name="materialCode" value="{{d.materialCode ? d.materialCode : ''}}"
-                   lay-filter="materialCode"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="materialErpCodeTpl">
-            <input type="text" data-name="materialErpCode" value="{{d.materialErpCode ? d.materialErpCode : ''}}"
-                   lay-filter="materialErpCode"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="materialNameTpl">
-            <input type="text" data-name="materialName" value="{{d.materialName ? d.materialName : ''}}"
-                   lay-filter="materialName"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="materialTradeNameTpl">
-            <input type="text" data-name="materialTradeName" value="{{d.materialTradeName ? d.materialTradeName : ''}}"
-                   lay-filter="materialTradeName"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="materialSpecTpl">
-            <input type="text" data-name="materialSpec" value="{{d.materialSpec ? d.materialSpec : ''}}"
-                   lay-filter="materialSpec"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="manufacturerNameTpl">
-            <input type="text" data-name="manufacturerName" value="{{d.manufacturerName ? d.manufacturerName : ''}}"
-                   lay-filter="manufacturerName"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="formTpl">
-            <input type="text" data-name="form" value="{{d.form ? d.form : ''}}" lay-filter="form"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="priceTpl">
-            <input type="text" data-name="price" value="{{d.price ? d.price : ''}}" lay-filter="price"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
+
         <script type="text/html" id="qtyTpl">
             <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
-        <script type="text/html" id="unitTpl">
-            <input type="text" data-name="unit" value="{{d.unit ? d.unit : ''}}" lay-filter="unit"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
+
+        <script type="text/html" id="subtotalAmountTpl">
+            <input type="text" data-name="subtotalAmount" readonly value="{{d.subtotalAmount ? d.subtotalAmount : ''}}"
+                   lay-filter="subtotalAmount"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder=""
                    class="layui-input custom-input"/>
         </script>
-        <script type="text/html" id="orderUnitTpl">
-            <input type="text" data-name="orderUnit" value="{{d.orderUnit ? d.orderUnit : ''}}" lay-filter="orderUnit"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="orderQtyTpl">
-            <input type="text" data-name="orderQty" value="{{d.orderQty ? d.orderQty : ''}}" lay-filter="orderQty"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="remarkTpl">
-            <input type="text" data-name="remark" value="{{d.remark ? d.remark : ''}}" lay-filter="remark"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""
-                   class="layui-input custom-input"/>
-        </script>
+
         <script type="text/html" id="purchaseOrderItemCellToolbar">
             {{#  if($strings.isBlank(d.id)){ }}
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
@@ -248,7 +184,7 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$
+                let form = layui.form, $ = layui.$, laydate = layui.laydate
 
                 let model = {}
 
@@ -264,41 +200,29 @@
                             height: 300,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                {field: 'poId', title: '订单ID', align: 'center', templet: "#poIdTpl"},
                                 {
-                                    field: 'materialSpecId',
-                                    title: '商品规格ID',
+                                    field: 'itemSelect',
+                                    title: '选择',
                                     align: 'center',
-                                    templet: "#materialSpecIdTpl"
+                                    templet: "#itemSelectTpl",
+                                    width: 60
                                 },
-                                {field: 'materialCode', title: '商品编码', align: 'center', templet: "#materialCodeTpl"},
-                                {
-                                    field: 'materialErpCode',
-                                    title: '商品代码',
-                                    align: 'center',
-                                    templet: "#materialErpCodeTpl"
-                                },
-                                {field: 'materialName', title: '商品名称', align: 'center', templet: "#materialNameTpl"},
-                                {
-                                    field: 'materialTradeName',
-                                    title: '商品通用名',
-                                    align: 'center',
-                                    templet: "#materialTradeNameTpl"
-                                },
-                                {field: 'materialSpec', title: '规格', align: 'center', templet: "#materialSpecTpl"},
+                                {field: 'materialName', title: '商品名称', align: 'center'},
+                                {field: 'materialSpec', title: '规格', align: 'center'},
+                                {field: 'form', title: '剂型', align: 'center'},
                                 {
                                     field: 'manufacturerName',
                                     title: '厂商名称',
-                                    align: 'center',
-                                    templet: "#manufacturerNameTpl"
+                                    align: 'center'
                                 },
-                                {field: 'form', title: '剂型', align: 'center', templet: "#formTpl"},
-                                {field: 'price', title: '价格', align: 'center', templet: "#priceTpl"},
+                                {field: 'unit', title: '单位', align: 'center'},
+                                {field: 'price', title: '价格(元)', align: 'center'},
                                 {field: 'qty', title: '数量', align: 'center', templet: "#qtyTpl"},
-                                {field: 'unit', title: '单位', align: 'center', templet: "#unitTpl"},
-                                {field: 'orderUnit', title: '订单单位', align: 'center', templet: "#orderUnitTpl"},
-                                {field: 'orderQty', title: '订单单位数量', align: 'center', templet: "#orderQtyTpl"},
-                                {field: 'remark', title: '备注', align: 'center', templet: "#remarkTpl"},
+                                {
+                                    field: 'subtotalAmount',
+                                    title: '小计(元)',
+                                    align: 'center'
+                                },
                                 {
                                     field: 'LAY_CELL_TOOLBAR',
                                     title: '操作',
@@ -316,13 +240,17 @@
                     let data = $.extend({}, formData)
                     form.val("editForm", data)
                     model = data
+
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         $(".child-tab").show()
+                        $(".form-submit-order").show()
                         window.reloadPurchaseOrderItemTable && window.reloadPurchaseOrderItemTable()
                     } else {
                         $(".child-tab").hide()
+                        $(".form-submit-order").hide()
                     }
+
                 }
 
                 //渲染供应商名称
@@ -347,16 +275,46 @@
                     }
                 })
 
+                //选染收货地址
+                layui.tableSelect.render({
+                    elem: '#warehouseName',	//定义输入框input对象 必填
+                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
+                    searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
+                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                        url: '/base/hospital_locations/page',
+                        cols: [[
+                            {type: 'radio'},
+                            {field: 'code', title: '仓库代码'},
+                            {field: 'name', title: '仓库名称'}
+                        ]]
+                    },
+                    done(elem, data) {
+                        model.warehouseId = data.data.length > 0 ? data.data[0].id : null
+                        layui.each(data.data, function (index, item) {
+                            $("form input[name='warehouseId']").val(model.warehouseId)
+                            elem.val(item.name)
+                        })
+                    }
+                })
+
+                laydate.render({
+                    elem: '#latestDeliveryDate'
+                    , min: 'new Date()'
+                });
+
                 // 渲染下拉框 数据
                 form.render('select')
 
                 // 渲染单选框/多选框 数据
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isConsignmentDiv").append(`<input type="radio" lay-skin="primary" name="isConsignment" value="${o.value}" title="${o.label}" /> `)
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isOneThingOneYardDiv").append(`<input type="radio" lay-skin="primary" name="isOneThingOneYard" value="${o.value}" title="${o.label}" /> `)
-                })
+                // $global.getDictDataList('common_yes_no').forEach(o => {
+                //     $("#isConsignmentDiv").append(`<input type="radio" lay-skin="primary" name="isConsignment" value="${o.value}" title="${o.label}" /> `)
+                // })
+                // $global.getDictDataList('common_yes_no').forEach(o => {
+                //     $("#isOneThingOneYardDiv").append(`<input type="radio" lay-skin="primary" name="isOneThingOneYard" value="${o.value}" title="${o.label}" /> `)
+                // })
+                //默认选中
+                $("input:radio[value='0']").attr('checked', 'true')
                 form.render('radio')
 
                 // 渲染日期、时间 数据
@@ -369,6 +327,8 @@
                 $("#purchaseOrderItemToolbar button[lay-event='addNewLine']").click(() => {
                     layui.table.addRow('purchase_order_item_table', 0, {})
                     form.render('select')
+
+                    window.renderitemSelect()
                 })
 
                 $("#purchaseOrderItemToolbar button[lay-event='batchSave']").click(() => {
@@ -392,6 +352,70 @@
                 $("#purchaseOrderItemToolbar button[lay-event='refresh']").click(() => {
                     window.reloadPurchaseOrderItemTable()
                 })
+
+                /**
+                 *  渲染订单明细选择框
+                 */
+                window.renderitemSelect = () => {
+                    let data = layui.table.getRows('purchase_order_item_table')
+                    for (let i = 0; i < data.length; i++) {
+                        //渲染规格
+                        layui.tableSelect.render({
+                            elem: `[data-name='itemSelect'][data-index='${i}']`,	//定义输入框input对象 必填
+                            checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+                            searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
+                            table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                                url: '/base/hospital_materials/page_by_keywords',
+                                cols: [[
+                                    {type: 'checkbox'},
+                                    {field: 'materialName', title: '商品名称'},
+                                    {field: 'materialSpec', title: '规格'},
+                                    {field: 'price', title: '价格(元)'}
+                                ]]
+                            },
+                            done(elem, data) {
+                                // 当前点击行
+                                let startIndex = parseInt(elem[0].getAttribute("data-index"))
+
+                                // 表格所有数据
+                                let tableRows = layui.table.getRows('purchase_order_item_table')
+
+                                // 当前选中数据
+                                let checkedRows = data.data
+
+                                let newFlag = false
+                                for (let j = 0; j < checkedRows.length; j++) {
+                                    let rowIndex = startIndex + j
+
+                                    if (rowIndex > tableRows.length - 1) {
+                                        layui.table.addRow('purchase_order_item_table', tableRows.length, {})
+                                        tableRows = layui.table.getRows('purchase_order_item_table')
+                                        newFlag = true
+                                    }
+                                    let newData = {
+                                        poId: model.id,
+                                        materialSpecId: checkedRows[j].materialSpecId,
+                                        materialCode: checkedRows[j].materialCode,
+                                        materialName: checkedRows[j].materialName,
+                                        materialTradeName: checkedRows[j].materialTradeName,
+                                        materialSpec: checkedRows[j].materialSpec,
+                                        price: checkedRows[j].price,
+                                        unit: checkedRows[j].unit,
+                                        manufacturerName: "山东冠龙医疗用品有限公司",
+                                        materialErpCode: "123456789",
+                                    }
+
+                                    // 重新渲染单行数据
+                                    layui.table.renderSpecRow('purchase_order_item_table', rowIndex, newData)
+                                }
+                                if (newFlag) {
+                                    // 当有新增行数时，表格会被重载，需重新进行选择渲染
+                                    window.renderitemSelect()
+                                }
+                            }
+                        })
+                    }
+                }
 
 
                 // 监听子表的列工具栏
@@ -421,6 +445,8 @@
                         }
                         let data = layui.table.cache.purchase_order_item_table[index]
                         data.poId = model.id
+                        data.subtotalAmount = Number(data.price) * Number(data.qty)
+                        $("input[data-name='subtotalAmount']").val(data.subtotalAmount)
                         let promise = null
                         if ($strings.isBlank(data.id)) {
                             promise = $http.post("/order/purchase_order_items/", data)
@@ -454,9 +480,28 @@
                     parent.layer.close(index);
                 })
 
+                $(".form-submit-order").click(() => {
+                    layer.confirm('确定提交么', function (index) {
+                        $http.post(`/order/purchase_orders/submit_order/` + model.id).then(resp => {
+                            if (!resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        })
+                    });
+                })
+
+
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     data.field = layui.$.extend({}, data.field)
+                    data.field.isConsignment = $("[name='isConsignment']")[0].checked ? "1" : "0"
+                    data.field.isOneThingOneYard = $("[name='isOneThingOneYard']")[0].checked ? "1" : "0"
+
                     let promise = null
                     if ($strings.isBlank(data.field.id)) {
                         promise = $http.post("/order/purchase_orders", data.field)
@@ -468,6 +513,7 @@
                         if (resp.data.success) {
                             layer.msg(resp.data.msg, {icon: 1})
                             parent.reloadTable()
+                            window.initForm($.extend(model, resp.data.data, {isNew: false}))
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }
@@ -478,7 +524,7 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadAllJs(["/lib/tableSelect.js","/scripts/utils/editable.js"], mainFunction)
+                loadAllJs(["/lib/tableSelect.js", "/scripts/utils/editable.js"], mainFunction)
             })
 
         </script>

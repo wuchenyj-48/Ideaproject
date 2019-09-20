@@ -11,24 +11,13 @@
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">待提交订单管理</div>
+                        <div class="layui-card-header">待确认订单管理</div>
                         <div class="layui-card-body">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                                <i class="layui-icon layui-icon-add-1"></i> 新增
-                            </button>
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
-                                    <input type="text" name="code" placeholder="请输入订单编号" autocomplete="off"
-                                           class="layui-input">
-                                </div>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="supplierName" placeholder="请输入供应商名称" autocomplete="off"
-                                           class="layui-input">
-                                </div>
-
-                                <div class="layui-input-inline">
-                                    <input type="hidden" type="text" name="status" placeholder="请输入订单状态 " autocomplete="off"
-                                           class="layui-input">
+                                    <select name="status">
+                                        <option value="">请选择订单状态</option>
+                                    </select>
                                 </div>
                                 <div class="layui-input-inline">
                                 </div>
@@ -48,17 +37,10 @@
             </div>
         </div>
 
-        <script type="text/html" id="headToolbar">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                    <i class="layui-icon layui-icon-add-1"></i>添加
-                </button>
-            </div>
-        </script>
+
 
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -79,43 +61,44 @@
                     elem: '#listTable',
                     title: '采购订单信息',
                     height: 'full-160',
-                    url: '/order/purchase_orders/page?status=0',
+                    url: '/order/purchase_orders/page_for_supplier?status=2&supplierConfirmStatus=0',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
 
-                        { field: 'code', title: '订单编号', align: 'center',width:'170'},
-                        { field: 'supplierName', title: '供应商名称', align: 'center',width:'180'},
-                        { field: 'warehouseName', title: '送货地点', align: 'center',width:'170'},
-                        { field: 'latestDeliveryDate', title: '最晚送达日期', align: 'center',width:'180'},
+                        { field: 'code', title: '订单编号', align: 'center'},
+                        { field: 'hospitalName', title: '医院名称', align: 'center'},
+                        { field: 'warehouseName', title: '送货地点', align: 'center'},
+                        { field: 'latestDeliveryDate', title: '最晚送达日期', align: 'center'},
                         {
-                            field: 'isOneThingOneYard', title: '一物一码', align: 'center',width:'100',
+                            field: 'isOneThingOneYard', title: '一物一码', align: 'center',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
                             }
                         },
                         {
-                            field: 'isConsignment', title: '寄售', align: 'center',width:'130',
+                            field: 'isConsignment', title: '寄售', align: 'center',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
                             }
                         },
-                        { field: 'totalAmount', title: '订单总金额(元)', align: 'center',width:'130'},
-                        { field: 'creator', title: '制单人 ', align: 'center',width:'180'},
-                        { field: 'gmtCreate', title: '制单时间', align: 'center',width:'180'},
-                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                        { field: 'totalAmount', title: '订单总金额(元)', align: 'center'},
+                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', align: 'center', fixed: 'right'}
                     ]]
                 });
 
-                 // 渲染下拉框 数据
+                // 渲染订单状态 数据
+                $global.getDictDataList('order_po_status').forEach(o => {
+                    $("select[name='status']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
                 form.render('select')
 
-                window.edit = (data,rowIndex) => {
+                window.detail = (data,rowIndex) => {
                     let index = layer.open({
-                        title: "编辑界面",
+                        title: "详情界面",
                         type: 2,
                         area: ['950px', '400px'],
-                        content: ['./unsubmit_order_form.html'],
+                        content: ['./confirm_order_form.html'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
@@ -124,17 +107,7 @@
                     layer.full(index)
                 }
 
-                window.deleteById = (data,rowIndex) => {
-                    layer.confirm('真的删除行么', function (index) {
 
-                        $http.delete(`/order/purchase_orders/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
-                            window.reloadTable()
-
-                            layer.close(index)
-                        })
-                    });
-                }
                 // 监听表单重置
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
@@ -148,22 +121,15 @@
                 });
 
 
-                layui.$(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({});
-                    }
-                });
+
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
                      // 获取当前行索引
                     let rowIndex = obj.tr[0].getAttribute("data-index")
 
-                    if (obj.event === 'del') {
-                        window.deleteById(obj.data,rowIndex)
-                    } else if (obj.event === 'edit') {
-                        window.edit(obj.data,rowIndex)
+                    if (obj.event === 'detail') {
+                        window.detail(obj.data,rowIndex)
                     }
                 });
 

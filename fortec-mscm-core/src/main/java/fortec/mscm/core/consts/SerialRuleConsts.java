@@ -17,4 +17,6 @@ public interface SerialRuleConsts {
 
     String BASE_MATERIAL_APPLICANT_CODE = "base_material_applicant_code";
 
+    String ORDER_PO_CODE = "order_po_code";
+
 }

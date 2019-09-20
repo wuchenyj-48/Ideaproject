@@ -31,6 +31,13 @@ public class PurchaseOrderQueryRequest extends PageRequest {
     private java.util.Date beginGmtCreate;
     private java.util.Date endGmtCreate;
 
+    /**
+     * 供应商id
+     */
+    private String supplierId;
+
+    private String hospitalId;
+
 
 }
     

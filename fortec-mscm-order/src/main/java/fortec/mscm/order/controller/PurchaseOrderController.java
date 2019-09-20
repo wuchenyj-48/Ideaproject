@@ -32,7 +32,7 @@ public class PurchaseOrderController extends BaseController {
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid PurchaseOrder entity) {
-        boolean bSave = purchaseOrderService.saveCascadeById(entity);
+        boolean bSave = purchaseOrderService.add(entity);
         return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
     }
 
@@ -59,6 +59,61 @@ public class PurchaseOrderController extends BaseController {
     public CommonResult deleteById(@PathVariable("id") Long id) {
         boolean bRemove = purchaseOrderService.removeCascadeById(id);
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
+    }
+
+    /**
+     * 医院提交采购订单
+     * @param id
+     * @return
+     */
+    @PostMapping("/submit_order/{id}")
+    public CommonResult submitOrder(@PathVariable("id") String id){
+        purchaseOrderService.submitOrder(id);
+        return CommonResult.ok("提交成功");
+    }
+
+    /**
+     * 医院采购订单审核通过
+     * @param id
+     * @return
+     */
+    @PostMapping("/pass/{id}")
+    public CommonResult passOrder(@PathVariable("id") String id){
+        purchaseOrderService.passOrder(id);
+        return CommonResult.ok("通过成功");
+    }
+
+    /**
+     * 供应商订单列表页
+     * @param request
+     * @return
+     */
+    @GetMapping("/page_for_supplier")
+    public PageResult pageForSupplier(PurchaseOrderQueryRequest request) {
+        IPage page = purchaseOrderService.pageForSupplier(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
+    /**
+     * 确认可供货
+     * @param id
+     * @return
+     */
+    @PostMapping("/able/{id}")
+    public CommonResult able(@PathVariable("id") String id){
+        purchaseOrderService.able(id);
+        return CommonResult.ok("通过成功");
+    }
+
+    /**
+     * 确认不可供货
+     * @param id
+     * @return
+     */
+    @PostMapping("/disable/{id}")
+    public CommonResult disable(@PathVariable("id") String id){
+        purchaseOrderService.disable(id);
+        return CommonResult.ok("通过成功");
     }
 
 }

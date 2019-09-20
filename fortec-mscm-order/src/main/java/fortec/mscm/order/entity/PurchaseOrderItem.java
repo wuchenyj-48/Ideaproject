@@ -71,15 +71,15 @@ public class PurchaseOrderItem extends DataEntity  implements Serializable {
 
     /** 已发货数量 */
     @NotNull(message="已发货数量不能为空")
-    private Double delivered_qty;
+    private Double deliveredQty;
 
     /** 已发货金额(元) */
     @NotNull(message="已发货金额(元)不能为空")
-    private Double delivered_amount;
+    private Double deliveredAmount;
 
     /** 发货状态 */
     @NotNull(message="发货状态不能为空")
-    private Integer delivery_status;
+    private Integer deliveryStatus;
 
     /** 数量 */
     @NotNull(message="数量不能为空")

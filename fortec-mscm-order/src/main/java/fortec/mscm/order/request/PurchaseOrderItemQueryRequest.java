@@ -12,6 +12,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PurchaseOrderItemQueryRequest extends PageRequest {
 
+    //订单编号
+    private String poId;
+
 
 }
     

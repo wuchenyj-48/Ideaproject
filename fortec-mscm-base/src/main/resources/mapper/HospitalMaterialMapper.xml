@@ -30,4 +30,23 @@
         </where>
         order by hm.gmt_modified desc
     </select>
+    <select id="pageByKeyword" resultType="fortec.mscm.base.entity.HospitalMaterial">
+        select
+        hm.*,
+        ms.material_spec as material_spec,m.material_erp_code as material_erp_code
+        from
+        hospital_material hm
+        inner join material_spec ms on hm.material_spec_id = ms.id
+        inner join material m on ms.material_id = m.id
+        <where>
+            <if test="request.keywords != null and request.keywords != ''">
+                and ms.material_spec like concat( '%', #{request.keywords}, '%')
+            </if>
+            <if test="request.hospitalId != null and request.hospitalId != ''">
+                and hm.hospital_id = #{request.hospitalId}
+            </if>
+            and hm.inactive = 0
+        </where>
+        order by hm.gmt_modified desc
+    </select>
 </mapper>

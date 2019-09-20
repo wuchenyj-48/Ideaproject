@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>审核详情页</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form custom-form" id="editForm" readonly="" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="supplierId" class="layui-input"/>
+                <input type="hidden" name="warehouseId" class="layui-input"/>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            订单编号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="code" readonly  lay-verify="" placeholder="自动生成"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            制单时间
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtCreate" readonly  lay-verify="" placeholder="" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            制单人
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="creator" readonly lay-verify="" placeholder=""
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                             供应商名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="supplierName" id="supplierName" readonly required lay-verify="required" placeholder="请输入供应商名称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                             送达地点名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="warehouseName" id="warehouseName" readonly required lay-verify="required"
+                                   placeholder="请输入送达地点名称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            最晚送达日期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="latestDeliveryDate" id="latestDeliveryDate" required lay-verify="required"
+                                   placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            提交时间
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtCreate" readonly  lay-verify="" placeholder="" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            审核人
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="auditorName" readonly autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            审核时间
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtAudited" readonly  lay-verify="" placeholder="" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+
+                        </label>
+                        <div class="layui-input-block" >
+                            <input  disabled type="checkbox" name="isOneThingOneYard" title="一物一码" lay-skin="primary" value="1">
+                            <input disabled type="checkbox" name="isConsignment" title="寄售" lay-skin="primary" value="1">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal form-able" type="button">可供货</button>
+                            <button class="layui-btn  form-disable" type="button">无法供货</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="layui-tab child-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">采购订单明细管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="row-edit-table" readonly="" id="purchase_order_item_table"
+                             lay-filter="purchase_order_item_table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子表管理模板 开始  -->
+
+
+
+        <!-- 子表管理模板 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$,laydate = layui.laydate
+
+                let model = {}
+
+                // 加载子表表格
+                window.reloadPurchaseOrderItemTable = () => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    $http.get(`/order/purchase_order_items/list?poId=${model.id}`).then(resp => {
+                        layui.table.render({
+                            elem: '#purchase_order_item_table',
+                            data: resp.data.data,
+                            height: 300,
+                            cols: [[
+                                {type: 'numbers', align: 'center'},
+
+                                {field: 'materialName', title: '商品名称', align: 'center'},
+                                {field: 'materialSpec', title: '规格', align: 'center'},
+                                {field: 'form', title: '剂型', align: 'center'},
+                                {
+                                    field: 'manufacturerName',
+                                    title: '厂商名称',
+                                    align: 'center'
+                                },
+                                {field: 'unit', title: '单位', align: 'center'},
+                                {field: 'price', title: '价格(元)', align: 'center'},
+                                {field: 'qty', title: '数量', align: 'center'},
+                                {field: 'subtotalAmount', title: '小计(元)', align: 'center'},
+
+                            ]]
+                        });
+                        $editable.watch('purchase_order_item_table')
+                    })
+                }
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        $(".child-tab").show()
+                        window.reloadPurchaseOrderItemTable && window.reloadPurchaseOrderItemTable()
+                    } else {
+                        $(".child-tab").hide()
+                    }
+
+                }
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                //默认选中
+
+                // 渲染日期、时间 数据
+
+
+
+                /*** 子表管理开始 */
+
+                /*** 子表管理结束 */
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+                $(".form-able").click(() => {
+                    layer.confirm('确定可供货么', function (index) {
+                        $http.post(`/order/purchase_orders/able/` + model.id).then(resp => {
+                            if(!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        })
+                    });
+                })
+
+                $(".form-disable").click(() => {
+                    layer.confirm('确定不可供货么', function (index) {
+                        $http.post(`/order/purchase_orders/disable/` + model.id).then(resp => {
+                            if(!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        })
+                    });
+                })
+
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(["/lib/tableSelect.js","/scripts/utils/editable.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    
