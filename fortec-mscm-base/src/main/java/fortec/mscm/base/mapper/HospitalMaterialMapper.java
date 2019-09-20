@@ -20,5 +20,13 @@ public interface HospitalMaterialMapper extends BaseMapper<HospitalMaterial> {
 
     IPage<HospitalMaterial> page(IPage page, @Param("request") HospitalMaterialQueryRequest request);
 
+    /**
+     * 采购订单-订单明细，关键字搜索
+     * @param page
+     * @param request
+     * @return
+     */
+    IPage<HospitalMaterial> pageByKeyword(IPage page, @Param("request") HospitalMaterialQueryRequest request);
+
 }
     

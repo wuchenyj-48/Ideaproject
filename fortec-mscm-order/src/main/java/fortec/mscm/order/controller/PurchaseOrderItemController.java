@@ -2,7 +2,6 @@
 package fortec.mscm.order.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.google.common.collect.Lists;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
@@ -29,13 +28,13 @@ public class PurchaseOrderItemController extends BaseController {
     private PurchaseOrderItemService purchaseOrderItemService;
 
     @PostMapping
-    public CommonResult add(@RequestBody @Valid PurchaseOrderItem entity) {
-        boolean bSave = purchaseOrderItemService.saveCascadeById(entity);
+    public CommonResult add(@RequestBody PurchaseOrderItem entity) {
+        boolean bSave = purchaseOrderItemService.add(entity);
         return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
     }
 
     @PutMapping
-    public CommonResult update(@RequestBody @Valid PurchaseOrderItem entity) {
+    public CommonResult update(@RequestBody PurchaseOrderItem entity) {
         boolean bUpdate = purchaseOrderItemService.updateCascadeById(entity);
         return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
@@ -64,7 +63,7 @@ public class PurchaseOrderItemController extends BaseController {
         if (children == null || children.length == 0) {
             return CommonResult.error("保存失败");
         }
-        boolean bSuccess = purchaseOrderItemService.saveOrUpdateBatch(Lists.newArrayList(children));
+        boolean bSuccess = purchaseOrderItemService.batchSave(children);
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
     }
 }

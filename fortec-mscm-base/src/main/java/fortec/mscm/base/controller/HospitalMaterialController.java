@@ -5,11 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-
 import fortec.mscm.base.entity.HospitalMaterial;
 import fortec.mscm.base.request.HospitalMaterialQueryRequest;
 import fortec.mscm.base.service.HospitalMaterialService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,6 +78,17 @@ public class HospitalMaterialController extends BaseController {
     public CommonResult deactive(@PathVariable("id") String id){
         hospitalMaterialService.deactive(id);
         return CommonResult.ok("停用成功");
+    }
+
+    /**
+     * 采购订单-订单明细，关键字搜索医院商品
+     * @param request
+     * @return
+     */
+    @GetMapping("/page_by_keywords")
+    public CommonResult pageByKeywords(HospitalMaterialQueryRequest request) {
+        IPage page = hospitalMaterialService.pageByKeyword(request);
+        return PageResult.ok("查询成功",page.getRecords(),page.getTotal());
     }
 
 }

@@ -37,5 +37,8 @@ public class HospitalMaterialQueryRequest extends PageRequest {
     /**商品价格*/
     private Double price;
 
+    /** 关键字 */
+    private String keywords;
+
 }
     

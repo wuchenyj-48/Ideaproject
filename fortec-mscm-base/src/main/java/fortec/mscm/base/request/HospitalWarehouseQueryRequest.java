@@ -15,6 +15,8 @@ public class HospitalWarehouseQueryRequest extends PageRequest {
     /** 医院标识 */
     private Long hospitalId;
 
+    /** 关键字搜索 */
+    private String keywords;
 
 }
     

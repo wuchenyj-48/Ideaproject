@@ -22,5 +22,19 @@ public interface PurchaseOrderItemService extends IBaseService<PurchaseOrderItem
 
     IPage<PurchaseOrderItem> page(PurchaseOrderItemQueryRequest request);
 
+    /**
+     * 添加明细
+     * @param entity
+     * @return
+     */
+    boolean add(PurchaseOrderItem entity);
+
+    /**
+     * 批量保存
+     * @param children
+     * @return
+     */
+    boolean batchSave(PurchaseOrderItem[] children);
+
 }
     

@@ -1,6 +1,9 @@
 package fortec.mscm.security.utils;
 
+import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.utils.SecurityUtils;
+import fortec.mscm.base.feign.vo.HospitalVO;
+import fortec.mscm.base.feign.vo.SupplierVO;
 import fortec.mscm.security.userdetails.ExtOAuthUser;
 
 /**
@@ -34,4 +37,20 @@ public class UserUtils {
     public static String getSupplierId(){
         return getUser().getSupplierId();
     }
+
+
+    public static HospitalVO getHospital(){
+        if(!getUser().isHospital()){
+            throw new BusinessException("当前非医院身份，不允许操作");
+        }
+        return getUser().getHospital();
+    }
+
+    public static SupplierVO getSupplier(){
+        if(!getUser().isSupplier()){
+            throw new BusinessException("当前非供应商身份，不允许操作");
+        }
+        return getUser().getSupplier();
+    }
+
 }

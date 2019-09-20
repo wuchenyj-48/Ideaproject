@@ -78,5 +78,11 @@ public class HospitalMaterialServiceImpl extends BaseServiceImpl<HospitalMateria
         hospitalMaterial.setInactive(HospitalMaterial.DEACTIVATE).setId(hm.getId());
         this.updateById(hospitalMaterial);
     }
+
+    @Override
+    public IPage<HospitalMaterial> pageByKeyword(HospitalMaterialQueryRequest request) {
+        request.setHospitalId(UserUtils.getHospitalId());
+        return baseMapper.pageByKeyword(request.getPage(),request);
+    }
 }
     

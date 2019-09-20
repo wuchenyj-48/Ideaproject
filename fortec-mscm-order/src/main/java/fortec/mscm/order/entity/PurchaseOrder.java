@@ -25,17 +25,12 @@ import java.io.Serializable;
 public class PurchaseOrder extends DataEntity  implements Serializable {
 
     /** 院方ID */
-    @NotBlank(message="院方ID不能为空")
-    @Length(min=1, max=20, message="院方ID长度必须介于 1 和 20 之间")
     private String hospitalId;
 
     /** 院方名称 */
-    @NotBlank(message="院方名称不能为空")
-    @Length(min=1, max=50, message="院方名称长度必须介于 1 和 50 之间")
     private String hospitalName;
 
     /** 订单编号 */
-    @Length(min=1, max=50, message="订单编号长度必须介于 1 和 50 之间")
     private String code;
 
     /** 供应商ID */
@@ -69,21 +64,18 @@ public class PurchaseOrder extends DataEntity  implements Serializable {
     private java.util.Date latestDeliveryDate;
 
     /** 订单金额(元) */
-    @NotNull(message="订单金额(元)不能为空")
     private Double totalAmount;
 
     /** 采购员 */
-    @NotNull(message="采购员不能为空")
-    private Long buyerName;
+    private String buyerName;
 
     /** 审核人 */
-    private Long auditorName;
+    private String auditorName;
 
     /** 审核时间 */
     private java.util.Date gmtAudited;
 
     /** 供应商确认状态  */
-    @NotNull(message="供应商确认状态 不能为空")
     private Integer supplierConfirmStatus;
 
     /** 供应商确认用户 */
@@ -93,18 +85,15 @@ public class PurchaseOrder extends DataEntity  implements Serializable {
     private java.util.Date gmtSupplierConfirmed;
 
     /** 发货状态 */
-    @NotNull(message="发货状态不能为空")
     private Integer deliveryStatus;
 
     /** 首次发货时间 */
     private java.util.Date gmtFirstDelivery;
 
     /** 订单状态  */
-    @NotNull(message="订单状态 不能为空")
     private Integer status;
 
     /** 是否关闭 */
-    @NotNull(message="是否关闭不能为空")
     private Integer isClosed;
 
     /** 关闭时间 */
