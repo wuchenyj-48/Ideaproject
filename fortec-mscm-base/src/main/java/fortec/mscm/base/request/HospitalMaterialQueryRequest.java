@@ -40,5 +40,11 @@ public class HospitalMaterialQueryRequest extends PageRequest {
     /** 关键字 */
     private String keywords;
 
+    /** 是否寄售 */
+    private Integer isConsignment;
+
+    /** 是否一物一码 */
+    private Integer isOneThingOneYard;
+
 }
     

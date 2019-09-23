@@ -93,7 +93,7 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
                 .setSource(DictConsts.STATUS_MANUAL)
                 .setHospitalId(UserUtils.getHospitalId())
                 .setHospitalName(UserUtils.getHospital().getName());
-        return saveCascadeById(entity);
+        return saveOrUpdate(entity);
     }
 
     @Override
@@ -114,6 +114,9 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
         if (list.isEmpty()) {
             throw new BusinessException("采购订单明细为空，不允许提交");
         }
+
+        //计算订单总金额
+
 
         //制单状态修改为待审核状态
         PurchaseOrder purchaseOrder = new PurchaseOrder();
@@ -152,7 +155,7 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
                 .notIn("status","0,1")
                 .eq(StringUtils.isNotBlank(request.getSupplierId()),"supplier_id",request.getSupplierId())
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
-                .like(StringUtils.isNotBlank(request.getSupplierName()), "supplier_name", request.getSupplierName())
+                .like(StringUtils.isNotBlank(request.getHospitalName()), "hospital_name", request.getHospitalName())
                 .eq(request.getSupplierConfirmStatus() != null, "supplier_confirm_status", request.getSupplierConfirmStatus())
                 .eq(request.getDeliveryStatus() != null, "delivery_status", request.getDeliveryStatus())
                 .eq(request.getStatus() != null, "status", request.getStatus())

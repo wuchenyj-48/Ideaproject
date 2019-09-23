@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+
 /**
 * 采购订单明细实体对象
 * @author chenchen
@@ -26,7 +27,7 @@ public class PurchaseOrderItem extends DataEntity  implements Serializable {
 
     /** 订单ID */
     @NotNull(message="订单ID不能为空")
-    private Long poId;
+    private String poId;
 
     /** 商品规格ID */
     @NotNull(message="商品规格ID不能为空")

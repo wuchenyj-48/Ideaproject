@@ -29,14 +29,14 @@ public class PurchaseOrderItemController extends BaseController {
 
     @PostMapping
     public CommonResult add(@RequestBody PurchaseOrderItem entity) {
-        boolean bSave = purchaseOrderItemService.add(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
+        purchaseOrderItemService.add(entity);
+        return CommonResult.ok("新增成功", entity);
     }
 
     @PutMapping
     public CommonResult update(@RequestBody PurchaseOrderItem entity) {
-        boolean bUpdate = purchaseOrderItemService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
+        purchaseOrderItemService.add(entity);
+        return CommonResult.ok("保存成功", entity);
     }
 
     @GetMapping("/page")
@@ -53,9 +53,9 @@ public class PurchaseOrderItemController extends BaseController {
 
 
     @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") Long id) {
-        boolean bRemove = purchaseOrderItemService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
+    public CommonResult deleteById(@PathVariable("id") String id) {
+        purchaseOrderItemService.delete(id);
+        return CommonResult.ok("删除成功");
     }
 
     @PutMapping("/batch_save")
@@ -63,7 +63,7 @@ public class PurchaseOrderItemController extends BaseController {
         if (children == null || children.length == 0) {
             return CommonResult.error("保存失败");
         }
-        boolean bSuccess = purchaseOrderItemService.batchSave(children);
-        return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
+        purchaseOrderItemService.batchSave(children);
+        return CommonResult.ok("保存成功");
     }
 }
