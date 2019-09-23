@@ -24,8 +24,11 @@
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="poCode" placeholder="请选择发货状态" autocomplete="off"
-                                           class="layui-input">
+                                    <select name="status" >
+                                        <option value=""></option>
+                                        <option value="0">未发货</option>
+                                        <option value="1">已发货</option>
+                                    </select>
                                 </div>
 
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit

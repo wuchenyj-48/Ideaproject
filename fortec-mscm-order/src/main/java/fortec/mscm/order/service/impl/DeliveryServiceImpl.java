@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,7 +67,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
     @Override
     public IPage<Delivery> page(DeliveryQueryRequest request) {
         IPage page = this.page(request.getPage(), Wrappers.<Delivery>query()
-                .eq(StringUtils.isBlank(request.getCode()),"status", DictConsts.STATUS_DELIVERY_UNFILLED)
+                .eq(StringUtils.isBlank(request.getCode()), "status", DictConsts.STATUS_DELIVERY_UNFILLED)
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())
                 .orderByDesc("gmt_modified")
@@ -79,17 +78,20 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
 
     @Override
     public boolean updateDeliverStatus(String id) {
-        PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem();
+
         // 根据id查出发货单
         Delivery delivery = this.getById(id);
         Integer status = delivery.getStatus();
+
         // 发货单状态!=0
         if (status != DictConsts.STATUS_DELIVERY_UNFILLED) {
             throw new BusinessException(delivery.getCode() + "发货单已经发货");
         }
+
         // 根据delivery_id查询发货明细
-        List<DeliveryItem> deliveryItemList = deliveryItemService.list(Wrappers.<DeliveryItem>query()
-                .eq("delivery_id", id));
+        List<DeliveryItem> deliveryItemList = deliveryItemService.list(Wrappers.<DeliveryItem>query().eq("delivery_id", id));
+
+        Double deliveryAmount = 0.0;
         // 根据发货明细,修改发货状态  数量  金额
         for (DeliveryItem item : deliveryItemList) {
             // 应发数量
@@ -98,33 +100,48 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
             Double sendedQty = item.getSendedQty();
             // 本次实发数量
             Double qty = item.getQty();
+
+            if (qty <= 0) {
+                throw new BusinessException(item.getMaterialName() + "实发数量不能小于等于0");
+            }
             // 应发数量 < 可发数量
             if (shouldSendQty < sendedQty + qty) {
                 throw new BusinessException(MessageFormat.format("本次实发数量超过可发数量,应发:{0},已发:{1},本次实发:{2}", shouldSendQty, sendedQty, qty));
             }
             // 应该数量=可发数量
+            PurchaseOrderItem orderItem = new PurchaseOrderItem();
             if (shouldSendQty == sendedQty + qty) {
                 //修改采购单数量  金额  状态为 2 全部发货
-                purchaseOrderItem.setDeliveryStatus(DictConsts.STATUS_DELIVERYED)
+                orderItem.setDeliveryStatus(DictConsts.STATUS_DELIVERYED)
                         .setDeliveredQty(shouldSendQty)
-                        .setDeliveredAmount(item.getSubtotalAmount());
+                        .setDeliveredAmount(item.getSubtotalAmount())
+                        .setId(item.getPoItemId());
 
-                purchaseOrderItemService.updateById(purchaseOrderItem);
+                purchaseOrderItemService.updateById(orderItem);
                 // 应该数量 > 发数量
             } else if (shouldSendQty > sendedQty + qty) {
                 //修改采购单数量  金额  状态为 1 部分发货
-                purchaseOrderItem.setDeliveryStatus(DictConsts.STATUS_DELIVERYED)
+                orderItem.setDeliveryStatus(DictConsts.STATUS_DELIVERYED)
                         .setDeliveredQty(sendedQty + qty)
-                        .setDeliveredAmount(item.getPrice() * (sendedQty + qty));
-                purchaseOrderItemService.updateById(purchaseOrderItem);
+                        .setDeliveredAmount(item.getPrice() * (sendedQty + qty))
+                        .setId(item.getPoItemId());
+                purchaseOrderItemService.updateById(orderItem);
+
             }
+            deliveryAmount += item.getSubtotalAmount();
+
+            this.deliveryItemService.update(Wrappers.<DeliveryItem>update()
+                    .set("sended_qty", orderItem.getDeliveredQty())
+                    .eq("po_item_id", item.getPoItemId())
+                    .ne("delivery_id", item.getDeliveryId()));
         }
         // 更新 发货单 为已经发货状态 1
         Delivery tmp = new Delivery();
-
-        tmp.setGmtDelivery(new Date()).setStatus(DictConsts.STATUS_DELIVERY_SENT)
+        tmp.setDeliveryAmount(deliveryAmount)
+                .setStatus(DictConsts.STATUS_DELIVERY_SENT)
                 .setGmtDelivery(DateUtils.now())
                 .setCreator(UserUtils.getUser().getUsername())
+
                 .setId(id);
 
         return this.updateById(tmp);
@@ -150,7 +167,12 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
 
         // 采购明细添加到发货明细
         for (PurchaseOrderItem purchaseOrderItem : purchaseOrderItemList) {
+
             try {
+//                如果数量=发货数量
+                if (purchaseOrderItem.getDeliveredQty().equals(purchaseOrderItem.getQty())) {
+                    continue;
+                }
                 DeliveryItem deliveryItem = new DeliveryItem();
                 BeanUtils.copyProperties(purchaseOrderItem, deliveryItem);
                 deliveryItem.setDeliveryId(entity.getId())
@@ -178,7 +200,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
     @Override
     public IPage<Delivery> sendPage(DeliveryQueryRequest request) {
         IPage page = this.page(request.getPage(), Wrappers.<Delivery>query()
-                .eq(StringUtils.isBlank(request.getCode()),"status", DictConsts.STATUS_DELIVERY_SENT)
+                .eq(StringUtils.isBlank(request.getCode()), "status", DictConsts.STATUS_DELIVERY_SENT)
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())
                 .orderByDesc("gmt_modified")
@@ -188,18 +210,25 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
 
     @Override
     public boolean cancelDelivery(String id) {
-        PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem();
+        PurchaseOrderItem orderItem = new PurchaseOrderItem();
         Delivery delivery = this.getById(id);
+        if (delivery.getStatus() != 1) {
+            throw new BusinessException("发货单未发货");
+        }
         List<DeliveryItem> deliveryItemList = deliveryItemService.list(Wrappers.<DeliveryItem>query()
                 .eq("delivery_id", id));
         for (DeliveryItem item : deliveryItemList) {
 //            修改发货数量   应发 - 本次实发  修改状态 -> 0   修改金额
-            purchaseOrderItem.setDeliveredQty(item.getShouldSendQty() - item.getQty())
+            orderItem.setDeliveredQty(item.getShouldSendQty() - item.getQty())
                     .setDeliveryStatus(DictConsts.STATUS_UNCONFIRM)
                     .setDeliveredAmount((item.getShouldSendQty() - item.getQty()) * item.getPrice())
                     .setId(item.getPoItemId());
-            purchaseOrderItemService.updateById(purchaseOrderItem);
+            purchaseOrderItemService.updateById(orderItem);
 
+            this.deliveryItemService.update(Wrappers.<DeliveryItem>update()
+                    .set("sended_qty", item.getShouldSendQty() - item.getQty())
+                    .eq("po_item_id", item.getPoItemId())
+                    .ne("delivery_id", item.getDeliveryId()));
         }
 //        修改状态 -> 0   修改人  修改时间
         Delivery tmp = new Delivery();
@@ -208,19 +237,21 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
                 .setGmtModified(DateUtils.now())
                 .setId(id);
 
+
         return this.updateById(tmp);
     }
 
     @Override
     public IPage allDeliveryPage(DeliveryQueryRequest request) {
         IPage page = this.page(request.getPage(), Wrappers.<Delivery>query()
-                .eq(StringUtils.isNotBlank(request.getCode()),"status", request.getStatus())
+                .eq(StringUtils.isNotBlank(request.getStatus()), "status", request.getStatus())
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())
                 .orderByDesc("gmt_modified")
         );
         return page;
     }
+
 
 }
     

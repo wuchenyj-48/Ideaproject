@@ -102,22 +102,22 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
 
 
-                    <div class="layui-col-xs4">
+                    <div class="layui-col-xs4 no-print">
                         <label class="layui-form-label layui-required">
                             最晚送达日期
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="latestDeliverDate" readonly lay-verify=""
+                            <input type="text" name="latestDeliverDate"
                                    placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs4">
+                    <div class="layui-col-xs4 no-print">
                         <label class="layui-form-label ">
 
                         </label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="isOneThingOneYard" title="一物一码" lay-skin="primary" disabled>
-                            <input type="checkbox" name="isConsignment" title="购销" lay-skin="primary" disabled>
+                            <input type="checkbox" name="isOneThingOneYard" title="一物一码" lay-skin="primary" >
+                            <input type="checkbox" name="isConsignment" title="购销" lay-skin="primary" >
 
 
                         </div>
@@ -128,10 +128,10 @@
 
                 <div class="block"></div>
                 <div class="layui-row ">
-                    <div class="layui-form-item">
+                    <div class="layui-form-item no-print">
                         <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-normal">打印条码</button>
-                            <button class="layui-btn layui-btn-normal">打印发货单</button>
+                            <button class="layui-btn layui-btn-normal " type="button">打印条码</button>
+                            <button class="layui-btn layui-btn-normal form-print" type="button">打印发货单</button>
                             <button class="layui-btn layui-btn-danger form-delivery" type="button">取消发货</button>
                             <!--                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>-->
                             <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
@@ -141,8 +141,8 @@
             </form>
 
 
-            <div class="layui-tab child-tab">
-                <ul class="layui-tab-title">
+            <div class="layui-tab child-tab" id="deliveryDtl">
+                <ul class="layui-tab-title no-print" >
                     <li class="layui-this">发货单明细管理</li>
                 </ul>
                 <div class="layui-tab-content">
@@ -165,31 +165,9 @@
             </div>
         </div>
 
-        <!-- 子表管理模板 开始  -->
-        <!--        <script type="text/html" id="currentPurchaseOrderSelectTpl">-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-normal" data-name="currentPurchaseOrderSelect"-->
-        <!--               lay-filter="currentPurchaseOrderSelect"-->
-        <!--               data-index="{{d.LAY_TABLE_INDEX}}" title="选择"><i-->
-        <!--                    class="fas fa-search"></i></a>-->
-        <!--        </script>-->
-
-
-        <!--        <script type="text/html" id="deliveryItemCellToolbar">-->
-        <!--            {{#  if($strings.isBlank(d.id)){ }}-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i-->
-        <!--                    class="fas fa-check"></i></a>-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i-->
-        <!--                    class="far fa-trash-alt"></i></a>-->
-        <!--            {{#  } else { }}-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i-->
-        <!--                    class="fas fa-save"></i></a>-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i-->
-        <!--                    class="far fa-trash-alt"></i></a>-->
-        <!--            {{#  } }}-->
-        <!--        </script>-->
-        <!-- 子表管理模板 结束  -->
-
         <script src="/scripts/utils/common.js"></script>
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/jQuery.print/1.6.0/jQuery.print.min.js"></script>
         <script>
 
             let mainFunction = () => {
@@ -209,13 +187,7 @@
                             height: 300,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                // {
-                                //     field: 'currentPurchaseOrderSelect',
-                                //     title: '选择',
-                                //     align: 'center',
-                                //     templet: "#currentPurchaseOrderSelectTpl",
-                                //     width: 60
-                                // },
+
                                 {field: 'materialName', title: '商品名称', align: 'center'},
                                 {field: 'materialSpec', title: '规格', align: 'center'},
                                 {field: 'form', title: '剂型', align: 'center'},
@@ -244,16 +216,10 @@
                                     title: '注册证号',
                                     align: 'center',
                                 }
-                                // {
-                                //     field: 'LAY_CELL_TOOLBAR',
-                                //     title: '操作',
-                                //     align: 'center',
-                                //     templet: "#deliveryItemCellToolbar"
-                                // },
+
                             ]]
                         });
                         $editable.watch('delivery_item_table')
-                        window.renderPurchaseOrderSelect();
                     })
                 };
 
@@ -270,58 +236,18 @@
                         $(".child-tab").hide()
                     }
                 };
-                // //渲染供应商名称
-                // layui.tableSelect.render({
-                //     elem: '#poCode',	//定义输入框input对象 必填
-                //     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                //     searchKey: 'keywords',	//搜索输入框的name值 默认keyword
-                //     searchPlaceholder: '采购订单搜索',	//搜索输入框的提示文字 默认关键词搜索
-                //     table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                //         url: '/order/purchase_orders/list',
-                //         cols: [[
-                //             {type: 'radio'},
-                //             {field: 'code', title: '采购订单'}
-                //         ]]
-                //     },
-                //     done(elem, data) {
-                //         let selectedRow = data.data[0];
-                //         console.log(selectedRow);
-                //         let tmp = {};
-                //         tmp.poId = selectedRow.id;
-                //         tmp.orderAmount = selectedRow.totalAmount;
-                //         tmp.deliveryAmount = selectedRow.totalAmount;
-                //         tmp.isConsignment = selectedRow.isConsignment === 1;
-                //         tmp.isOneThingOneYard = selectedRow.isOneThingOneYard === 1;
-                //         tmp.poCode = selectedRow.code;
-                //         tmp.hospitalId = selectedRow.hospitalId;
-                //         tmp.hospitalName = selectedRow.hospitalName;
-                //         tmp.supplierId = selectedRow.supplierId;
-                //         tmp.supplierName = selectedRow.supplierName;
-                //         form.val("editForm", tmp);
-                //
-                //         $.extend(model, tmp)
-                //
-                //
-                //     }
-                // });
+
                 // 渲染下拉框 数据
                 form.render('select');
 
                 // 渲染单选框/多选框 数据
                 form.render('radio');
 
-                // 渲染日期、时间 数据
-                // layui.laydate.render({elem: "input[name='latestDeliverDate']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='gmtDelivery']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='expiringDate']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='registrationNumber']", type: 'datetime', trigger: 'click'});
-
 
                 /*** 子表管理开始 */
                 $("#deliveryItemToolbar button[lay-event='addNewLine']").click(() => {
                     layui.table.addRow('delivery_item_table', 0, {});
                     form.render('select')
-                    window.renderPurchaseOrderSelect()
                 });
 
                 $("#deliveryItemToolbar button[lay-event='batchSave']").click(() => {
@@ -345,74 +271,6 @@
                 $("#deliveryItemToolbar button[lay-event='refresh']").click(() => {
                     window.reloadDeliveryItemTable()
                 });
-
-                /**
-                 *  TODO:渲染商品规格选择框
-                 */
-                window.renderPurchaseOrderSelect = () => {
-                    console.log(model)
-                    let data = layui.table.getRows('delivery_item_table')
-                    for (let i = 0; i < data.length; i++) {
-                        //渲染规格
-                        layui.tableSelect.render({
-                            elem: `[data-name='currentPurchaseOrderSelect'][data-index='${i}']`,	//定义输入框input对象 必填
-                            checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                            searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
-                            table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                                url: '/order/delivery_items/surplusOrder',
-                                cols: [[
-                                    {type: 'checkbox'},
-                                    {field: 'materialSpec', title: '规格'},
-                                    {field: 'materialName', title: '品名'},
-                                    {field: 'materialTradeName', title: '商品名'},
-                                    {field: 'price', title: '价格'},
-                                    {field: 'unit', title: '单位'},
-                                ]],
-                                where: {
-                                    poId: model.poId
-                                }
-                            },
-                            done(elem, data) {
-                                // 当前点击行
-                                let startIndex = parseInt(elem[0].getAttribute("data-index"))
-
-                                // 表格所有数据
-                                let tableRows = layui.table.getRows('delivery_item_table')
-
-                                // 当前选中数据
-                                let checkedRows = data.data
-
-                                let newFlag = false
-                                for (let j = 0; j < checkedRows.length; j++) {
-                                    let rowIndex = startIndex + j
-
-                                    if (rowIndex > tableRows.length - 1) {
-                                        layui.table.addRow('delivery_item_table', tableRows.length, {})
-                                        tableRows = layui.table.getRows('delivery_item_table')
-                                        newFlag = true
-                                    }
-                                    let newData = {
-                                        id: tableRows[rowIndex].id,
-                                        materialSpecId: checkedRows[j].id,
-                                        materialId: checkedRows[j].materialId,
-                                        materialSpec: checkedRows[j].materialSpec,
-                                        materialName: checkedRows[j].materialName,
-                                        materialTradeName: checkedRows[j].materialTradeName,
-                                        price: checkedRows[j].price,
-                                        unit: checkedRows[j].unit
-                                    }
-
-                                    // 重新渲染单行数据
-                                    layui.table.renderSpecRow('delivery_item_table', rowIndex, newData)
-                                }
-                                if (newFlag) {
-                                    // 当有新增行数时，表格会被重载，需重新进行选择渲染
-                                    window.renderPurchaseOrderSelect()
-                                }
-                            }
-                        })
-                    }
-                }
 
                 // 监听子表的列工具栏
                 layui.table.on('tool(delivery_item_table)', function (obj) {
@@ -464,6 +322,9 @@
                 });
 
                 /*** 子表管理结束 */
+                $(".form-print").click(() => {
+
+                });
 
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
@@ -480,7 +341,7 @@
                                 layer.msg(resp.data.msg, {icon: 1});
                                 parent.reloadTable()
                                 //  明细表格
-                                initForm($.extend(model, resp.data.data))
+                                $(".form-close").click()
                             } else {
                                 layer.msg(resp.data.msg, {icon: 5})
                             }
