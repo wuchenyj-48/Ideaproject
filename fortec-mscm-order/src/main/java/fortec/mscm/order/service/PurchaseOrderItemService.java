@@ -2,10 +2,9 @@
 package fortec.mscm.order.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import fortec.common.core.service.IBaseService;
 import fortec.mscm.order.entity.PurchaseOrderItem;
 import fortec.mscm.order.request.PurchaseOrderItemQueryRequest;
-
-import fortec.common.core.service.IBaseService;
 
 import java.util.List;
 
@@ -27,14 +26,23 @@ public interface PurchaseOrderItemService extends IBaseService<PurchaseOrderItem
      * @param entity
      * @return
      */
-    boolean add(PurchaseOrderItem entity);
+    void add(PurchaseOrderItem entity);
 
     /**
      * 批量保存
      * @param children
      * @return
      */
-    boolean batchSave(PurchaseOrderItem[] children);
+    void batchSave(PurchaseOrderItem[] children);
+
+    /**
+     * 计算订单总金额
+     * @param poId
+     * @return
+     */
+    Double totalAmount(String poId);
+
+    void delete(String id);
 
 }
     

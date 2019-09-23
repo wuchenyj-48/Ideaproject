@@ -35,7 +35,7 @@ public class PurchaseOrder extends DataEntity  implements Serializable {
 
     /** 供应商ID */
     @NotNull(message="供应商ID不能为空")
-    private Long supplierId;
+    private String supplierId;
 
     /** 供应商名称 */
     @NotBlank(message="供应商名称不能为空")

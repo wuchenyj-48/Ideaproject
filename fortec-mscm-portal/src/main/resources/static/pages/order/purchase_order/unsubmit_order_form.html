@@ -38,7 +38,7 @@
                             制单时间
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="gmtCreate" readonly lay-verify="" placeholder="" autocomplete="off"
+                            <input type="text" name="gmtCreate" readonly lay-verify="" placeholder="自动获取当前时间" autocomplete="off"
                                    class="layui-input">
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                             制单人
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="creator" readonly lay-verify="" placeholder=""
+                            <input type="text" name="creator" readonly lay-verify="" placeholder="自动获取当前用户名称"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                            供应商名称
+                            <span class="required-star">*</span>供应商名称
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="supplierName" id="supplierName" readonly required
@@ -68,7 +68,7 @@
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                             送达地点名称
+                            <span class="required-star">*</span>送达地点名称
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="warehouseName" id="warehouseName" readonly required
@@ -80,7 +80,7 @@
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                             最晚送达日期
+                            <span class="required-star">*</span>最晚送达日期
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="latestDeliveryDate" id="latestDeliveryDate" required
@@ -158,12 +158,6 @@
                    class="layui-input custom-input"/>
         </script>
 
-        <script type="text/html" id="subtotalAmountTpl">
-            <input type="text" data-name="subtotalAmount" readonly value="{{d.subtotalAmount ? d.subtotalAmount : ''}}"
-                   lay-filter="subtotalAmount"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder=""
-                   class="layui-input custom-input"/>
-        </script>
 
         <script type="text/html" id="purchaseOrderItemCellToolbar">
             {{#  if($strings.isBlank(d.id)){ }}
@@ -207,12 +201,12 @@
                                     templet: "#itemSelectTpl",
                                     width: 60
                                 },
-                                {field: 'materialName', title: '商品名称', align: 'center'},
+                                {field: 'materialName', title: '品名', align: 'center'},
                                 {field: 'materialSpec', title: '规格', align: 'center'},
                                 {field: 'form', title: '剂型', align: 'center'},
                                 {
                                     field: 'manufacturerName',
-                                    title: '厂商名称',
+                                    title: '生产厂商',
                                     align: 'center'
                                 },
                                 {field: 'unit', title: '单位', align: 'center'},
@@ -232,6 +226,7 @@
                             ]]
                         });
                         $editable.watch('purchase_order_item_table')
+                        window.renderItemSelect()
                     })
                 }
 
@@ -275,7 +270,7 @@
                     }
                 })
 
-                //选染收货地址
+                //渲染收货地址
                 layui.tableSelect.render({
                     elem: '#warehouseName',	//定义输入框input对象 必填
                     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
@@ -306,16 +301,6 @@
                 // 渲染下拉框 数据
                 form.render('select')
 
-                // 渲染单选框/多选框 数据
-                // $global.getDictDataList('common_yes_no').forEach(o => {
-                //     $("#isConsignmentDiv").append(`<input type="radio" lay-skin="primary" name="isConsignment" value="${o.value}" title="${o.label}" /> `)
-                // })
-                // $global.getDictDataList('common_yes_no').forEach(o => {
-                //     $("#isOneThingOneYardDiv").append(`<input type="radio" lay-skin="primary" name="isOneThingOneYard" value="${o.value}" title="${o.label}" /> `)
-                // })
-                //默认选中
-                $("input:radio[value='0']").attr('checked', 'true')
-                form.render('radio')
 
                 // 渲染日期、时间 数据
                 layui.laydate.render({elem: "input[name='latestDeliveryDate']", type: 'datetime', trigger: 'click'});
@@ -328,7 +313,7 @@
                     layui.table.addRow('purchase_order_item_table', 0, {})
                     form.render('select')
 
-                    window.renderitemSelect()
+                    window.renderItemSelect()
                 })
 
                 $("#purchaseOrderItemToolbar button[lay-event='batchSave']").click(() => {
@@ -356,7 +341,7 @@
                 /**
                  *  渲染订单明细选择框
                  */
-                window.renderitemSelect = () => {
+                window.renderItemSelect = () => {
                     let data = layui.table.getRows('purchase_order_item_table')
                     for (let i = 0; i < data.length; i++) {
                         //渲染规格
@@ -365,7 +350,7 @@
                             checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
                             searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
                             table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                                url: '/base/hospital_materials/page_by_keywords',
+                                url: `/base/hospital_materials/page_by_keywords?isConsignment=${model.isConsignment}&isOneThingOneYard=${model.isOneThingOneYard}&supplierId=${model.supplierId}`,
                                 cols: [[
                                     {type: 'checkbox'},
                                     {field: 'materialName', title: '商品名称'},
@@ -410,7 +395,7 @@
                                 }
                                 if (newFlag) {
                                     // 当有新增行数时，表格会被重载，需重新进行选择渲染
-                                    window.renderitemSelect()
+                                    window.renderItemSelect()
                                 }
                             }
                         })
@@ -443,10 +428,10 @@
                         if (!valid) {
                             return
                         }
+
                         let data = layui.table.cache.purchase_order_item_table[index]
                         data.poId = model.id
-                        data.subtotalAmount = Number(data.price) * Number(data.qty)
-                        $("input[data-name='subtotalAmount']").val(data.subtotalAmount)
+
                         let promise = null
                         if ($strings.isBlank(data.id)) {
                             promise = $http.post("/order/purchase_order_items/", data)
@@ -493,6 +478,14 @@
                             parent.layer.close(index);
                         })
                     });
+                })
+
+                // 监听数量输入框
+                $(document).on('input propertychange',"input[data-name='qty']",function() {
+                    let index = this.getAttribute("data-index")
+                    let row = layui.table.getRows('purchase_order_item_table')[index]
+                    let subtotalAmount = Number(row.price) * Number(this.value)
+                    layui.table.renderSpecRow('purchase_order_item_table',index,{subtotalAmount: subtotalAmount,id: row.id})
                 })
 
 

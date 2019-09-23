@@ -36,8 +36,14 @@ public class PurchaseOrderQueryRequest extends PageRequest {
      */
     private String supplierId;
 
+    /**
+     * 医院id
+     */
     private String hospitalId;
 
-
+    /**
+     * 医院名称
+     */
+    private String hospitalName;
 }
     
