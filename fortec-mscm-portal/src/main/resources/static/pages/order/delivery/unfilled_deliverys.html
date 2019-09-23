@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>发货单管理</title>
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">发货单管理</div>
+                        <div class="layui-card-body">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
+                                <i class="layui-icon layui-icon-add-1"></i> 新增
+                            </button>
+                            <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="code" placeholder="请输入发货单号" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="poCode" placeholder="请输入采购单号" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+
+                                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
+                                        lay-filter="list">
+                                    <i class="layui-icon layui-icon-search"></i> 查询
+                                </button>
+                                <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="reset">
+                                    <i class="layui-icon "></i> 重置
+                                </button>
+                            </form>
+                            <table id="listTable" lay-filter="listTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/html" id="headToolbar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
+                    <i class="layui-icon layui-icon-add-1"></i>添加
+                </button>
+            </div>
+        </script>
+
+        <script type="text/html" id="cellToolbar">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+
+        <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
+
+        <script>
+
+            extendParentScriptsAndStyles(() => {
+                let table = layui.table, $ = layui.$, form = layui.form
+
+                window.reloadTable = () => {
+                    table.reload('listTable', {
+                        where: layui.$('#queryForm').serializeObject()
+                    })
+                }
+
+                table.render({
+                    id: "listTable",
+                    elem: '#listTable',
+                    title: '发货单信息',
+                    height: 'full-160',
+                    url: '/order/deliverys/page',
+                    page: {limit: 30},
+                    cols: [[ //表头
+                        {type: 'numbers', align: 'center', fixed: 'left'},
+
+                        {field: 'code', title: '发货单号', align: 'center'},
+                        {field: 'gmtDelivery', title: '发货时间', align: 'center'},
+                        {field: 'poCode', title: '采购单号', align: 'center'},
+                        {field: 'demandWarehouse', title: '需求仓库', align: 'center'},
+                        {field: 'deliveryAmount', title: '发货总金额(元)', align: 'center'},
+                        {field: 'creator', title: '制单人', align: 'center'},
+                        {field: 'gmtCreate', title: '制单时间', align: 'center'},
+                        {
+                            field: "LAY_CELL_TOOLBAR",
+                            title: '操作',
+                            templet: '#cellToolbar',
+                            width: 150,
+                            align: 'center',
+                            fixed: 'right'
+                        }
+                    ]]
+                });
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                window.edit = (data, rowIndex) => {
+                    let index = layer.open({
+                        title: "编辑发货单",
+                        type: 2,
+                        area: ['950px', '400px'],
+                        content: ['./unfilled_delivery_form.html'],
+                        success(layero, index) {
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm(data)
+                        }
+                    });
+                    layer.full(index)
+                }
+
+                window.deleteById = (data, rowIndex) => {
+                    layer.confirm('真的删除行么', function (index) {
+
+                        $http.delete(`/order/deliverys/` + data.id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+
+                            layer.close(index)
+                        })
+                    });
+                }
+                // 监听表单重置
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+
+                // 监听表单提交事件
+                layui.form.on('submit(list)', (data) => {
+                    window.reloadTable()
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+
+
+                layui.$(".layui-btn").on('click', function () {
+                    let layevent = this.getAttribute("lay-event");
+                    if (layevent == 'addNew') {
+                        edit({});
+                    }
+                });
+
+                //监听行工具事件
+                table.on('tool(listTable)', function (obj) {
+                    // 获取当前行索引
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+
+                    if (obj.event === 'del') {
+                        window.deleteById(obj.data, rowIndex)
+                    } else if (obj.event === 'edit') {
+                        window.edit(obj.data, rowIndex)
+                    }
+                });
+
+
+            })
+
+        </script>
+    </body>
+
+
+</html>
+    
+    

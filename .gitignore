@@ -28,3 +28,6 @@ logs/*
 **/.settings/*
 
 .txlcn
+rebel.xml
+*.log
+rebel-remote.xml

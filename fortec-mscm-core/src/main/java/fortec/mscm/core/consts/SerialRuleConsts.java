@@ -19,4 +19,5 @@ public interface SerialRuleConsts {
 
     String ORDER_PO_CODE = "order_po_code";
 
+    String ORDER_DELIVERY_CODE = "order_delivery_code";
 }
