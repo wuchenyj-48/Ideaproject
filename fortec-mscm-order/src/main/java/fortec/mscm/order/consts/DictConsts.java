@@ -50,4 +50,10 @@ public interface DictConsts {
     int STATUS_MANUAL = 0;
 
     int STATUS_INTERFACE = 1;
+
+    /** 发货订单 - 数据来源，字典类型：order_delivery_status  */
+
+    int STATUS_DELIVERY_UNFILLED = 0;
+
+    int STATUS_DELIVERY_SENT = 1;
 }

@@ -26,11 +26,11 @@ public class PurchaseOrderItem extends DataEntity  implements Serializable {
 
     /** 订单ID */
     @NotNull(message="订单ID不能为空")
-    private Long poId;
+    private String poId;
 
     /** 商品规格ID */
     @NotNull(message="商品规格ID不能为空")
-    private Long materialSpecId;
+    private String materialSpecId;
 
     /** 商品编码 */
     private Long materialCode;

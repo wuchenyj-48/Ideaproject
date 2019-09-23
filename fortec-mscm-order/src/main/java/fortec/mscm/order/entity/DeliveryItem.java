@@ -26,23 +26,23 @@ public class DeliveryItem extends DataEntity  implements Serializable {
 
     /** 发货单ID */
     @NotNull(message="发货单ID不能为空")
-    private Long deliveryId;
+    private String deliveryId;
 
     /** 订单明细ID */
     @NotNull(message="订单明细ID不能为空")
-    private Long poItemId;
+    private String poItemId;
 
     /** 商品规格ID */
     @NotNull(message="商品规格ID不能为空")
-    private Long materialSpecId;
+    private String materialSpecId;
 
     /** 商品编码 */
-    @NotNull(message="商品编码不能为空")
-    private Long materialCode;
+//    @NotNull(message="商品编码不能为空")
+    private String materialCode;
 
     /** 商品代码 */
-    @NotBlank(message="商品代码不能为空")
-    @Length(min=1, max=20, message="商品代码长度必须介于 1 和 20 之间")
+//    @NotBlank(message="商品代码不能为空")
+//    @Length(min=1, max=20, message="商品代码长度必须介于 1 和 20 之间")
     private String materialErpCode;
 
     /** 商品名称 */
@@ -90,7 +90,7 @@ public class DeliveryItem extends DataEntity  implements Serializable {
     private String unit;
 
     /** 备注 */
-    @Length(max=100, message="备注长度必须介于 0 和 100 之间")
+//    @Length(max=100, message="备注长度必须介于 0 和 100 之间")
     private String remark;
 
 }

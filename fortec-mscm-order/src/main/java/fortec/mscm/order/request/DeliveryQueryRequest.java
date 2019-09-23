@@ -12,11 +12,19 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class DeliveryQueryRequest extends PageRequest {
 
-    /** 发货单号 */
+    /**
+     * 发货单号
+     */
     private String code;
 
-    /** 采购单号 */
+    /**
+     * 采购单号
+     */
     private String poCode;
+    /**
+     * 发货状态
+     */
+    private String status;
 
 
 }

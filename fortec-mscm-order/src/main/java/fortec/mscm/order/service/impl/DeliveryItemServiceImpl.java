@@ -56,7 +56,7 @@ public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper,
     @Override
     public List<DeliveryItem> surplusPurchaseOrder(Delivery delivery) {
         List<PurchaseOrderItem> purchaseOrderItemList = purchaseOrderItemService.list(Wrappers.<PurchaseOrderItem>query()
-                .eq(delivery.getPoId() != null, "delivery_id", delivery.getPoId())
+                .eq(delivery.getPoId() != null, "po_id", delivery.getPoId())
                 .in("delivery_status", 0, 1));
         List<DeliveryItem> deliveryItemList = new ArrayList<>();
 
@@ -65,8 +65,10 @@ public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper,
             try {
                 DeliveryItem deliveryItem = new DeliveryItem();
                 BeanUtils.copyProperties(purchaseOrderItem, deliveryItem);
-                deliveryItem.setDeliveryId(Long.valueOf(delivery.getId()))
-                        .setPoItemId(Long.valueOf(purchaseOrderItem.getId()))
+                deliveryItem.setDeliveryId(delivery.getId())
+                        .setShouldSendQty(purchaseOrderItem.getQty())
+                        .setSendedQty(purchaseOrderItem.getDeliveredQty())
+                        .setPoItemId(purchaseOrderItem.getId())
                         .setId(null);
                 deliveryItemList.add(deliveryItem);
             } catch (Exception e) {

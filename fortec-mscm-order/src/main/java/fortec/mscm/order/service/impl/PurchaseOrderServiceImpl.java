@@ -50,7 +50,9 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
 
     @Override
     public List<PurchaseOrder> list(PurchaseOrderQueryRequest request) {
-        request.setHospitalId(UserUtils.getHospitalId());
+        if(UserUtils.getUser().isHospital()) {
+            request.setHospitalId(UserUtils.getHospitalId());
+        }
         List<PurchaseOrder> list = this.list(Wrappers.<PurchaseOrder>query()
                 .eq(StringUtils.isNotBlank(request.getHospitalId()),"hospital_id",request.getHospitalId())
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())

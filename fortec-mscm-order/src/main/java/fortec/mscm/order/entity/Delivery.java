@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Delivery extends DataEntity  implements Serializable {
 
     /** 院方ID */
-    private Long hospitalId;
+    private String hospitalId;
 
     /** 院方名称 */
     private String hospitalName;
@@ -35,7 +35,7 @@ public class Delivery extends DataEntity  implements Serializable {
 
     /** 订单ID */
     @NotNull(message="订单ID不能为空")
-    private Long poId;
+    private String poId;
 
     /** 采购单号 */
     @NotBlank(message="采购单号不能为空")
@@ -43,7 +43,7 @@ public class Delivery extends DataEntity  implements Serializable {
     private String poCode;
 
     /** 供应商ID */
-    private Long supplierId;
+    private String supplierId;
 
     /** 供应商名称 */
     private String supplierName;

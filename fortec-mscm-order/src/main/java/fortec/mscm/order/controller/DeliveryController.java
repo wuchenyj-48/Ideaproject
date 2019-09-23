@@ -18,17 +18,17 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
-* 发货单 controller
-*
-* @author Yangjy
-* @version 1.0
-*/
+ * 发货单 controller
+ *
+ * @author Yangjy
+ * @version 1.0
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/deliverys")
 public class DeliveryController extends BaseController {
 
-    private final  DeliveryService deliveryService;
+    private final DeliveryService deliveryService;
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid Delivery entity) {
@@ -53,6 +53,29 @@ public class DeliveryController extends BaseController {
         List<Delivery> list = deliveryService.list(request);
         return CommonResult.ok("查询成功", list);
     }
+    /**
+     * @param id
+     * @Description: 发货
+     * @return: fortec.common.core.model.CommonResult
+     */
+    @PostMapping("/{id}/delivery")
+    public CommonResult delivery(@PathVariable("id") String id) {
+
+        boolean deliverStatusBool = deliveryService.updateDeliverStatus(id);
+        return deliverStatusBool ? CommonResult.ok("发货成功") : CommonResult.error("发货失败");
+    }
+
+    /**
+     * @param id
+     * @Description: 取消发货
+     * @return: fortec.common.core.model.CommonResult
+     */
+    @PostMapping("/{id}/cancelDelivery")
+    public CommonResult cancelDelivery(@PathVariable("id") String id) {
+
+        boolean cancelDeliverBool = deliveryService.cancelDelivery(id);
+        return cancelDeliverBool ? CommonResult.ok("取消发货成功") : CommonResult.error("取消发货失败");
+    }
 
 
     @DeleteMapping("/{id}")
@@ -62,5 +85,15 @@ public class DeliveryController extends BaseController {
     }
 
 
+    @GetMapping("/sendPage")
+    public PageResult sendPage(DeliveryQueryRequest request) {
+        IPage page = deliveryService.sendPage(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+    @GetMapping("/allDeliveryPage")
+    public PageResult allDeliveryPage(DeliveryQueryRequest request) {
+        IPage page = deliveryService.allDeliveryPage(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
 }
     
