@@ -71,15 +71,12 @@ public class PurchaseOrderItem extends DataEntity  implements Serializable {
     private Double subtotalAmount;
 
     /** 已发货数量 */
-    @NotNull(message="已发货数量不能为空")
     private Double deliveredQty;
 
     /** 已发货金额(元) */
-    @NotNull(message="已发货金额(元)不能为空")
     private Double deliveredAmount;
 
     /** 发货状态 */
-    @NotNull(message="发货状态不能为空")
     private Integer deliveryStatus;
 
     /** 数量 */
@@ -92,12 +89,9 @@ public class PurchaseOrderItem extends DataEntity  implements Serializable {
     private String unit;
 
     /** 订单单位 */
-    @NotBlank(message="订单单位不能为空")
-    @Length(min=1, max=4, message="订单单位长度必须介于 1 和 4 之间")
     private String orderUnit;
 
     /** 订单单位数量 */
-    @NotNull(message="订单单位数量不能为空")
     private Double orderQty;
 
     /** 备注 */

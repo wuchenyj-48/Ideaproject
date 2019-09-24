@@ -74,26 +74,26 @@
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
 
-                        { field: 'code', title: '订单编号', align: 'center',width:'170'},
-                        { field: 'supplierName', title: '供应商名称', align: 'center',width:'180'},
+                        { field: 'code', title: '订单编号', align: 'center',width:'160'},
+                        { field: 'supplierName', title: '供应商名称', align: 'center',width:'170'},
                         { field: 'warehouseName', title: '送货地点', align: 'center',width:'170'},
-                        { field: 'latestDeliveryDate', title: '最晚送达日期', align: 'center',width:'180'},
+                        { field: 'latestDeliveryDate', title: '最晚送达日期', align: 'center',width:'160'},
                         {
-                            field: 'isOneThingOneYard', title: '一物一码', align: 'center',width:'100',
+                            field: 'isOneThingOneYard', title: '一物一码', align: 'center',width:'90',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
                             }
                         },
                         {
-                            field: 'isConsignment', title: '寄售', align: 'center',width:'130',
+                            field: 'isConsignment', title: '寄售', align: 'center',width:'60',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
                             }
                         },
                         { field: 'totalAmount', title: '订单总金额(元)', align: 'center',width:'130'},
-                        { field: 'creator', title: '制单人 ', align: 'center',width:'180'},
-                        { field: 'gmtCreate', title: '制单时间', align: 'center',width:'180'},
-                        { field: 'gmtCreate', title: '提交时间', align: 'center',width:'180'},
+                        { field: 'creator', title: '制单人 ', align: 'center',width:'160'},
+                        { field: 'gmtCreate', title: '制单时间', align: 'center',width:'160'},
+                        { field: 'gmtCreate', title: '提交时间', align: 'center',width:'160'},
                         {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });

@@ -74,16 +74,6 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
             add(item);
         }
 
-
-
-        /*List<Object> results = this.baseMapper.selectObjs(Wrappers.<PurchaseOrderItem>query().select("sum(subtotal_amount)").eq("po_id", children[0].getPoId()));
-        if (results.size() == 0) {
-            return saveOrUpdateBatch(Lists.newArrayList(children));
-        }
-
-        PurchaseOrder po = new PurchaseOrder();
-        po.setTotalAmount(results.stream().mapToDouble(o -> ((BigDecimal)o).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue() ).sum()).setId(children[0].getPoId());
-        purchaseOrderService.updateById(po);*/
         saveOrUpdateBatch(Lists.newArrayList(children));
 
         //更新订单总金额
@@ -99,11 +89,12 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(String id) {
+        PurchaseOrderItem entity = getById(id);
+        String poId = entity.getPoId();
         removeCascadeById(id);
 
         //更新订单总金额
-        PurchaseOrderItem entity = getById(id);
-        updateTotalAmount(entity.getPoId());
+        updateTotalAmount(poId);
     }
 
     /**

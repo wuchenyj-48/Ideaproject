@@ -28,13 +28,13 @@ public class PurchaseOrderItemController extends BaseController {
     private PurchaseOrderItemService purchaseOrderItemService;
 
     @PostMapping
-    public CommonResult add(@RequestBody PurchaseOrderItem entity) {
+    public CommonResult add(@RequestBody @Valid PurchaseOrderItem entity) {
         purchaseOrderItemService.add(entity);
         return CommonResult.ok("新增成功", entity);
     }
 
     @PutMapping
-    public CommonResult update(@RequestBody PurchaseOrderItem entity) {
+    public CommonResult update(@RequestBody @Valid PurchaseOrderItem entity) {
         purchaseOrderItemService.add(entity);
         return CommonResult.ok("保存成功", entity);
     }
