@@ -4,7 +4,6 @@ package fortec.mscm.order.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.global.GlobalDictService;
 import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.StringUtils;
@@ -40,7 +39,6 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
 
     private final PurchaseOrderItemService purchaseOrderItemService;
 
-    private final GlobalDictService globalDictService;
 
     @Override
     public boolean removeCascadeById(Serializable id) {
@@ -115,9 +113,6 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
             throw new BusinessException("采购订单明细为空，不允许提交");
         }
 
-        //计算订单总金额
-
-
         //制单状态修改为待审核状态
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setStatus(STATUS_UNPASS)
@@ -152,7 +147,7 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
     public IPage<PurchaseOrder> pageForSupplier(PurchaseOrderQueryRequest request) {
         request.setSupplierId(UserUtils.getSupplierId());
         IPage page = this.page(request.getPage(), Wrappers.<PurchaseOrder>query()
-                .notIn("status","0,1")
+                .notIn("status",DictConsts.STATUS_UNSUBMIT+DictConsts.STATUS_UNPASS)
                 .eq(StringUtils.isNotBlank(request.getSupplierId()),"supplier_id",request.getSupplierId())
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getHospitalName()), "hospital_name", request.getHospitalName())

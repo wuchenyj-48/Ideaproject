@@ -81,7 +81,7 @@
                              最晚送达日期
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="latestDeliveryDate" id="latestDeliveryDate" required lay-verify="required"
+                            <input type="text" name="latestDeliveryDate" id="latestDeliveryDate" readonly required lay-verify="required"
                                    placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -158,19 +158,21 @@
                     }
                     $http.get(`/order/purchase_order_items/list?poId=${model.id}`).then(resp => {
                         layui.table.render({
+                            id:'purchase_order_item_table',
                             elem: '#purchase_order_item_table',
                             data: resp.data.data,
-                            height: 300,
+                            height: 470,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
 
-                                {field: 'materialName', title: '商品名称', align: 'center'},
-                                {field: 'materialSpec', title: '规格', align: 'center'},
+                                {field: 'materialName', title: '商品名称', align: 'center',width:270},
+                                {field: 'materialSpec', title: '规格', align: 'center',width:340},
                                 {field: 'form', title: '剂型', align: 'center'},
                                 {
                                     field: 'manufacturerName',
                                     title: '厂商名称',
-                                    align: 'center'
+                                    align: 'center',
+                                    width:250
                                 },
                                 {field: 'unit', title: '单位', align: 'center'},
                                 {field: 'price', title: '价格(元)', align: 'center'},

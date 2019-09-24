@@ -180,9 +180,10 @@
                     }
                     $http.get(`/order/purchase_order_items/list?poId=${model.id}`).then(resp => {
                         layui.table.render({
+                            id:'purchase_order_item_table',
                             elem: '#purchase_order_item_table',
                             data: resp.data.data,
-                            height: 300,
+                            height: 450,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
 
