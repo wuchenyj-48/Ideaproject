@@ -335,7 +335,7 @@
                     searchKey: 'keywords',	//搜索输入框的name值 默认keyword
                     searchPlaceholder: '采购订单搜索',	//搜索输入框的提示文字 默认关键词搜索
                     table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                        url: '/order/purchase_orders/list',
+                        url: '/order/purchase_orders/page_For_Delivery',
                         cols: [[
                             {type: 'radio'},
                             {field: 'code', title: '采购订单'}
@@ -369,7 +369,7 @@
                 form.render('radio');
 
                 // 渲染日期、时间 数据
-                layui.laydate.render({elem: "input[name='latestDeliverDate']", type: 'datetime', trigger: 'click'});
+                layui.laydate.render({elem: "input[name='latestDeliverDate']", type: 'date', trigger: 'click'});
                 layui.laydate.render({elem: "input[name='gmtDelivery']", type: 'datetime', trigger: 'click'});
                 layui.laydate.render({elem: "input[data-name='validDate']", type: 'datetime', trigger: 'click'});
                 layui.laydate.render({elem: "input[name='registrationNumber']", type: 'datetime', trigger: 'click'});
@@ -550,15 +550,30 @@
                     parent.layer.close(index)
                 })
                 $(".form-delivery").click(() => {
+                    let windowName = window.name
                     layer.confirm('确定发货吗么', function (index) {
                         $http.post(`/order/deliverys/${model.id}/delivery`).then(resp => {
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1});
-                                parent.reloadTable()
-                                $(".form-close").click()
-                            } else {
+                            if (!resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 5})
+                                return
                             }
+                            layer.msg(resp.data.msg, {icon: 1});
+                            parent.reloadTable()
+
+                            let newIndex = parent.layer.open({
+                                title: "发货单详情",
+                                type: 2,
+                                area: ['950px', '400px'],
+                                content: ['./delivery_form.html'],
+                                success(layero) {
+                                    parent.layer.close(parent.layer.getFrameIndex(windowName))
+                                    let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                                    iframeWin && iframeWin.initForm(model)
+                                }
+                            });
+                            parent.layer.full(newIndex)
+
+                            // $(".form-close").click()
                         });
 
                         return false;
