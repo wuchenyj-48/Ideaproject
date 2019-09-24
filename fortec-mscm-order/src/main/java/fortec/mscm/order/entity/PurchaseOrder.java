@@ -61,7 +61,7 @@ public class PurchaseOrder extends DataEntity  implements Serializable {
 
     /** 最晚送达日期 */
     @NotNull(message="最晚送达日期不能为空")
-    private java.util.Date latestDeliveryDate;
+    private java.util.Date gmtRequireLatestDelivery;
 
     /** 订单金额(元) */
     private Double totalAmount;
@@ -71,6 +71,9 @@ public class PurchaseOrder extends DataEntity  implements Serializable {
 
     /** 审核人 */
     private String auditorName;
+
+    /** 审核时间 */
+    private java.util.Date gmtSubmitted;
 
     /** 审核时间 */
     private java.util.Date gmtAudited;

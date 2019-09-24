@@ -1,5 +1,3 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -27,7 +25,8 @@
                                 </div>
 
                                 <div class="layui-input-inline">
-                                    <input type="hidden" type="text" name="status" placeholder="请输入订单状态 " autocomplete="off"
+                                    <input type="hidden" type="text" name="status" placeholder="请输入订单状态 "
+                                           autocomplete="off"
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
@@ -84,33 +83,40 @@
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
 
-                        { field: 'code', title: '订单编号', align: 'center',width:'170'},
-                        { field: 'supplierName', title: '供应商名称', align: 'center',width:'180'},
-                        { field: 'warehouseName', title: '送货地点', align: 'center',width:'175'},
-                        { field: 'latestDeliveryDate', title: '最晚送达日期', align: 'center',width:'180'},
+                        {field: 'code', title: '订单编号', align: 'center', width: '170'},
+                        {field: 'supplierName', title: '供应商名称', align: 'center', width: '180'},
+                        {field: 'warehouseName', title: '送货地点', align: 'center', width: '175'},
+                        {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center', width: '180'},
                         {
-                            field: 'isOneThingOneYard', title: '一物一码', align: 'center',width:'100',
+                            field: 'isOneThingOneYard', title: '一物一码', align: 'center', width: '100',
                             templet(item) {
-                                return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
+                                return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard, "否")}</div>`;
                             }
                         },
                         {
-                            field: 'isConsignment', title: '寄售', align: 'center',width:'130',
+                            field: 'isConsignment', title: '寄售', align: 'center', width: '130',
                             templet(item) {
-                                return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
+                                return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment, "否")}</div>`;
                             }
                         },
-                        { field: 'totalAmount', title: '订单总金额(元)', align: 'center',width:'130'},
-                        { field: 'creator', title: '制单人 ', align: 'center',width:'180'},
-                        { field: 'gmtCreate', title: '制单时间', align: 'center',width:'180'},
-                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                        {field: 'totalAmount', title: '订单总金额(元)', align: 'center', width: '130'},
+                        {field: 'creator', title: '制单人 ', align: 'center', width: '180'},
+                        {field: 'gmtCreate', title: '制单时间', align: 'center', width: '180'},
+                        {
+                            field: "LAY_CELL_TOOLBAR",
+                            title: '操作',
+                            templet: '#cellToolbar',
+                            width: 150,
+                            align: 'center',
+                            fixed: 'right'
+                        }
                     ]]
                 });
 
-                 // 渲染下拉框 数据
+                // 渲染下拉框 数据
                 form.render('select')
 
-                window.edit = (data,rowIndex) => {
+                window.edit = (data, rowIndex) => {
                     let index = layer.open({
                         title: "编辑界面",
                         type: 2,
@@ -124,7 +130,7 @@
                     layer.full(index)
                 }
 
-                window.deleteById = (data,rowIndex) => {
+                window.deleteById = (data, rowIndex) => {
                     layer.confirm('真的删除行么', function (index) {
 
                         $http.delete(`/order/purchase_orders/` + data.id).then(resp => {
@@ -157,13 +163,13 @@
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
-                     // 获取当前行索引
+                    // 获取当前行索引
                     let rowIndex = obj.tr[0].getAttribute("data-index")
 
                     if (obj.event === 'del') {
-                        window.deleteById(obj.data,rowIndex)
+                        window.deleteById(obj.data, rowIndex)
                     } else if (obj.event === 'edit') {
-                        window.edit(obj.data,rowIndex)
+                        window.edit(obj.data, rowIndex)
                     }
                 });
 

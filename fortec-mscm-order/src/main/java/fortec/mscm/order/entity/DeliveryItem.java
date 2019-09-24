@@ -2,6 +2,7 @@
 
 package fortec.mscm.order.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
 import lombok.Data;
@@ -9,9 +10,12 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Date;
+
 /**
 * 发货单明细实体对象
 * @author Yangjy
@@ -72,11 +76,11 @@ public class DeliveryItem extends DataEntity  implements Serializable {
 
     /** 应发数量 */
     @NotNull(message="应发数量不能为空")
-    private Double shouldSendQty;
+    private Double shouldDeliveryQty;
 
     /** 已发数量 */
     @NotNull(message="已发数量不能为空")
-    private Double sendedQty;
+    private Double deliveredQty;
 
     /** 本次实发 */
     @DecimalMin(value = "0.0")
@@ -88,6 +92,28 @@ public class DeliveryItem extends DataEntity  implements Serializable {
     /** 单位 */
     @Length(min=1, max=4, message="单位长度必须介于 1 和 4 之间")
     private String unit;
+
+    /** 批次 */
+    private String lot;
+
+    /** 生产日期 */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JSONField(format = "yyyy-MM-dd")
+    private Date productionDate;
+
+    /** 有效日期 */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JSONField(format = "yyyy-MM-dd")
+    private Date  expiredDate;
+
+    /** 灭菌日期 */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JSONField(format = "yyyy-MM-dd")
+    private Date sterilizationDate;
+
+    /** 注册证号 */
+    private String  certificateNo;
+
 
     /** 备注 */
 //    @Length(max=100, message="备注长度必须介于 0 和 100 之间")

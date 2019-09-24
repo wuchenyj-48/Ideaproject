@@ -41,7 +41,7 @@
 		<suspend_validator>false</suspend_validator>
 		<export_setting>
 			<export_ddl_setting>
-				<output_path>src\main\resources\db\erm\order.sql</output_path>
+				<output_path>src\main\resources\db\erm\settlement.sql</output_path>
 				<encoding>UTF-8</encoding>
 				<line_feed>CR+LF</line_feed>
 				<is_open_after_saved>true</is_open_after_saved>
@@ -135,7 +135,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2019-07-08 10:29:56</creation_date>
-			<updated_date>2019-09-18 15:10:05</updated_date>
+			<updated_date>2019-09-19 14:41:13</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -1203,8 +1203,48 @@
 						<decimal_size>0</decimal_size>
 					</sequence>
 				</normal_column>
+				<column_group>0</column_group>
 			</columns>
 			<indexes>
+				<inidex>
+					<full_text>false</full_text>
+					<non_unique>true</non_unique>
+					<name>idx_bill_hospital_id</name>
+					<type></type>
+					<description></description>
+					<columns>
+						<column>
+							<id>8</id>
+							<desc>true</desc>
+						</column>
+					</columns>
+				</inidex>
+				<inidex>
+					<full_text>false</full_text>
+					<non_unique>true</non_unique>
+					<name>idx_bill_supplier_id</name>
+					<type></type>
+					<description></description>
+					<columns>
+						<column>
+							<id>11</id>
+							<desc>true</desc>
+						</column>
+					</columns>
+				</inidex>
+				<inidex>
+					<full_text>false</full_text>
+					<non_unique>true</non_unique>
+					<name>idx_bill_code</name>
+					<type></type>
+					<description></description>
+					<columns>
+						<column>
+							<id>10</id>
+							<desc>true</desc>
+						</column>
+					</columns>
+				</inidex>
 			</indexes>
 			<complex_unique_key_list>
 			</complex_unique_key_list>

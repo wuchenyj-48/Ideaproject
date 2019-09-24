@@ -159,7 +159,7 @@
                 });
 
 
-                layui.$(".layui-btn").on('click', function () {
+                $(".layui-btn").on('click', function () {
                     let layevent = this.getAttribute("lay-event");
                     if (layevent == 'addNew') {
                         edit({isNew: true});

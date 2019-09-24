@@ -48,6 +48,9 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
     @Length(max=50, message="商品通用名长度必须介于 0 和 50 之间")
     private String materialTradeName;
 
+    /** 剂型 */
+    private String form;
+
     /** 价格 */
     private Double price;
 
@@ -73,6 +76,12 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
 
     /** 是否一物一码 */
     private Integer isOneThingOneYard;
+
+    /** 厂商ID */
+    private String manufactureId;
+
+    /** 厂商名称 */
+    private String manufactureName;
 
     /** 停用标志 */
     @NotNull(message="停用标志不能为空")

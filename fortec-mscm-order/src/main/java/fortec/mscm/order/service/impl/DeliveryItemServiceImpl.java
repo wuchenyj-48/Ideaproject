@@ -69,8 +69,8 @@ public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper,
                 DeliveryItem deliveryItem = new DeliveryItem();
                 BeanUtils.copyProperties(purchaseOrderItem, deliveryItem);
                 deliveryItem.setDeliveryId(delivery.getId())
-                        .setShouldSendQty(purchaseOrderItem.getQty())
-                        .setSendedQty(purchaseOrderItem.getDeliveredQty())
+                        .setShouldDeliveryQty(purchaseOrderItem.getQty())
+                        .setDeliveredQty(purchaseOrderItem.getDeliveredQty())
                         .setPoItemId(purchaseOrderItem.getId())
                         .setId(null);
                 deliveryItemList.add(deliveryItem);

@@ -95,9 +95,9 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
         // 根据发货明细,修改发货状态  数量  金额
         for (DeliveryItem item : deliveryItemList) {
             // 应发数量
-            Double shouldSendQty = item.getShouldSendQty();
+            Double shouldSendQty = item.getShouldDeliveryQty();
             // 已发数量
-            Double sendedQty = item.getSendedQty();
+            Double sendedQty = item.getDeliveredQty();
             // 本次实发数量
             Double qty = item.getQty();
 
@@ -177,8 +177,8 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
                 BeanUtils.copyProperties(purchaseOrderItem, deliveryItem);
                 deliveryItem.setDeliveryId(entity.getId())
                         .setPoItemId(purchaseOrderItem.getId())
-                        .setShouldSendQty(purchaseOrderItem.getQty())
-                        .setSendedQty(purchaseOrderItem.getDeliveredQty())
+                        .setShouldDeliveryQty(purchaseOrderItem.getQty())
+                        .setDeliveredQty(purchaseOrderItem.getDeliveredQty())
                         .setQty(purchaseOrderItem.getQty() - purchaseOrderItem.getDeliveredQty())
                         .setId(null);
                 deliveryItemList.add(deliveryItem);
@@ -220,7 +220,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
                 .eq("delivery_id", id));
         for (DeliveryItem item : deliveryItemList) {
 //            应发 - 本次实发 = 0  修改为未发货
-            if (item.getShouldSendQty().equals(item.getQty())) {
+            if (item.getShouldDeliveryQty().equals(item.getQty())) {
                 orderItem.setDeliveryStatus(DictConsts.STATUS_UNDELIVERY);
 //                否则修改为部分发货
             } else {
@@ -228,13 +228,13 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
             }
 
 //            修改发货数量     修改状态   修改金额  撤销发货操作
-            orderItem.setDeliveredQty(item.getShouldSendQty() - item.getQty())
-                    .setDeliveredAmount((item.getShouldSendQty() - item.getQty()) * item.getPrice())
+            orderItem.setDeliveredQty(item.getShouldDeliveryQty() - item.getQty())
+                    .setDeliveredAmount((item.getShouldDeliveryQty() - item.getQty()) * item.getPrice())
                     .setId(item.getPoItemId());
             purchaseOrderItemService.updateById(orderItem);
 //              把当前明细加入发货订单的,修改 已发数量,还原之前数量
             this.deliveryItemService.update(Wrappers.<DeliveryItem>update()
-                    .set("sended_qty", item.getShouldSendQty() - item.getQty())
+                    .set("sended_qty", item.getShouldDeliveryQty() - item.getQty())
                     .eq("po_item_id", item.getPoItemId())
                     .ne("delivery_id", item.getDeliveryId()));
         }

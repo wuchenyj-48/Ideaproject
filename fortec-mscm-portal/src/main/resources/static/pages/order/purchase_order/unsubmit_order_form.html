@@ -81,12 +81,12 @@
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>最晚送达日期
+                            <span class="required-star">*</span>要求送达时间
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="latestDeliveryDate" id="latestDeliveryDate" required
+                            <input type="text" name="gmtRequireLatestDelivery" id="gmtRequireLatestDelivery" required
                                    lay-verify="required"
-                                   placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
+                                   placeholder="请选择要求送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
 
@@ -306,8 +306,8 @@
                 })
 
                 laydate.render({
-                    id: 'latestDeliveryDate',
-                    elem: '#latestDeliveryDate'
+                    id: 'gmtRequireLatestDelivery',
+                    elem: '#gmtRequireLatestDelivery'
                     , min: 'new Date()'
                 });
 
@@ -316,9 +316,8 @@
 
 
                 // 渲染日期、时间 数据
-                layui.laydate.render({elem: "input[name='latestDeliveryDate']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='gmtAudited']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='gmtFirstDelivery']", type: 'datetime', trigger: 'click'});
+                layui.laydate.render({elem: "input[name='gmtRequireLatestDelivery']", type: 'datetime', trigger: 'click'});
+
 
 
                 /*** 子表管理开始 */

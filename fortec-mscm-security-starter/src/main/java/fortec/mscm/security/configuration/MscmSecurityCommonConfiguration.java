@@ -20,15 +20,18 @@ import org.springframework.core.annotation.Order;
 @Order(-100)
 public class MscmSecurityCommonConfiguration {
 
+    static {
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+        ParserConfig.getGlobalInstance().addAccept(ExtOAuthUser.class.getName());
+        ParserConfig.getGlobalInstance().addAccept("fortec.common.upms.entity");
+    }
 
     @Primary
     @Bean("mscmUserDetailsService")
-    public MscmIntegrationUserDetailsService mscmUserDetailsService( SupplierClient supplierClient, HospitalClient hospitalClient) {
-        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
-        ParserConfig.getGlobalInstance().addAccept(ExtOAuthUser.class.getName());
-        return new MscmIntegrationUserDetailsService( supplierClient, hospitalClient);
-    }
+    public MscmIntegrationUserDetailsService mscmUserDetailsService(SupplierClient supplierClient, HospitalClient hospitalClient) {
 
+        return new MscmIntegrationUserDetailsService(supplierClient, hospitalClient);
+    }
 
 
 }

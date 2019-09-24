@@ -136,7 +136,7 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$
+                let form = layui.form, $ = layui.$, layer = layui.layer
 
                 let model = {}
                 window.initForm = (formData) => {
@@ -195,7 +195,7 @@
 
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({}, data.field)
+                    data.field = $.extend({}, data.field)
                     let promise = null
                     if (model.isNew) {
                         promise = $http.post("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)
