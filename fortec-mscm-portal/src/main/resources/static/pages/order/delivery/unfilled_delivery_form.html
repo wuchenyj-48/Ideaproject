@@ -188,24 +188,19 @@
         </script>
         <script type="text/html" id="lotTpl">
             <input type="text" data-name="lot" value="{{d.lot ? d.lot : ''}}" lay-filter="lot"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
-        <script type="text/html" id="subtotalAmountTpl">
-            <input type="text" data-name="subtotalAmount" value="{{d.subtotalAmount ? d.subtotalAmount : ''}}"
-                   lay-filter="subtotalAmount"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
+
         <script type="text/html" id="expiringDateTpl">
             <input type="text" data-name="expiringDate" value="{{d.expiringDate ? d.expiringDate : ''}}"
                    lay-filter="expiringDate"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="date | required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="validDateTpl">
             <input type="text" data-name="validDate" value="{{d.validDate ? d.validDate : ''}}" lay-filter="validDate"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="sterilizationDateTpl">
@@ -237,6 +232,8 @@
         </script>
         <!-- 子表管理模板 结束  -->
 
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/jQuery.print/1.6.0/jQuery.print.min.js"></script>
         <script src="/scripts/utils/common.js"></script>
         <script>
 
@@ -253,6 +250,7 @@
                     }
                     $http.get(`/order/delivery_items/list?deliveryId=${model.id}`).then(resp => {
                         layui.table.render({
+                            id: 'delivery_item_table',
                             elem: '#delivery_item_table',
                             data: resp.data.data,
                             height: 300,
@@ -275,23 +273,28 @@
                                 },
                                 {field: 'unit', title: '单位', align: 'center'},
                                 {field: 'price', title: '单价', align: 'center'},
-                                {field: 'shouldSendQty', title: '应送', align: 'center'},
-                                {field: 'sendedQty', title: '已送', align: 'center'},
+                                {field: 'shouldSendQty', title: '应发', align: 'center'},
+                                {field: 'sendedQty', title: '已发', align: 'center'},
                                 {field: 'qty', title: '本次实发', align: 'center', templet: "#qtyTpl"},
                                 {field: 'lot', title: '批次', align: 'center', templet: "#lotTpl"},
-                                {field: 'subtotalAmount', title: '小计', align: 'center'},
-                                {field: 'expiringDate', title: '生产日期', align: 'center'},
-                                {field: 'validDate', title: '有效日期', align: 'center'},
+                                {field: 'subtotalAmount', title: '小计(元)', align: 'center'},
+                                {field: 'expiringDate', title: '生产日期', align: 'center', templet: "#expiringDateTpl"},
+                                {field: 'validDate', title: '有效日期', align: 'center', templet: "#validDateTpl"},
+                                {field: 'materialSpecId', title: '商品规格ID', hide: true, align: 'center'},
+                                {field: 'poItemId', title: '订单明细ID', hide: true, align: 'center'},
+                                {field: 'materialCode', title: '商品编码', hide: true, align: 'center'},
+                                {field: 'materialErpCode', title: '商品代码', hide: true, align: 'center'},
                                 {
                                     field: 'sterilizationDate',
                                     title: '灭菌日期',
                                     align: 'center',
-                                    templet: "sterilizationDateTpl"
+                                    templet: "#sterilizationDateTpl"
                                 },
                                 {
                                     field: 'registrationNumber',
                                     title: '注册证号',
                                     align: 'center',
+                                    templet: "#registrationNumberTpl"
                                 },
                                 {
                                     field: 'LAY_CELL_TOOLBAR',
@@ -303,6 +306,7 @@
                         });
                         $editable.watch('delivery_item_table')
                         window.renderPurchaseOrderSelect();
+                        window.renderDateTime();
                     })
                 };
 
@@ -321,14 +325,14 @@
                         $(".form-delivery").hide();
                     }
                 };
-                //渲染供应商名称
+                //渲染订单名称
                 layui.tableSelect.render({
                     elem: '#poCode',	//定义输入框input对象 必填
                     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
                     searchKey: 'keywords',	//搜索输入框的name值 默认keyword
                     searchPlaceholder: '采购订单搜索',	//搜索输入框的提示文字 默认关键词搜索
                     table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                        url: '/order/purchase_orders/list',
+                        url: '/order/purchase_orders/page_For_Delivery',
                         cols: [[
                             {type: 'radio'},
                             {field: 'code', title: '采购订单'}
@@ -362,7 +366,7 @@
                 form.render('radio');
 
                 // 渲染日期、时间 数据
-                layui.laydate.render({elem: "input[name='latestDeliverDate']", type: 'datetime', trigger: 'click'});
+                layui.laydate.render({elem: "input[name='latestDeliverDate']", type: 'date', trigger: 'click'});
                 layui.laydate.render({elem: "input[name='gmtDelivery']", type: 'datetime', trigger: 'click'});
                 layui.laydate.render({elem: "input[data-name='validDate']", type: 'datetime', trigger: 'click'});
                 layui.laydate.render({elem: "input[name='registrationNumber']", type: 'datetime', trigger: 'click'});
@@ -373,6 +377,7 @@
                     layui.table.addRow('delivery_item_table', 0, {});
                     form.render('select')
                     window.renderPurchaseOrderSelect()
+                    window.renderDateTime()
                 });
 
                 $("#deliveryItemToolbar button[lay-event='batchSave']").click(() => {
@@ -396,12 +401,36 @@
                 $("#deliveryItemToolbar button[lay-event='refresh']").click(() => {
                     window.reloadDeliveryItemTable()
                 });
+                /**
+                 *  渲染字表时间
+                 */
+                window.renderDateTime = () => {
+                    let data = layui.table.getRows('delivery_item_table')
+                    for (let i = 0; i < data.length; i++) {
+                        layui.laydate.render({
+                            elem: `[data-name='expiringDate'][data-index="${i}"]`,
+                            type: 'date',
+                            trigger: 'click'
+                        });
 
+                        layui.laydate.render({
+                            elem: `[data-name='validDate'][data-index="${i}"]`,
+                            type: 'date',
+                            trigger: 'click'
+                        });
+
+                        layui.laydate.render({
+                            elem: `[data-name='sterilizationDate'][data-index="${i}"]`,
+                            type: 'date',
+                            trigger: 'click'
+                        });
+                    }
+                }
                 /**
                  *  渲染商品规格选择框
                  */
                 window.renderPurchaseOrderSelect = () => {
-                    console.log(model)
+
                     let data = layui.table.getRows('delivery_item_table')
                     for (let i = 0; i < data.length; i++) {
                         //渲染规格
@@ -442,16 +471,9 @@
                                         tableRows = layui.table.getRows('delivery_item_table')
                                         newFlag = true
                                     }
-                                    let newData = {
-                                        id: tableRows[rowIndex].id,
-                                        materialSpecId: checkedRows[j].id,
-                                        materialId: checkedRows[j].materialId,
-                                        materialSpec: checkedRows[j].materialSpec,
-                                        materialName: checkedRows[j].materialName,
-                                        materialTradeName: checkedRows[j].materialTradeName,
-                                        price: checkedRows[j].price,
-                                        unit: checkedRows[j].unit
-                                    }
+                                    let newData = {}
+                                    $.extend(newData, checkedRows[j])
+                                    newData.id = tableRows[rowIndex].id
 
                                     // 重新渲染单行数据
                                     layui.table.renderSpecRow('delivery_item_table', rowIndex, newData)
@@ -468,18 +490,18 @@
                 // 监听子表的列工具栏
                 layui.table.on('tool(delivery_item_table)', function (obj) {
                     // 获取行索引
-                    let index = obj.tr[0].getAttribute("data-index");
-                    var data = obj.data;
+                    let rowIndex = obj.tr[0].getAttribute("data-index");
+                    let data = obj.data;
                     if (obj.event === 'newDel') {
                         // 未在数据库中存在，直接从界面移除即可
-                        layui.table.deleteRow('delivery_item_table', index);
+                        layui.table.deleteRow('delivery_item_table', rowIndex);
                         return
                     }
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/order/delivery_items/` + data.id).then(resp => {
                                 layer.msg(resp.data.msg, {icon: 1});
-                                obj.del()
+                                layui.table.deleteRow('delivery_item_table', rowIndex);
                             })
                         });
                         return
@@ -495,7 +517,6 @@
                         let promise = null;
                         if ($strings.isBlank(data.id)) {
                             promise = $http.post("/order/delivery_items/", data)
-                            $(".form-delivery").hide()
                         } else {
                             promise = $http.put("/order/delivery_items/", data)
                         }
@@ -508,6 +529,7 @@
                                 layui.table.renderSpecRow('delivery_item_table', index, {
                                     id: resp.data.data.id
                                 })
+                                window.reloadDeliveryItemTable()
                             } else {
                                 layer.msg(resp.data.msg, {icon: 5})
                             }
@@ -526,17 +548,30 @@
                     parent.layer.close(index)
                 })
                 $(".form-delivery").click(() => {
+                    let windowName = window.name
                     layer.confirm('确定发货吗么', function (index) {
                         $http.post(`/order/deliverys/${model.id}/delivery`).then(resp => {
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1});
-                                parent.reloadTable()
-                                //  明细表格
-                                initForm($.extend(model, resp.data.data))
-                                parent.layer.close(index);
-                            } else {
+                            if (!resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 5})
+                                return
                             }
+                            layer.msg(resp.data.msg, {icon: 1});
+                            parent.reloadTable()
+
+                            let newIndex = parent.layer.open({
+                                title: "发货单详情",
+                                type: 2,
+                                area: ['950px', '400px'],
+                                content: ['./delivery_form.html'],
+                                success(layero) {
+                                    parent.layer.close(parent.layer.getFrameIndex(windowName))
+                                    let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                                    iframeWin && iframeWin.initForm(model)
+                                }
+                            });
+                            parent.layer.full(newIndex)
+
+                            // $(".form-close").click()
                         });
 
                         return false;

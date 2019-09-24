@@ -63,6 +63,9 @@ public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper,
 //        采购明细添加到发货明细
         for (PurchaseOrderItem purchaseOrderItem : purchaseOrderItemList) {
             try {
+                if (purchaseOrderItem.getQty().equals(purchaseOrderItem.getDeliveredQty())) {
+                    continue;
+                }
                 DeliveryItem deliveryItem = new DeliveryItem();
                 BeanUtils.copyProperties(purchaseOrderItem, deliveryItem);
                 deliveryItem.setDeliveryId(delivery.getId())
@@ -77,6 +80,26 @@ public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper,
 
         }
         return deliveryItemList;
+    }
+
+    @Override
+    public boolean saveDeliveryItemsById(DeliveryItem entity) {
+        entity.setSubtotalAmount(entity.getQty() * entity.getPrice());
+        return this.save(entity);
+    }
+
+    @Override
+    public boolean updateDeliveryItemsById(DeliveryItem entity) {
+        entity.setSubtotalAmount(entity.getQty() * entity.getPrice());
+        return  this.updateById(entity);
+    }
+
+    @Override
+    public boolean saveOrUpdateBatchDtl(ArrayList<DeliveryItem> newArrayList) {
+        for (DeliveryItem item : newArrayList) {
+            item.setSubtotalAmount(item.getQty() * item.getPrice());
+        }
+        return this.saveOrUpdateBatch(newArrayList);
     }
 }
     

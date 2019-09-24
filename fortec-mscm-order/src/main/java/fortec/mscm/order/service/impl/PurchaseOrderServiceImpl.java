@@ -202,5 +202,26 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
         updateById(purchaseOrder);
     }
 
+
+   /**
+    *
+    * @Description: 查询未发货订单和采购订单
+    *
+    * @param request
+    * @Author: Yang.jianye
+    * @Date: 2019/9/23
+    * @return: com.baomidou.mybatisplus.core.metadata.IPage<fortec.mscm.order.entity.PurchaseOrder>
+    */
+    @Override
+    public IPage<PurchaseOrder> pageForDelivery(PurchaseOrderQueryRequest request) {
+
+        request.setSupplierId(UserUtils.getSupplierId());
+        IPage page = this.page(request.getPage(), Wrappers.<PurchaseOrder>query()
+                .eq(StringUtils.isNotBlank(request.getSupplierId()), "supplier_id", request.getSupplierId())
+                .in("delivery_status", DictConsts.STATUS_UNDELIVERY,DictConsts.STATUS_PART_DELIVERY)
+                .orderByDesc("gmt_modified")
+        );
+        return page;
+    }
 }
     

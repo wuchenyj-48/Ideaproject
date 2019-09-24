@@ -10,8 +10,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 /**
 * 发货单明细实体对象
@@ -80,6 +79,7 @@ public class DeliveryItem extends DataEntity  implements Serializable {
     private Double sendedQty;
 
     /** 本次实发 */
+    @DecimalMin(value = "0.0")
     private Double qty;
 
     /** 小计(元) */
