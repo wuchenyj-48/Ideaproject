@@ -106,7 +106,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
             }
             // 应发数量 < 可发数量
             if (shouldSendQty < sendedQty + qty) {
-                throw new BusinessException(MessageFormat.format("本次实发数量超过可发数量,应发:{0},已发:{1},本次实发:{2}", shouldSendQty, sendedQty, qty));
+                throw new BusinessException(MessageFormat.format(item.getMaterialName()+"本次实发数量超过可发数量,应发:{0},已发:{1},本次实发:{2}", shouldSendQty, sendedQty, qty));
             }
             // 应该数量=可发数量
             PurchaseOrderItem orderItem = new PurchaseOrderItem();
@@ -129,7 +129,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
 
             }
             deliveryAmount += item.getSubtotalAmount();
-
+//          将当前发货明细加入采购单的,修改他们的已发数量
             this.deliveryItemService.update(Wrappers.<DeliveryItem>update()
                     .set("sended_qty", orderItem.getDeliveredQty())
                     .eq("po_item_id", item.getPoItemId())
@@ -153,7 +153,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
         //生成单号
         String code = SerialUtils.generateCode(SerialRuleConsts.ORDER_DELIVERY_CODE);
         entity.setCode(code)
-                .setCreator(UserUtils.getUser().getUsername())
+                .setCreator(UserUtils.getUser().getId())
                 .setGmtCreate(DateUtils.now());
         // 新增发货单主表
         boolean saveCount = this.save(entity);
@@ -212,19 +212,27 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
     public boolean cancelDelivery(String id) {
         PurchaseOrderItem orderItem = new PurchaseOrderItem();
         Delivery delivery = this.getById(id);
+//        没有发货抛出异常
         if (delivery.getStatus() != 1) {
             throw new BusinessException("发货单未发货");
         }
         List<DeliveryItem> deliveryItemList = deliveryItemService.list(Wrappers.<DeliveryItem>query()
                 .eq("delivery_id", id));
         for (DeliveryItem item : deliveryItemList) {
-//            修改发货数量   应发 - 本次实发  修改状态 -> 0   修改金额
+//            应发 - 本次实发 = 0  修改为未发货
+            if (item.getShouldSendQty().equals(item.getQty())) {
+                orderItem.setDeliveryStatus(DictConsts.STATUS_UNDELIVERY);
+//                否则修改为部分发货
+            } else {
+                orderItem.setDeliveryStatus(DictConsts.STATUS_PART_DELIVERY);
+            }
+
+//            修改发货数量     修改状态   修改金额  撤销发货操作
             orderItem.setDeliveredQty(item.getShouldSendQty() - item.getQty())
-                    .setDeliveryStatus(DictConsts.STATUS_UNCONFIRM)
                     .setDeliveredAmount((item.getShouldSendQty() - item.getQty()) * item.getPrice())
                     .setId(item.getPoItemId());
             purchaseOrderItemService.updateById(orderItem);
-
+//              把当前明细加入发货订单的,修改 已发数量,还原之前数量
             this.deliveryItemService.update(Wrappers.<DeliveryItem>update()
                     .set("sended_qty", item.getShouldSendQty() - item.getQty())
                     .eq("po_item_id", item.getPoItemId())
@@ -237,7 +245,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
                 .setGmtModified(DateUtils.now())
                 .setId(id);
 
-
+//         修改主表
         return this.updateById(tmp);
     }
 

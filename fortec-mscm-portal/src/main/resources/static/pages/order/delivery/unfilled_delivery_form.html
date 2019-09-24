@@ -191,21 +191,16 @@
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
-        <script type="text/html" id="subtotalAmountTpl">
-            <input type="text" data-name="subtotalAmount" value="{{d.subtotalAmount ? d.subtotalAmount : ''}}"
-                   lay-filter="subtotalAmount"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
+
         <script type="text/html" id="expiringDateTpl">
             <input type="text" data-name="expiringDate" value="{{d.expiringDate ? d.expiringDate : ''}}"
                    lay-filter="expiringDate"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="date | required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="validDateTpl">
             <input type="text" data-name="validDate" value="{{d.validDate ? d.validDate : ''}}" lay-filter="validDate"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="sterilizationDateTpl">
@@ -255,6 +250,7 @@
                     }
                     $http.get(`/order/delivery_items/list?deliveryId=${model.id}`).then(resp => {
                         layui.table.render({
+                            id: 'delivery_item_table',
                             elem: '#delivery_item_table',
                             data: resp.data.data,
                             height: 300,
@@ -282,8 +278,8 @@
                                 {field: 'qty', title: '本次实发', align: 'center', templet: "#qtyTpl"},
                                 {field: 'lot', title: '批次', align: 'center', templet: "#lotTpl"},
                                 {field: 'subtotalAmount', title: '小计(元)', align: 'center'},
-                                {field: 'expiringDate', title: '生产日期', align: 'center'},
-                                {field: 'validDate', title: '有效日期', align: 'center'},
+                                {field: 'expiringDate', title: '生产日期', align: 'center', templet: "#expiringDateTpl"},
+                                {field: 'validDate', title: '有效日期', align: 'center', templet: "#validDateTpl"},
                                 {field: 'materialSpecId', title: '商品规格ID', hide: true, align: 'center'},
                                 {field: 'poItemId', title: '订单明细ID', hide: true, align: 'center'},
                                 {field: 'materialCode', title: '商品编码', hide: true, align: 'center'},
@@ -292,12 +288,13 @@
                                     field: 'sterilizationDate',
                                     title: '灭菌日期',
                                     align: 'center',
-                                    templet: "sterilizationDateTpl"
+                                    templet: "#sterilizationDateTpl"
                                 },
                                 {
                                     field: 'registrationNumber',
                                     title: '注册证号',
                                     align: 'center',
+                                    templet: "#registrationNumberTpl"
                                 },
                                 {
                                     field: 'LAY_CELL_TOOLBAR',
@@ -404,11 +401,26 @@
                 $("#deliveryItemToolbar button[lay-event='refresh']").click(() => {
                     window.reloadDeliveryItemTable()
                 });
+                /**
+                 *  渲染字表时间
+                 */
                 window.renderDateTime = () => {
                     let data = layui.table.getRows('delivery_item_table')
                     for (let i = 0; i < data.length; i++) {
                         layui.laydate.render({
                             elem: `[data-name='expiringDate'][data-index="${i}"]`,
+                            type: 'date',
+                            trigger: 'click'
+                        });
+
+                        layui.laydate.render({
+                            elem: `[data-name='validDate'][data-index="${i}"]`,
+                            type: 'date',
+                            trigger: 'click'
+                        });
+
+                        layui.laydate.render({
+                            elem: `[data-name='sterilizationDate'][data-index="${i}"]`,
                             type: 'date',
                             trigger: 'click'
                         });
@@ -459,21 +471,7 @@
                                         tableRows = layui.table.getRows('delivery_item_table')
                                         newFlag = true
                                     }
-                                    let newData = {
-                                        // id: tableRows[rowIndex].id,
-                                        // materialSpecId: checkedRows[j].materialSpecId,
-                                        // materialId: checkedRows[j].materialId,
-                                        // materialSpec: checkedRows[j].materialSpec,
-                                        // materialName: checkedRows[j].materialName,
-                                        // materialTradeName: checkedRows[j].materialTradeName,
-                                        // price: checkedRows[j].price,
-                                        // shouldSendQty: checkedRows[j].shouldSendQty,
-                                        // sendedQty: checkedRows[j].sendedQty,
-                                        // poItemId: checkedRows[j].poItemId,
-                                        // materialCode: checkedRows[j].materialCode,
-                                        // manufacturerName: checkedRows[j].manufacturerName,
-                                        // unit: checkedRows[j].unit
-                                    }
+                                    let newData = {}
                                     $.extend(newData, checkedRows[j])
                                     newData.id = tableRows[rowIndex].id
 

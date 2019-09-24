@@ -182,6 +182,7 @@
                     }
                     $http.get(`/order/delivery_items/list?deliveryId=${model.id}`).then(resp => {
                         layui.table.render({
+                            id: 'delivery_item_table',
                             elem: '#delivery_item_table',
                             data: resp.data.data,
                             height: 300,
@@ -197,12 +198,12 @@
                                     align: 'center',
                                 },
                                 {field: 'unit', title: '单位', align: 'center'},
-                                {field: 'price', title: '单价', align: 'center'},
-                                {field: 'shouldSendQty', title: '应送', align: 'center'},
-                                {field: 'sendedQty', title: '已送', align: 'center'},
+                                {field: 'price', title: '单价(元)', align: 'center'},
+                                {field: 'shouldSendQty', title: '应发', align: 'center'},
+                                {field: 'sendedQty', title: '已发', align: 'center'},
                                 {field: 'qty', title: '本次实发', align: 'center'},
                                 {field: 'lot', title: '批次', align: 'center'},
-                                {field: 'subtotalAmount', title: '小计'},
+                                {field: 'subtotalAmount', title: '小计(元)'},
                                 {field: 'expiringDate', title: '生产日期', align: 'center'},
                                 {field: 'validDate', title: '有效日期', align: 'center'},
                                 {

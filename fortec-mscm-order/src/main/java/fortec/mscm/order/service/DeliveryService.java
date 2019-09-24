@@ -46,6 +46,13 @@ public interface DeliveryService extends IBaseService<Delivery> {
      */
     boolean cancelDelivery(String id);
 
+    /**
+     * @param request
+     * @Description: 所有发货单查询
+     * @Author: Yang.jianye
+     * @Date: 2019/9/24
+     * @return: com.baomidou.mybatisplus.core.metadata.IPage
+     */
     IPage allDeliveryPage(DeliveryQueryRequest request);
 }
     
