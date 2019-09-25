@@ -67,13 +67,11 @@ public class Delivery extends DataEntity implements Serializable {
     /**
      * 是否寄售
      */
-    @NotNull(message = "是否寄售不能为空")
     private Integer isConsignment;
 
     /**
      * 是否一物一码
      */
-    @NotNull(message = "是否一物一码不能为空")
     private Integer isOneThingOneYard;
 
     /*** 最晚送达日期*/

@@ -205,7 +205,7 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
 
    /**
     *
-    * @Description: 查询未发货订单和采购订单
+    * @Description: 查询未发货订单,部分发货采购订单
     *
     * @param request
     * @Author: Yang.jianye

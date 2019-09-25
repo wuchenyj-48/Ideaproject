@@ -60,10 +60,16 @@ public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper,
                 .in("delivery_status", 0, 1));
         List<DeliveryItem> deliveryItemList = new ArrayList<>();
 
+        List<Object> poItemIdList = this.listObjs(Wrappers.<DeliveryItem>query()
+                .select("po_item_id")
+                .eq("delivery_id", delivery.getId()));
 //        采购明细添加到发货明细
         for (PurchaseOrderItem purchaseOrderItem : purchaseOrderItemList) {
             try {
                 if (purchaseOrderItem.getQty().equals(purchaseOrderItem.getDeliveredQty())) {
+                    continue;
+                }
+                if (poItemIdList.contains(purchaseOrderItem.getId())) {
                     continue;
                 }
                 DeliveryItem deliveryItem = new DeliveryItem();
