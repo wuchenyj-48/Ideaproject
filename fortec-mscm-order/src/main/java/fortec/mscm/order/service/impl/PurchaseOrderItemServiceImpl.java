@@ -61,7 +61,10 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         saveOrUpdate(entity);
 
         //更新订单总金额
-        updateTotalAmount(entity.getPoId());
+        Double totalAmount = totalAmount(entity.getPoId());
+        PurchaseOrder po = new PurchaseOrder();
+        po.setTotalAmount(totalAmount).setId(entity.getPoId());
+        purchaseOrderService.updateById(po);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -77,13 +80,16 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         saveOrUpdateBatch(Lists.newArrayList(children));
 
         //更新订单总金额
-        updateTotalAmount(children[0].getPoId());
+        Double totalAmount = totalAmount(children[0].getPoId());
+        PurchaseOrder po = new PurchaseOrder();
+        po.setTotalAmount(totalAmount).setId(children[0].getPoId());
+        purchaseOrderService.updateById(po);
     }
 
     @Override
     public Double totalAmount(String poId) {
-        List<PurchaseOrder> list = baseMapper.totalAmount(poId);
-        return list.isEmpty() ? 0 : list.get(0).getTotalAmount();
+        Double amount = baseMapper.totalAmount(poId);
+        return amount == null ? 0 : amount;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -94,18 +100,13 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         removeCascadeById(id);
 
         //更新订单总金额
-        updateTotalAmount(poId);
-    }
 
-    /**
-     * 更新订单总金额
-     * @param poId
-     */
-    public void updateTotalAmount(String poId){
         Double totalAmount = totalAmount(poId);
         PurchaseOrder po = new PurchaseOrder();
         po.setTotalAmount(totalAmount).setId(poId);
+
         purchaseOrderService.updateById(po);
     }
+
 }
     

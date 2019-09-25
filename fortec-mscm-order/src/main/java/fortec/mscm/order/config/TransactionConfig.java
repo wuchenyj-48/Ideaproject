@@ -36,6 +36,7 @@ public class TransactionConfig {
 
     /**
      * 本地事务配置
+     *
      * @param transactionManager
      * @return
      */
@@ -52,6 +53,7 @@ public class TransactionConfig {
 
     /**
      * 分布式事务配置 设置为LCN模式
+     *
      * @param dtxLogicWeaver
      * @return
      */
@@ -60,7 +62,7 @@ public class TransactionConfig {
     public TxLcnInterceptor txLcnInterceptor(DTXLogicWeaver dtxLogicWeaver) {
         TxLcnInterceptor txLcnInterceptor = new TxLcnInterceptor(dtxLogicWeaver);
         Properties properties = new Properties();
-        properties.setProperty(Transactions.DTX_TYPE,Transactions.LCN);
+        properties.setProperty(Transactions.DTX_TYPE, Transactions.LCN);
         properties.setProperty(Transactions.DTX_PROPAGATION, "REQUIRED");
         txLcnInterceptor.setTransactionAttributes(properties);
         return txLcnInterceptor;
@@ -76,17 +78,20 @@ public class TransactionConfig {
             Method[] declaredMethods = o.getClass().getDeclaredMethods();
 
             for (Method declaredMethod : declaredMethods) {
-                if(declaredMethod.getDeclaredAnnotation(LcnTransaction.class) != null){
+                if (declaredMethod.getDeclaredAnnotation(LcnTransaction.class) != null) {
                     beanNames.add(o.getClass().getName());
                 }
             }
         }
         BeanNameAutoProxyCreator beanNameAutoProxyCreator = new BeanNameAutoProxyCreator();
         //需要调整优先级，分布式事务在前，本地事务在后。
-        beanNameAutoProxyCreator.setInterceptorNames("txLcnInterceptor","transactionInterceptor");
+        beanNameAutoProxyCreator.setInterceptorNames("txLcnInterceptor", "transactionInterceptor");
 
-        if(beanNames.size() != 0) {
+        if (beanNames.size() != 0) {
             beanNameAutoProxyCreator.setBeanNames(beanNames.toArray(new String[0]));
+        } else {
+            beanNameAutoProxyCreator.setInterceptorNames("transactionInterceptor");
+            beanNameAutoProxyCreator.setBeanNames("*ServiceImpl");
         }
         return beanNameAutoProxyCreator;
     }

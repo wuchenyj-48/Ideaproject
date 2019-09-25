@@ -157,7 +157,7 @@
 
         <script type="text/html" id="qtyTpl">
             <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
 
@@ -316,8 +316,11 @@
 
 
                 // 渲染日期、时间 数据
-                layui.laydate.render({elem: "input[name='gmtRequireLatestDelivery']", type: 'datetime', trigger: 'click'});
-
+                layui.laydate.render({
+                    elem: "input[name='gmtRequireLatestDelivery']",
+                    type: 'datetime',
+                    trigger: 'click'
+                });
 
 
                 /*** 子表管理开始 */
@@ -365,7 +368,7 @@
                     for (let i = 0; i < data.length; i++) {
                         //渲染规格
                         layui.tableSelect.render({
-                            id: `materialSpecItemSelect${i}` ,
+                            id: `materialSpecItemSelect${i}`,
                             elem: `[data-name='itemSelect'][data-index='${i}']`,	//定义输入框input对象 必填
                             checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
                             searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
@@ -384,7 +387,6 @@
 
                                 // 表格所有数据
                                 let tableRows = layui.table.getRows('purchase_order_item_table')
-
                                 // 当前选中数据
                                 let checkedRows = data.data
 
@@ -397,15 +399,15 @@
                                         tableRows = layui.table.getRows('purchase_order_item_table')
                                         newFlag = true
                                     }
-
                                     let newData = {}
                                     $.extend(newData, checkedRows[j])
                                     $.extend(newData, {
                                         poId: model.id,
-                                        manufacturerName: "山东冠龙医疗用品有限公司",
-                                        materialErpCode: "123456789",
+                                        subtotalAmount: null,
+                                        qty: null,
+                                        id: tableRows[rowIndex].id ? tableRows[rowIndex].id : null
                                     })
-
+                                    console.log(newData)
                                     // 重新渲染单行数据
                                     layui.table.renderSpecRow('purchase_order_item_table', rowIndex, newData)
                                 }
@@ -434,6 +436,7 @@
                             $http.delete(`/order/purchase_order_items/` + data.id).then(resp => {
                                 layer.msg(resp.data.msg, {icon: 1})
                                 layui.table.deleteRow('purchase_order_item_table', rowIndex)
+                                window.renderItemSelect()
                             })
                         });
                         return
@@ -505,6 +508,9 @@
                 $(document).on('input propertychange', "input[data-name='qty']", function () {
                     let index = this.getAttribute("data-index")
                     let row = layui.table.getRows('purchase_order_item_table')[index]
+                    if (!row.price && !Number.isInteger(this.value)) {
+                        return
+                    }
                     let subtotalAmount = Number(row.price) * Number(this.value)
                     layui.table.renderSpecRow('purchase_order_item_table', index, {
                         subtotalAmount: subtotalAmount,
