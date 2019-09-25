@@ -27,6 +27,7 @@
                 <input type="hidden" name="supplierId" class="layui-input"/>
                 <input type="hidden" name="hospitalName" class="layui-input"/>
                 <input type="hidden" name="hospitalId" class="layui-input"/>
+                <input type="hidden" name="warehouseId" class="layui-input"/>
                 <input type="hidden" name="supplierName" class="layui-input"/>
                 <input type="hidden" name="deliveryAmount" class="layui-input"/>
                 <input type="hidden" name="status" VALUE="0" class="layui-input"/>
@@ -75,7 +76,16 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            采购仓库
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="warehouseName" readonly lay-verify=""
+                                   placeholder=""
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -87,6 +97,10 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             发货金额(元)
@@ -97,10 +111,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -120,6 +130,11 @@
                                    placeholder="请选择最早送达日期" autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             最晚送达日期
@@ -140,10 +155,7 @@
 
                         </div>
                     </div>
-
                 </div>
-
-
                 <div class="block"></div>
                 <div class="layui-row ">
                     <div class="layui-form-item">
@@ -217,7 +229,8 @@
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="expiredDateTpl">
-            <input type="text" data-name="expiredDate" value="{{d.expiredDate ? d.expiredDate : ''}}" lay-filter="expiredDate"
+            <input type="text" data-name="expiredDate" value="{{d.expiredDate ? d.expiredDate : ''}}"
+                   lay-filter="expiredDate"
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"
                    class="layui-input custom-input"/>
         </script>
@@ -296,7 +309,12 @@
                                 {field: 'qty', title: '本次实发', align: 'center', templet: "#qtyTpl"},
                                 {field: 'lot', title: '批次', align: 'center', templet: "#lotTpl"},
                                 {field: 'subtotalAmount', title: '小计(元)', align: 'center'},
-                                {field: 'productionDate', title: '生产日期', align: 'center', templet: "#productionDateTpl"},
+                                {
+                                    field: 'productionDate',
+                                    title: '生产日期',
+                                    align: 'center',
+                                    templet: "#productionDateTpl"
+                                },
                                 {field: 'expiredDate', title: '过期日期', align: 'center', templet: "#expiredDateTpl"},
                                 {field: 'materialSpecId', title: '商品规格ID', hide: true, align: 'center'},
                                 {field: 'poItemId', title: '订单明细ID', hide: true, align: 'center'},
@@ -363,15 +381,16 @@
                         tmp.poId = selectedRow.id;
                         tmp.orderAmount = selectedRow.totalAmount;
                         tmp.deliveryAmount = selectedRow.totalAmount;
-                        tmp.isConsignment = selectedRow.isConsignment ;
+                        tmp.isConsignment = selectedRow.isConsignment;
                         tmp.isOneThingOneYard = selectedRow.isOneThingOneYard;
                         tmp.poCode = selectedRow.code;
                         tmp.gmtRequireLatestDelivery = selectedRow.gmtRequireLatestDelivery;
+                        tmp.warehouseId = selectedRow.warehouseId;
                         tmp.hospitalId = selectedRow.hospitalId;
                         tmp.hospitalName = selectedRow.hospitalName;
                         tmp.supplierId = selectedRow.supplierId;
                         tmp.supplierName = selectedRow.supplierName;
-                        tmp.supplierName = selectedRow.warehouseName;
+                        tmp.warehouseName = selectedRow.warehouseName;
                         form.val("editForm", tmp);
 
                         $.extend(model, tmp)
@@ -387,7 +406,11 @@
 
                 // 渲染日期、时间 数据
                 layui.laydate.render({elem: "input[name='gmtExceptedLatestDelivery']", type: 'date', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='gmtExceptedEarliestDelivery']", type: 'date', trigger: 'click'});
+                layui.laydate.render({
+                    elem: "input[name='gmtExceptedEarliestDelivery']",
+                    type: 'date',
+                    trigger: 'click'
+                });
                 layui.laydate.render({elem: "input[name='gmtExceptedLatestDelivery']", type: 'date', trigger: 'click'});
 
 
@@ -430,8 +453,8 @@
                             elem: `[data-name='productionDate'][data-index="${i}"]`,
                             type: 'date',
                             trigger: 'click',
-                            done(value){
-                                table.renderSpecRow('delivery_item_table', i , {
+                            done(value) {
+                                table.renderSpecRow('delivery_item_table', i, {
                                     id: table.getRows('delivery_item_table')[i].id,
                                     productionDate: value
                                 })

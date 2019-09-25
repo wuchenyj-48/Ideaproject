@@ -27,9 +27,9 @@
                 <input type="hidden" name="supplierId" class="layui-input"/>
                 <input type="hidden" name="hospitalName" class="layui-input"/>
                 <input type="hidden" name="hospitalId" class="layui-input"/>
+                <input type="hidden" name="warehouseId" class="layui-input"/>
                 <input type="hidden" name="supplierName" class="layui-input"/>
                 <input type="hidden" name="deliveryAmount" class="layui-input"/>
-                <input type="hidden" name="status" VALUE="0" class="layui-input"/>
 
 
                 <div class="layui-row layui-col-space5 layui-form-item">
@@ -70,12 +70,21 @@
                             采购单号
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="poCode" id="poCode" readonly lay-verify=""
+                            <input type="text" name="poCode" id="poCode" required lay-verify="required"
                                    placeholder="请输入采购单号"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            采购仓库
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="warehouseName" readonly lay-verify=""
+                                   placeholder=""
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -87,6 +96,10 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             发货金额(元)
@@ -97,17 +110,36 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            要求送达日期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtRequireLatestDelivery" readonly lay-verify=""
+                                   placeholder="" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            最早送达日期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtExceptedEarliestDelivery" required lay-verify="required"
+                                   placeholder="请选择最早送达日期" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
                 </div>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-
-
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             最晚送达日期
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="latestDeliverDate" readonly lay-verify=""
+                            <input type="text" name="gmtExceptedLatestDelivery" required lay-verify="required"
                                    placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -117,12 +149,11 @@
                         </label>
                         <div class="layui-input-block">
                             <input type="checkbox" name="isOneThingOneYard" title="一物一码" lay-skin="primary" disabled>
-                            <input type="checkbox" name="isConsignment" title="购销" lay-skin="primary" disabled>
+                            <input type="checkbox" name="isConsignment" title="是否寄售" lay-skin="primary" disabled>
 
 
                         </div>
                     </div>
-
                 </div>
 
 

@@ -131,7 +131,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
             deliveryAmount += item.getSubtotalAmount();
 //          将当前发货明细加入采购单的,修改他们的已发数量
             this.deliveryItemService.update(Wrappers.<DeliveryItem>update()
-                    .set("sended_qty", orderItem.getDeliveredQty())
+                    .set("delivered_qty", orderItem.getDeliveredQty())
                     .eq("po_item_id", item.getPoItemId())
                     .ne("delivery_id", item.getDeliveryId()));
         }
@@ -234,7 +234,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
             purchaseOrderItemService.updateById(orderItem);
 //              把当前明细加入发货订单的,修改 已发数量,还原之前数量
             this.deliveryItemService.update(Wrappers.<DeliveryItem>update()
-                    .set("sended_qty", item.getShouldDeliveryQty() - item.getQty())
+                    .set("delivered_qty", item.getShouldDeliveryQty() - item.getQty())
                     .eq("po_item_id", item.getPoItemId())
                     .ne("delivery_id", item.getDeliveryId()));
         }
