@@ -104,6 +104,7 @@ public class DeliveryItem extends DataEntity  implements Serializable {
     /** 有效日期 */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JSONField(format = "yyyy-MM-dd")
+    @Past(message = "有效日期不能早于当前时间")
     private Date  expiredDate;
 
     /** 灭菌日期 */

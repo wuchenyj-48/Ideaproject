@@ -355,7 +355,7 @@
 
                 /*** 子表管理结束 */
                 $(".form-print").click(() => {
-
+                    $("#app").jqprint();
                 });
 
                 $(".form-reset").click(() => {
@@ -382,6 +382,10 @@
                         return false;
                     })
                 })
+
+
+
+
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     data.field = layui.$.extend({}, data.field);

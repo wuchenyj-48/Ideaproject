@@ -153,6 +153,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
         //生成单号
         String code = SerialUtils.generateCode(SerialRuleConsts.ORDER_DELIVERY_CODE);
         entity.setCode(code)
+                .setStatus(DictConsts.STATUS_DELIVERY_UNFILLED)
                 .setCreator(UserUtils.getUser().getId())
                 .setGmtCreate(DateUtils.now());
         // 新增发货单主表
