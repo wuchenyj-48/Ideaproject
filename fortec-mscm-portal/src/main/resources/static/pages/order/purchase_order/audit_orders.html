@@ -77,7 +77,7 @@
                         { field: 'code', title: '订单编号', align: 'center',width:'160'},
                         { field: 'supplierName', title: '供应商名称', align: 'center',width:'170'},
                         { field: 'warehouseName', title: '送货地点', align: 'center',width:'170'},
-                        { field: 'latestDeliveryDate', title: '最晚送达日期', align: 'center',width:'160'},
+                        {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center', width: '170'},
                         {
                             field: 'isOneThingOneYard', title: '一物一码', align: 'center',width:'90',
                             templet(item) {
@@ -91,7 +91,7 @@
                             }
                         },
                         { field: 'totalAmount', title: '订单总金额(元)', align: 'center',width:'130'},
-                        { field: 'creator', title: '制单人 ', align: 'center',width:'160'},
+                        { field: 'creator', title: '制单人 ', align: 'center',width:'140'},
                         { field: 'gmtCreate', title: '制单时间', align: 'center',width:'160'},
                         { field: 'gmtCreate', title: '提交时间', align: 'center',width:'160'},
                         {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}

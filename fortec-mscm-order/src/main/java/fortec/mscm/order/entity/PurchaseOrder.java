@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+
 /**
 * 采购订单实体对象
 * @author chenchen
@@ -59,8 +60,8 @@ public class PurchaseOrder extends DataEntity  implements Serializable {
     @NotNull(message="是否一物一码不能为空")
     private Integer isOneThingOneYard;
 
-    /** 最晚送达日期 */
-    @NotNull(message="最晚送达日期不能为空")
+    /** 要求送达日期 */
+    @NotNull(message="要求送达日期不能为空")
     private java.util.Date gmtRequireLatestDelivery;
 
     /** 订单金额(元) */
@@ -72,7 +73,7 @@ public class PurchaseOrder extends DataEntity  implements Serializable {
     /** 审核人 */
     private String auditorName;
 
-    /** 审核时间 */
+    /** 提交时间 */
     private java.util.Date gmtSubmitted;
 
     /** 审核时间 */

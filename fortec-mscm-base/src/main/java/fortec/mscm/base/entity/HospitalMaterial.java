@@ -78,10 +78,13 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
     private Integer isOneThingOneYard;
 
     /** 厂商ID */
-    private String manufactureId;
+    private String manufacturerId;
 
     /** 厂商名称 */
-    private String manufactureName;
+    private String manufacturerName;
+
+    /** 供方ERP代码 */
+    private String materialErpCode;
 
     /** 停用标志 */
     @NotNull(message="停用标志不能为空")
