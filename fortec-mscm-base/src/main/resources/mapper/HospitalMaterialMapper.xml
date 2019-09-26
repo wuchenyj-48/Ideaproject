@@ -33,7 +33,7 @@
     <select id="pageByKeyword" resultType="fortec.mscm.base.entity.HospitalMaterial">
         select
         hm.*,
-        ms.material_spec as material_spec,m.material_erp_code as material_erp_code
+        ms.material_spec as material_spec
         from
         hospital_material hm
         inner join material_spec ms on hm.material_spec_id = ms.id

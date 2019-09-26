@@ -19,6 +19,7 @@ import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,6 +35,7 @@ import static fortec.mscm.order.consts.DictConsts.STATUS_UNPASS;
  */
 @Slf4j
 @AllArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 @Service
 public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMapper, PurchaseOrder> implements PurchaseOrderService {
 

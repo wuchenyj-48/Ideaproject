@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -28,7 +27,7 @@ import java.util.Properties;
  * @CreateDate: 2019/7/19 9:41
  * @Version: 1.0
  */
-@Configuration
+//@Configuration
 @EnableTransactionManagement
 @EnableDistributedTransaction
 public class TransactionConfig {

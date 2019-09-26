@@ -52,6 +52,10 @@ spring:
   redis:
     host: demo-mscm.forten-tech.com
     port: 6379
+    lettuce:
+      pool:
+        time-between-eviction-runs: 1800
+
   rabbitmq:
     host: demo-mscm.forten-tech.com
     port: 5672

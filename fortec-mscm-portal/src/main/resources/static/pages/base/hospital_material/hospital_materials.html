@@ -86,11 +86,11 @@
                         {field: 'miniumOrderUnit', title: '最小订单单位', align: 'center'},
                         {field: 'miniumOrderQty', title: '最小订单单位数量', align: 'center'},
                         {field: 'unit', title: '单位', align: 'center'},
-                        {field: 'isConsignment', title: '是否寄售', align: 'center', templet(item) {
+                        {field: 'isConsignment', title: '寄售', align: 'center', templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
                             }
                         },
-                        {field: 'isOneThingOneYard', title: '是否一物一码', align: 'center',templet(item) {
+                        {field: 'isOneThingOneYard', title: '一物一码', align: 'center',templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
                             }
                         },

@@ -4,14 +4,15 @@ package fortec.mscm.order.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
+import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.mscm.order.consts.DictConsts;
 import fortec.mscm.order.entity.PurchaseOrder;
 import fortec.mscm.order.entity.PurchaseOrderItem;
 import fortec.mscm.order.mapper.PurchaseOrderItemMapper;
+import fortec.mscm.order.mapper.PurchaseOrderMapper;
 import fortec.mscm.order.request.PurchaseOrderItemQueryRequest;
 import fortec.mscm.order.service.PurchaseOrderItemService;
-import fortec.mscm.order.service.PurchaseOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ import java.util.List;
 public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderItemMapper, PurchaseOrderItem> implements PurchaseOrderItemService {
 
     @Autowired
-    private PurchaseOrderService purchaseOrderService;
+    private PurchaseOrderMapper purchaseOrderMapper;
 
     @Override
     public List<PurchaseOrderItem> list(PurchaseOrderItemQueryRequest request) {
@@ -61,7 +62,12 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         saveOrUpdate(entity);
 
         //更新订单总金额
-        updateTotalAmount(entity.getPoId());
+        Double totalAmount = totalAmount(entity.getPoId());
+        PurchaseOrder po = new PurchaseOrder();
+        po.setTotalAmount(totalAmount).setId(entity.getPoId());
+        purchaseOrderMapper.updateById(po);
+
+        throw new BusinessException("test");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -77,13 +83,16 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         saveOrUpdateBatch(Lists.newArrayList(children));
 
         //更新订单总金额
-        updateTotalAmount(children[0].getPoId());
+        Double totalAmount = totalAmount(children[0].getPoId());
+        PurchaseOrder po = new PurchaseOrder();
+        po.setTotalAmount(totalAmount).setId(children[0].getPoId());
+        purchaseOrderMapper.updateById(po);
     }
 
     @Override
     public Double totalAmount(String poId) {
-        List<PurchaseOrder> list = baseMapper.totalAmount(poId);
-        return list.isEmpty() ? 0 : list.get(0).getTotalAmount();
+        Double amount = baseMapper.totalAmount(poId);
+        return amount == null ? 0 : amount;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -94,18 +103,13 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         removeCascadeById(id);
 
         //更新订单总金额
-        updateTotalAmount(poId);
-    }
 
-    /**
-     * 更新订单总金额
-     * @param poId
-     */
-    public void updateTotalAmount(String poId){
         Double totalAmount = totalAmount(poId);
         PurchaseOrder po = new PurchaseOrder();
         po.setTotalAmount(totalAmount).setId(poId);
-        purchaseOrderService.updateById(po);
+
+        purchaseOrderMapper.updateById(po);
     }
+
 }
     
