@@ -42,7 +42,16 @@ public interface PurchaseOrderItemService extends IBaseService<PurchaseOrderItem
      */
     Double totalAmount(String poId);
 
+    /**
+     * 删除一条订单明细
+     * @param id
+     */
     void delete(String id);
 
+    /**
+     * 修改一条订单明细
+     * @param entity
+     */
+    void update(PurchaseOrderItem entity);
 }
     

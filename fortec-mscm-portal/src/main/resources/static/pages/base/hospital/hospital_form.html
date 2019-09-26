@@ -196,7 +196,7 @@
                     if ($strings.isBlank(model.id)) {
                         return
                     }
-                    $http.get(`/base/hospital_locations/list?hospitalId=${model.id}`).then(resp => {
+                    $http.get(`/base/hospital_warehouses/list?hospitalId=${model.id}`).then(resp => {
                         layui.table.render({
                             elem: '#hospital_location_table',
                             data: resp.data.data,
@@ -257,7 +257,7 @@
                         }
 
                         rows.forEach(o => o.hospitalId = model.id)
-                        $http.put("/base/hospital_locations/batch_save", rows).then(resp => {
+                        $http.put("/base/hospital_warehouses/batch_save", rows).then(resp => {
                             if (resp.data.success) {
                                 layui.layer.msg(resp.data.msg, {icon: 1})
                                 window.reloadHospitalLocationTable()
@@ -285,7 +285,7 @@
                     }
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
-                            $http.delete(`/base/hospital_locations/` + data.id).then(resp => {
+                            $http.delete(`/base/hospital_warehouses/` + data.id).then(resp => {
                                 window.reloadHospitalLocationTable()
                                 layer.msg(resp.data.msg, {icon: 1})
                             })
@@ -302,9 +302,9 @@
                         data.hospitalId = model.id
                         let promise = null
                         if ($strings.isBlank(data.id)) {
-                            promise = $http.post("/base/hospital_locations/", data)
+                            promise = $http.post("/base/hospital_warehouses/", data)
                         } else {
-                            promise = $http.put("/base/hospital_locations/", data)
+                            promise = $http.put("/base/hospital_warehouses/", data)
                         }
 
                         promise.then(resp => {

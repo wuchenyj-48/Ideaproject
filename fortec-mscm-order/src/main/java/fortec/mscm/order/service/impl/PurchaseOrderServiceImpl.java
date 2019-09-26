@@ -95,7 +95,7 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
                 .setSource(DictConsts.STATUS_MANUAL)
                 .setHospitalId(UserUtils.getHospitalId())
                 .setHospitalName(UserUtils.getHospital().getName());
-        return saveOrUpdate(entity);
+        return saveCascadeById(entity);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
     public IPage<PurchaseOrder> pageForSupplier(PurchaseOrderQueryRequest request) {
         request.setSupplierId(UserUtils.getSupplierId());
         IPage page = this.page(request.getPage(), Wrappers.<PurchaseOrder>query()
-                .notIn("status",DictConsts.STATUS_UNSUBMIT+DictConsts.STATUS_UNPASS)
+                .notIn("status",DictConsts.STATUS_UNSUBMIT ,DictConsts.STATUS_UNPASS)
                 .eq(StringUtils.isNotBlank(request.getSupplierId()),"supplier_id",request.getSupplierId())
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getHospitalName()), "hospital_name", request.getHospitalName())

@@ -24,7 +24,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping("/hospital_locations")
+@RequestMapping("/hospital_warehouses")
 public class HospitalWarehouseController extends BaseController {
 
     private HospitalWarehouseService hospitalWarehouseService;

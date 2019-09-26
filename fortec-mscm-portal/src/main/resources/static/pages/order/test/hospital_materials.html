@@ -23,6 +23,10 @@
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
+                                    <input type="text" name="price" placeholder="请输入价格" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-input-inline">
                                     <select name="inactive">
                                         <option value="">请选择停用标志</option>
                                     </select>
@@ -65,11 +69,12 @@
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
-                    title: '医院商品信息',
+                    title: 'HospitalMaterial信息',
                     height: 'full-160',
                     url: '/base/hospital_materials/page',
                     page: {limit: 30},
                     cols: [[ //表头
+                        {type: type},
                         {type: 'numbers', align: 'center', fixed: 'left'},
                         {field: 'hospitalName', title: '医院名称', align: 'center'},
                         {field: 'materialTradeName', title: '商品通用名称', align: 'center'},
