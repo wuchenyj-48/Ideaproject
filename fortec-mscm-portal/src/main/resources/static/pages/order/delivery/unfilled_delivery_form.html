@@ -275,7 +275,6 @@
                 // 加载子表表格
                 window.reloadDeliveryItemTable = () => {
                     if ($strings.isBlank(model.id)) {
-
                         return
                     }
                     $http.get(`/order/delivery_items/list?deliveryId=${model.id}`).then(resp => {
@@ -406,7 +405,6 @@
                 form.render('radio');
 
                 // 渲染日期、时间 数据
-                layui.laydate.render({elem: "input[name='gmtExceptedLatestDelivery']", type: 'date', trigger: 'click'});
                 layui.laydate.render({
                     elem: "input[name='gmtExceptedEarliestDelivery']",
                     type: 'date',
@@ -435,9 +433,7 @@
                                 window.reloadDeliveryItemTable()
                                 parent.reloadTable();
 
-
                                 form.val("editForm", {"deliveryAmount": rows.map(o => o.subtotalAmount).reduce((prev, curr) => prev + curr)})
-
                             } else {
                                 layui.layer.msg(resp.data.msg, {icon: 5})
                             }
@@ -470,7 +466,6 @@
                         elem: `[data-name$='Date']`,
                         type: 'date',
                         trigger: 'click',
-                        
                     });
 
                 }
@@ -524,7 +519,6 @@
                         // 未在数据库中存在，直接从界面移除即可
                         layui.table.deleteRow('delivery_item_table', rowIndex)
                         renderDateTime()
-                        // renderPurchaseOrderSelect()
                         return
                     }
                     if (obj.event === 'del') {
@@ -533,7 +527,6 @@
                                 layer.msg(resp.data.msg, {icon: 1});
                                 layui.table.deleteRow('delivery_item_table', rowIndex);
                                 renderDateTime()
-                                // renderPurchaseOrderSelect()
                             })
                         });
                         return
@@ -581,7 +574,7 @@
                 })
                 $(".form-delivery").click(() => {
                     let windowName = window.name
-                    layer.confirm('确定发货吗么', function (index) {
+                    layer.confirm('确定发货吗', function (index) {
                         $http.post(`/order/deliverys/${model.id}/delivery`).then(resp => {
                             if (!resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 5})
@@ -602,8 +595,6 @@
                                 }
                             });
                             parent.layer.full(newIndex)
-
-                            // $(".form-close").click()
                         });
 
                         return false;

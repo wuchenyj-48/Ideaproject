@@ -181,7 +181,6 @@
 
                             ]]
                         });
-                        $editable.watch('purchase_order_item_table')
                     })
                 }
 
@@ -201,26 +200,8 @@
 
                 }
 
-                // 渲染下拉框 数据
-                form.render('select')
-
-                // 渲染单选框/多选框 数据
-                //默认选中
-
-                // 渲染日期、时间 数据
-
-                layui.laydate.render({elem: "input[name='gmtAudited']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='gmtFirstDelivery']", type: 'datetime', trigger: 'click'});
 
 
-                /*** 子表管理开始 */
-
-                /*** 子表管理结束 */
-
-                $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
-                })
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
@@ -248,7 +229,7 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadAllJs(["/lib/tableSelect.js","/scripts/utils/editable.js"], mainFunction)
+                loadAllJs(["/lib/tableSelect.js"], mainFunction)
             })
 
         </script>

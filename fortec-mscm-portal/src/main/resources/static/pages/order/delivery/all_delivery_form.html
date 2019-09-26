@@ -178,47 +178,12 @@
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-                        <div id="deliveryItemToolbar">
-                            <!--                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"-->
-                            <!--                                    lay-event="addNewLine">-->
-                            <!--                                <i class="layui-icon layui-icon-add-1"></i> 增行-->
-                            <!--                            </button>-->
-                            <!--                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">-->
-                            <!--                                <i class="layui-icon layui-icon-save"></i> 批量保存-->
-                            <!--                            </button>-->
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
-                                <i class="layui-icon layui-icon-refresh"></i> 刷新
-                            </button>
-                        </div>
                         <div class="row-edit-table" id="delivery_item_table" lay-filter="delivery_item_table"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 子表管理模板 开始  -->
-        <!--        <script type="text/html" id="currentPurchaseOrderSelectTpl">-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-normal" data-name="currentPurchaseOrderSelect"-->
-        <!--               lay-filter="currentPurchaseOrderSelect"-->
-        <!--               data-index="{{d.LAY_TABLE_INDEX}}" title="选择"><i-->
-        <!--                    class="fas fa-search"></i></a>-->
-        <!--        </script>-->
-
-
-        <!--        <script type="text/html" id="deliveryItemCellToolbar">-->
-        <!--            {{#  if($strings.isBlank(d.id)){ }}-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i-->
-        <!--                    class="fas fa-check"></i></a>-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i-->
-        <!--                    class="far fa-trash-alt"></i></a>-->
-        <!--            {{#  } else { }}-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i-->
-        <!--                    class="fas fa-save"></i></a>-->
-        <!--            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i-->
-        <!--                    class="far fa-trash-alt"></i></a>-->
-        <!--            {{#  } }}-->
-        <!--        </script>-->
-        <!-- 子表管理模板 结束  -->
 
         <script src="/scripts/utils/common.js"></script>
         <script>
@@ -241,13 +206,7 @@
                             height: 300,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                // {
-                                //     field: 'currentPurchaseOrderSelect',
-                                //     title: '选择',
-                                //     align: 'center',
-                                //     templet: "#currentPurchaseOrderSelectTpl",
-                                //     width: 60
-                                // },
+
                                 {field: 'materialName', title: '商品名称', align: 'center'},
                                 {field: 'materialSpec', title: '规格', align: 'center'},
                                 {field: 'form', title: '剂型', align: 'center'},
@@ -276,16 +235,8 @@
                                     title: '注册证号',
                                     align: 'center',
                                 }
-                                // {
-                                //     field: 'LAY_CELL_TOOLBAR',
-                                //     title: '操作',
-                                //     align: 'center',
-                                //     templet: "#deliveryItemCellToolbar"
-                                // },
                             ]]
                         });
-                        $editable.watch('delivery_item_table')
-                        window.renderPurchaseOrderSelect();
                     })
                 };
 
@@ -294,261 +245,20 @@
                     let data = $.extend({}, formData);
                     form.val("editForm", data);
                     model = data;
-                    if ($strings.isNotBlank(model.id)) {
-                        $(".form-reset").hide();
-                        $(".child-tab").show();
-                        window.reloadDeliveryItemTable && window.reloadDeliveryItemTable()
-                    } else {
-                        $(".child-tab").hide()
-                    }
+                    $(".child-tab").show();
+                    window.reloadDeliveryItemTable && window.reloadDeliveryItemTable()
+
                 };
-                // //渲染供应商名称
-                // layui.tableSelect.render({
-                //     elem: '#poCode',	//定义输入框input对象 必填
-                //     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                //     searchKey: 'keywords',	//搜索输入框的name值 默认keyword
-                //     searchPlaceholder: '采购订单搜索',	//搜索输入框的提示文字 默认关键词搜索
-                //     table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                //         url: '/order/purchase_orders/list',
-                //         cols: [[
-                //             {type: 'radio'},
-                //             {field: 'code', title: '采购订单'}
-                //         ]]
-                //     },
-                //     done(elem, data) {
-                //         let selectedRow = data.data[0];
-                //         console.log(selectedRow);
-                //         let tmp = {};
-                //         tmp.poId = selectedRow.id;
-                //         tmp.orderAmount = selectedRow.totalAmount;
-                //         tmp.deliveryAmount = selectedRow.totalAmount;
-                //         tmp.isConsignment = selectedRow.isConsignment === 1;
-                //         tmp.isOneThingOneYard = selectedRow.isOneThingOneYard === 1;
-                //         tmp.poCode = selectedRow.code;
-                //         tmp.hospitalId = selectedRow.hospitalId;
-                //         tmp.hospitalName = selectedRow.hospitalName;
-                //         tmp.supplierId = selectedRow.supplierId;
-                //         tmp.supplierName = selectedRow.supplierName;
-                //         form.val("editForm", tmp);
-                //
-                //         $.extend(model, tmp)
-                //
-                //
-                //     }
-                // });
-                // 渲染下拉框 数据
-                form.render('select');
 
-                // 渲染单选框/多选框 数据
-                form.render('radio');
-
-                // 渲染日期、时间 数据
-                // layui.laydate.render({elem: "input[name='gmtRequireLatestDelivery']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='gmtDelivery']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='expiringDate']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='registrationNumber']", type: 'datetime', trigger: 'click'});
-
-
-                /*** 子表管理开始 */
-                $("#deliveryItemToolbar button[lay-event='addNewLine']").click(() => {
-                    layui.table.addRow('delivery_item_table', 0, {});
-                    form.render('select')
-                    window.renderPurchaseOrderSelect()
-                });
-
-                $("#deliveryItemToolbar button[lay-event='batchSave']").click(() => {
-                    $editable.validateAllRows('delivery_item_table', (valid, errors) => {
-                        if (!valid) {
-                            return
-                        }
-                        let rows = layui.table.getRows('delivery_item_table');
-                        rows.forEach(o => o.deliveryId = model.id);
-                        $http.put("/order/delivery_items/batch_save", rows).then(resp => {
-                            if (resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 1});
-                                window.reloadDeliveryItemTable()
-                            } else {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
-                            }
-                        })
-                    })
-                });
-
-                $("#deliveryItemToolbar button[lay-event='refresh']").click(() => {
-                    window.reloadDeliveryItemTable()
-                });
-
-                /**
-                 *  TODO:渲染商品规格选择框
-                 */
-                window.renderPurchaseOrderSelect = () => {
-                    console.log(model)
-                    let data = layui.table.getRows('delivery_item_table')
-                    for (let i = 0; i < data.length; i++) {
-                        //渲染规格
-                        layui.tableSelect.render({
-                            elem: `[data-name='currentPurchaseOrderSelect'][data-index='${i}']`,	//定义输入框input对象 必填
-                            checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                            searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
-                            table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                                url: '/order/delivery_items/surplusOrder',
-                                cols: [[
-                                    {type: 'checkbox'},
-                                    {field: 'materialSpec', title: '规格'},
-                                    {field: 'materialName', title: '品名'},
-                                    {field: 'materialTradeName', title: '商品名'},
-                                    {field: 'price', title: '价格'},
-                                    {field: 'unit', title: '单位'},
-                                ]],
-                                where: {
-                                    poId: model.poId
-                                }
-                            },
-                            done(elem, data) {
-                                // 当前点击行
-                                let startIndex = parseInt(elem[0].getAttribute("data-index"))
-
-                                // 表格所有数据
-                                let tableRows = layui.table.getRows('delivery_item_table')
-
-                                // 当前选中数据
-                                let checkedRows = data.data
-
-                                let newFlag = false
-                                for (let j = 0; j < checkedRows.length; j++) {
-                                    let rowIndex = startIndex + j
-
-                                    if (rowIndex > tableRows.length - 1) {
-                                        layui.table.addRow('delivery_item_table', tableRows.length, {})
-                                        tableRows = layui.table.getRows('delivery_item_table')
-                                        newFlag = true
-                                    }
-                                    let newData = {
-                                        id: tableRows[rowIndex].id,
-                                        materialSpecId: checkedRows[j].id,
-                                        materialId: checkedRows[j].materialId,
-                                        materialSpec: checkedRows[j].materialSpec,
-                                        materialName: checkedRows[j].materialName,
-                                        materialTradeName: checkedRows[j].materialTradeName,
-                                        price: checkedRows[j].price,
-                                        unit: checkedRows[j].unit
-                                    }
-
-                                    // 重新渲染单行数据
-                                    layui.table.renderSpecRow('delivery_item_table', rowIndex, newData)
-                                }
-                                if (newFlag) {
-                                    // 当有新增行数时，表格会被重载，需重新进行选择渲染
-                                    window.renderPurchaseOrderSelect()
-                                }
-                            }
-                        })
-                    }
-                }
-
-                // 监听子表的列工具栏
-                layui.table.on('tool(delivery_item_table)', function (obj) {
-                    // 获取行索引
-                    let index = obj.tr[0].getAttribute("data-index");
-                    var data = obj.data;
-                    if (obj.event === 'newDel') {
-                        // 未在数据库中存在，直接从界面移除即可
-                        layui.table.deleteRow('delivery_item_table', index);
-                        return
-                    }
-                    if (obj.event === 'del') {
-                        layer.confirm('真的删除行么', function (index) {
-                            $http.delete(`/order/delivery_items/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1});
-                                obj.del()
-                            })
-                        });
-                        return
-                    }
-
-                    // 校验并保存
-                    $editable.validateSingleRow("delivery_item_table", index, (valid, error) => {
-                        if (!valid) {
-                            return
-                        }
-                        let data = layui.table.cache.delivery_item_table[index];
-                        data.deliveryId = model.id;
-                        let promise = null;
-                        if ($strings.isBlank(data.id)) {
-                            promise = $http.post("/order/delivery_items/", data)
-                        } else {
-                            promise = $http.put("/order/delivery_items/", data)
-                        }
-
-                        promise.then(resp => {
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1});
-
-                                // 重新渲染单行数据
-                                layui.table.renderSpecRow('delivery_item_table', index, {
-                                    id: resp.data.data.id
-                                })
-                            } else {
-                                layer.msg(resp.data.msg, {icon: 5})
-                            }
-                        })
-                    })
-                });
-
-                /*** 子表管理结束 */
-
-                $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
-                })
                 $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name)
+                    let index = parent.layer.getFrameIndex(window.name)
                     parent.layer.close(index)
                 })
-                $(".form-delivery").click(() => {
-                    layer.confirm('确定取消发货吗么', function () {
-                        $http.post(`/order/deliverys/${model.id}/cancelDelivery`).then(resp => {
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1});
-                                parent.reloadTable()
-                                //  明细表格
-                                initForm($.extend(model, resp.data.data))
-                            } else {
-                                layer.msg(resp.data.msg, {icon: 5})
-                            }
-                        });
 
-                        return false;
-                    })
-                })
-                // 监听表单提交事件
-                form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({}, data.field);
-                    let promise = null;
-                    console.log(data);
-                    if ($strings.isBlank(data.field.id)) {
-                        promise = $http.post("/order/deliverys", data.field)
-                    } else {
-                        promise = $http.put("/order/deliverys", data.field)
-                    }
-
-                    promise.then(resp => {
-                        if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1});
-                            parent.reloadTable()
-                            //  明细表格
-                            initForm($.extend(model, resp.data.data))
-                        } else {
-                            layer.msg(resp.data.msg, {icon: 5})
-                        }
-                    });
-
-                    return false;
-                });
             };
 
             extendParentScriptsAndStyles(() => {
-                loadAllJs(["/lib/tableSelect.js", "/lib/treeSelect.js", "/scripts/utils/editable.js"], mainFunction)
+                mainFunction()
             })
 
         </script>
