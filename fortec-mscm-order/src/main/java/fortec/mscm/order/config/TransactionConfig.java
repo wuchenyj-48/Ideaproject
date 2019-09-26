@@ -5,21 +5,14 @@ import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import com.codingapi.txlcn.tc.aspect.interceptor.TxLcnInterceptor;
 import com.codingapi.txlcn.tc.aspect.weave.DTXLogicWeaver;
 import com.codingapi.txlcn.tc.config.EnableDistributedTransaction;
-import com.google.common.collect.Lists;
-import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
+import org.springframework.aop.Advisor;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.core.Ordered;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -28,7 +21,7 @@ import java.util.Properties;
  * @CreateDate: 2019/7/19 9:41
  * @Version: 1.0
  */
-@Configuration
+//@Configuration
 @EnableTransactionManagement
 @EnableDistributedTransaction
 public class TransactionConfig {
@@ -40,16 +33,16 @@ public class TransactionConfig {
      * @param transactionManager
      * @return
      */
-    @Bean
-    @ConditionalOnMissingBean
-    public TransactionInterceptor transactionInterceptor(PlatformTransactionManager transactionManager) {
-        Properties properties = new Properties();
-        properties.setProperty("*", "PROPAGATION_REQUIRED,-Throwable");
-        TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
-        transactionInterceptor.setTransactionManager(transactionManager);
-        transactionInterceptor.setTransactionAttributes(properties);
-        return transactionInterceptor;
-    }
+//    @Bean
+//    @ConditionalOnMissingBean
+//    public TransactionInterceptor transactionInterceptor(PlatformTransactionManager transactionManager) {
+//        Properties properties = new Properties();
+//        properties.setProperty("*", "PROPAGATION_REQUIRED,-Throwable");
+//        TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
+//        transactionInterceptor.setTransactionManager(transactionManager);
+//        transactionInterceptor.setTransactionAttributes(properties);
+//        return transactionInterceptor;
+//    }
 
     /**
      * 分布式事务配置 设置为LCN模式
@@ -68,31 +61,43 @@ public class TransactionConfig {
         return txLcnInterceptor;
     }
 
+//    @Bean
+//    public BeanNameAutoProxyCreator beanNameAutoProxyCreator(ApplicationContext applicationContext) {
+//
+//        Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(Service.class);
+//        List<String> beanNames = Lists.newArrayList();
+//        for (String beanName : beansWithAnnotation.keySet()) {
+//            Object o = beansWithAnnotation.get(beanName);
+//            Method[] declaredMethods = o.getClass().getDeclaredMethods();
+//
+//            for (Method declaredMethod : declaredMethods) {
+//                if (declaredMethod.getDeclaredAnnotation(LcnTransaction.class) != null) {
+//                    beanNames.add(o.getClass().getName());
+//                }
+//            }
+//        }
+//        BeanNameAutoProxyCreator beanNameAutoProxyCreator = new BeanNameAutoProxyCreator();
+//        //需要调整优先级，分布式事务在前，本地事务在后。
+//        beanNameAutoProxyCreator.setInterceptorNames("txLcnInterceptor", "transactionInterceptor");
+//        beanNameAutoProxyCreator.setProxyTargetClass(true);
+//        Map<String, MethodInterceptor> beansOfType = applicationContext.getBeansOfType(MethodInterceptor.class);
+//        if (beanNames.size() != 0) {
+//            beanNameAutoProxyCreator.setBeanNames(beanNames.toArray(new String[0]));
+//        } else {
+//            beanNameAutoProxyCreator.setInterceptorNames("transactionInterceptor");
+//            beanNameAutoProxyCreator.setBeanNames(PurchaseOrderItemServiceImpl.class.getName());
+//        }
+//        return beanNameAutoProxyCreator;
+//    }
+
+
     @Bean
-    public BeanNameAutoProxyCreator beanNameAutoProxyCreator(ApplicationContext applicationContext) {
-
-        Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(Service.class);
-        List<String> beanNames = Lists.newArrayList();
-        for (String beanName : beansWithAnnotation.keySet()) {
-            Object o = beansWithAnnotation.get(beanName);
-            Method[] declaredMethods = o.getClass().getDeclaredMethods();
-
-            for (Method declaredMethod : declaredMethods) {
-                if (declaredMethod.getDeclaredAnnotation(LcnTransaction.class) != null) {
-                    beanNames.add(o.getClass().getName());
-                }
-            }
-        }
-        BeanNameAutoProxyCreator beanNameAutoProxyCreator = new BeanNameAutoProxyCreator();
-        //需要调整优先级，分布式事务在前，本地事务在后。
-        beanNameAutoProxyCreator.setInterceptorNames("txLcnInterceptor", "transactionInterceptor");
-
-        if (beanNames.size() != 0) {
-            beanNameAutoProxyCreator.setBeanNames(beanNames.toArray(new String[0]));
-        } else {
-            beanNameAutoProxyCreator.setInterceptorNames("transactionInterceptor");
-            beanNameAutoProxyCreator.setBeanNames("*ServiceImpl");
-        }
-        return beanNameAutoProxyCreator;
+    public Advisor lcnAdvisor(TxLcnInterceptor txLcnInterceptor) {
+        AnnotationMatchingPointcut pointcut = new AnnotationMatchingPointcut(LcnTransaction.class);
+        DefaultPointcutAdvisor defaultPointcutAdvisor = new DefaultPointcutAdvisor(pointcut, txLcnInterceptor);
+        // 本地事务之前
+        defaultPointcutAdvisor.setOrder(Ordered.LOWEST_PRECEDENCE - 1);
+        return defaultPointcutAdvisor;
     }
+
 }

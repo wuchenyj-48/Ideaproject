@@ -4,14 +4,15 @@ package fortec.mscm.order.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
+import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.mscm.order.consts.DictConsts;
 import fortec.mscm.order.entity.PurchaseOrder;
 import fortec.mscm.order.entity.PurchaseOrderItem;
 import fortec.mscm.order.mapper.PurchaseOrderItemMapper;
+import fortec.mscm.order.mapper.PurchaseOrderMapper;
 import fortec.mscm.order.request.PurchaseOrderItemQueryRequest;
 import fortec.mscm.order.service.PurchaseOrderItemService;
-import fortec.mscm.order.service.PurchaseOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ import java.util.List;
 public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderItemMapper, PurchaseOrderItem> implements PurchaseOrderItemService {
 
     @Autowired
-    private PurchaseOrderService purchaseOrderService;
+    private PurchaseOrderMapper purchaseOrderMapper;
 
     @Override
     public List<PurchaseOrderItem> list(PurchaseOrderItemQueryRequest request) {
@@ -64,7 +65,9 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         Double totalAmount = totalAmount(entity.getPoId());
         PurchaseOrder po = new PurchaseOrder();
         po.setTotalAmount(totalAmount).setId(entity.getPoId());
-        purchaseOrderService.updateById(po);
+        purchaseOrderMapper.updateById(po);
+
+        throw new BusinessException("test");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -83,7 +86,7 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         Double totalAmount = totalAmount(children[0].getPoId());
         PurchaseOrder po = new PurchaseOrder();
         po.setTotalAmount(totalAmount).setId(children[0].getPoId());
-        purchaseOrderService.updateById(po);
+        purchaseOrderMapper.updateById(po);
     }
 
     @Override
@@ -105,7 +108,7 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         PurchaseOrder po = new PurchaseOrder();
         po.setTotalAmount(totalAmount).setId(poId);
 
-        purchaseOrderService.updateById(po);
+        purchaseOrderMapper.updateById(po);
     }
 
 }

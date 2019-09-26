@@ -12,7 +12,7 @@
 	<category_index>0</category_index>
 	<zoom>1.0</zoom>
 	<x>77</x>
-	<y>1722</y>
+	<y>1791</y>
 	<default_color>
 		<r>128</r>
 		<g>128</g>
@@ -135,7 +135,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2019-07-08 10:29:56</creation_date>
-			<updated_date>2019-09-24 14:24:14</updated_date>
+			<updated_date>2019-09-24 16:15:01</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -1346,13 +1346,13 @@
 			<decimal>null</decimal>
 			<array>false</array>
 			<array_dimension>null</array_dimension>
-			<unsigned>true</unsigned>
+			<unsigned>false</unsigned>
 			<zerofill>false</zerofill>
 			<binary>false</binary>
 			<args></args>
 			<char_semantics>false</char_semantics>
 			<description></description>
-			<logical_name>生产厂商</logical_name>
+			<logical_name>厂商ID</logical_name>
 			<physical_name>manufacturer_id</physical_name>
 			<type>bigint(n)</type>
 		</word>
@@ -1362,14 +1362,14 @@
 			<decimal>null</decimal>
 			<array>false</array>
 			<array_dimension>null</array_dimension>
-			<unsigned>false</unsigned>
+			<unsigned>true</unsigned>
 			<zerofill>false</zerofill>
 			<binary>false</binary>
 			<args></args>
 			<char_semantics>false</char_semantics>
 			<description></description>
-			<logical_name>厂商ID</logical_name>
-			<physical_name>manufacture_id</physical_name>
+			<logical_name>生产厂商</logical_name>
+			<physical_name>manufacturer_id</physical_name>
 			<type>bigint(n)</type>
 		</word>
 		<word>
@@ -1385,7 +1385,7 @@
 			<char_semantics>false</char_semantics>
 			<description></description>
 			<logical_name>厂商名称</logical_name>
-			<physical_name>manufacture_name</physical_name>
+			<physical_name>manufacturer_name</physical_name>
 			<type>varchar(n)</type>
 		</word>
 		<word>
@@ -4311,7 +4311,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>73</word_id>
+					<word_id>74</word_id>
 					<id>59</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -7100,7 +7100,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>74</word_id>
+					<word_id>73</word_id>
 					<id>134</id>
 					<description></description>
 					<unique_key_name></unique_key_name>

@@ -8,6 +8,7 @@ import fortec.mscm.security.annotation.EnableMscmSecurityCommonConfig;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @Description: 程序配置信息
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan({"fortec.mscm.base.service", "fortec.mscm.base.controller", "fortec.mscm.base.listener"})
+@EnableTransactionManagement
 @EnableDiscoveryClient
 @EnableMscmFeignConfig
 @EnableDefaultCoreConfig
