@@ -74,7 +74,7 @@ public class DeliveryItemController extends BaseController {
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
     }
 
-    @GetMapping("/surplusOrder")
+    @GetMapping("/surplus_order_item")
     public CommonResult surplusPurchaseOrder(Delivery delivery) {
         List<DeliveryItem> deliveryItemList = deliveryItemService.surplusPurchaseOrder(delivery);
         return CommonResult.ok("查询成功", deliveryItemList);

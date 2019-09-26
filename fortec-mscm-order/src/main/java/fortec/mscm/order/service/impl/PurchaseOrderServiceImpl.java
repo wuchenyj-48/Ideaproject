@@ -220,7 +220,8 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
         request.setSupplierId(UserUtils.getSupplierId());
         IPage page = this.page(request.getPage(), Wrappers.<PurchaseOrder>query()
                 .eq(StringUtils.isNotBlank(request.getSupplierId()), "supplier_id", request.getSupplierId())
-                .in("delivery_status", DictConsts.STATUS_UNDELIVERY,DictConsts.STATUS_PART_DELIVERY)
+                .eq("status", DictConsts.STATUS_SUPPLIER_UNDELIVERY)
+                .eq("is_closed",DictConsts.STATUS_NO)
                 .orderByDesc("gmt_modified")
         );
         return page;

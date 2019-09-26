@@ -161,7 +161,7 @@
                 <div class="layui-row ">
                     <div class="layui-form-item no-print">
                         <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-normal " type="button">打印条码</button>
+                            <button class="layui-btn layui-btn-normal form-barCode" type="button">打印条码</button>
                             <button class="layui-btn layui-btn-normal form-print" type="button">打印发货单</button>
                             <button class="layui-btn layui-btn-danger form-delivery" type="button">取消发货</button>
                             <!--                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>-->
@@ -173,7 +173,7 @@
 
 
             <div class="layui-tab child-tab" id="deliveryDtl">
-                <ul class="layui-tab-title no-print" >
+                <ul class="layui-tab-title no-print">
                     <li class="layui-this">发货单明细管理</li>
                 </ul>
                 <div class="layui-tab-content">
@@ -197,8 +197,6 @@
         </div>
 
         <script src="/scripts/utils/common.js"></script>
-        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdn.bootcss.com/jQuery.print/1.6.0/jQuery.print.min.js"></script>
         <script>
 
             let mainFunction = () => {
@@ -256,6 +254,7 @@
                 };
 
                 window.initForm = (formData) => {
+                    console.log(model)
                     // 必须要重新创建对象，原因未知
                     let data = $.extend({}, formData);
                     form.val("editForm", data);
@@ -266,6 +265,11 @@
                         window.reloadDeliveryItemTable && window.reloadDeliveryItemTable()
                     } else {
                         $(".child-tab").hide()
+                    }
+                    if (model.isOneThingOneYard === 1) {
+                        $(".form-barCode").show();
+                    } else {
+                        $(".form-barCode").hide();
                     }
                 };
 
@@ -367,8 +371,8 @@
                     parent.layer.close(index)
                 })
                 $(".form-delivery").click(() => {
-                    layer.confirm('确定取消发货吗么', function () {
-                        $http.post(`/order/deliverys/${model.id}/cancelDelivery`).then(resp => {
+                    layer.confirm('确定取消发货吗?', function () {
+                        $http.post(`/order/deliverys/${model.id}/cancel_delivery`).then(resp => {
                             if (resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 1});
                                 parent.reloadTable()
@@ -382,8 +386,22 @@
                         return false;
                     })
                 })
+                $(".form-barCode").click(() => {
+                    layer.confirm('确定打印条码吗?', function () {
+                        $http.post(`/order/delivery_item_sns/${model.id}`).then(resp => {
+                            if (resp.data.success) {
+                                layer.msg(resp.data.msg, {icon: 1});
+                                parent.reloadTable()
+                                //  明细表格
+                                $(".form-close").click()
+                            } else {
+                                layer.msg(resp.data.msg, {icon: 5})
+                            }
+                        });
 
-
+                        return false;
+                    })
+                });
 
 
                 // 监听表单提交事件
