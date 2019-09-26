@@ -5,11 +5,11 @@
         <title>编辑表单</title>
         <style>
             .custom-form .layui-form-label {
-                width: 120px
+                width: 130px
             }
 
             .custom-form .layui-input-block {
-                margin-left: 150px
+                margin-left: 160px
             }
 
             .row-edit-table + .layui-table-view .layui-table-body .layui-table-cell {
@@ -114,7 +114,7 @@
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
-                            要求送达日期
+                            要求送达时间
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="gmtRequireLatestDelivery" readonly lay-verify=""
@@ -123,11 +123,11 @@
                     </div>
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
-                            最早送达日期
+                            预计最早送达时间
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="gmtExceptedEarliestDelivery" required lay-verify="required"
-                                   placeholder="请选择最早送达日期" autocomplete="off" class="layui-input">
+                                   placeholder="请选择预计最早送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
 
@@ -137,11 +137,11 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
-                            最晚送达日期
+                            预计最晚送达时间
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="gmtExceptedLatestDelivery" required lay-verify="required"
-                                   placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
+                                   placeholder="请选择预计最晚送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-col-xs4">
@@ -284,13 +284,14 @@
                             data: resp.data.data,
                             height: 300,
                             cols: [[
-                                {type: 'numbers', align: 'center'},
+                                {type: 'numbers', align: 'center', fixed: "left"},
                                 {
                                     field: 'currentPurchaseOrderSelect',
                                     title: '选择',
                                     align: 'center',
                                     templet: "#currentPurchaseOrderSelectTpl",
-                                    width: 60
+                                    width: 60,
+                                    fixed: "left"
                                 },
                                 {field: 'materialName', title: '商品名称', align: 'center'},
                                 {field: 'materialSpec', title: '规格', align: 'center'},
@@ -302,18 +303,25 @@
                                 },
                                 {field: 'unit', title: '单位', align: 'center'},
                                 {field: 'price', title: '单价', align: 'center'},
-                                {field: 'shouldSendQty', title: '应发', align: 'center'},
-                                {field: 'sendedQty', title: '已发', align: 'center'},
+                                {field: 'shouldDeliveryQty', title: '应发', align: 'center'},
+                                {field: 'deliveredQty', title: '已发', align: 'center'},
                                 {field: 'qty', title: '本次实发', align: 'center', templet: "#qtyTpl"},
                                 {field: 'lot', title: '批次', align: 'center', templet: "#lotTpl"},
                                 {field: 'subtotalAmount', title: '小计(元)', align: 'center'},
                                 {
                                     field: 'productionDate',
                                     title: '生产日期',
+                                    width: 110,
                                     align: 'center',
                                     templet: "#productionDateTpl"
                                 },
-                                {field: 'expiredDate', title: '过期日期', align: 'center', templet: "#expiredDateTpl"},
+                                {
+                                    field: 'expiredDate',
+                                    title: '过期日期',
+                                    align: 'center',
+                                    width: 110,
+                                    templet: "#expiredDateTpl"
+                                },
                                 {field: 'materialSpecId', title: '商品规格ID', hide: true, align: 'center'},
                                 {field: 'poItemId', title: '订单明细ID', hide: true, align: 'center'},
                                 {field: 'materialCode', title: '商品编码', hide: true, align: 'center'},
@@ -322,6 +330,7 @@
                                     field: 'sterilizationDate',
                                     title: '灭菌日期',
                                     align: 'center',
+                                    width: 110,
                                     templet: "#sterilizationDateTpl"
                                 },
                                 {
@@ -334,7 +343,8 @@
                                     field: 'LAY_CELL_TOOLBAR',
                                     title: '操作',
                                     align: 'center',
-                                    templet: "#deliveryItemCellToolbar"
+                                    templet: "#deliveryItemCellToolbar",
+                                    fixed: "right"
                                 },
                             ]]
                         });
@@ -407,10 +417,10 @@
                 // 渲染日期、时间 数据
                 layui.laydate.render({
                     elem: "input[name='gmtExceptedEarliestDelivery']",
-                    type: 'date',
+                    type: 'datetime',
                     trigger: 'click'
                 });
-                layui.laydate.render({elem: "input[name='gmtExceptedLatestDelivery']", type: 'date', trigger: 'click'});
+                layui.laydate.render({elem: "input[name='gmtExceptedLatestDelivery']", type: 'datetime', trigger: 'click'});
 
 
                 /*** 子表管理开始 */

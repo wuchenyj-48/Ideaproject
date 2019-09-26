@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>用户选择</title>
+        <title>订单明细选择</title>
     </head>
     <body>
         <div class="layui-fluid">
@@ -47,7 +47,7 @@
                     table.render({
                         id: "listTable",
                         elem: '#listTable',
-                        title: '用户信息',
+                        title: '订单明细',
                         height: 'full-80',
                         url: '/order/delivery_items/surplus_order_item',
                         where: whereModel,
@@ -60,7 +60,6 @@
                         },
                         cols: [[
                             allowMultiple ? {type: 'checkbox'} : {type: "radio"},
-                            {type: 'checkbox'},
                             {field: 'materialSpec', title: '规格'},
                             {field: 'materialName', title: '品名'},
                             {field: 'shouldDeliveryQty', title: '应发'},
