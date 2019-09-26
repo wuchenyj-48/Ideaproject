@@ -35,7 +35,7 @@ public class PurchaseOrderItemController extends BaseController {
 
     @PutMapping
     public CommonResult update(@RequestBody @Valid PurchaseOrderItem entity) {
-        purchaseOrderItemService.add(entity);
+        purchaseOrderItemService.update(entity);
         return CommonResult.ok("保存成功", entity);
     }
 

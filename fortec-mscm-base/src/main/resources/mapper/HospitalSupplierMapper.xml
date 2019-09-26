@@ -11,7 +11,7 @@
         inner join hospital h on hs.hospital_id = h.id
         inner join supplier s on hs.supplier_id = s.id
         <where>
-            <if test="request.hospitalId != null and request.hospitalName != ''">
+            <if test="request.hospitalId != null and request.hospitalId != ''">
                 and hs.hospital_id = #{request.hospitalId}
             </if>
             <if test="request.supplierId != null and request.supplierId != ''">

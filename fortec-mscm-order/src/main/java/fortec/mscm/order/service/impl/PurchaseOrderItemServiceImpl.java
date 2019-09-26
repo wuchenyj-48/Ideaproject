@@ -4,7 +4,6 @@ package fortec.mscm.order.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
-import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.mscm.order.consts.DictConsts;
 import fortec.mscm.order.entity.PurchaseOrder;
@@ -66,8 +65,6 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         PurchaseOrder po = new PurchaseOrder();
         po.setTotalAmount(totalAmount).setId(entity.getPoId());
         purchaseOrderMapper.updateById(po);
-
-        throw new BusinessException("test");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -108,6 +105,16 @@ public class PurchaseOrderItemServiceImpl extends BaseServiceImpl<PurchaseOrderI
         PurchaseOrder po = new PurchaseOrder();
         po.setTotalAmount(totalAmount).setId(poId);
 
+        purchaseOrderMapper.updateById(po);
+    }
+
+    @Override
+    public void update(PurchaseOrderItem entity) {
+        updateCascadeById(entity);
+        //更新订单总金额
+        Double totalAmount = totalAmount(entity.getPoId());
+        PurchaseOrder po = new PurchaseOrder();
+        po.setTotalAmount(totalAmount).setId(entity.getPoId());
         purchaseOrderMapper.updateById(po);
     }
 

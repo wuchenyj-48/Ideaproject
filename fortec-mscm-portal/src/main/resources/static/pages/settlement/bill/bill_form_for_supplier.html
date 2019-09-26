@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form custom-form"  id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="supplierId" class="layui-input"/>
+                <input type="hidden" name="materialSpecId" class="layui-input"/>
+
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            记帐单号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="code" readonly lay-verify="" placeholder="自动生成"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            供应商名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="supplierName" readonly id="supplierName" required
+                                   lay-verify="required" placeholder="请输入供应商名称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            科室名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="deptName"  readonly lay-verify="" placeholder="请输入科室名称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            记账日期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtCreate" required readonly lay-verify="required" placeholder="请选择记账日期"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            记账金额(元)
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="totalAmount" readonly required lay-verify="required"
+                                   placeholder="请输入记账金额(元)"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            记账单状态
+                        </label>
+                        <div class="layui-input-block" >
+                            <select name="status" disabled>
+                                <option value="">请选择账单状态</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space5 layui-form-item">
+
+                        <div class="layui-col-xs4">
+                            <label class="layui-form-label ">
+
+                            </label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="isOneThingOneYard" id="isOneThingOneYard" title="一物一码"
+                                       lay-skin="primary" value="1">
+                                <input type="checkbox" name="isConsignment" id="isConsignment" title="寄售" lay-skin="primary"
+                                       value="1">
+
+                            </div>
+                        </div>
+
+                </div>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="layui-tab child-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">记账单明细管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="row-edit-table" id="bill_item_table" lay-filter="bill_item_table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 子表管理模板 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$, table = layui.table, layer = layui.layer
+
+                let model = {}
+
+                // 加载子表表格
+                window.reloadBillItemTable = () => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    $http.get(`/settlement/bill_items/list?billId=${model.id}`).then(resp => {
+                        table.render({
+                            id: "bill_item_table",
+                            elem: '#bill_item_table',
+                            data: resp.data.data,
+                            height: 450,
+                            cols: [[
+                                {type: 'numbers', align: 'center'},
+                                {field: 'materialName', title: '品名', align: 'center', width: 270},
+                                {field: 'materialSpec', title: '规格', align: 'center', width: 330},
+                                {field: 'form', title: '剂型', align: 'center'},
+                                {
+                                    field: 'manufacturerName',
+                                    title: '生产厂商',
+                                    align: 'center',
+                                    width: 250
+                                },
+                                {field: 'lot', title: '批次', align: 'center'},
+                                {field: 'unit', title: '单位', align: 'center'},
+                                {field: 'qty', title: '数量', align: 'center'},
+                                {field: 'price', title: '价格(元)', align: 'center'},
+                                {
+                                    field: 'subtotalAmount',
+                                    title: '小计(元)',
+                                    align: 'center'
+                                },
+                            ]]
+                        });
+                        $editable.watch('bill_item_table')
+                    })
+                }
+
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    let data = $.extend({}, formData)
+                    form.val("editForm", data)
+                    model = data
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        $(".child-tab").show()
+
+                        $("#supplierName").attr("disabled", true)
+                        $("#isOneThingOneYard").attr("disabled", true)
+                        $("#isConsignment").attr("disabled", true)
+
+                        window.reloadBillItemTable && window.reloadBillItemTable()
+                    } else {
+                        $(".child-tab").hide()
+                    }
+                }
+
+                // 渲染下拉框 数据
+                // 渲染下拉框 数据
+                $global.getDictDataList('settlement_bill_status').forEach(o => {
+                    $("select[name='status']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                form.render('radio')
+
+                // 渲染日期、时间 数据
+
+
+                /*** 子表管理开始 */
+
+                /*** 子表管理结束 */
+
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(["/lib/tableSelect.js", "/scripts/utils/editable.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

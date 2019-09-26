@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.settlement.mapper.BillItemMapper">
+    <select id="totalAmount" resultType="java.lang.Double">
+        select
+        sum(subtotal_amount) as total_amount
+        from bill_item bi
+        where bi.bill_id = #{billId}
+    </select>
+</mapper>

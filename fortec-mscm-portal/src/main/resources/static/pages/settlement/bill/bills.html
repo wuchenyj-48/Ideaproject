@@ -4,23 +4,23 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>采购订单管理</title>
+        <title>记账单管理</title>
     </head>
     <body>
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">待确认订单管理</div>
+                        <div class="layui-card-header">记账单管理</div>
                         <div class="layui-card-body">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
+                                <i class="layui-icon layui-icon-add-1"></i> 新增
+                            </button>
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
-                                    <input type="text" name="code" placeholder="请输入订单编号" autocomplete="off"
-                                           class="layui-input">
-                                </div>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="hospitalName" placeholder="请输入医院名称" autocomplete="off"
-                                           class="layui-input">
+                                    <select name="status">
+                                        <option value="">请选择账单状态</option>
+                                    </select>
                                 </div>
                                 <div class="layui-input-inline">
                                 </div>
@@ -40,10 +40,17 @@
             </div>
         </div>
 
-
+        <script type="text/html" id="headToolbar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
+                    <i class="layui-icon layui-icon-add-1"></i>添加
+                </button>
+            </div>
+        </script>
 
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -55,53 +62,49 @@
 
                 window.reloadTable = () => {
                     table.reload('listTable', {
-                        where: layui.$('#queryForm').serializeObject()
+                        where: $('#queryForm').serializeObject()
                     })
                 }
 
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
-                    title: '采购订单信息',
+                    title: '记账单信息',
                     height: 'full-160',
-                    url: '/order/purchase_orders/page_for_supplier?status=2&supplierConfirmStatus=0',
+                    url: '/settlement/bills/page',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
 
-                        { field: 'code', title: '订单编号', align: 'center'},
-                        { field: 'hospitalName', title: '医院名称', align: 'center'},
-                        { field: 'warehouseName', title: '送货地点', align: 'center'},
-                        {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center'},
+                        { field: 'code', title: '记帐单号', align: 'center'},
                         {
-                            field: 'isOneThingOneYard', title: '一物一码', align: 'center',
+                            field: 'supplierName', title: '供应商名称', align: 'center'
+                        },
+                        { field: 'deptName', title: '科室名称', align: 'center'},
+                        { field: 'totalAmount', title: '记账金额(元)', align: 'center'},
+                        {
+                            field: 'status', title: '账单状态', align: 'center',
                             templet(item) {
-                                return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
+                                return `<div>${$global.getDictLabel('settlement_bill_status', item.status)}</div>`;
                             }
                         },
-                        {
-                            field: 'isConsignment', title: '寄售', align: 'center',
-                            templet(item) {
-                                return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
-                            }
-                        },
-                        { field: 'totalAmount', title: '订单总金额(元)', align: 'center'},
-                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', align: 'center', fixed: 'right'}
+                        { field: 'gmtCreate', title: '记账日期', align: 'center'},
+                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });
 
-                // 渲染订单状态 数据
-                $global.getDictDataList('order_po_status').forEach(o => {
+                 // 渲染下拉框 数据
+                $global.getDictDataList('settlement_bill_status').forEach(o => {
                     $("select[name='status']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
                 form.render('select')
 
-                window.detail = (data,rowIndex) => {
+                window.edit = (data,rowIndex) => {
                     let index = layer.open({
-                        title: "详情界面",
+                        title: "编辑记账单",
                         type: 2,
                         area: ['950px', '400px'],
-                        content: ['./confirm_order_form.html'],
+                        content: ['./bill_form.html'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
@@ -110,7 +113,17 @@
                     layer.full(index)
                 }
 
+                window.deleteById = (data,rowIndex) => {
+                    layer.confirm('真的删除行么', function (index) {
 
+                        $http.delete(`/settlement/bills/` + data.id).then(resp => {
+                            layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadTable()
+
+                            layer.close(index)
+                        })
+                    });
+                }
                 // 监听表单重置
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
@@ -118,21 +131,28 @@
                 })
 
                 // 监听表单提交事件
-                layui.form.on('submit(list)', (data) => {
+                form.on('submit(list)', (data) => {
                     window.reloadTable()
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
 
 
-
+                $(".layui-btn").on('click', function () {
+                    let layevent = this.getAttribute("lay-event");
+                    if (layevent == 'addNew') {
+                        edit({});
+                    }
+                });
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
                      // 获取当前行索引
                     let rowIndex = obj.tr[0].getAttribute("data-index")
 
-                    if (obj.event === 'detail') {
-                        window.detail(obj.data,rowIndex)
+                    if (obj.event === 'del') {
+                        window.deleteById(obj.data,rowIndex)
+                    } else if (obj.event === 'edit') {
+                        window.edit(obj.data,rowIndex)
                     }
                 });
 

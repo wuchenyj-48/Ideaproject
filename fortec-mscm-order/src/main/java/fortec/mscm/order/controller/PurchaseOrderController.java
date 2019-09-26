@@ -38,7 +38,7 @@ public class PurchaseOrderController extends BaseController {
 
     @PutMapping
     public CommonResult update(@RequestBody @Valid PurchaseOrder entity) {
-        boolean bUpdate = purchaseOrderService.add(entity);
+        boolean bUpdate = purchaseOrderService.updateCascadeById(entity);
         return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 

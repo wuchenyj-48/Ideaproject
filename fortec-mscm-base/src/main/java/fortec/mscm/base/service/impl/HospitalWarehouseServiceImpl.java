@@ -43,10 +43,8 @@ public class HospitalWarehouseServiceImpl extends BaseServiceImpl<HospitalWareho
         }
         IPage page = this.page(request.getPage(), Wrappers.<HospitalWarehouse>query()
                 .eq(request.getHospitalId() != null, "hospital_id", request.getHospitalId())
-                .and(StringUtils.isNotBlank(request.getKeywords()), o ->
-                        o.like("name", request.getKeywords())
-                                .or()
-                                .like("code", request.getKeywords()))
+                .like(StringUtils.isNotBlank(request.getName()),"name",request.getName())
+                .like(StringUtils.isNotBlank(request.getCode()),"code",request.getCode())
                 .orderByDesc("gmt_modified")
         );
         return page;
