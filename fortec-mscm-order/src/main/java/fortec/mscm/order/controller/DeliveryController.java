@@ -70,7 +70,7 @@ public class DeliveryController extends BaseController {
      * @Description: 取消发货
      * @return: fortec.common.core.model.CommonResult
      */
-    @PostMapping("/{id}/cancelDelivery")
+    @PostMapping("/{id}/cancel_delivery")
     public CommonResult cancelDelivery(@PathVariable("id") String id) {
 
         boolean cancelDeliverBool = deliveryService.cancelDelivery(id);
@@ -85,12 +85,12 @@ public class DeliveryController extends BaseController {
     }
 
 
-    @GetMapping("/sendPage")
+    @GetMapping("/send_page")
     public PageResult sendPage(DeliveryQueryRequest request) {
         IPage page = deliveryService.sendPage(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
-    @GetMapping("/allDeliveryPage")
+    @GetMapping("/all_delivery_page")
     public PageResult allDeliveryPage(DeliveryQueryRequest request) {
         IPage page = deliveryService.allDeliveryPage(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());

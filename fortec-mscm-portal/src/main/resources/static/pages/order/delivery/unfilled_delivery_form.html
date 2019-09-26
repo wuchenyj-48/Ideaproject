@@ -27,9 +27,9 @@
                 <input type="hidden" name="supplierId" class="layui-input"/>
                 <input type="hidden" name="hospitalName" class="layui-input"/>
                 <input type="hidden" name="hospitalId" class="layui-input"/>
+                <input type="hidden" name="warehouseId" class="layui-input"/>
                 <input type="hidden" name="supplierName" class="layui-input"/>
                 <input type="hidden" name="deliveryAmount" class="layui-input"/>
-                <input type="hidden" name="status" VALUE="0" class="layui-input"/>
 
 
                 <div class="layui-row layui-col-space5 layui-form-item">
@@ -75,7 +75,16 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            采购仓库
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="warehouseName" readonly lay-verify=""
+                                   placeholder=""
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -87,27 +96,51 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             发货金额(元)
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="deliveryAmount" readonly lay-verify=""
+                            <input type="text" name="deliveryAmount" id="deliveryAmount" lay-filter="deliveryAmount"
+                                   readonly lay-verify=""
                                    placeholder="发货金额(元)"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            要求送达日期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtRequireLatestDelivery" readonly lay-verify=""
+                                   placeholder="" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label layui-required">
+                            最早送达日期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtExceptedEarliestDelivery" required lay-verify="required"
+                                   placeholder="请选择最早送达日期" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
                 </div>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-
-
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             最晚送达日期
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="latestDeliverDate" required lay-verify="required"
+                            <input type="text" name="gmtExceptedLatestDelivery" required lay-verify="required"
                                    placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -116,16 +149,13 @@
 
                         </label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="isOneThingOneYard" title="一物一码" lay-skin="primary">
-                            <input type="checkbox" name="isConsignment" title="购销" lay-skin="primary">
+                            <input type="checkbox" name="isOneThingOneYard" title="一物一码" lay-skin="primary" disabled>
+                            <input type="checkbox" name="isConsignment" title="是否寄售" lay-skin="primary" disabled>
 
 
                         </div>
                     </div>
-
                 </div>
-
-
                 <div class="block"></div>
                 <div class="layui-row ">
                     <div class="layui-form-item">
@@ -188,31 +218,32 @@
         </script>
         <script type="text/html" id="lotTpl">
             <input type="text" data-name="lot" value="{{d.lot ? d.lot : ''}}" lay-filter="lot"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"
                    class="layui-input custom-input"/>
         </script>
 
-        <script type="text/html" id="expiringDateTpl">
-            <input type="text" data-name="expiringDate" value="{{d.expiringDate ? d.expiringDate : ''}}"
-                   lay-filter="expiringDate"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="date | required" placeholder="必填"
+        <script type="text/html" id="productionDateTpl">
+            <input type="text" data-name="productionDate" value="{{d.productionDate ? d.productionDate : ''}}"
+                   lay-filter="productionDate" id="{{'productionDate' + d.LAY_TABLE_INDEX}}"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"
                    class="layui-input custom-input"/>
         </script>
-        <script type="text/html" id="validDateTpl">
-            <input type="text" data-name="validDate" value="{{d.validDate ? d.validDate : ''}}" lay-filter="validDate"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
+        <script type="text/html" id="expiredDateTpl">
+            <input type="text" data-name="expiredDate" value="{{d.expiredDate ? d.expiredDate : ''}}"
+                   lay-filter="expiredDate" id="{{'expiredDate' + d.LAY_TABLE_INDEX}}"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="sterilizationDateTpl">
             <input type="text" data-name="sterilizationDate" value="{{d.sterilizationDate ? d.sterilizationDate : ''}}"
-                   lay-filter="sterilizationDate"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
+                   lay-filter="sterilizationDate" id="{{'sterilizationDate' + d.LAY_TABLE_INDEX}}"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"
                    class="layui-input custom-input"/>
         </script>
-        <script type="text/html" id="registrationNumberTpl">
-            <input type="text" data-name="registrationNumber"
-                   value="{{d.registrationNumber ? d.registrationNumber : ''}}" lay-filter="registrationNumber"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
+        <script type="text/html" id="certificateNoTpl">
+            <input type="text" data-name="certificateNo"
+                   value="{{d.certificateNo ? d.certificateNo : ''}}" lay-filter="certificateNo"
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"
                    class="layui-input custom-input"/>
         </script>
 
@@ -232,13 +263,12 @@
         </script>
         <!-- 子表管理模板 结束  -->
 
-        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdn.bootcss.com/jQuery.print/1.6.0/jQuery.print.min.js"></script>
         <script src="/scripts/utils/common.js"></script>
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$;
+                let form = layui.form, $ = layui.$, table = layui.table, layer = layui.layer,
+                    tableSelect = layui.tableSelect
 
                 let model = {};
 
@@ -278,8 +308,13 @@
                                 {field: 'qty', title: '本次实发', align: 'center', templet: "#qtyTpl"},
                                 {field: 'lot', title: '批次', align: 'center', templet: "#lotTpl"},
                                 {field: 'subtotalAmount', title: '小计(元)', align: 'center'},
-                                {field: 'expiringDate', title: '生产日期', align: 'center', templet: "#expiringDateTpl"},
-                                {field: 'validDate', title: '有效日期', align: 'center', templet: "#validDateTpl"},
+                                {
+                                    field: 'productionDate',
+                                    title: '生产日期',
+                                    align: 'center',
+                                    templet: "#productionDateTpl"
+                                },
+                                {field: 'expiredDate', title: '过期日期', align: 'center', templet: "#expiredDateTpl"},
                                 {field: 'materialSpecId', title: '商品规格ID', hide: true, align: 'center'},
                                 {field: 'poItemId', title: '订单明细ID', hide: true, align: 'center'},
                                 {field: 'materialCode', title: '商品编码', hide: true, align: 'center'},
@@ -291,10 +326,10 @@
                                     templet: "#sterilizationDateTpl"
                                 },
                                 {
-                                    field: 'registrationNumber',
+                                    field: 'certificateNo',
                                     title: '注册证号',
                                     align: 'center',
-                                    templet: "#registrationNumberTpl"
+                                    templet: "#certificateNoTpl"
                                 },
                                 {
                                     field: 'LAY_CELL_TOOLBAR',
@@ -305,7 +340,7 @@
                             ]]
                         });
                         $editable.watch('delivery_item_table')
-                        window.renderPurchaseOrderSelect();
+                        // window.renderPurchaseOrderSelect();
                         window.renderDateTime();
                     })
                 };
@@ -319,14 +354,16 @@
                         $(".form-reset").hide();
                         $(".form-delivery").show();
                         $(".child-tab").show();
+                        renderPurchaseOrderSelect()
                         window.reloadDeliveryItemTable && window.reloadDeliveryItemTable()
                     } else {
                         $(".child-tab").hide()
                         $(".form-delivery").hide();
                     }
+
                 };
                 //渲染订单名称
-                layui.tableSelect.render({
+                tableSelect.render({
                     elem: '#poCode',	//定义输入框input对象 必填
                     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
                     searchKey: 'keywords',	//搜索输入框的name值 默认keyword
@@ -345,13 +382,16 @@
                         tmp.poId = selectedRow.id;
                         tmp.orderAmount = selectedRow.totalAmount;
                         tmp.deliveryAmount = selectedRow.totalAmount;
-                        tmp.isConsignment = selectedRow.isConsignment === 1;
-                        tmp.isOneThingOneYard = selectedRow.isOneThingOneYard === 1;
+                        tmp.isConsignment = selectedRow.isConsignment;
+                        tmp.isOneThingOneYard = selectedRow.isOneThingOneYard;
                         tmp.poCode = selectedRow.code;
+                        tmp.gmtRequireLatestDelivery = selectedRow.gmtRequireLatestDelivery;
+                        tmp.warehouseId = selectedRow.warehouseId;
                         tmp.hospitalId = selectedRow.hospitalId;
                         tmp.hospitalName = selectedRow.hospitalName;
                         tmp.supplierId = selectedRow.supplierId;
                         tmp.supplierName = selectedRow.supplierName;
+                        tmp.warehouseName = selectedRow.warehouseName;
                         form.val("editForm", tmp);
 
                         $.extend(model, tmp)
@@ -366,17 +406,19 @@
                 form.render('radio');
 
                 // 渲染日期、时间 数据
-                layui.laydate.render({elem: "input[name='latestDeliverDate']", type: 'date', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='gmtDelivery']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[data-name='validDate']", type: 'datetime', trigger: 'click'});
-                layui.laydate.render({elem: "input[name='registrationNumber']", type: 'datetime', trigger: 'click'});
+                layui.laydate.render({elem: "input[name='gmtExceptedLatestDelivery']", type: 'date', trigger: 'click'});
+                layui.laydate.render({
+                    elem: "input[name='gmtExceptedEarliestDelivery']",
+                    type: 'date',
+                    trigger: 'click'
+                });
+                layui.laydate.render({elem: "input[name='gmtExceptedLatestDelivery']", type: 'date', trigger: 'click'});
 
 
                 /*** 子表管理开始 */
                 $("#deliveryItemToolbar button[lay-event='addNewLine']").click(() => {
                     layui.table.addRow('delivery_item_table', 0, {});
                     form.render('select')
-                    window.renderPurchaseOrderSelect()
                     window.renderDateTime()
                 });
 
@@ -391,12 +433,31 @@
                             if (resp.data.success) {
                                 layui.layer.msg(resp.data.msg, {icon: 1});
                                 window.reloadDeliveryItemTable()
+                                parent.reloadTable();
+
+
+                                form.val("editForm", {"deliveryAmount": rows.map(o => o.subtotalAmount).reduce((prev, curr) => prev + curr)})
+
                             } else {
                                 layui.layer.msg(resp.data.msg, {icon: 5})
                             }
                         })
                     })
                 });
+
+                // 监听数量输入框
+                $(document).on('input propertychange', "input[data-name='qty']", function () {
+                    let index = this.getAttribute("data-index")
+                    let row = layui.table.getRows('delivery_item_table')[index]
+                    if (!row.price && !Number.isInteger(this.value)) {
+                        return
+                    }
+                    let subtotalAmount = Number(row.price) * Number(this.value)
+                    layui.table.renderSpecRow('delivery_item_table', index, {
+                        subtotalAmount: subtotalAmount,
+                        id: row.id
+                    })
+                })
 
                 $("#deliveryItemToolbar button[lay-event='refresh']").click(() => {
                     window.reloadDeliveryItemTable()
@@ -405,87 +466,54 @@
                  *  渲染字表时间
                  */
                 window.renderDateTime = () => {
-                    let data = layui.table.getRows('delivery_item_table')
-                    for (let i = 0; i < data.length; i++) {
-                        layui.laydate.render({
-                            elem: `[data-name='expiringDate'][data-index="${i}"]`,
-                            type: 'date',
-                            trigger: 'click'
-                        });
+                    layui.laydate.render({
+                        elem: `[data-name$='Date']`,
+                        type: 'date',
+                        trigger: 'click',
+                        
+                    });
 
-                        layui.laydate.render({
-                            elem: `[data-name='validDate'][data-index="${i}"]`,
-                            type: 'date',
-                            trigger: 'click'
-                        });
-
-                        layui.laydate.render({
-                            elem: `[data-name='sterilizationDate'][data-index="${i}"]`,
-                            type: 'date',
-                            trigger: 'click'
-                        });
-                    }
                 }
                 /**
-                 *  渲染商品规格选择框
+                 *  渲染彈出框
                  */
                 window.renderPurchaseOrderSelect = () => {
+                    tableSelect.renderOpenTable({
+                        elem: "[data-name='currentPurchaseOrderSelect']",
+                        title: "订单明细选择",
+                        component: "/components/order/order_item_select.html",
+                        allowMultiple: true,
+                        where: {
+                            poId: model.poId,
+                            id: model.id
+                        },
+                        onConfirm(rows, elem) {
+                            // 当前点击行
+                            let startIndex = parseInt(elem.getAttribute("data-index"))
 
-                    let data = layui.table.getRows('delivery_item_table')
-                    for (let i = 0; i < data.length; i++) {
-                        //渲染规格
-                        layui.tableSelect.render({
-                            elem: `[data-name='currentPurchaseOrderSelect'][data-index='${i}']`,	//定义输入框input对象 必填
-                            checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                            searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
-                            table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                                url: '/order/delivery_items/surplusOrder',
-                                cols: [[
-                                    {type: 'checkbox'},
-                                    {field: 'materialSpec', title: '规格'},
-                                    {field: 'materialName', title: '品名'},
-                                    {field: 'materialTradeName', title: '商品名'},
-                                    {field: 'price', title: '价格'},
-                                    {field: 'unit', title: '单位'},
-                                ]],
-                                where: {
-                                    poId: model.poId
+                            // 表格所有数据
+                            let tableRows = layui.table.getRows('delivery_item_table')
+
+                            let newFlag = false
+                            for (let j = 0; j < rows.length; j++) {
+                                let rowIndex = startIndex + j
+
+                                if (rowIndex > tableRows.length - 1) {
+                                    layui.table.addRow('delivery_item_table', tableRows.length, {})
+                                    tableRows = layui.table.getRows('delivery_item_table')
+                                    newFlag = true
                                 }
-                            },
-                            done(elem, data) {
-                                // 当前点击行
-                                let startIndex = parseInt(elem[0].getAttribute("data-index"))
+                                let newData = {}
+                                $.extend(newData, rows[j])
+                                newData.id = tableRows[rowIndex].id ? tableRows[rowIndex].id : null
 
-                                // 表格所有数据
-                                let tableRows = layui.table.getRows('delivery_item_table')
-
-                                // 当前选中数据
-                                let checkedRows = data.data
-
-                                let newFlag = false
-                                for (let j = 0; j < checkedRows.length; j++) {
-                                    let rowIndex = startIndex + j
-
-                                    if (rowIndex > tableRows.length - 1) {
-                                        layui.table.addRow('delivery_item_table', tableRows.length, {})
-                                        tableRows = layui.table.getRows('delivery_item_table')
-                                        newFlag = true
-                                    }
-                                    let newData = {}
-                                    $.extend(newData, checkedRows[j])
-                                    newData.id = tableRows[rowIndex].id
-
-                                    // 重新渲染单行数据
-                                    layui.table.renderSpecRow('delivery_item_table', rowIndex, newData)
-                                }
-                                if (newFlag) {
-                                    // 当有新增行数时，表格会被重载，需重新进行选择渲染
-                                    window.renderPurchaseOrderSelect()
-                                }
+                                // 重新渲染单行数据
+                                table.renderSpecRow('delivery_item_table', rowIndex, newData)
                             }
-                        })
-                    }
+                        }
+                    })
                 }
+
 
                 // 监听子表的列工具栏
                 layui.table.on('tool(delivery_item_table)', function (obj) {
@@ -494,7 +522,9 @@
                     let data = obj.data;
                     if (obj.event === 'newDel') {
                         // 未在数据库中存在，直接从界面移除即可
-                        layui.table.deleteRow('delivery_item_table', rowIndex);
+                        layui.table.deleteRow('delivery_item_table', rowIndex)
+                        renderDateTime()
+                        // renderPurchaseOrderSelect()
                         return
                     }
                     if (obj.event === 'del') {
@@ -502,17 +532,19 @@
                             $http.delete(`/order/delivery_items/` + data.id).then(resp => {
                                 layer.msg(resp.data.msg, {icon: 1});
                                 layui.table.deleteRow('delivery_item_table', rowIndex);
+                                renderDateTime()
+                                // renderPurchaseOrderSelect()
                             })
                         });
                         return
                     }
 
                     // 校验并保存
-                    $editable.validateSingleRow("delivery_item_table", index, (valid, error) => {
+                    $editable.validateSingleRow("delivery_item_table", rowIndex, (valid, error) => {
                         if (!valid) {
                             return
                         }
-                        let data = layui.table.cache.delivery_item_table[index];
+                        let data = layui.table.cache.delivery_item_table[rowIndex];
                         data.deliveryId = model.id;
                         let promise = null;
                         if ($strings.isBlank(data.id)) {
@@ -526,7 +558,7 @@
                                 layer.msg(resp.data.msg, {icon: 1});
 
                                 // 重新渲染单行数据
-                                layui.table.renderSpecRow('delivery_item_table', index, {
+                                layui.table.renderSpecRow('delivery_item_table', rowIndex, {
                                     id: resp.data.data.id
                                 })
                                 window.reloadDeliveryItemTable()
@@ -544,7 +576,7 @@
                     $("form input:hidden").val('')
                 })
                 $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name)
+                    let index = parent.layer.getFrameIndex(window.name)
                     parent.layer.close(index)
                 })
                 $(".form-delivery").click(() => {
@@ -581,8 +613,10 @@
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     data.field = layui.$.extend({}, data.field);
+                    data.field.isConsignment = $("[name='isConsignment']")[0].checked ? "1" : "0"
+                    data.field.isOneThingOneYard = $("[name='isOneThingOneYard']")[0].checked ? "1" : "0"
                     let promise = null;
-                    console.log(data);
+
                     if ($strings.isBlank(data.field.id)) {
                         promise = $http.post("/order/deliverys", data.field)
                     } else {

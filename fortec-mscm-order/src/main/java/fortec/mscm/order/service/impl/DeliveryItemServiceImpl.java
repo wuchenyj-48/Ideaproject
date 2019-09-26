@@ -8,9 +8,10 @@ import fortec.mscm.order.entity.Delivery;
 import fortec.mscm.order.entity.DeliveryItem;
 import fortec.mscm.order.entity.PurchaseOrderItem;
 import fortec.mscm.order.mapper.DeliveryItemMapper;
+import fortec.mscm.order.mapper.DeliveryMapper;
+import fortec.mscm.order.mapper.PurchaseOrderItemMapper;
 import fortec.mscm.order.request.DeliveryItemQueryRequest;
 import fortec.mscm.order.service.DeliveryItemService;
-import fortec.mscm.order.service.PurchaseOrderItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +33,9 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper, DeliveryItem> implements DeliveryItemService {
 
-    private final PurchaseOrderItemService purchaseOrderItemService;
+    private final PurchaseOrderItemMapper purchaseOrderItemMapper;
+
+    private final DeliveryMapper deliveryMapper;
 
 
     @Override
@@ -55,15 +58,28 @@ public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper,
 
     @Override
     public List<DeliveryItem> surplusPurchaseOrder(Delivery delivery) {
-        List<PurchaseOrderItem> purchaseOrderItemList = purchaseOrderItemService.list(Wrappers.<PurchaseOrderItem>query()
+        List<PurchaseOrderItem> purchaseOrderItemList = purchaseOrderItemMapper.selectList(Wrappers.<PurchaseOrderItem>query()
                 .eq(delivery.getPoId() != null, "po_id", delivery.getPoId())
                 .in("delivery_status", 0, 1));
         List<DeliveryItem> deliveryItemList = new ArrayList<>();
 
+        List<Object>poItemIdList = this.listObjs(Wrappers.<DeliveryItem>query()
+                .select("po_item_id")
+                .eq("delivery_id", delivery.getId()));
+        List<String> idStrList = new ArrayList<>();
+        for (Object o : poItemIdList) {
+            String poItemId = String.valueOf(o);
+            idStrList.add(poItemId);
+        }
 //        采购明细添加到发货明细
         for (PurchaseOrderItem purchaseOrderItem : purchaseOrderItemList) {
             try {
                 if (purchaseOrderItem.getQty().equals(purchaseOrderItem.getDeliveredQty())) {
+                    continue;
+                }
+                boolean idExistBool = idStrList.contains(purchaseOrderItem.getId());
+
+                if (idExistBool) {
                     continue;
                 }
                 DeliveryItem deliveryItem = new DeliveryItem();
@@ -96,9 +112,18 @@ public class DeliveryItemServiceImpl extends BaseServiceImpl<DeliveryItemMapper,
 
     @Override
     public boolean saveOrUpdateBatchDtl(ArrayList<DeliveryItem> newArrayList) {
+//        修改每条明细小计金额
+        double deliveryAmount = 0.0;
+        Delivery delivery = new Delivery();
         for (DeliveryItem item : newArrayList) {
             item.setSubtotalAmount(item.getQty() * item.getPrice());
+            deliveryAmount += item.getSubtotalAmount();
+            delivery.setId(item.getDeliveryId());
         }
+
+        delivery.setDeliveryAmount(deliveryAmount);
+//        修改主表发货金额
+        deliveryMapper.updateById(delivery);
         return this.saveOrUpdateBatch(newArrayList);
     }
 }

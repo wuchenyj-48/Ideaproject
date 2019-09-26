@@ -10,8 +10,10 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.io.Serializable;
 
 /**
@@ -67,26 +69,26 @@ public class Delivery extends DataEntity implements Serializable {
     /**
      * 是否寄售
      */
-    @NotNull(message = "是否寄售不能为空")
     private Integer isConsignment;
 
     /**
      * 是否一物一码
      */
-    @NotNull(message = "是否一物一码不能为空")
     private Integer isOneThingOneYard;
 
-    /*** 最晚送达日期*/
+    /*** 送达日期*/
     private java.util.Date gmtRequireLatestDelivery;
 
     /**
      * 预计最早送达日期
      */
+    @Past(message = "最早送达日期不能早于当前时间")
     private java.util.Date gmtExceptedEarliestDelivery;
 
     /**
      * 预计最晚送达日期
      */
+    @Future(message = "最晚送达日期不能早于当前时间")
     private java.util.Date gmtExceptedLatestDelivery;
 
     /**
