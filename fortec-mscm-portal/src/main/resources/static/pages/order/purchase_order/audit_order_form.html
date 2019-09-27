@@ -189,14 +189,7 @@
                     let data = $.extend({}, formData)
                     form.val("editForm", data)
                     model = data
-
-                    if ($strings.isNotBlank(model.id)) {
-                        $(".form-reset").hide()
-                        $(".child-tab").show()
                         window.reloadPurchaseOrderItemTable && window.reloadPurchaseOrderItemTable()
-                    } else {
-                        $(".child-tab").hide()
-                    }
 
                 }
 

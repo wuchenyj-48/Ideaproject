@@ -47,25 +47,33 @@ public class MaterialSpec extends DataEntity  implements Serializable {
     private String form;
 
     /** 单位 */
-    private Long unit;
+    private String unit;
 
     /** 价格 */
     private Double price;
 
+    /** 是否寄售 */
+    @NotNull(message="是否寄售不能为空")
+    private Integer isConsignment;
+
+    /** 是否一物一码*/
+    @NotNull(message="是否一物一码不能为空")
+    private Integer isOneThingOneYard;
+
     /** 小包装单位 */
-    private Long smallPackageUnit;
+    private String smallPackageUnit;
 
     /** 小包装单位数量 */
     private Integer smallPackageQty;
 
     /** 中包装单位 */
-    private Long mediumPackageUnit;
+    private String mediumPackageUnit;
 
     /** 中包装单位数量 */
     private Integer mediumPackageQty;
 
     /** 大包装单位 */
-    private Long largePackageUnit;
+    private String largePackageUnit;
 
     /** 大包装单位数量 */
     private Integer largePackageQty;

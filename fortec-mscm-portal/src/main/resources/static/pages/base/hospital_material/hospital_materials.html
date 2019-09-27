@@ -71,27 +71,26 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-                        {field: 'hospitalName', title: '医院名称', align: 'center'},
-                        {field: 'materialTradeName', title: '商品通用名称', align: 'center'},
-                        {field: 'materialSpec', title: '商品规格', align: 'center'},
+                        {field: 'supplierName', title: '供应商名称', align: 'center',width:180},
+                        {field: 'materialName', title: '品名', align: 'center',width:220},
+                        {field: 'materialSpec', title: '商品规格', align: 'center',width:180},
                         {field: 'materialCode', title: '商品编码', align: 'center'},
-                        {field: 'materialName', title: '商品院内名称', align: 'center'},
-                        {field: 'price', title: '价格（元）', align: 'center'},
-                        {field: 'miniumRequestUnit', title: '最小请领单位', align: 'center'},
-                        {field: 'miniumRequestQty', title: '最小请领单位数量', align: 'center'},
-                        {field: 'miniumOrderUnit', title: '最小订单单位', align: 'center'},
-                        {field: 'miniumOrderQty', title: '最小订单单位数量', align: 'center'},
                         {field: 'unit', title: '单位', align: 'center'},
+                        {field: 'price', title: '单价（元）', align: 'center'},
+                        {field: 'miniumRequestUnit', title: '请领单位', align: 'center'},
+                        {field: 'miniumRequestQty', title: '请领单位数量', align: 'center'},
+                        {field: 'miniumOrderUnit', title: '订单单位', align: 'center'},
+                        {field: 'miniumOrderQty', title: '订单单位数量', align: 'center'},
+
                         {field: 'isConsignment', title: '寄售', align: 'center', templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
-                            }
+                            },width:80
                         },
                         {field: 'isOneThingOneYard', title: '一物一码', align: 'center',templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
-                            }
+                            },width:90
                         },
-                        {field: 'inactive', title: '停用标志', align: 'center', templet: "#inactiveTpl"},
-                        {field: 'gmtModified', title: '修改时间', align: 'center'}
+                        {field: 'inactive', title: '停用标志', align: 'center', templet: "#inactiveTpl"}
                     ]]
                 });
 

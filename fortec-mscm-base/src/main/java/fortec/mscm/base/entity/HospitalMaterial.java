@@ -94,6 +94,10 @@ public class HospitalMaterial extends DataEntity  implements Serializable {
     @TableField(exist = false)
     private String hospitalName;
 
+    /**供应商名称*/
+    @TableField(exist = false)
+    private String supplierName;
+
     /**商品规格*/
     @TableField(exist = false)
     private String materialSpec;

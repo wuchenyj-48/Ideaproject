@@ -5,12 +5,14 @@
         select
         hm.*,
         h.name as hospital_name,
+        s.name as supplier_name,
         ms.material_spec as material_spec
         from
         hospital_material hm
         inner join hospital h on hm.hospital_id = h.id
         inner join material_spec ms on hm.material_spec_id = ms.id
         inner join material m on ms.material_id = m.id
+        inner join supplier s on m.supplier_id = s.id
         <where>
             <if test="request.hospitalName != null and request.hospitalName != ''">
                 and h.name like concat( '%', #{request.hospitalName}, '%')
@@ -27,10 +29,10 @@
             <if test="request.supplierId != null and request.supplierId != ''">
                 and m.supplier_id = #{request.supplierId}
             </if>
-            <if test="request.isConsignment != null and request.isConsignment != ''">
+            <if test="request.isConsignment != null">
                 and hm.is_consignment = #{request.isConsignment}
             </if>
-            <if test="request.isOneThingOneYard != null and request.isOneThingOneYard != ''">
+            <if test="request.isOneThingOneYard != null">
                 and hm.is_one_thing_one_yard = #{request.isOneThingOneYard}
             </if>
             <if test="request.inactive != null ">
