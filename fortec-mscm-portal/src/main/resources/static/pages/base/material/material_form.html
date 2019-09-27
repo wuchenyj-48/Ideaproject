@@ -49,7 +49,7 @@
 
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6" >
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 商品类型
                         </label>
@@ -128,7 +128,8 @@
                             注册证效期
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="certificateExpiredDate" placeholder="请选择注册证效期" autocomplete="off" readonly
+                            <input type="text" name="certificateExpiredDate" placeholder="请选择注册证效期" autocomplete="off"
+                                   readonly
                                    class="layui-input">
                         </div>
                     </div>
@@ -222,7 +223,7 @@
         </script>
         <script type="text/html" id="smallPackageUnitTpl">
             <select data-name="smallPackageUnit" value="{{d.smallPackageUnit ? d.smallPackageUnit : ''}}"
-                    lay-filter="smallPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}">
+                    lay-filter="smallPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
                 {{# layui.each(packUnits, function(index, item){ }}
                 <option value="{{item.id}}" {{item.id== d.smallPackageUnit ?
                 'selected' : ''}}>{{item.name}}</option>
@@ -238,7 +239,7 @@
         <script type="text/html" id="mediumPackageUnitTpl">
 
             <select data-name="mediumPackageUnit" value="{{d.mediumPackageUnit ? d.mediumPackageUnit : ''}}"
-                    lay-filter="mediumPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}">
+                    lay-filter="mediumPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
                 {{# layui.each(packUnits, function(index, item){ }}
                 <option value="{{item.id}}" {{item.id== d.mediumPackageUnit ?
                 'selected' : ''}}>{{item.name}}</option>
@@ -254,7 +255,7 @@
         <script type="text/html" id="largePackageUnitTpl">
 
             <select data-name="largePackageUnit" value="{{d.largePackageUnit ? d.largePackageUnit : ''}}"
-                    lay-filter="largePackageUnit" data-index="{{d.LAY_TABLE_INDEX}}">
+                    lay-filter="largePackageUnit" data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
                 {{# layui.each(packUnits, function(index, item){ }}
                 <option value="{{item.id}}" {{item.id== d.largePackageUnit ?
                 'selected' : ''}}>{{item.name}}</option>
@@ -394,7 +395,7 @@
                     },
                     onConfirm(node) {
 
-                        if (!node.leaf){
+                        if (!node.leaf) {
                             layui.layer.msg("只能选择末级品类", {icon: 5})
                             return;
                         }
@@ -433,6 +434,14 @@
                     }
                 })
 
+                $http.get("/base/pack_units/list").then(resp => {
+                    window.packUnits = resp.data.data
+
+                    $("[lay-filter$='PackageUnit']").empty()
+                    $("[lay-filter$='PackageUnit']").append(`<option value=''>请选择</option>`)
+                    packUnits.forEach(o => $("[lay-filter$='PackageUnit']").append(`<option value='${o.name}'>${o.name}</option>`))
+                    form.render("select")
+                })
 
 
                 // 渲染下拉框 数据
@@ -459,6 +468,7 @@
                     layui.table.addRow('material_spec_table', 0, {
                         inputCodingType: 0
                     })
+
                     form.render('select')
                 })
 
@@ -468,7 +478,7 @@
                             return
                         }
                         let rows = layui.table.getRows('material_spec_table')
-                        if (rows.length == 0){
+                        if (rows.length == 0) {
                             return;
                         }
 
@@ -537,9 +547,6 @@
                     })
                 });
 
-                $http.get("/base/pack_units/list").then(resp => {
-                    window.packUnits = resp.data.data
-                })
 
                 /*** 子表管理结束 */
 
@@ -566,7 +573,7 @@
                         if (resp.data.success) {
                             layer.msg(resp.data.msg, {icon: 1})
                             parent.reloadTable()
-                            window.initForm($.extend(model ,resp.data.data,{isNew: false}))
+                            window.initForm($.extend(model, resp.data.data, {isNew: false}))
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }
@@ -577,7 +584,7 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadAllJs(["/scripts/utils/editable.js", "/lib/treeSelect.js", "/lib/tableSelect.js","/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
+                loadAllJs(["/scripts/utils/editable.js", "/lib/treeSelect.js", "/lib/tableSelect.js", "/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
                 loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
             })
 

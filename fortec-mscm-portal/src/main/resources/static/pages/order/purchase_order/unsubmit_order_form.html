@@ -156,9 +156,15 @@
         </script>
 
         <script type="text/html" id="qtyTpl">
+            {{#  if(layui.$('#isOneThingOneYard')[0].checked){ }}
+            <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
+                   data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required|integer" placeholder="必填"
+                   class="layui-input custom-input"/>
+            {{#  } else { }}
             <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
                    data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
+            {{#  } }}
         </script>
 
 
