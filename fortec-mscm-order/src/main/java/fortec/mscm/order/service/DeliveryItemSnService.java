@@ -21,6 +21,6 @@ public interface DeliveryItemSnService extends IBaseService<DeliveryItemSn> {
 
     IPage<DeliveryItemSn> page(DeliveryItemSnQueryRequest request);
 
-    boolean saveDeliveryItemSns(String deliveryId);
+    List<DeliveryItemSn> saveDeliveryItemSns(String deliveryId);
 }
     

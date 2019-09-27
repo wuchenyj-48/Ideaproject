@@ -12,7 +12,9 @@ import fortec.mscm.core.consts.SerialRuleConsts;
 import fortec.mscm.order.consts.DictConsts;
 import fortec.mscm.order.entity.Delivery;
 import fortec.mscm.order.entity.DeliveryItem;
+import fortec.mscm.order.entity.DeliveryItemSn;
 import fortec.mscm.order.entity.PurchaseOrderItem;
+import fortec.mscm.order.mapper.DeliveryItemSnMapper;
 import fortec.mscm.order.mapper.DeliveryMapper;
 import fortec.mscm.order.request.DeliveryQueryRequest;
 import fortec.mscm.order.service.DeliveryItemService;
@@ -45,6 +47,8 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
     private final DeliveryItemService deliveryItemService;
 
     private final PurchaseOrderItemService purchaseOrderItemService;
+
+    private final DeliveryItemSnMapper deliveryItemSnMapper;
 
 
     @Override
@@ -242,10 +246,11 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
 //        修改状态 -> 0   修改人  修改时间
         Delivery tmp = new Delivery();
         tmp.setStatus(DictConsts.STATUS_DELIVERY_UNFILLED)
-                .setModifier(UserUtils.getUser().getUsername())
-                .setGmtModified(DateUtils.now())
+                .setGmtDelivery(null)
                 .setId(id);
-
+//        刪除SN
+        deliveryItemSnMapper.delete(Wrappers.<DeliveryItemSn>query()
+                .eq("delivery_id",id));
 //         修改主表
         return this.updateById(tmp);
     }

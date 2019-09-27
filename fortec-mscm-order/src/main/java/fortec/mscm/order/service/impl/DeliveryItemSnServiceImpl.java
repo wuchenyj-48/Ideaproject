@@ -3,6 +3,7 @@ package fortec.mscm.order.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.StringUtils;
 import fortec.mscm.order.entity.DeliveryItem;
@@ -51,22 +52,42 @@ public class DeliveryItemSnServiceImpl extends BaseServiceImpl<DeliveryItemSnMap
     }
 
     @Override
-    public boolean saveDeliveryItemSns(String deliveryId) {
-        DeliveryItemSn deliveryItemSn = new DeliveryItemSn();
+    public List<DeliveryItemSn> saveDeliveryItemSns(String deliveryId) {
+//        查询订单明细
         List<DeliveryItem> deliveryItems = deliveryItemMapper.selectList(Wrappers.<DeliveryItem>query()
                 .eq("delivery_id", deliveryId)
                 .orderByDesc("gmt_modified"));
         List<DeliveryItemSn> deliveryItemSnList = new ArrayList<>();
-        for (DeliveryItem deliveryItem : deliveryItems) {
-            deliveryItemSn.setSn(StringUtils.getRandomStr(20))
-                    .setDeliveryId(deliveryItem.getDeliveryId())
-                    .setDeliveryItemId(deliveryItem.getId())
-                    .setId(null);
-            deliveryItemSnList.add(deliveryItemSn);
+//          查询 订单明细生成的SN
+        List<DeliveryItemSn> returnSnList = this.list(Wrappers.<DeliveryItemSn>query()
+                .eq("delivery_id", deliveryId)
+                .orderByDesc("gmt_modified"));
 
+//          如果不存在,新增
+        if (returnSnList.size() == 0) {
+
+            for (DeliveryItem deliveryItem : deliveryItems) {
+
+                Double qty = deliveryItem.getQty();
+                long qtyItem = Math.round(qty);
+                for (long i = 0; i < qtyItem; i++) {
+                    DeliveryItemSn deliveryItemSn = new DeliveryItemSn();
+                    deliveryItemSn.setSn(StringUtils.getRandomStr(20))
+                            .setDeliveryId(deliveryItem.getDeliveryId())
+                            .setDeliveryItemId(deliveryItem.getId())
+                            .setId(null);
+                    deliveryItemSnList.add(deliveryItemSn);
+                }
+            }
+            boolean insertSNBool = this.saveBatch(deliveryItemSnList);
+            if (!insertSNBool) {
+                throw new BusinessException("生成SN失败,请重试");
+            }
+            return this.list(Wrappers.<DeliveryItemSn>query()
+                    .eq("delivery_id", deliveryId)
+                    .orderByDesc("gmt_modified"));
         }
-
-        return this.saveBatch(deliveryItemSnList);
+        return returnSnList;
     }
 }
     

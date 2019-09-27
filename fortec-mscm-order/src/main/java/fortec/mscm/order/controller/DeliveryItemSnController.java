@@ -29,8 +29,8 @@ public class DeliveryItemSnController extends BaseController {
 
     @PostMapping("/{id}")
     public CommonResult add(@PathVariable("id") String deliveryId) {
-        boolean bSave = deliveryItemSnService.saveDeliveryItemSns(deliveryId);
-        return bSave ? CommonResult.ok("新增成功") : CommonResult.error("新增失败");
+        List<DeliveryItemSn> deliveryItemSnList = deliveryItemSnService.saveDeliveryItemSns(deliveryId);
+        return CommonResult.ok("新增成功",deliveryItemSnList);
     }
 
     @PutMapping
