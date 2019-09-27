@@ -66,12 +66,6 @@
             </div>
         </div>
 
-        <!-- 子表管理模板 开始  -->
-
-
-
-        <!-- 子表管理模板 结束  -->
-
         <script src="/scripts/utils/common.js"></script>
         <script>
 
@@ -79,7 +73,6 @@
                 let form = layui.form, $ = layui.$
 
                 let model = {}
-
 
                 // 加载子表表格
                 window.reloadMaterialApplicantItemTable = () => {
@@ -164,23 +157,6 @@
                     });
                 })
 
-                // 监听表单提交事件
-                /*form.on('submit(*)', (data) => {
-                        data.field = layui.$.extend({}, data.field)
-                        let promise  = $http.put("/base/material_applicants", data.field)
-
-                        promise.then(resp => {
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
-                                parent.reloadTable()
-                                window.initForm($.extend(model, resp.data.data, {isNew: false}))
-                            } else {
-                                layer.msg(resp.data.msg, {icon: 5})
-                            }
-                        })
-
-                        return false;
-                });*/
             }
 
             extendParentScriptsAndStyles(() => {

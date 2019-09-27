@@ -23,7 +23,7 @@
                 <input type="hidden" name="manufacturerId"/>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <spen class="layui-form-label">
                             <span class="required-star">*</span>品类
                         </spen>
@@ -34,7 +34,7 @@
                         </div>
                     </div>
 
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             <span class="required-star">*</span>生产厂商
                         </label>
@@ -45,11 +45,7 @@
                         </div>
                     </div>
 
-                </div>
-
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 商品类型
                         </label>
@@ -60,8 +56,12 @@
                         </div>
                     </div>
 
+                </div>
 
-                    <div class="layui-col-xs6">
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 品名
                         </label>
@@ -71,10 +71,7 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 商品名
                         </label>
@@ -86,7 +83,7 @@
                     </div>
 
 
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             ERP代码
                         </label>
@@ -99,7 +96,7 @@
                 </div>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             助记码
                         </label>
@@ -110,7 +107,7 @@
                     </div>
 
 
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             注册证号
                         </label>
@@ -120,10 +117,7 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             注册证效期
                         </label>
@@ -134,8 +128,11 @@
                         </div>
                     </div>
 
+                </div>
 
-                    <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             批准文号
                         </label>
@@ -212,20 +209,34 @@
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="unitTpl">
-            <input type="text" data-name="unit" value="{{d.unit ? d.unit : ''}}" lay-filter="unit"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number"
-                   class="layui-input custom-input"/>
+            <select data-name="smallPackageUnit" value="{{d.smallPackageUnit ? d.smallPackageUnit : ''}}"
+                    lay-filter="smallPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
+                {{# layui.each(packUnits, function(index, item){ }}
+                <option value="{{item.name}}" {{item.name== d.smallPackageUnit ?
+                'selected' : ''}}>{{item.name}}</option>
+                {{# }) }}
+            </select>
         </script>
         <script type="text/html" id="priceTpl">
             <input type="text" data-name="price" value="{{d.price ? d.price : ''}}" lay-filter="price"
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number"
                    class="layui-input custom-input"/>
         </script>
+        <script type="text/html" id="isConsignmentTpl">
+            <input type="checkbox" data-name="isConsignment" value="1" lay-filter="isConsignment" lay-skin="primary"
+                   data-index="{{d.LAY_TABLE_INDEX}}" {{d.isConsignment == 1 ? 'checked' : ''}}
+                   class="layui-input custom-input"/>
+        </script>
+        <script type="text/html" id="isOneThingOneYardTpl">
+            <input type="checkbox" data-name="isOneThingOneYard" value="1" lay-filter="isOneThingOneYard" lay-skin="primary"
+                   data-index="{{d.LAY_TABLE_INDEX}}" {{d.isOneThingOneYard == 1 ? 'checked' : ''}}
+                   class="layui-input custom-input"/>
+        </script>
         <script type="text/html" id="smallPackageUnitTpl">
             <select data-name="smallPackageUnit" value="{{d.smallPackageUnit ? d.smallPackageUnit : ''}}"
                     lay-filter="smallPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
                 {{# layui.each(packUnits, function(index, item){ }}
-                <option value="{{item.id}}" {{item.id== d.smallPackageUnit ?
+                <option value="{{item.id}}" {{item.name== d.smallPackageUnit ?
                 'selected' : ''}}>{{item.name}}</option>
                 {{# }) }}
             </select>
@@ -241,7 +252,7 @@
             <select data-name="mediumPackageUnit" value="{{d.mediumPackageUnit ? d.mediumPackageUnit : ''}}"
                     lay-filter="mediumPackageUnit" data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
                 {{# layui.each(packUnits, function(index, item){ }}
-                <option value="{{item.id}}" {{item.id== d.mediumPackageUnit ?
+                <option value="{{item.id}}" {{item.name== d.mediumPackageUnit ?
                 'selected' : ''}}>{{item.name}}</option>
                 {{# }) }}
             </select>
@@ -257,7 +268,7 @@
             <select data-name="largePackageUnit" value="{{d.largePackageUnit ? d.largePackageUnit : ''}}"
                     lay-filter="largePackageUnit" data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
                 {{# layui.each(packUnits, function(index, item){ }}
-                <option value="{{item.id}}" {{item.id== d.largePackageUnit ?
+                <option value="{{item.id}}" {{item.name== d.largePackageUnit ?
                 'selected' : ''}}>{{item.name}}</option>
                 {{# }) }}
             </select>
@@ -287,12 +298,37 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$, dtree = layui.dtree
+                let form = layui.form, $ = layui.$, dtree = layui.dtree,table = layui.table
 
                 let model = {}
 
 
                 window.packUnits = []
+
+                $http.get("/base/pack_units/list").then(resp => {
+                    window.packUnits = resp.data.data
+
+                    $("[lay-filter$='PackageUnit']").empty()
+                    $("[lay-filter$='PackageUnit']").append(`<option value=''>请选择</option>`)
+                    packUnits.forEach(o => $("[lay-filter$='PackageUnit']").append(`<option value='${o.name}'>${o.name}</option>`))
+
+                    renderPackUnit()
+                })
+
+                let renderPackUnit = (rows) => {
+                    let data = null
+                    if(!rows ){
+                        data =  table.getRows("material_spec_table")
+                    }else{
+                        data = rows
+                    }
+                    data.forEach((o,index) =>  {
+                        $(`[lay-filter='smallPackageUnit'][data-index='${index}']`).val(o.smallPackageUnit)
+                        $(`[lay-filter='mediumPackageUnit'][data-index='${index}']`).val(o.mediumPackageUnit)
+                        $(`[lay-filter='largePackageUnit'][data-index='${index}']`).val(o.largePackageUnit)
+                    })
+                    form.render("select")
+                }
 
                 // 加载子表表格
                 window.reloadMaterialSpecTable = () => {
@@ -303,7 +339,7 @@
                         layui.table.render({
                             elem: '#material_spec_table',
                             data: resp.data.data,
-                            height: 300,
+                            height: 400,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
                                 {field: 'materialSpec', title: '规格', align: 'center', templet: "#materialSpecTpl"},
@@ -314,9 +350,11 @@
                                     templet: "#inputCodingTypeTpl"
                                 },
                                 {field: 'inputCode', title: '输入编码', align: 'center', templet: "#inputCodeTpl"},
-                                {field: 'form', title: '剂型', align: 'center', templet: "#formTpl"},
+                                {field: 'form', title: '剂型', align: 'center', templet: "#formTpl",width: 80},
                                 {field: 'unit', title: '单位', align: 'center', templet: "#unitTpl"},
-                                {field: 'price', title: '价格', align: 'center', templet: "#priceTpl"},
+                                {field: 'price', title: '价格', align: 'center', templet: "#priceTpl",width: 80},
+                                {field: 'isConsignment', title: '寄售', align: 'center', templet: "#isConsignmentTpl"},
+                                {field: 'isOneThingOneYard', title: '一物一码', align: 'center', templet: "#isOneThingOneYardTpl"},
                                 {
                                     field: 'smallPackageUnit',
                                     title: '小包装单位',
@@ -327,7 +365,8 @@
                                     field: 'smallPackageQty',
                                     title: '小包装单位数量',
                                     align: 'center',
-                                    templet: "#smallPackageQtyTpl"
+                                    templet: "#smallPackageQtyTpl",
+                                    width: 80
                                 },
                                 {
                                     field: 'mediumPackageUnit',
@@ -339,7 +378,8 @@
                                     field: 'mediumPackageQty',
                                     title: '中包装单位数量',
                                     align: 'center',
-                                    templet: "#mediumPackageQtyTpl"
+                                    templet: "#mediumPackageQtyTpl",
+                                    width: 80
                                 },
                                 {
                                     field: 'largePackageUnit',
@@ -351,7 +391,8 @@
                                     field: 'largePackageQty',
                                     title: '大包装单位数量',
                                     align: 'center',
-                                    templet: "#largePackageQtyTpl"
+                                    templet: "#largePackageQtyTpl",
+                                    width: 80
                                 },
                                 {
                                     field: 'LAY_CELL_TOOLBAR',
@@ -359,7 +400,10 @@
                                     align: 'center',
                                     templet: "#materialSpecCellToolbar"
                                 },
-                            ]]
+                            ]],
+                            done(res){
+                                renderPackUnit(res)
+                            }
                         });
                         $editable.watch('material_spec_table')
                     })
@@ -434,14 +478,7 @@
                     }
                 })
 
-                $http.get("/base/pack_units/list").then(resp => {
-                    window.packUnits = resp.data.data
 
-                    $("[lay-filter$='PackageUnit']").empty()
-                    $("[lay-filter$='PackageUnit']").append(`<option value=''>请选择</option>`)
-                    packUnits.forEach(o => $("[lay-filter$='PackageUnit']").append(`<option value='${o.name}'>${o.name}</option>`))
-                    form.render("select")
-                })
 
 
                 // 渲染下拉框 数据
@@ -481,8 +518,12 @@
                         if (rows.length == 0) {
                             return;
                         }
+                        rows.forEach(o => {
+                            o.materialId = model.id
+                            o.isConsignment = $(`[data-name='isConsignment'][data-index='${o.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
+                            o.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${o.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
+                        })
 
-                        rows.forEach(o => o.materialId = model.id)
                         $http.put("/base/material_specs/batch_save", rows).then(resp => {
                             if (resp.data.success) {
                                 layui.layer.msg(resp.data.msg, {icon: 1})
@@ -525,6 +566,9 @@
                         }
                         let data = layui.table.cache.material_spec_table[index]
                         data.materialId = model.id
+                        data.isConsignment = $(`[data-name='isConsignment'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
+                        data.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
+
                         let promise = null
                         if ($strings.isBlank(data.id)) {
                             promise = $http.post("/base/material_specs/", data)

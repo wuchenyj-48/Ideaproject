@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import fortec.common.core.consts.GlobalConsts;
 import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.msg.domain.SceneMessage;
 import fortec.common.core.msg.enums.ReceiverType;
@@ -24,6 +23,7 @@ import fortec.mscm.core.consts.SerialRuleConsts;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,7 +104,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     public void submit(String id) {
 
         MaterialApplicant ma = this.getById(id);
-        if (ma == null){
+        if (ma == null) {
             return;
         }
         //当前状态是否为制单状态
@@ -136,7 +136,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
     public void pass(String id) {
 
         MaterialApplicant ma = this.getById(id);
-        if (ma == null){
+        if (ma == null) {
             return;
         }
 
@@ -170,24 +170,29 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
             Material material = materialService.getById(item.getMaterialId());
             MaterialSpec materialSpec = materialSpecService.getById(item.getMaterialSpecId());
 
-            if (material == null || materialSpec == null){
+            if (material == null || materialSpec == null) {
                 throw new BusinessException("商品不存在");
             }
+
+            BeanUtils.copyProperties(materialSpec, hm);
 
             hm.setHospitalId(ma.getHospitalId())
                     .setMaterialId(item.getMaterialId())
                     .setMaterialSpecId(item.getMaterialSpecId())
-                    .setMaterialSpec(materialSpec.getMaterialSpec())
+//                    .setMaterialSpec(materialSpec.getMaterialSpec())
                     .setMaterialName(material.getMaterialName())
-                    .setMaterialCode(materialSpec.getInputCode())
+//                    .setMaterialCode(materialSpec.getInputCode())
                     .setHospitalName(hospital.getName())
                     .setMaterialTradeName(material.getMaterialTradeName())
-                    .setPrice(materialSpec.getPrice())
+//                    .setPrice(materialSpec.getPrice())
                     .setMiniumOrderQty(0.0)
                     .setMiniumRequestQty(0.0)
-                    .setIsConsignment((int) GlobalConsts.NO)
-                    .setIsOneThingOneYard((int) GlobalConsts.NO)
-                    .setInactive(HospitalMaterial.DEACTIVATE);
+
+//                    .setIsConsignment(materialSpec.getIsConsignment())
+//                    .setIsOneThingOneYard(materialSpec.getIsOneThingOneYard())
+                    .setInactive(HospitalMaterial.DEACTIVATE)
+                    .setId(null);
+
             hms.add(hm);
         }
 
@@ -198,7 +203,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         Supplier supplier = supplierService.getById(ma.getSupplierId());
 
         HashMap<String, Object> params = Maps.newHashMap();
-        params.put("hospital_name",hospital.getName());
+        params.put("hospital_name", hospital.getName());
         params.put("code", ma.getCode());
         params.put("send_date", DateUtils.format(new Date(), "yyyy-MM-dd"));
 
@@ -211,15 +216,15 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void cancel(String id,String reason) {
+    public void cancel(String id, String reason) {
 
         MaterialApplicant ma = this.getById(id);
-        if (ma == null){
+        if (ma == null) {
             return;
         }
 
         //当前状态是否为提交待审核
-        if (ma.getStatus() != MaterialApplicant.STATUS_SUBMITED){
+        if (ma.getStatus() != MaterialApplicant.STATUS_SUBMITED) {
             throw new BusinessException("当前状态不是待审核状态");
         }
 
@@ -254,7 +259,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
         }
         Hospital h = hospitalService.getById(hospitalId);
         MaterialSpec ms = materialSpecService.getById(materialSpecId);
-        throw new BusinessException(h.getName() + "已存在" + ms.getMaterialSpec()+"了呀！");
+        throw new BusinessException(h.getName() + "已存在" + ms.getMaterialSpec() + "了呀！");
     }
 
 
