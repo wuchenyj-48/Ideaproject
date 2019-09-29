@@ -2,6 +2,8 @@
 
 package fortec.mscm.order.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
 import lombok.Data;
@@ -110,6 +112,7 @@ public class Delivery extends DataEntity implements Serializable {
     /**
      * 发货时间
      */
+    @TableField(strategy = FieldStrategy.IGNORED)
     private java.util.Date gmtDelivery;
 
     /**

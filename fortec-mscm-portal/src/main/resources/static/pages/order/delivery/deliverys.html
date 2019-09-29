@@ -48,7 +48,7 @@
         </script>
 
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">查看明细</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">详细</a>
 <!--            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
         </script>
 
@@ -80,6 +80,7 @@
                         {field: 'poCode', title: '采购单号', align: 'center',width: 160},
 
                         {field: 'deliveryAmount', title: '发货金额(元)', align: 'center',width: 120},
+                        {field: 'gmtDelivery', title: '发货时间', align: 'center'},
                         {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center'},
                         {field: 'isConsignment', title: '一物一码', align: 'center', width: 90,
                             templet(item) {
@@ -101,12 +102,11 @@
                         },
                         {field: 'gmtExceptedEarliestDelivery', title: '预计最早送达时间', align: 'center'},
                         {field: 'gmtExceptedLatestDelivery', title: '预计最晚送达时间', align: 'center'},
-                        {field: 'creator', title: '制单人', align: 'center'},
                         {
                             field: "LAY_CELL_TOOLBAR",
                             title: '操作',
                             templet: '#cellToolbar',
-                            width: 150,
+                            width: 70,
                             align: 'center',
                             fixed: 'right'
                         }

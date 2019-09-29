@@ -113,7 +113,7 @@
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
-                            要求送达日期
+                            要求送达时间
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="gmtRequireLatestDelivery" readonly lay-verify=""
@@ -122,11 +122,11 @@
                     </div>
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
-                            最早送达日期
+                            最早送达时间
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="gmtExceptedEarliestDelivery" required lay-verify="required"
-                                   placeholder="请选择最早送达日期" autocomplete="off" class="layui-input">
+                                   placeholder="请选择最早送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
 
@@ -136,11 +136,11 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
-                            最晚送达日期
+                            最晚送达时间
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="gmtExceptedLatestDelivery" required lay-verify="required"
-                                   placeholder="请选择最晚送达日期" autocomplete="off" class="layui-input">
+                                   placeholder="请选择最晚送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-col-xs4">
@@ -397,18 +397,19 @@
                             if (!resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 5})
                                 return
-
                             }
 
-                            layer.msg(resp.data.msg, {icon: 1});
-
                             let data = resp.data.data
+
+                            let tableRows = table.getRows('delivery_item_table')
+                            data.forEach(o => o.materialName = tableRows.filter(t => o.deliveryItemId == t.id)[0].materialName)
+
                             let dom = $("<div></div>")
                             for (let i = 0; i < data.length; i++) {
                                 let container = $("<div style='border: 1px'></div>")
-                                container.append(`<p>品名: ${data[i].id}</p>`)
+                                container.append(`<p>品名: ${data[i].materialName}</p>`)
 
-                                let barcode = $("<img style='width: 200px'/>")
+                                let barcode = $("<img />")
                                 barcode.JsBarcode(data[i].sn)
                                 container.append(barcode)
 

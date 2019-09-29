@@ -63,7 +63,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())
                 .eq("status", DictConsts.STATUS_DELIVERY_UNFILLED)
-                .orderByDesc("gmt_modified")
+                .orderByDesc("code")
         );
         return list;
     }
@@ -74,7 +74,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
                 .eq(StringUtils.isBlank(request.getCode()), "status", DictConsts.STATUS_DELIVERY_UNFILLED)
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())
-                .orderByDesc("gmt_modified")
+                .orderByDesc("code")
         );
         return page;
     }

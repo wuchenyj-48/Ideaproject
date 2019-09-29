@@ -63,7 +63,7 @@ public class DeliveryItemSnServiceImpl extends BaseServiceImpl<DeliveryItemSnMap
 //          查询 订单明细生成的SN
         List<DeliveryItemSn> returnSnList = this.list(Wrappers.<DeliveryItemSn>query()
                 .eq("delivery_id", deliveryId)
-                .select("sn")
+                .select("sn,delivery_item_id")
                 .orderByDesc("gmt_modified"));
 
 //          如果不存在,新增
@@ -88,7 +88,7 @@ public class DeliveryItemSnServiceImpl extends BaseServiceImpl<DeliveryItemSnMap
             }
             return this.list(Wrappers.<DeliveryItemSn>query()
                     .eq("delivery_id", deliveryId)
-                    .select("sn")
+                    .select("sn,delivery_item_id")
                     .orderByDesc("gmt_modified"));
         }
         return returnSnList;
