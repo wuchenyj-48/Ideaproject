@@ -98,9 +98,6 @@ public class PurchaseOrderController extends BaseController {
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
-    public PurchaseOrderController() {
-        super();
-    }
 
     /**
      * @param request

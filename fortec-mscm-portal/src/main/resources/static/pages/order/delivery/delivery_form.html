@@ -219,37 +219,40 @@
                             id: 'delivery_item_table',
                             elem: '#delivery_item_table',
                             data: resp.data.data,
-                            height: 300,
+                            height: 'full-450',
                             cols: [[
                                 {type: 'numbers', align: 'center'},
 
-                                {field: 'materialName', title: '商品名称', align: 'center',width:230},
-                                {field: 'materialSpec', title: '规格', align: 'center'},
-                                {field: 'form', title: '剂型', align: 'center',width: 80},
+                                {field: 'materialName', title: '商品名称', align: 'center', width: 230},
+                                {field: 'materialSpec', title: '规格', align: 'center',width: 150},
+                                {field: 'form', title: '剂型', align: 'center', width: 80},
 
-                                {field: 'unit', title: '单位', align: 'center',width: 70},
-                                {field: 'price', title: '单价', align: 'center',width: 70},
-                                {field: 'shouldDeliveryQty', title: '应发', align: 'center',width: 70},
-                                {field: 'deliveredQty', title: '已发', align: 'center',width: 70},
-                                {field: 'qty', title: '本次实发', align: 'center',width: 90},
+                                {field: 'unit', title: '单位', align: 'center', width: 70},
+                                {field: 'price', title: '单价', align: 'center', width: 70},
+                                {field: 'shouldDeliveryQty', title: '应发', align: 'center', width: 70},
+                                {field: 'deliveredQty', title: '已发', align: 'center', width: 70},
+                                {field: 'qty', title: '本次实发', align: 'center', width: 90},
                                 {field: 'lot', title: '批次', align: 'center'},
-                                {field: 'subtotalAmount', title: '小计(元)', align: 'center',width: 100},
-                                {field: 'expiringDate', title: '生产日期', align: 'center'},
-                                {field: 'validDate', title: '有效日期', align: 'center'},
+                                {field: 'subtotalAmount', title: '小计(元)', align: 'center', width: 100},
+                                {field: 'expiringDate', title: '生产日期', align: 'center',width: 110},
+                                {field: 'validDate', title: '有效日期', align: 'center',width: 110},
                                 {
                                     field: 'sterilizationDate',
                                     title: '灭菌日期',
                                     align: 'center',
+                                    width: 110,
                                     templet: "sterilizationDateTpl"
                                 },
                                 {
                                     field: 'registrationNumber',
                                     title: '注册证号',
+                                    width: 110,
                                     align: 'center',
                                 },
                                 {
                                     field: 'manufacturerName',
                                     title: '生产厂家',
+                                    width: 250,
                                     align: 'center',
                                 },
 
@@ -393,32 +396,36 @@
                     })
                 })
                 $(".form-barCode").click(() => {
-                        $http.post(`/order/delivery_item_sns/${model.id}`).then(resp => {
-                            if (!resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
-                                return
-                            }
+                    $http.post(`/order/delivery_item_sns/${model.id}`).then(resp => {
+                        if (!resp.data.success) {
+                            layer.msg(resp.data.msg, {icon: 5})
+                            return
+                        }
 
-                            let data = resp.data.data
+                        let data = resp.data.data
 
-                            let tableRows = table.getRows('delivery_item_table')
-                            data.forEach(o => o.materialName = tableRows.filter(t => o.deliveryItemId == t.id)[0].materialName)
+                        let tableRows = table.getRows('delivery_item_table')
+                        data.forEach(o => {
+                            o.materialName = tableRows.filter(t => o.deliveryItemId === t.id)[0].materialName
+                            o.materialSpec = tableRows.filter(t => o.deliveryItemId === t.id)[0].materialSpec
+                        })
+                        console.log(data)
+                        let dom = $("<div></div>")
+                        for (let i = 0; i < data.length; i++) {
 
-                            let dom = $("<div></div>")
-                            for (let i = 0; i < data.length; i++) {
-                                let container = $("<div style='border: 1px'></div>")
-                                container.append(`<p>品名: ${data[i].materialName}</p>`)
+                            let container = $("<div style='border: 1px'></div>")
+                            container.append(`<p>品名: ${data[i].materialName}</p>`)
 
-                                let barcode = $("<img />")
-                                barcode.JsBarcode(data[i].sn)
-                                container.append(barcode)
 
-                                dom.append(container)
-                            }
-                            dom.jqprint()
-                        });
-                    })
+                            let barcode = $("<img />")
+                            barcode.JsBarcode(data[i].sn)
+                            container.append(barcode)
 
+                            dom.append(container)
+                        }
+                        dom.jqprint()
+                    });
+                })
 
 
                 // 监听表单提交事件
