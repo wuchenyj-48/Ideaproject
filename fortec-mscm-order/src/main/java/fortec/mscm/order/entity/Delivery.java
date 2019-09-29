@@ -2,6 +2,8 @@
 
 package fortec.mscm.order.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
 import lombok.Data;
@@ -10,10 +12,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import java.io.Serializable;
 
 /**
@@ -82,13 +82,13 @@ public class Delivery extends DataEntity implements Serializable {
     /**
      * 预计最早送达日期
      */
-    @Past(message = "最早送达日期不能早于当前时间")
+//    @Future(message = "最早送达日期不能早于当前时间")
     private java.util.Date gmtExceptedEarliestDelivery;
 
     /**
      * 预计最晚送达日期
      */
-    @Future(message = "最晚送达日期不能早于当前时间")
+//    @Future(message = "最晚送达日期不能早于当前时间")
     private java.util.Date gmtExceptedLatestDelivery;
 
     /**
@@ -112,6 +112,7 @@ public class Delivery extends DataEntity implements Serializable {
     /**
      * 发货时间
      */
+    @TableField(strategy = FieldStrategy.IGNORED)
     private java.util.Date gmtDelivery;
 
     /**

@@ -25,9 +25,7 @@
                                 </div>
                                 <div class="layui-input-inline">
                                     <select name="status" >
-                                        <option value=""></option>
-                                        <option value="0">未发货</option>
-                                        <option value="1">已发货</option>
+                                        <option value="">请选择订单状态</option>
                                     </select>
                                 </div>
 
@@ -55,7 +53,7 @@
         </script>
 
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">查看明细</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">详细</a>
 <!--            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
         </script>
 
@@ -81,27 +79,56 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
+                        {field: 'code', title: '发货单号', align: 'center',width: 160},
+                        {field: 'hospitalName', title: '院方名称', align: 'center'},
+                        {field: 'poCode', title: '采购单号', align: 'center',width: 160},
 
-                        {field: 'code', title: '发货单号', align: 'center'},
+                        {field: 'deliveryAmount', title: '发货金额(元)', align: 'center', width: 120},
                         {field: 'gmtDelivery', title: '发货时间', align: 'center'},
-                        {field: 'poCode', title: '采购单号', align: 'center'},
-                        {field: 'warehouseName', title: '采购仓库', align: 'center'},
-                        {field: 'deliveryAmount', title: '发货总金额(元)', align: 'center'},
-                        {field: 'creator', title: '制单人', align: 'center'},
-                        {field: 'gmtCreate', title: '制单时间', align: 'center'},
+                        {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center'},
+                        {field: 'isConsignment', title: '一物一码', align: 'center', width: 90,
+                            templet(item) {
+                                if(item.isConsignment === 0){
+                                    return `<div class="layui-color-blue">${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
+                                }else{
+                                    return `<div class="layui-color-red">${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
+                                }
+                            }
+                        },
+                        {field: 'isOneThingOneYard', title: '寄售', align: 'center', width: 80,
+                            templet(item) {
+                                if(item.isOneThingOneYard === 0){
+                                    return `<div class="layui-color-blue">${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
+                                }else{
+                                    return `<div class="layui-color-red">${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
+                                }
+                            }
+                        },
+                        {field: 'status', title: '订单状态', align: 'center',
+                            templet(item) {
+                                if(item.status === 0){
+                                    return `<div class="layui-color-red">${$global.getDictLabel('order_delivery_status', item.status)}</div>`;
+                                }else if (item.status === 1) {
+                                    return `<div class="layui-color-blue">${$global.getDictLabel('order_delivery_status', item.status)}</div>`;
+                                }else if (item.status === 2) {
+                                    return `<div class="layui-color-black">${$global.getDictLabel('order_delivery_status', item.status)}</div>`;
+                                }
+                            }
+                        },
+                        {field: 'gmtExceptedEarliestDelivery', title: '预计最早送达时间', align: 'center'},
+                        {field: 'gmtExceptedLatestDelivery', title: '预计最晚送达时间', align: 'center'},
                         {
                             field: "LAY_CELL_TOOLBAR",
                             title: '操作',
                             templet: '#cellToolbar',
-                            width: 150,
+                            width: 70,
                             align: 'center',
                             fixed: 'right'
                         }
                     ]]
                 });
 
-                // 渲染下拉框 数据
-                form.render('select')
+
 
                 window.edit = (data, rowIndex) => {
                     let index = layer.open({
@@ -128,6 +155,12 @@
                         })
                     });
                 }
+                // 渲染订单状态 数据
+                $global.getDictDataList('order_delivery_status').forEach(o => {
+                    $("select[name='status']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                // 渲染下拉框 数据
+                form.render('select')
                 // 监听表单重置
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
