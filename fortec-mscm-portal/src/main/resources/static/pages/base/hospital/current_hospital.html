@@ -150,8 +150,8 @@
                                             <i class="layui-icon layui-icon-refresh"></i> 刷新
                                         </button>
                                     </div>
-                                    <div class="row-edit-table" id="hospital_location_table"
-                                         lay-filter="hospital_location_table"></div>
+                                    <div class="row-edit-table" id="hospital_warehouse_table"
+                                         lay-filter="hospital_warehouse_table"></div>
                                 </div>
                             </div>
                         </div>
@@ -212,9 +212,9 @@
                     if ($strings.isBlank(model.id)) {
                         return
                     }
-                    $http.get(`/base/hospital_locations/list?hospitalId=${model.id}`).then(resp => {
+                    $http.get(`/base/hospital_warehouses/list?hospitalId=${model.id}`).then(resp => {
                         layui.table.render({
-                            elem: '#hospital_location_table',
+                            elem: '#hospital_warehouse_table',
                             data: resp.data.data,
                             height: 400,
                             cols: [[
@@ -229,7 +229,7 @@
                                 },
                             ]]
                         });
-                        $editable.watch('hospital_location_table')
+                        $editable.watch('hospital_warehouse_table')
                     })
                 }
 
@@ -258,22 +258,22 @@
 
                 /*** 子表管理开始 */
                 $("#hospitalLocationToolbar button[lay-event='addNewLine']").click(() => {
-                    layui.table.addRow('hospital_location_table', 0, {})
+                    layui.table.addRow('hospital_warehouse_table', 0, {})
                     form.render('select')
                 })
 
                 $("#hospitalLocationToolbar button[lay-event='batchSave']").click(() => {
-                    $editable.validateAllRows('hospital_location_table', (valid, errors) => {
+                    $editable.validateAllRows('hospital_warehouse_table', (valid, errors) => {
                         if (!valid) {
                             return
                         }
-                        let rows = layui.table.getRows('hospital_location_table')
+                        let rows = layui.table.getRows('hospital_warehouse_table')
                         if (rows.length == 0){
                             return;
                         }
 
                         rows.forEach(o => o.hospitalId = model.id)
-                        $http.put("/base/hospital_locations/batch_save", rows).then(resp => {
+                        $http.put("/base/hospital_warehouses/batch_save", rows).then(resp => {
                             if (resp.data.success) {
                                 layui.layer.msg(resp.data.msg, {icon: 1})
                                 window.reloadHospitalLocationTable()
@@ -290,18 +290,18 @@
 
 
                 // 监听子表的列工具栏
-                layui.table.on('tool(hospital_location_table)', function (obj) {
+                layui.table.on('tool(hospital_warehouse_table)', function (obj) {
                     // 获取行索引
                     let index = obj.tr[0].getAttribute("data-index")
                     var data = obj.data;
                     if (obj.event === 'newDel') {
                         // 未在数据库中存在，直接从界面移除即可
-                        layui.table.deleteRow('hospital_location_table', index)
+                        layui.table.deleteRow('hospital_warehouse_table', index)
                         return
                     }
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
-                            $http.delete(`/base/hospital_locations/` + data.id).then(resp => {
+                            $http.delete(`/base/hospital_warehouses/` + data.id).then(resp => {
                                 window.reloadHospitalLocationTable()
                                 layer.msg(resp.data.msg, {icon: 1})
                             })
@@ -310,17 +310,17 @@
                     }
 
                     // 校验并保存
-                    $editable.validateSingleRow("hospital_location_table", index, (valid, error) => {
+                    $editable.validateSingleRow("hospital_warehouse_table", index, (valid, error) => {
                         if (!valid) {
                             return
                         }
-                        let data = layui.table.cache.hospital_location_table[index]
+                        let data = layui.table.cache.hospital_warehouse_table[index]
                         data.hospitalId = model.id
                         let promise = null
                         if ($strings.isBlank(data.id)) {
-                            promise = $http.post("/base/hospital_locations/", data)
+                            promise = $http.post("/base/hospital_warehouses/", data)
                         } else {
-                            promise = $http.put("/base/hospital_locations/", data)
+                            promise = $http.put("/base/hospital_warehouses/", data)
                         }
 
                         promise.then(resp => {
@@ -328,7 +328,7 @@
                                 layer.msg(resp.data.msg, {icon: 1})
 
                                 // 重新渲染单行数据
-                                layui.table.renderSpecRow('hospital_location_table', index, {
+                                layui.table.renderSpecRow('hospital_warehouse_table', index, {
                                     id: resp.data.data.id
                                 })
                             } else {

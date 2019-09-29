@@ -6,11 +6,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
-
 import fortec.mscm.order.entity.PurchaseOrder;
 import fortec.mscm.order.request.PurchaseOrderQueryRequest;
 import fortec.mscm.order.service.PurchaseOrderService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +26,7 @@ import java.util.List;
 @RequestMapping("/purchase_orders")
 public class PurchaseOrderController extends BaseController {
 
-    private PurchaseOrderService purchaseOrderService;
+    private final PurchaseOrderService purchaseOrderService;
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid PurchaseOrder entity) {
@@ -98,13 +96,10 @@ public class PurchaseOrderController extends BaseController {
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
-    public PurchaseOrderController() {
-        super();
-    }
 
     /**
      * @param request
-     * @Description:  查询未发货和部分发货订单
+     * @Description: 查询未发货和部分发货订单
      * @return: fortec.common.core.model.PageResult
      * @author Yangjy
      */

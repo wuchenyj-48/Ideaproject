@@ -11,9 +11,9 @@ import fortec.mscm.core.consts.SerialRuleConsts;
 import fortec.mscm.order.consts.DictConsts;
 import fortec.mscm.order.entity.PurchaseOrder;
 import fortec.mscm.order.entity.PurchaseOrderItem;
+import fortec.mscm.order.mapper.PurchaseOrderItemMapper;
 import fortec.mscm.order.mapper.PurchaseOrderMapper;
 import fortec.mscm.order.request.PurchaseOrderQueryRequest;
-import fortec.mscm.order.service.PurchaseOrderItemService;
 import fortec.mscm.order.service.PurchaseOrderService;
 import fortec.mscm.security.utils.UserUtils;
 import lombok.AllArgsConstructor;
@@ -39,12 +39,12 @@ import static fortec.mscm.order.consts.DictConsts.STATUS_UNPASS;
 @Service
 public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMapper, PurchaseOrder> implements PurchaseOrderService {
 
-    private final PurchaseOrderItemService purchaseOrderItemService;
+    private final PurchaseOrderItemMapper purchaseOrderItemMapper;
 
 
     @Override
     public boolean removeCascadeById(Serializable id) {
-        purchaseOrderItemService.remove(Wrappers.<PurchaseOrderItem>query().eq("po_id", id));
+        purchaseOrderItemMapper.delete(Wrappers.<PurchaseOrderItem>query().eq("po_id", id));
         return super.removeById(id);
     }
 
@@ -112,7 +112,7 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
         }
 
         //明细是否为空
-        List<PurchaseOrderItem> list = purchaseOrderItemService.list(Wrappers.<PurchaseOrderItem>query().eq("po_id", id));
+        List<PurchaseOrderItem> list = purchaseOrderItemMapper.selectList(Wrappers.<PurchaseOrderItem>query().eq("po_id", id));
         if (list.isEmpty()) {
             throw new BusinessException("采购订单明细为空，不允许提交");
         }
