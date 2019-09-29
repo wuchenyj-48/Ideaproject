@@ -28,7 +28,7 @@ public class DeliveryItemSnController extends BaseController {
     private final DeliveryItemSnService deliveryItemSnService;
 
     @PostMapping("/{id}")
-    public CommonResult add(@PathVariable("id") String deliveryId) {
+    public CommonResult saveDeliveryItemSns(@PathVariable("id") String deliveryId) {
         List<DeliveryItemSn> deliveryItemSnList = deliveryItemSnService.saveDeliveryItemSns(deliveryId);
         return CommonResult.ok("新增成功",deliveryItemSnList);
     }

@@ -98,6 +98,10 @@ public class PurchaseOrderController extends BaseController {
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
+    public PurchaseOrderController() {
+        super();
+    }
+
     /**
      * @param request
      * @Description:  查询未发货和部分发货订单

@@ -70,8 +70,8 @@
                             采购单号
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="poCode" id="poCode" required lay-verify="required"
-                                   placeholder="请输入采购单号"
+                            <input type="text" name="poCode" id="poCode" readonly required lay-verify=""
+                                   placeholder=""
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -161,7 +161,9 @@
                 <div class="layui-row ">
                     <div class="layui-form-item no-print">
                         <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-normal form-barCode" type="button">打印条码</button>
+                            <button class="layui-btn layui-btn-normal form-barCode" id="printBarCode" type="button">
+                                打印条码
+                            </button>
                             <button class="layui-btn layui-btn-normal form-print" type="button">打印发货单</button>
                             <button class="layui-btn layui-btn-danger form-delivery" type="button">取消发货</button>
                             <!--                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>-->
@@ -179,16 +181,7 @@
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <div id="deliveryItemToolbar">
-                            <!--                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"-->
-                            <!--                                    lay-event="addNewLine">-->
-                            <!--                                <i class="layui-icon layui-icon-add-1"></i> 增行-->
-                            <!--                            </button>-->
-                            <!--                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">-->
-                            <!--                                <i class="layui-icon layui-icon-save"></i> 批量保存-->
-                            <!--                            </button>-->
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
-                                <i class="layui-icon layui-icon-refresh"></i> 刷新
-                            </button>
+
                         </div>
                         <div class="row-edit-table" id="delivery_item_table" lay-filter="delivery_item_table"></div>
                     </div>
@@ -208,11 +201,11 @@
             </ul>
         </script>
         <script src="/scripts/utils/common.js"></script>
-        <script src="https://cdn.bootcss.com/jsbarcode/3.9.0/JsBarcode.all.min.js"></script>
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$;
+                let form = layui.form, $ = layui.$, table = layui.table, layer = layui.layer;
+                tableSelect = layui.tableSelect
 
                 let model = {};
 
@@ -230,21 +223,17 @@
                             cols: [[
                                 {type: 'numbers', align: 'center'},
 
-                                {field: 'materialName', title: '商品名称', align: 'center'},
+                                {field: 'materialName', title: '商品名称', align: 'center',width:230},
                                 {field: 'materialSpec', title: '规格', align: 'center'},
-                                {field: 'form', title: '剂型', align: 'center'},
-                                {
-                                    field: 'manufacturerName',
-                                    title: '生产厂家',
-                                    align: 'center',
-                                },
-                                {field: 'unit', title: '单位', align: 'center'},
-                                {field: 'price', title: '单价(元)', align: 'center'},
-                                {field: 'shouldDeliveryQty', title: '应发', align: 'center'},
-                                {field: 'deliveredQty', title: '已发', align: 'center'},
-                                {field: 'qty', title: '本次实发', align: 'center'},
+                                {field: 'form', title: '剂型', align: 'center',width: 80},
+
+                                {field: 'unit', title: '单位', align: 'center',width: 70},
+                                {field: 'price', title: '单价', align: 'center',width: 70},
+                                {field: 'shouldDeliveryQty', title: '应发', align: 'center',width: 70},
+                                {field: 'deliveredQty', title: '已发', align: 'center',width: 70},
+                                {field: 'qty', title: '本次实发', align: 'center',width: 90},
                                 {field: 'lot', title: '批次', align: 'center'},
-                                {field: 'subtotalAmount', title: '小计(元)'},
+                                {field: 'subtotalAmount', title: '小计(元)', align: 'center',width: 100},
                                 {field: 'expiringDate', title: '生产日期', align: 'center'},
                                 {field: 'validDate', title: '有效日期', align: 'center'},
                                 {
@@ -258,7 +247,11 @@
                                     title: '注册证号',
                                     align: 'center',
                                 },
-
+                                {
+                                    field: 'manufacturerName',
+                                    title: '生产厂家',
+                                    align: 'center',
+                                },
 
                             ]]
                         });
@@ -400,34 +393,33 @@
                     })
                 })
                 $(".form-barCode").click(() => {
-                    layer.confirm('确定打印条码吗?', function () {
                         $http.post(`/order/delivery_item_sns/${model.id}`).then(resp => {
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1});
-
-                                layui.laytpl($("#SnBarCoded").html()).render(resp.data.data, function (html) {
-                                    $(html).jqprint()
-
-                                })
-
-
-                            } else {
+                            if (!resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 5})
+                                return
+
                             }
+
+                            layer.msg(resp.data.msg, {icon: 1});
+
+                            let data = resp.data.data
+                            let dom = $("<div></div>")
+                            for (let i = 0; i < data.length; i++) {
+                                let container = $("<div style='border: 1px'></div>")
+                                container.append(`<p>品名: ${data[i].id}</p>`)
+
+                                let barcode = $("<img style='width: 200px'/>")
+                                barcode.JsBarcode(data[i].sn)
+                                container.append(barcode)
+
+                                dom.append(container)
+                            }
+                            dom.jqprint()
                         });
-
-                        return false;
                     })
-                });
 
-                JsBarcode(this.barcode, "1234567890", {
-                    text: "",
-                    format: "CODE39",
-                    displayValue: true,
-                    width: 2.0,
-                    height: 100,
-                    margin: 0,
-                });
+
+
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     data.field = layui.$.extend({}, data.field);
@@ -456,7 +448,12 @@
             };
 
             extendParentScriptsAndStyles(() => {
-                loadAllJs(["/lib/tableSelect.js", "/lib/treeSelect.js", "/scripts/utils/editable.js"], mainFunction)
+                window.$ = layui.$
+                window.jQuery = layui.$
+                loadAllJs([
+                    "/lib/tableSelect.js", "/lib/treeSelect.js", "/scripts/utils/editable.js",
+                    "https://cdn.bootcss.com/jsbarcode/3.9.0/JsBarcode.all.min.js"
+                ], mainFunction)
             })
 
         </script>

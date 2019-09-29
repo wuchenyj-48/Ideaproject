@@ -8,29 +8,33 @@
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
-                    <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
-                        <div class="layui-input-inline fortec-margin-right">
-                            <input type="text" name="materialName" placeholder="请输入耗材名称" autocomplete="off"
-                                   class="layui-input">
-                        </div>
-
+                    <span>*************************************</span>
                         <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
                                 lay-filter="list">
-                            <i class="layui-icon layui-icon-search"></i> 查询
+                            <i class="layui-icon layui-icon-search"></i> 打印
                         </button>
-                        <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="reset">
-                            <i class="layui-icon "></i> 重置
-                        </button>
-
-                    </form>
-                    <table id="listTable" lay-filter="listTable"></table>
+                    <div id="view"></div>
                 </div>
             </div>
         </div>
 
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
+        <script id="demo" type="text/html">
+            <ul>
+                {{# layui.each(d.list, function(index, item){ }}
+                <li>
+                    <span>{{ item.field }}：</span>
+                    <span>{{ item.site || '' }}</span>
+                    <span>{{ item.site || '' }}</span>
+                </li>
+                {{# }); }}
 
+                {{# if(d.list.length === 0){ }}
+                无数据
+                {{# } }}
+            </ul>
+        </script>
         <script>
 
             extendParentScriptsAndStyles(() => {
@@ -41,30 +45,21 @@
                 let fnOnConfirm = null
 
                 let renderTable = () => {
-                    table.render({
-                        id: "listTable",
-                        elem: '#listTable',
-                        title: '订单明细',
-                        height: 'full-80',
-                        url: '/order/delivery_items/surplus_order_item',
+                    let getTpl = demo.innerHTML
+                    layui.laytpl(getTpl).render({
+                        url: '/order/delivery_item_sns/list',
                         where: whereModel,
-                        page: {
-                            limit: 20
-                        },
-                        request: {
-                            pageName: 'currPage',
-                            limitName: 'pageSize' //每页数据量的参数名，默认：limit
-                        },
-                        cols: [[
-                            allowMultiple ? {type: 'checkbox'} : {type: "radio"},
-                            {field: 'materialName', title: '品名',align: 'center'},
-                            {field: 'materialSpec', title: '规格',align: 'center'},
-                            {field: 'shouldDeliveryQty', title: '应发',align: 'center'},
-                            {field: 'deliveredQty', title: '已发',align: 'center'},
-                            {field: 'price', title: '价格(元)',align: 'center'},
-                            {field: 'unit', title: '单位',align: 'center'},
-                        ]]
+                        data:{
+                            "title":"打印sn"
+                            ,"list":[{field:"sn","site":"layer.layui.com"},{"field":"form"}]
+                        }
+
+                    },function(html){
+                        view.innerHTML = html;
                     })
+
+
+
 
                     // 行单击
                     table.on('row(listTable)', function (obj) {

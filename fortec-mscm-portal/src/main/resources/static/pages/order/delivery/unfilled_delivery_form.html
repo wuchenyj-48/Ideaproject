@@ -149,7 +149,7 @@
 
                         </label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="isOneThingOneYard" title="一物一码" lay-skin="primary" disabled>
+                            <input type="checkbox" name="isOneThingOneYard" id="isOneThingOneYard" title="一物一码" lay-skin="primary" disabled>
                             <input type="checkbox" name="isConsignment" title="是否寄售" lay-skin="primary" disabled>
 
 
@@ -212,9 +212,15 @@
 
 
         <script type="text/html" id="qtyTpl">
+            {{#  if(layui.$('#isOneThingOneYard')[0].checked){ }}
             <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required" placeholder="必填"
+                   data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required|integer" placeholder="必填"
                    class="layui-input custom-input"/>
+            {{#  } else { }}
+            <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
+                   data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required" placeholder="必填"
+                   class="layui-input custom-input"/>
+            {{#  } }}
         </script>
         <script type="text/html" id="lotTpl">
             <input type="text" data-name="lot" value="{{d.lot ? d.lot : ''}}" lay-filter="lot"
@@ -293,21 +299,17 @@
                                     width: 60,
                                     fixed: "left"
                                 },
-                                {field: 'materialName', title: '商品名称', align: 'center'},
-                                {field: 'materialSpec', title: '规格', align: 'center'},
-                                {field: 'form', title: '剂型', align: 'center'},
-                                {
-                                    field: 'manufacturerName',
-                                    title: '生产厂家',
-                                    align: 'center',
-                                },
-                                {field: 'unit', title: '单位', align: 'center'},
-                                {field: 'price', title: '单价', align: 'center'},
-                                {field: 'shouldDeliveryQty', title: '应发', align: 'center'},
-                                {field: 'deliveredQty', title: '已发', align: 'center'},
-                                {field: 'qty', title: '本次实发', align: 'center', templet: "#qtyTpl"},
+                                {field: 'materialName', title: '商品名称', align: 'center',width:230},
+                                {field: 'materialSpec', title: '规格', align: 'center',width: 70},
+                                {field: 'form', title: '剂型', align: 'center',width: 80},
+
+                                {field: 'unit', title: '单位', align: 'center',width: 70},
+                                {field: 'price', title: '单价', align: 'center',width: 70},
+                                {field: 'shouldDeliveryQty', title: '应发', align: 'center',width: 70},
+                                {field: 'deliveredQty', title: '已发', align: 'center',width: 70},
+                                {field: 'qty', title: '本次实发', align: 'center',width: 90, templet: "#qtyTpl"},
                                 {field: 'lot', title: '批次', align: 'center', templet: "#lotTpl"},
-                                {field: 'subtotalAmount', title: '小计(元)', align: 'center'},
+                                {field: 'subtotalAmount', title: '小计(元)', align: 'center',width: 100},
                                 {
                                     field: 'productionDate',
                                     title: '生产日期',
@@ -340,6 +342,11 @@
                                     templet: "#certificateNoTpl"
                                 },
                                 {
+                                    field: 'manufacturerName',
+                                    title: '生产厂家',
+                                    align: 'center',
+                                },
+                                {
                                     field: 'LAY_CELL_TOOLBAR',
                                     title: '操作',
                                     align: 'center',
@@ -363,6 +370,7 @@
                         $(".form-reset").hide();
                         $(".form-delivery").show();
                         $(".child-tab").show();
+                        $("#poCode").attr("disabled", true)
                         renderPurchaseOrderSelect()
                         window.reloadDeliveryItemTable && window.reloadDeliveryItemTable()
                     } else {
@@ -371,43 +379,7 @@
                     }
 
                 };
-                //渲染订单名称
-                tableSelect.render({
-                    elem: '#poCode',	//定义输入框input对象 必填
-                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
-                    searchPlaceholder: '采购订单搜索',	//搜索输入框的提示文字 默认关键词搜索
-                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                        url: '/order/purchase_orders/page_For_Delivery',
-                        cols: [[
-                            {type: 'radio'},
-                            {field: 'code', title: '采购订单'}
-                        ]]
-                    },
-                    done(elem, data) {
-                        let selectedRow = data.data[0];
-                        console.log(selectedRow);
-                        let tmp = {};
-                        tmp.poId = selectedRow.id;
-                        tmp.orderAmount = selectedRow.totalAmount;
-                        tmp.deliveryAmount = selectedRow.totalAmount;
-                        tmp.isConsignment = selectedRow.isConsignment;
-                        tmp.isOneThingOneYard = selectedRow.isOneThingOneYard;
-                        tmp.poCode = selectedRow.code;
-                        tmp.gmtRequireLatestDelivery = selectedRow.gmtRequireLatestDelivery;
-                        tmp.warehouseId = selectedRow.warehouseId;
-                        tmp.hospitalId = selectedRow.hospitalId;
-                        tmp.hospitalName = selectedRow.hospitalName;
-                        tmp.supplierId = selectedRow.supplierId;
-                        tmp.supplierName = selectedRow.supplierName;
-                        tmp.warehouseName = selectedRow.warehouseName;
-                        form.val("editForm", tmp);
 
-                        $.extend(model, tmp)
-
-
-                    }
-                });
                 // 渲染下拉框 数据
                 form.render('select');
 
@@ -480,12 +452,46 @@
 
                 }
                 /**
-                 *  渲染彈出框
+                 *  渲染订单弹出框
+                 */
+                    tableSelect.renderOpenTable({
+                        elem: "#poCode",
+                        title: "订单明细选择",
+                        component: "/components/order/order_select.html",
+                        allowMultiple: false,
+                        onConfirm(rows, elem) {
+                            model.supplierId = rows.length > 0 ? rows[0].supplierId : null
+                            layui.each(rows, function (index, item) {
+                                console.log(item)
+                                let tmp = {};
+                                         tmp.poId = item.id;
+                                         tmp.orderAmount = item.totalAmount;
+                                         tmp.deliveryAmount = item.totalAmount;
+                                         tmp.isConsignment = item.isConsignment;
+                                         tmp.isOneThingOneYard = item.isOneThingOneYard;
+                                         tmp.poCode = item.code;
+                                         tmp.gmtRequireLatestDelivery = item.gmtRequireLatestDelivery;
+                                         tmp.warehouseId = item.warehouseId;
+                                         tmp.hospitalId = item.hospitalId;
+                                         tmp.hospitalName = item.hospitalName;
+                                         tmp.supplierId = item.supplierId;
+                                         tmp.supplierName = item.supplierName;
+                                         tmp.warehouseName = item.warehouseName;
+                                         form.val("editForm", tmp);
+
+                                         $.extend(model, tmp)
+                            })
+
+
+                        }
+                    })
+                /**
+                 *  渲染剩余彈出框
                  */
                 window.renderPurchaseOrderSelect = () => {
                     tableSelect.renderOpenTable({
                         elem: "[data-name='currentPurchaseOrderSelect']",
-                        title: "订单明细选择",
+                        title: "采购订单剩余明细选择",
                         component: "/components/order/order_item_select.html",
                         allowMultiple: true,
                         where: {

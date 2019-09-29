@@ -35,6 +35,8 @@ public class DeliveryItemSnServiceImpl extends BaseServiceImpl<DeliveryItemSnMap
     private final DeliveryItemMapper deliveryItemMapper;
 
 
+
+
     @Override
     public List<DeliveryItemSn> list(DeliveryItemSnQueryRequest request) {
         List<DeliveryItemSn> list = this.list(Wrappers.<DeliveryItemSn>query()
@@ -61,6 +63,7 @@ public class DeliveryItemSnServiceImpl extends BaseServiceImpl<DeliveryItemSnMap
 //          查询 订单明细生成的SN
         List<DeliveryItemSn> returnSnList = this.list(Wrappers.<DeliveryItemSn>query()
                 .eq("delivery_id", deliveryId)
+                .select("sn")
                 .orderByDesc("gmt_modified"));
 
 //          如果不存在,新增
@@ -85,6 +88,7 @@ public class DeliveryItemSnServiceImpl extends BaseServiceImpl<DeliveryItemSnMap
             }
             return this.list(Wrappers.<DeliveryItemSn>query()
                     .eq("delivery_id", deliveryId)
+                    .select("sn")
                     .orderByDesc("gmt_modified"));
         }
         return returnSnList;
