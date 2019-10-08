@@ -21,7 +21,7 @@ import ${t.packageName}.${t.moduleName}<#if t.subModuleName != "">.${t.subModule
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.mapper.${className}Mapper;
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.service.${className}Service;
 <#list childTableList as t>
-import ${t.packageName}.${t.moduleName}<#if t.subModuleName != "">.${t.subModuleName}</#if>.service.${t.className}Service;
+import ${t.packageName}.${t.moduleName}<#if t.subModuleName != "">.${t.subModuleName}</#if>.mapper.${t.className}Mapper;
 </#list>
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,13 +44,13 @@ import java.util.List;
 public class ${className}ServiceImpl extends BaseServiceImpl<${className}Mapper, ${className}> implements ${className}Service {
 
     <#list childTableList as t>
-    private final ${t.className}Service ${t.className?uncap_first}Service;
+    private final ${t.className}Mapper ${t.className?uncap_first}Mapper;
     </#list>
 
     @Override
     public boolean removeCascadeById(Serializable id) {
         <#list childTableList as t>
-        ${t.className?uncap_first}Service.remove(Wrappers.<${t.className}>query().eq("${t.parentTableFkName}", id));
+        ${t.className?uncap_first}Mapper.delete(Wrappers.<${t.className}>query().eq("${t.parentTableFkName}", id));
         </#list>
         return super.removeById(id);
     }

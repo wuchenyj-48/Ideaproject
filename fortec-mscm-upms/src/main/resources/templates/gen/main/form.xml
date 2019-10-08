@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template>
     <name>viewList</name>
-    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
-    <fileName>${uncamelClassName}_form.html</fileName>
-    <content>
-    <![CDATA[
+    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}
+    </#if>/${uncamelCase(className)}
+</fileDir>
+<fileName>${uncamelClassName}_form.html</fileName>
+<content>
+<![CDATA[
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -171,6 +173,7 @@
         <script type="text/html" id="${c.attrName}Tpl">
             <select data-name="${c.attrName}" lay-filter="${c.attrName}" lay-event="${c.attrName}"
                     data-index="{{d.LAY_TABLE_INDEX}}">
+                 <option value=''>请选择</option>
                 {{# layui.each($global.getDictDataList('${c.dictType!''}'), function(index, item){ }}
                 <option value="{{item.value}}" {{item.value== d.testSelect ?
                 'selected' : ''}}>{{item.label}}</option>
@@ -180,7 +183,7 @@
                         <#elseif showType == 'input' || showType == 'textarea'>
         <script type="text/html" id="${c.attrName}Tpl">
             <input type="text" data-name="${c.attrName}" value="{{d.${c.attrName} ? d.${c.attrName} : ''}}" lay-filter="${c.attrName}"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="${vc(c.isNull,c.validators)}" <#if c.isNull?? && c.isNull == 0>placeholder="必填"</#if>
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="${vc(c.isNull,c.validators)}" <#if c.isNull?? && c.isNull == 0>placeholder="必填"</#if> <#if c.isNull?? && c.isNull == 1>placeholder="选填"</#if>
                    class="layui-input custom-input"/>
         </script>
                         </#if>
@@ -214,38 +217,51 @@
                 <#if (childTableList?size > 0)>
                 // 加载子表表格
                     <#list childTableList as t>
-                window.reload${t.className}Table = () => {
+                window.reload${t.className}Table = (loadChildTableByHttp) => {
                     if ($strings.isBlank(model.id)) {
                         return
                     }
-                    $http.get(`/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/list?${camelCase(t.parentTableFkName)}=${r"$"}{model.id}`).then(resp => {
-                        table.render({
-                            id: "${uncamelCase(t.className)}_table",
-                            elem: '#${uncamelCase(t.className)}_table',
-                            data: resp.data.data,
-                            height: 300,
-                            cols: [[
-                                {type: 'numbers', align: 'center'},
-                                <#list t.columns as c>
-                                    <#if c.isEdit?? && c.isEdit == 1>
-                                        <#assign showType="${c.showType!''}">
-                                        <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
-                                { field: '${c.attrName}', title: '${c.comments}', align: 'center', templet: "#${c.attrName}Tpl"},
-                                        <#else>
-                                { field: '${c.attrName}', title: '${c.comments}', align: 'center', templet: "#${c.attrName}Tpl"},
-                                        </#if>
+                    let options = {
+                        id: "${uncamelCase(t.className)}_table",
+                        elem: '#${uncamelCase(t.className)}_table',
+                        data: [],
+                        height: 300,
+                        cols: [[
+                            {type: 'numbers', align: 'center'},
+                            <#list t.columns as c>
+                                <#if c.isEdit?? && c.isEdit == 1>
+                                    <#assign showType="${c.showType!''}">
+                                    <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
+                            { field: '${c.attrName}', title: '${c.comments}', align: 'center', templet: "#${c.attrName}Tpl"},
+                                    <#else>
+                            { field: '${c.attrName}', title: '${c.comments}', align: 'center', templet: "#${c.attrName}Tpl"},
                                     </#if>
-                                </#list>
-                                {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#${t.className?uncap_first}CellToolbar"},
-                            ]]
-                        });
+                                </#if>
+                            </#list>
+                            {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#${t.className?uncap_first}CellToolbar"},
+                        ]]
+                    }
+                     if (!loadChildTableByHttp) {
+                        // 如果不需要通过请求的方式加载表格（一般情况下 主表新增后 不需要从后台拉取数据）
+                        table.render(options);
+                        $editable.watch('dict_data_table')
+                        return
+                    }
+                    $http.get(`/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/list?${camelCase(t.parentTableFkName)}=${r"$"}{model.id}`).then(resp => {
+                        options.data = resp.data.data
+                        table.render(options);
                         $editable.watch('${uncamelCase(t.className)}_table')
                     })
                     </#list>
                 }
                 </#if>
 
-                window.initForm = (formData) => {
+                 /**
+                 * 初始化表单
+                 * @param formData 表单数据
+                 * @param loadChildTableByHttp  通过http请求的方式加载子表数据
+                 * */
+                window.initForm = (formData, loadChildTableByHttp = true) => {
                     // 必须要重新创建对象，原因未知
                     let data = $.extend({}, formData)
                     form.val("editForm", data)
@@ -254,7 +270,7 @@
                         $(".form-reset").hide()
                         <#list childTableList as t>
                         $(".child-tab").show()
-                        window.reload${t.className}Table && window.reload${t.className}Table()
+                        window.reload${t.className}Table && window.reload${t.className}Table(loadChildTableByHttp)
                         </#list>
                     } else {
                         $(".child-tab").hide()
@@ -348,11 +364,11 @@
                     }
 
                     // 校验并保存
-                    $editable.validateSingleRow("${uncamelCase(t.className)}_table", index, (valid, error) => {
+                    $editable.validateSingleRow("${uncamelCase(t.className)}_table", rowIndex, (valid, error) => {
                         if (!valid) {
                             return
                         }
-                        let data = table.cache.${uncamelCase(t.className)}_table[index]
+                        let data = table.cache.${uncamelCase(t.className)}_table[rowIndex]
                         data.${camelCase(t.parentTableFkName)}= model.id
                         let promise = null
                         if ($strings.isBlank(data.id)) {
@@ -366,7 +382,7 @@
                                 layer.msg(resp.data.msg, {icon: 1})
 
                                 // 重新渲染单行数据
-                                table.renderSpecRow('${uncamelCase(t.className)}_table', index, {
+                                table.renderSpecRow('${uncamelCase(t.className)}_table', rowIndex, {
                                     id: resp.data.data.id
                                 })
                             } else {
@@ -390,7 +406,7 @@
 
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({}, data.field)
+                    data.field = $.extend({}, data.field)
                     let promise = null
                     if ($strings.isBlank(data.field.id)) {
                         promise = $http.post("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)
@@ -403,7 +419,7 @@
                             layer.msg(resp.data.msg, {icon: 1})
                             if(!model.id){
                                 model.id = resp.data.data.id
-                                initForm(model)
+                                initForm(model, false)
                             }
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
@@ -423,7 +439,7 @@
     </body>
 </html>
     ]]>
-    </content>
+</content>
 </template>
 
 
