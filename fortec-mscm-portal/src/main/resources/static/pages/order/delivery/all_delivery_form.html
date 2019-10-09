@@ -72,16 +72,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs4">
-                        <label class="layui-form-label layui-required">
-                            采购仓库
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="warehouseName" readonly lay-verify=""
-                                   placeholder=""
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -93,10 +83,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             发货金额(元)
@@ -107,6 +93,9 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -127,10 +116,6 @@
                         </div>
                     </div>
 
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             预计最晚送达日期
@@ -140,6 +125,10 @@
                                    placeholder="请选择预计最晚送达日期" autocomplete="off" class="layui-input">
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
                     <div class="layui-col-xs4">
                         <label class="layui-form-label ">
 
@@ -158,10 +147,6 @@
                 <div class="layui-row ">
                     <div class="layui-form-item">
                         <div class="layui-input-block">
-                            <!--                            <button class="layui-btn layui-btn-normal">打印条码</button>-->
-                            <!--                            <button class="layui-btn layui-btn-normal">打印发货单</button>-->
-                            <!--                            <button class="layui-btn layui-btn-danger form-delivery" type="button">取消发货</button>-->
-                            <!--                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>-->
                             <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
                         </div>
                     </div>
@@ -209,7 +194,7 @@
                                 {field: 'form', title: '剂型', align: 'center', width: 80},
 
                                 {field: 'unit', title: '单位', align: 'center', width: 70},
-                                {field: 'price', title: '单价', align: 'center', width: 70},
+                                {field: 'price', title: '单价(元)', align: 'center', width: 70},
                                 {field: 'shouldDeliveryQty', title: '应发', align: 'center', width: 70},
                                 {field: 'deliveredQty', title: '已发', align: 'center', width: 70},
                                 {field: 'qty', title: '本次实发', align: 'center', width: 90},

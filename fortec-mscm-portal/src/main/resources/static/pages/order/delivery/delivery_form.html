@@ -75,16 +75,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs4">
-                        <label class="layui-form-label layui-required">
-                            采购仓库
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="warehouseName" readonly lay-verify=""
-                                   placeholder=""
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -96,10 +86,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             发货金额(元)
@@ -110,6 +96,10 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -130,10 +120,6 @@
                         </div>
                     </div>
 
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             最晚送达时间
@@ -143,6 +129,10 @@
                                    placeholder="请选择最晚送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
                     <div class="layui-col-xs4">
                         <label class="layui-form-label ">
 
@@ -224,18 +214,18 @@
                                 {type: 'numbers', align: 'center'},
 
                                 {field: 'materialName', title: '商品名称', align: 'center', width: 230},
-                                {field: 'materialSpec', title: '规格', align: 'center',width: 150},
+                                {field: 'materialSpec', title: '规格', align: 'center', width: 150},
                                 {field: 'form', title: '剂型', align: 'center', width: 80},
 
                                 {field: 'unit', title: '单位', align: 'center', width: 70},
-                                {field: 'price', title: '单价', align: 'center', width: 70},
+                                {field: 'price', title: '单价(元)', align: 'center', width: 70},
                                 {field: 'shouldDeliveryQty', title: '应发', align: 'center', width: 70},
                                 {field: 'deliveredQty', title: '已发', align: 'center', width: 70},
                                 {field: 'qty', title: '本次实发', align: 'center', width: 90},
                                 {field: 'lot', title: '批次', align: 'center'},
                                 {field: 'subtotalAmount', title: '小计(元)', align: 'center', width: 100},
-                                {field: 'expiringDate', title: '生产日期', align: 'center',width: 110},
-                                {field: 'validDate', title: '有效日期', align: 'center',width: 110},
+                                {field: 'expiringDate', title: '生产日期', align: 'center', width: 110},
+                                {field: 'validDate', title: '有效日期', align: 'center', width: 110},
                                 {
                                     field: 'sterilizationDate',
                                     title: '灭菌日期',
@@ -368,7 +358,56 @@
 
                 /*** 子表管理结束 */
                 $(".form-print").click(() => {
-                    $("#app").jqprint();
+                    // let windowName = window.name
+                    // let newIndex = parent.layer.open({
+                    //     title: "打印预览",
+                    //     type: 2,
+                    //     area: ['950px', '400px'],
+                    //     content: ['./print_delivery_form.html'],
+                    //     success(layero) {
+                    //         parent.layer.close(parent.layer.getFrameIndex(windowName))
+                    //         let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    //         iframeWin && iframeWin.initForm(model)
+                    //     }
+                    // });
+                    // parent.layer.full(newIndex)
+
+                    let windowName = window.name
+                    let newIndex = parent.layer.open({
+                        title: "打印预览",
+                        type: 2,
+                        area: ['950px', '400px'],
+                        content: ['./print_model_form.html'],
+                        success(layero) {
+                            parent.layer.close(parent.layer.getFrameIndex(windowName))
+                            let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm({
+                                title: "发货单",
+                                headers: {
+                                    "供应商名称": model.supplierName,
+                                    "发货时间": model.gmtDelivery
+                                },
+                                grid: {
+                                    cols: [
+                                        {field: "materialName", title: "品名"},
+                                        {field: "materialSpec", title: "规格"},
+                                        {field: 'unit', title: '单位'},
+                                        {field: 'price', title: '单价(元)'},
+                                        {field: 'lot', title: '批次'},
+                                        {field: 'subtotalAmount', title: '小计(元)'},
+                                        {field: 'expiringDate', title: '生产日期'},
+                                        {field: 'validDate', title: '有效日期'},
+                                        {field: 'sterilizationDate', title: '灭菌日期'},
+                                        {field: 'registrationNumber', title: '注册证号'},
+
+                                    ],
+                                    data: table.getRows("delivery_item_table")
+                                },
+                                footer: {}
+                            })
+                        }
+                    });
+                    parent.layer.full(newIndex)
                 });
 
                 $(".form-reset").click(() => {
@@ -405,25 +444,47 @@
                         let data = resp.data.data
 
                         let tableRows = table.getRows('delivery_item_table')
+                        let map = new Map()
                         data.forEach(o => {
-                            o.materialName = tableRows.filter(t => o.deliveryItemId === t.id)[0].materialName
-                            o.materialSpec = tableRows.filter(t => o.deliveryItemId === t.id)[0].materialSpec
+                            let result = map.get(o.deliveryItemId)
+                            if (result == null) {
+                                let filtedResult = tableRows.filter(t => o.deliveryItemId === t.id)
+                                if (filtedResult.length == 0) {
+                                    return
+                                }
+                                result = filtedResult[0]
+                                map.set(o.deliveryItemId, result)
+                            }
+
+                            o.materialName = result.materialName
+                            o.materialSpec = result.materialSpec
+                            o.lot = result.lot
+                            o.productionDate = result.productionDate
+
                         })
-                        console.log(data)
+
                         let dom = $("<div></div>")
                         for (let i = 0; i < data.length; i++) {
 
-                            let container = $("<div style='border: 1px'></div>")
+                            let container = $("<div style='border: 1px solid #000000;margin-top: 5px;padding: 5px;width:300px'></div>")
+                            container.append(`<p>材料编号: ${data[i].materialName}</p>`)
                             container.append(`<p>品名: ${data[i].materialName}</p>`)
+                            container.append(`<p>规格: ${data[i].materialSpec}</p>`)
+                            container.append(`<p>生产批号: ${data[i].lot}</p>`)
+                            container.append(`<p>生产日期: ${data[i].productionDate}  失效日期: ${data[i].validDate}</p>`)
+                            container.append(`<p>生产厂商: ${data[i].manufacturerName}</p>`)
 
 
                             let barcode = $("<img />")
-                            barcode.JsBarcode(data[i].sn)
+                            barcode.JsBarcode(data[i].sn, {width: 1, Font: "Fantasy", fontOptions: "Bold"})
                             container.append(barcode)
+
 
                             dom.append(container)
                         }
                         dom.jqprint()
+
+                        map = null
                     });
                 })
 

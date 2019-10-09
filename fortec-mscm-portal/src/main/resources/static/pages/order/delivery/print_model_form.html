@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+
+            .custom-form .layui-input {
+                border: 0px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+            <div id="title"></div>
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+
+                <div class="layui-row">
+
+
+                </div>
+
+            </form>
+
+            <div id="grid">
+                <table class="layui-table" id="gridTable">
+
+                </table>
+            </div>
+            <div id="footer">
+
+            </div>
+
+        </div>
+
+        <script type="text/html" id="template">
+            <div id="title">{{d.title}}</div>
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+
+                <div class="layui-row">
+
+                </div>
+
+            </form>
+
+            <div id="grid">
+                <table class="layui-table" id="gridTable">
+                    <colgroup>
+                    {{#  layui.each(d.grid.cols, function(index, item){ }}
+                        <col>
+                    {{#  }); }}
+                    </colgroup>
+
+                    <thead>
+                        {{#  layui.each(d.grid.cols, function(index, item){ }}
+                        <td>{{ item.title }}</td>
+                        {{#  }); }}
+
+
+                    </thead>
+
+                </table>
+            </div>
+            <div id="footer">
+
+            </div>
+
+        </script>
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$, table = layui.table, layer = layui.layer
+
+                let defaultOptions = {
+                    title: "",
+                    headers: {},
+                    grid: {
+                        cols: [],
+                        data: []
+                    },
+                    footer: {}
+                }
+                window.options = defaultOptions
+                window.initForm = (options) => {
+                    $.extend(window.options, options)
+
+                    $("#app").html()
+
+                    layui.laytpl($("#template").html()).render(options, function(result){
+                        $("#app").html(result)
+                    });
+                    // renderPrintForm()
+                };
+
+                let renderPrintForm = () => {
+                    $("#title").html(options.title)
+
+
+                    for (const key in options.headers) {
+                        $("#editForm").append(`
+                            <div class="layui-col-md4">
+                                <label class="layui-form-label">
+                                    ${key}
+                                </label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="supplierName" readonly
+                                           placeholder="" value="${options.headers[key]}" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>`
+                        )
+                    }
+
+                    let grid = options.grid
+                    let colgroup = $("<colgroup></colgroup>")
+                    for (let i = 0; i < grid.cols.length; i++) {
+                        colgroup.append(
+                            `
+                                <col />
+                            `
+                        )
+                    }
+                    $("#gridTable").append(colgroup)
+
+                    let thead = $("<thead></thead>")
+                    for (let i = 0; i < grid.cols.length; i++) {
+                        thead.append(
+                            `
+                                <th >${grid.cols[i].title}</th>
+                            `
+                        )
+                    }
+                    $("#gridTable").append(thead)
+
+                    let tbody = $("<tbody></tbody>")
+                    for (let i = 0; i < grid.data.length; i++) {
+                        let tr = $("<tr></tr>")
+                        for (let j = 0; j < grid.cols.length; j++) {
+                            tr.append(
+                                `
+                                <td >${grid.data[i][grid.cols[j].field]}</th>
+                            `
+                            )
+                        }
+                        tbody.append(tr)
+
+                    }
+                    $("#gridTable").append(tbody)
+
+                }
+            }
+
+            extendParentScriptsAndStyles(() => {
+                mainFunction()
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

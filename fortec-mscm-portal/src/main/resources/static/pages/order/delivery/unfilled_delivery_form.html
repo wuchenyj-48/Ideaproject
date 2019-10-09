@@ -75,16 +75,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs4">
-                        <label class="layui-form-label layui-required">
-                            采购仓库
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="warehouseName" readonly lay-verify=""
-                                   placeholder=""
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -96,10 +86,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             发货金额(元)
@@ -111,6 +97,10 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -130,11 +120,6 @@
                                    placeholder="请选择预计最早送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             预计最晚送达时间
@@ -144,6 +129,11 @@
                                    placeholder="请选择预计最晚送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
                     <div class="layui-col-xs4">
                         <label class="layui-form-label ">
 
@@ -305,7 +295,7 @@
                                 {field: 'form', title: '剂型', align: 'center', width: 80},
 
                                 {field: 'unit', title: '单位', align: 'center', width: 70},
-                                {field: 'price', title: '单价', align: 'center', width: 70},
+                                {field: 'price', title: '单价(元)', align: 'center', width: 70},
                                 {field: 'shouldDeliveryQty', title: '应发', align: 'center', width: 70},
                                 {field: 'deliveredQty', title: '已发', align: 'center', width: 70},
                                 {field: 'qty', title: '本次实发', align: 'center', width: 90, templet: "#qtyTpl"},
@@ -470,7 +460,6 @@
                     onConfirm(rows, elem) {
                         model.supplierId = rows.length > 0 ? rows[0].supplierId : null
                         layui.each(rows, function (index, item) {
-                            console.log(item)
                             let tmp = {};
                             tmp.poId = item.id;
                             tmp.orderAmount = item.totalAmount;
