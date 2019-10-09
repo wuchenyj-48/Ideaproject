@@ -94,7 +94,9 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
 
         // 根据delivery_id查询发货明细
         List<DeliveryItem> deliveryItemList = deliveryItemService.list(Wrappers.<DeliveryItem>query().eq("delivery_id", id));
-
+        if (deliveryItemList.size() == 0) {
+            throw new BusinessException("没有明细,无法发货");
+        }
         Double deliveryAmount = 0.0;
         // 根据发货明细,修改发货状态  数量  金额
         for (DeliveryItem item : deliveryItemList) {

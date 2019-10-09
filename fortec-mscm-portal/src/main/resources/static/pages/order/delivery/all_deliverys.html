@@ -84,8 +84,8 @@
                         {field: 'poCode', title: '采购单号', align: 'center',width: 160},
 
                         {field: 'deliveryAmount', title: '发货金额(元)', align: 'center', width: 120},
-                        {field: 'gmtDelivery', title: '发货时间', align: 'center'},
-                        {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center'},
+                        {field: 'gmtDelivery', title: '发货时间', align: 'center',width: 160},
+                        {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center',width: 160},
                         {field: 'isConsignment', title: '一物一码', align: 'center', width: 90,
                             templet(item) {
                                 if(item.isConsignment === 0){
@@ -104,7 +104,7 @@
                                 }
                             }
                         },
-                        {field: 'status', title: '订单状态', align: 'center',
+                        {field: 'status', title: '发货单状态', align: 'center',
                             templet(item) {
                                 if(item.status === 0){
                                     return `<div class="layui-color-red">${$global.getDictLabel('order_delivery_status', item.status)}</div>`;
@@ -115,8 +115,8 @@
                                 }
                             }
                         },
-                        {field: 'gmtExceptedEarliestDelivery', title: '预计最早送达时间', align: 'center'},
-                        {field: 'gmtExceptedLatestDelivery', title: '预计最晚送达时间', align: 'center'},
+                        {field: 'gmtExceptedEarliestDelivery', title: '预计最早送达时间', align: 'center',width: 160},
+                        {field: 'gmtExceptedLatestDelivery', title: '预计最晚送达时间', align: 'center',width: 160},
                         {
                             field: "LAY_CELL_TOOLBAR",
                             title: '操作',
@@ -132,7 +132,7 @@
 
                 window.edit = (data, rowIndex) => {
                     let index = layer.open({
-                        title: "编辑发货单",
+                        title: "查看发货单",
                         type: 2,
                         area: ['950px', '400px'],
                         content: ['./all_delivery_form.html'],

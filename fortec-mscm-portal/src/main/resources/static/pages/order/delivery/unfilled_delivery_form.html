@@ -75,16 +75,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs4">
-                        <label class="layui-form-label layui-required">
-                            采购仓库
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="warehouseName" readonly lay-verify=""
-                                   placeholder=""
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -96,10 +86,6 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             发货金额(元)
@@ -111,6 +97,10 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
 
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
@@ -130,11 +120,6 @@
                                    placeholder="请选择预计最早送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
-
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs4">
                         <label class="layui-form-label layui-required">
                             预计最晚送达时间
@@ -144,12 +129,18 @@
                                    placeholder="请选择预计最晚送达时间" autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
                     <div class="layui-col-xs4">
                         <label class="layui-form-label ">
 
                         </label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="isOneThingOneYard" id="isOneThingOneYard" title="一物一码" lay-skin="primary" disabled>
+                            <input type="checkbox" name="isOneThingOneYard" id="isOneThingOneYard" title="一物一码"
+                                   lay-skin="primary" disabled>
                             <input type="checkbox" name="isConsignment" title="是否寄售" lay-skin="primary" disabled>
 
 
@@ -288,7 +279,7 @@
                             id: 'delivery_item_table',
                             elem: '#delivery_item_table',
                             data: resp.data.data,
-                            height: 300,
+                            height: 'full-450',
                             cols: [[
                                 {type: 'numbers', align: 'center', fixed: "left"},
                                 {
@@ -299,17 +290,17 @@
                                     width: 60,
                                     fixed: "left"
                                 },
-                                {field: 'materialName', title: '商品名称', align: 'center',width:230},
-                                {field: 'materialSpec', title: '规格', align: 'center',width: 70},
-                                {field: 'form', title: '剂型', align: 'center',width: 80},
+                                {field: 'materialName', title: '商品名称', align: 'center', width: 230},
+                                {field: 'materialSpec', title: '规格', align: 'center', width: 150},
+                                {field: 'form', title: '剂型', align: 'center', width: 80},
 
-                                {field: 'unit', title: '单位', align: 'center',width: 70},
-                                {field: 'price', title: '单价', align: 'center',width: 70},
-                                {field: 'shouldDeliveryQty', title: '应发', align: 'center',width: 70},
-                                {field: 'deliveredQty', title: '已发', align: 'center',width: 70},
-                                {field: 'qty', title: '本次实发', align: 'center',width: 90, templet: "#qtyTpl"},
-                                {field: 'lot', title: '批次', align: 'center', templet: "#lotTpl"},
-                                {field: 'subtotalAmount', title: '小计(元)', align: 'center',width: 100},
+                                {field: 'unit', title: '单位', align: 'center', width: 70},
+                                {field: 'price', title: '单价(元)', align: 'center', width: 70},
+                                {field: 'shouldDeliveryQty', title: '应发', align: 'center', width: 70},
+                                {field: 'deliveredQty', title: '已发', align: 'center', width: 70},
+                                {field: 'qty', title: '本次实发', align: 'center', width: 90, templet: "#qtyTpl"},
+                                {field: 'lot', title: '批次', align: 'center', width: 100, templet: "#lotTpl"},
+                                {field: 'subtotalAmount', title: '小计(元)', align: 'center', width: 100},
                                 {
                                     field: 'productionDate',
                                     title: '生产日期',
@@ -338,12 +329,14 @@
                                 {
                                     field: 'certificateNo',
                                     title: '注册证号',
+                                    width: 100,
                                     align: 'center',
                                     templet: "#certificateNoTpl"
                                 },
                                 {
                                     field: 'manufacturerName',
                                     title: '生产厂家',
+                                    width: 250,
                                     align: 'center',
                                 },
                                 {
@@ -351,6 +344,7 @@
                                     title: '操作',
                                     align: 'center',
                                     templet: "#deliveryItemCellToolbar",
+                                    width: 100,
                                     fixed: "right"
                                 },
                             ]]
@@ -392,7 +386,11 @@
                     type: 'datetime',
                     trigger: 'click'
                 });
-                layui.laydate.render({elem: "input[name='gmtExceptedLatestDelivery']", type: 'datetime', trigger: 'click'});
+                layui.laydate.render({
+                    elem: "input[name='gmtExceptedLatestDelivery']",
+                    type: 'datetime',
+                    trigger: 'click'
+                });
 
 
                 /*** 子表管理开始 */
@@ -454,37 +452,36 @@
                 /**
                  *  渲染订单弹出框
                  */
-                    tableSelect.renderOpenTable({
-                        elem: "#poCode",
-                        title: "订单明细选择",
-                        component: "/components/order/order_select.html",
-                        allowMultiple: false,
-                        onConfirm(rows, elem) {
-                            model.supplierId = rows.length > 0 ? rows[0].supplierId : null
-                            layui.each(rows, function (index, item) {
-                                console.log(item)
-                                let tmp = {};
-                                         tmp.poId = item.id;
-                                         tmp.orderAmount = item.totalAmount;
-                                         tmp.deliveryAmount = item.totalAmount;
-                                         tmp.isConsignment = item.isConsignment;
-                                         tmp.isOneThingOneYard = item.isOneThingOneYard;
-                                         tmp.poCode = item.code;
-                                         tmp.gmtRequireLatestDelivery = item.gmtRequireLatestDelivery;
-                                         tmp.warehouseId = item.warehouseId;
-                                         tmp.hospitalId = item.hospitalId;
-                                         tmp.hospitalName = item.hospitalName;
-                                         tmp.supplierId = item.supplierId;
-                                         tmp.supplierName = item.supplierName;
-                                         tmp.warehouseName = item.warehouseName;
-                                         form.val("editForm", tmp);
+                tableSelect.renderOpenTable({
+                    elem: "#poCode",
+                    title: "订单明细选择",
+                    component: "/components/order/order_select.html",
+                    allowMultiple: false,
+                    onConfirm(rows, elem) {
+                        model.supplierId = rows.length > 0 ? rows[0].supplierId : null
+                        layui.each(rows, function (index, item) {
+                            let tmp = {};
+                            tmp.poId = item.id;
+                            tmp.orderAmount = item.totalAmount;
+                            tmp.deliveryAmount = item.totalAmount;
+                            tmp.isConsignment = item.isConsignment;
+                            tmp.isOneThingOneYard = item.isOneThingOneYard;
+                            tmp.poCode = item.code;
+                            tmp.gmtRequireLatestDelivery = item.gmtRequireLatestDelivery;
+                            tmp.warehouseId = item.warehouseId;
+                            tmp.hospitalId = item.hospitalId;
+                            tmp.hospitalName = item.hospitalName;
+                            tmp.supplierId = item.supplierId;
+                            tmp.supplierName = item.supplierName;
+                            tmp.warehouseName = item.warehouseName;
+                            form.val("editForm", tmp);
 
-                                         $.extend(model, tmp)
-                            })
+                            $.extend(model, tmp)
+                        })
 
 
-                        }
-                    })
+                    }
+                })
                 /**
                  *  渲染剩余彈出框
                  */
