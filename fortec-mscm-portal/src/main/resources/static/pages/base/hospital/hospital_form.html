@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>编辑表单</title>
         <style>
-            .custom-form .layui-form-label {
+            .custom-form .layui-input-label {
                 width: 120px
             }
 
@@ -17,12 +17,12 @@
 
         <div class="layui-fluid" id="app">
 
-            <form class="layui-form" id="editForm" lay-filter="editForm">
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
-
+                <input type="hidden" name="regionId" class="layui-input"/>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 医院代码
                         </label>
@@ -33,7 +33,7 @@
                     </div>
 
 
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 医院名称
                         </label>
@@ -43,10 +43,7 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             简称
                         </label>
@@ -56,8 +53,11 @@
                         </div>
                     </div>
 
+                </div>
 
-                    <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 拼音
                         </label>
@@ -67,10 +67,7 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             联系人
                         </label>
@@ -80,8 +77,31 @@
                         </div>
                     </div>
 
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            邮箱
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
 
-                    <div class="layui-col-xs6">
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs4">
+                        <label class="layui-form-label">
+                            区域名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="regionName" id="regionName" lay-verify="" placeholder="请点击选择区域"
+                                 readonly  autocomplete="off" class="layui-input" lay-filter="tree" />
+                        </div>
+                    </div>
+                    
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             地址
                         </label>
@@ -91,21 +111,7 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-col-space5 layui-form-item">
-
-
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label">
-                            邮箱
-                        </label>
-                        <div class="layui-input-block">
-                            <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             电话
                         </label>
@@ -114,6 +120,13 @@
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+
+                    
                 </div>
 
                 <div class="block"></div>
@@ -187,7 +200,7 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$
+                let form = layui.form, $ = layui.$, dtree = layui.dtree
 
                 let model = {}
 
@@ -200,7 +213,7 @@
                         layui.table.render({
                             elem: '#hospital_location_table',
                             data: resp.data.data,
-                            height: 300,
+                            height: 470,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
                                 {field: 'code', title: '仓库代码', align: 'center', templet: "#codeTpl"},
@@ -236,6 +249,27 @@
                         $(".child-tab").hide()
                     }
                 }
+
+                //渲染区域名称
+                dtree.renderOpenTree({
+                    title: "选择区域",
+                    elem: "#regionName",
+                    url: "/upms/areas/tree",
+                    allowClear: true,
+                    allowFilter: true,
+                    onClear() {
+                        $("input[name='regionId']").val("");
+                        $("input[name='regionName']").val("");
+                    },
+                    onConfirm(node) {
+                        if (!node.leaf){
+                            layer.msg("只能选择最末节点",{icon : 5})
+                            return
+                        }
+                        $("input[name='regionId']").val(node.nodeId);
+                        $("input[name='regionName']").val(node.context);
+                    }
+                })
 
                 form.render('select')
                 form.render('radio')
@@ -359,7 +393,8 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadSingleJs("/scripts/utils/editable.js", mainFunction)
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js","/scripts/utils/editable.js"], mainFunction)
+                loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
             })
 
         </script>

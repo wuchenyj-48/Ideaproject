@@ -19,7 +19,7 @@
                     <div class="layui-card-body">
                         <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                             <input type="hidden" name="id" class="layui-input"/>
-
+                            <input type="hidden" name="regionId" class="layui-input"/>
 
                             <div class="layui-row layui-col-space5 layui-form-item">
                                 <div class="layui-col-xs6">
@@ -104,11 +104,11 @@
 
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        区域id
+                                        区域名称
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="regionId"  lay-verify="" placeholder="请输入区域id"
-                                               autocomplete="off" class="layui-input">
+                                        <input type="text" name="regionName" id="regionName" lay-verify="" placeholder="请点击选择区域"
+                                               readonly  autocomplete="off" class="layui-input" lay-filter="tree" />
                                     </div>
                                 </div>
 
@@ -254,7 +254,7 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$
+                let form = layui.form, $ = layui.$, dtree = layui.dtree
 
                 $http.get("/base/suppliers/get_current_supplier").then(resp => {
                     if (resp.data.success) {
@@ -304,6 +304,27 @@
                         $(".child-tab").hide()
                     }
                 }
+
+                //渲染区域名称
+                dtree.renderOpenTree({
+                    title: "选择区域",
+                    elem: "#regionName",
+                    url: "/upms/areas/tree",
+                    allowClear: true,
+                    allowFilter: true,
+                    onClear() {
+                        $("input[name='regionId']").val("");
+                        $("input[name='regionName']").val("");
+                    },
+                    onConfirm(node) {
+                        if (!node.leaf){
+                            layer.msg("只能选择最末节点",{icon : 5})
+                            return
+                        }
+                        $("input[name='regionId']").val(node.nodeId);
+                        $("input[name='regionName']").val(node.context);
+                    }
+                })
 
                 // 渲染下拉框 数据
                 form.render('select')
@@ -450,7 +471,6 @@
                     promise.then(resp => {
                         if (resp.data.success) {
                             layer.msg(resp.data.msg, {icon: 1})
-                            parent.reloadTable()
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }
@@ -461,7 +481,8 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadSingleJs("/scripts/utils/editable.js", mainFunction)
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js","/scripts/utils/editable.js"], mainFunction)
+                loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
             })
 
         </script>

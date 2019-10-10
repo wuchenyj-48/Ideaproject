@@ -82,7 +82,19 @@
                 }
 
                 //渲染医院
-                layui.tableSelect.render({
+                layui.tableSelect.renderOpenTable({
+                    elem : `#hospitalName`,
+                    title : "医院选择",
+                    component : "/components/base/hospital_select.html",
+                    onConfirm(rows, elem){
+                        model.hospitalId = rows.length > 0 ? rows[0].id : null
+                        layui.each(rows, function (index, item) {
+                            $("form input[name='hospitalId']").val(model.hospitalId)
+                            $("form input[name='hospitalName']").val(item.name)
+                        })
+                    }
+                })
+                /*layui.tableSelect.render({
                     elem: '#hospitalName',	//定义输入框input对象 必填
                     checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
                     searchKey: 'keywords',	//搜索输入框的name值 默认keyword
@@ -101,7 +113,7 @@
                             elem.val(item.name)
                         })
                     }
-                })
+                })*/
 
                 // 渲染下拉框 数据
                 form.render('select')

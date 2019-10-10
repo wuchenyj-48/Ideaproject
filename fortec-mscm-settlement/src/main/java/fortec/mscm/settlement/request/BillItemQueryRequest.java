@@ -15,6 +15,5 @@ public class BillItemQueryRequest extends PageRequest {
     /** 记账单ID */
     private String billId;
 
-
 }
     

@@ -78,19 +78,18 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-
                         { field: 'code', title: '订单编号', align: 'center',width:'170'},
-                        { field: 'hospitalName', title: '医院名称', align: 'center',width:'180'},
+                        { field: 'hospitalName', title: '医院名称', align: 'center',width:'150'},
                         { field: 'warehouseName', title: '送货地点', align: 'center',width:'170'},
                         {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center', width: '170'},
                         {
-                            field: 'isOneThingOneYard', title: '一物一码', align: 'center',width:'100',
+                            field: 'isOneThingOneYard', title: '一物一码', align: 'center',width:'90',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard)}</div>`;
                             }
                         },
                         {
-                            field: 'isConsignment', title: '寄售', align: 'center',width:'130',
+                            field: 'isConsignment', title: '寄售', align: 'center',width:'60',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment)}</div>`;
                             }
@@ -101,7 +100,8 @@
                                 return `<div>${$global.getDictLabel('order_po_supplier_confirm_status', item.supplierConfirmStatus)}</div>`;
                             }
                         },
-                        { field: 'deliveryStatus', title: '发货状态', align: 'center',width:'100',
+                        { field: 'gmtSupplierConfirmed', title: '供应商确认时间', align: 'center',width:'130'},
+                        { field: 'deliveryStatus', title: '发货状态', align: 'center',width:'90',
                             templet(item) {
                                 return `<div>${$global.getDictLabel('order_po_delivery_status', item.deliveryStatus)}</div>`;
                             }

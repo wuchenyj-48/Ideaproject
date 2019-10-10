@@ -26,7 +26,8 @@
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">父级品类</label>
                         <div class="layui-input-block">
-                            <input readonly type="text" name="parentName" id="parentName" class="layui-input" lay-filter="tree"/>
+                            <input readonly type="text" name="parentName" id="parentName" class="layui-input"
+                                   lay-filter="tree"/>
                         </div>
                     </div>
 
@@ -36,7 +37,7 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  商品类型
+                            <span class="required-star">*</span> 商品类型
                         </label>
                         <div class="layui-input-block">
                             <select disabled name="materialTypeCode" required lay-verify="required">
@@ -49,10 +50,11 @@
 
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  品类代码
+                            <span class="required-star">*</span> 品类代码
                         </label>
                         <div class="layui-input-block">
-                            <input readonly type="text" name="code" required lay-verify="abc|required" placeholder="请输入品类代码"
+                            <input readonly type="text" name="code" required lay-verify="abc|required"
+                                   placeholder="请输入品类代码"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -62,7 +64,7 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  品类名称
+                            <span class="required-star">*</span> 品类名称
                         </label>
                         <div class="layui-input-block">
                             <input readonly type="text" name="name" required lay-verify="required" placeholder="请输入品类名称"
@@ -73,10 +75,11 @@
 
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  品类全称
+                            <span class="required-star">*</span> 品类全称
                         </label>
                         <div class="layui-input-block">
-                            <input readonly type="text" name="fullName" required lay-verify="required" placeholder="请输入品类全称"
+                            <input readonly type="text" name="fullName" required lay-verify="required"
+                                   placeholder="请输入品类全称"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -84,11 +87,10 @@
                 </div>
 
 
-
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>  排序
+                            <span class="required-star">*</span> 排序
                         </label>
                         <div class="layui-input-block">
                             <input readonly type="text" name="sort" required lay-verify="required" placeholder="请输入排序"
@@ -167,19 +169,26 @@
                             data: resp.data.data,
                             cols: [[ //表头
                                 {type: 'numbers', align: 'center', fixed: 'left'},
-                                { field: 'certificateName', title: '资质名称', align: 'center'},
-                                { field: 'certificateNo', title: '资质编号', align: 'center'},
-                                { field: 'expiryDate', title: '有效期', align: 'center'},
-                                { field: 'certificateSign', title: '签发方', align: 'center'},
-                                { field: 'certificateSignTo', title: '签发给', align: 'center'},
-                                { field: 'version', title: '当前版本号', align: 'center'},
+                                {field: 'certificateName', title: '资质名称', align: 'center'},
+                                {field: 'certificateNo', title: '资质编号', align: 'center'},
+                                {field: 'expiryDate', title: '有效期', align: 'center'},
+                                {field: 'certificateSign', title: '签发方', align: 'center'},
+                                {field: 'certificateSignTo', title: '签发给', align: 'center'},
+                                {field: 'version', title: '当前版本号', align: 'center'},
                                 {
                                     field: 'submitFlag', title: '提交状态', align: 'center',
-                                    templet(item){
-                                        return `<div>${$global.getDictLabel('cert_submit_flag',item.submitFlag)}</div>`
+                                    templet(item) {
+                                        return `<div>${$global.getDictLabel('cert_submit_flag', item.submitFlag)}</div>`
                                     }
                                 },
-                                {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                                {
+                                    field: "LAY_CELL_TOOLBAR",
+                                    title: '操作',
+                                    templet: '#cellToolbar',
+                                    width: 150,
+                                    align: 'center',
+                                    fixed: 'right'
+                                }
                             ]]
                         });
                         //$editable.watch('material_certificate_repository_table')
@@ -191,7 +200,6 @@
                     let data = $.extend({}, formData)
                     form.val("editForm", data)
                     model = data
-
                     if ($strings.isNotBlank(model.id)) {
                         $(".child-tab").show()
                         window.reloadMaterialSpecTable && window.reloadMaterialSpecTable()
@@ -208,16 +216,16 @@
                 })
 
                 //品类资质编辑
-                window.edit = (data,rowIndex) => {
+                window.edit = (data, rowIndex) => {
                     layer.open({
                         title: "商品资质信息",
                         type: 2,
                         area: ['950px', '520px'],
-                        content: ["./catalog_form.html?targetDescribeId=" + model.id+
-                        "&businessTypeCode="+params.businessTypeCode+
-                        "&limitFileExtension=" + data.limitFileExtension+
-                        "&maxiumFileSize=" + data.maxiumFileSize+
-                        "&maxiumFileCount="+data.maxiumFileCount],
+                        content: ["./catalog_form.html?targetDescribeId=" + model.id +
+                        "&businessTypeCode=" + params.businessTypeCode +
+                        "&limitFileExtension=" + data.limitFileExtension +
+                        "&maxiumFileSize=" + data.maxiumFileSize +
+                        "&maxiumFileCount=" + data.maxiumFileCount],
                         success(layero, index) {
                             let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             console.log(data)
@@ -228,7 +236,7 @@
                 }
 
                 //品类资质关闭
-                window.closeCert = (data,rowIndex) => {
+                window.closeCert = (data, rowIndex) => {
                     layer.confirm('真的关闭么', function (index) {
 
                         $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
@@ -241,7 +249,7 @@
                 }
 
                 //查看
-                window.viewCert = (data,rowIndex) => {
+                window.viewCert = (data, rowIndex) => {
                     let index = layer.open({
                         title: "资质查看",
                         type: 2,
@@ -257,32 +265,39 @@
 
                 //品类资质提交
                 window.subm = (data) => {
-                    layer.confirm('确定提交吗',(index) => {
+                    layer.confirm('确定提交吗', (index) => {
                         $http.post(`/cert/certificate_repositorys/certificate_submit/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon:1})
+                            layer.msg(resp.data.msg, {icon: 1})
                             window.reloadMaterialSpecTable()
                             layer.close(index)
                         })
                     })
                 }
 
-                    //监听行工具事件
-                    table.on('tool(listTable)', function (obj) {
-                        // 获取当前行索引
-                        let rowIndex = obj.tr[0].getAttribute("data-index")
-                        if (obj.event === 'close') {
-                            window.closeCert(obj.data, rowIndex)
-                        } else if (obj.event === 'edit') {
-                            window.edit(obj.data, rowIndex)
-                        } else if (obj.event === 'subm' ){
-                            window.subm(obj.data)
-                        }else if (obj.event === 'cert') {
-                            window.viewCert(obj.data, rowIndex)
-                        }
-                    });
+                //监听行工具事件
+                table.on('tool(listTable)', function (obj) {
+                    // 获取当前行索引
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    if (obj.event === 'close') {
+                        window.closeCert(obj.data, rowIndex)
+                    } else if (obj.event === 'edit') {
+                        window.edit(obj.data, rowIndex)
+                    } else if (obj.event === 'subm') {
+                        window.subm(obj.data)
+                    } else if (obj.event === 'cert') {
+                        window.viewCert(obj.data, rowIndex)
+                    }
+                });
 
 
                 /*** 子表管理结束 */
+                // 渲染下拉框 数据
+                $global.getDictDataList('base_material_type').forEach(o => {
+                    $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+
+                // 渲染下拉框 数据
+                form.render('select')
 
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);

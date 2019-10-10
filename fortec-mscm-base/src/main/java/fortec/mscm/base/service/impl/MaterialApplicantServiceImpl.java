@@ -57,6 +57,8 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
 
     private final SupplierService supplierService;
 
+    private final ManufacturerService manufacturerService;
+
 
     @Override
     public boolean removeCascadeById(Serializable id) {
@@ -169,6 +171,7 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
             hm = new HospitalMaterial();
             Material material = materialService.getById(item.getMaterialId());
             MaterialSpec materialSpec = materialSpecService.getById(item.getMaterialSpecId());
+            Manufacturer manufacturer = manufacturerService.getById(material.getManufacturerId());
 
             if (material == null || materialSpec == null) {
                 throw new BusinessException("商品不存在");
@@ -187,6 +190,8 @@ public class MaterialApplicantServiceImpl extends BaseServiceImpl<MaterialApplic
 //                    .setPrice(materialSpec.getPrice())
                     .setMiniumOrderQty(0.0)
                     .setMiniumRequestQty(0.0)
+                    .setManufacturerId(material.getManufacturerId())
+                    .setManufacturerName(manufacturer.getName())
 
 //                    .setIsConsignment(materialSpec.getIsConsignment())
 //                    .setIsOneThingOneYard(materialSpec.getIsOneThingOneYard())

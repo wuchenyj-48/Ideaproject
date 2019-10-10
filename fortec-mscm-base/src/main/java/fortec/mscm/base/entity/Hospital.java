@@ -50,6 +50,9 @@ public class Hospital extends DataEntity  implements Serializable {
     /** 区域id */
     private Long regionId;
 
+    /** 区域名称 */
+    private String regionName;
+
     /** 地址 */
     @Length(max=200, message="地址长度必须介于 0 和 200 之间")
     private String address;

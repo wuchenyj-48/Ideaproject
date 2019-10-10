@@ -22,6 +22,8 @@ public interface HospitalMaterialService extends IBaseService<HospitalMaterial> 
 
     IPage<HospitalMaterial> page(HospitalMaterialQueryRequest request);
 
+    IPage<HospitalMaterial> pageForSupplier(HospitalMaterialQueryRequest request);
+
     /**
      * 将医院商品状态设为正常
      * @param id

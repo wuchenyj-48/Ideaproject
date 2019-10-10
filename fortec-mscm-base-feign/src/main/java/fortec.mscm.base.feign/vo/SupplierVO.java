@@ -42,6 +42,9 @@ public class SupplierVO implements Serializable {
     /** 区域id */
     private Long regionId;
 
+    /** 区域名称 */
+    private String regionName;
+
     /** 地址 */
     private String address;
 

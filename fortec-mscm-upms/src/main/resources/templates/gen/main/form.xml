@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template>
     <name>viewList</name>
-    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}
-    </#if>/${uncamelCase(className)}
-</fileDir>
-<fileName>${uncamelClassName}_form.html</fileName>
-<content>
+    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
+    <fileName>${uncamelClassName}_form.html</fileName>
+    <content>
 <![CDATA[
 <!DOCTYPE html>
 <html lang="en">
