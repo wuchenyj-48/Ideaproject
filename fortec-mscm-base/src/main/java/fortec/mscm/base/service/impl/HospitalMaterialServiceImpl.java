@@ -44,6 +44,12 @@ public class HospitalMaterialServiceImpl extends BaseServiceImpl<HospitalMateria
     }
 
     @Override
+    public IPage<HospitalMaterial> pageForSupplier(HospitalMaterialQueryRequest request) {
+        request.setSupplierId(UserUtils.getSupplierId());
+        return this.baseMapper.page(request.getPage(),request);
+    }
+
+    @Override
     public void active(String id) {
         HospitalMaterial hm = this.getById(id);
         if (hm == null) {

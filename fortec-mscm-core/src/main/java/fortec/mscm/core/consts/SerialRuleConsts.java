@@ -22,4 +22,6 @@ public interface SerialRuleConsts {
     String ORDER_DELIVERY_CODE = "order_delivery_code";
 
     String SETTLEMENT_BILL_CODE = "settlement_bill_code";
+
+    String SETTLEMENT_INVOICE_CODE ="settlement_invoice_code";
 }

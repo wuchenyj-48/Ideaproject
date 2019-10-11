@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.settlement.mapper.InvoiceItemMapper">
+    <select id="pageForRelate" resultType="fortec.mscm.settlement.VO.InvoiceItemVO">
+        select bi.*,b.code,b.gmt_create as bill_gmt_create
+        from bill_item bi
+        inner join bill b on bi.bill_id = b.id
+        <where>
+            <if test="dto.supplierId != null and dto.supplierId != ''">
+               and b.supplier_id = #{dto.supplierId}
+            </if>
+            <if test="dto.code != null and dto.code != ''">
+                and b.code like concat( '%', #{dto.code}, '%')
+            </if>
+            <if test="dto.materialName != null and dto.materialName != ''">
+                and bi.material_name like concat( '%', #{dto.materialName}, '%')
+            </if>
+            <if test="dto.materialSpec != null and dto.materialSpec != ''">
+                and bi.material_spec like concat( '%', #{dto.materialSpec}, '%')
+            </if>
+            and bi.id not in (select ii.bill_item_id from invoice_item ii where ii.invoice_line_id = #{dto.invoiceLineId})
+            and b.status in (0,1)
+        </where>
+    </select>
+    <select id="pageForView" resultType="fortec.mscm.settlement.VO.InvoiceItemVO">
+        select bi.*,b.code,b.gmt_create as bill_gmt_create
+        from invoice_item ii
+        inner join bill_item bi on bi.id = ii.bill_item_id
+        inner join bill b on bi.bill_id = b.id
+        <where>
+            <if test="dto.invoiceLineId != null and dto.invoiceLineId != ''">
+                and ii.invoice_line_id = #{dto.invoiceLineId}
+            </if>
+            <if test="dto.code != null and dto.code != ''">
+                and b.code like concat( '%', #{dto.code}, '%')
+            </if>
+            <if test="dto.materialName != null and dto.materialName != ''">
+                and bi.material_name like concat( '%', #{dto.materialName}, '%')
+            </if>
+            <if test="dto.materialSpec != null and dto.materialSpec != ''">
+                and bi.material_spec like concat( '%', #{dto.materialSpec}, '%')
+            </if>
+            order by ii.gmt_modified desc
+        </where>
+
+    </select>
+</mapper>

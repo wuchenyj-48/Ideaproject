@@ -70,16 +70,5 @@ public class MaterialSpecController extends BaseController {
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
     }
 
-    /**
-     * 供货申请明细，关键字搜索
-     * @param request
-     * @return
-     */
-    @GetMapping("/page_by_keywords")
-    public PageResult pageByKeywords(MaterialSpecQueryRequest request) {
-        IPage<MaterialSpec> page = materialSpecService.pageByKeywords(request);
-        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
-    }
-
 }
     

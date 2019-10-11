@@ -45,6 +45,12 @@ public class HospitalMaterialController extends BaseController {
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
+    @GetMapping("/page_for_supplier")
+    public PageResult pageForSupplier(HospitalMaterialQueryRequest request) {
+        IPage page = hospitalMaterialService.pageForSupplier(request);
+        return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
+    }
+
     @GetMapping("/list")
     public CommonResult list(HospitalMaterialQueryRequest request) {
         List<HospitalMaterial> list = hospitalMaterialService.list(request);

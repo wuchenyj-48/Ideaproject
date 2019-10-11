@@ -18,7 +18,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MaterialSpecMapper extends BaseMapper<MaterialSpec> {
 
-    IPage<MaterialSpec> pageByKeywords(IPage page, @Param("request") MaterialSpecQueryRequest request);
+    IPage<MaterialSpec> page(IPage page, @Param("request") MaterialSpecQueryRequest request);
 
 }
     

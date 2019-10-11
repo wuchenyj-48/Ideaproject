@@ -29,7 +29,7 @@
 
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                            <span class="required-star">*</span>资质名称
+                            资质名称
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="certificateName" id="certificateName" lay-verify="required"
@@ -161,37 +161,6 @@
                     }
                     layui.form.render()
                 }
-
-                // 渲染资质选择
-                layui.tableSelect.render({
-                    id:'certificateName',
-                    elem: '#certificateName',	//定义输入框input对象 必填
-                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                    table: {
-                        url: '/cert/certificates/page_by_keywords',
-                        cols: [[
-                            {type: 'radio'},
-                            {field: 'name', title: '资质名称'}
-                        ]]
-                    },
-                    done(elem, data) {
-                        let selectedRow = data.data.length > 0 ? data.data[0] : null
-                        if (!selectedRow) {
-                            return
-                        }
-
-                        model.certificateId = selectedRow.id
-                        $("form input[name='certificateId']").val(model.certificateId)
-                        elem.val(selectedRow.name)
-
-                        window.renderExpiryDate(selectedRow.needExpiryDate)
-
-                        model.docIds = []
-                        renderUploader(selectedRow.limitFileExtension, selectedRow.maxiumFileSize, selectedRow.maxiumFileCount)
-                    }
-                })
-
-
 
                 let uploader = null
                 window.renderUploader = (limitFileExtension, maxiumFileSize, maxiumFileCount) => {

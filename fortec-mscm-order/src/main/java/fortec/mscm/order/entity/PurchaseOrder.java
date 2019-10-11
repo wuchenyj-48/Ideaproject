@@ -83,7 +83,7 @@ public class PurchaseOrder extends DataEntity  implements Serializable {
     private Integer supplierConfirmStatus;
 
     /** 供应商确认用户 */
-    private Long supplierConfirmer;
+    private String supplierConfirmer;
 
     /** 供应商确认时间 */
     private java.util.Date gmtSupplierConfirmed;

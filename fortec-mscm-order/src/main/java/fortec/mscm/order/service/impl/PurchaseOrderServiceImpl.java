@@ -179,6 +179,8 @@ public class PurchaseOrderServiceImpl extends BaseServiceImpl<PurchaseOrderMappe
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setSupplierConfirmStatus(DictConsts.STATUS_CONFIRMED_YES)
                 .setStatus(DictConsts.STATUS_SUPPLIER_UNDELIVERY)
+                .setSupplierConfirmer(UserUtils.getUser().getUsername())
+                .setGmtSupplierConfirmed(new Date())
                 .setId(id);
         //提交
         updateById(purchaseOrder);

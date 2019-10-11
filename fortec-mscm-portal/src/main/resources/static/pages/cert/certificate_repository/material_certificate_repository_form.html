@@ -348,6 +348,13 @@
 
 
                 /*** 子表管理结束 */
+                // 渲染下拉框 数据
+                $global.getDictDataList('base_material_type').forEach(o => {
+                    $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+
+                // 渲染下拉框 数据
+                form.render('select')
 
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);

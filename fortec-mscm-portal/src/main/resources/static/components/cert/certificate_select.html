@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>资质管理</title>
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="请输入资质名称" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
+                                lay-filter="list">
+                            <i class="layui-icon layui-icon-search"></i> 查询
+                        </button>
+                        <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="reset">
+                            <i class="layui-icon "></i> 重置
+                        </button>
+
+                    </form>
+                    <table id="listTable" lay-filter="listTable"></table>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
+
+        <script>
+
+            extendParentScriptsAndStyles(() => {
+                let table = layui.table, $ = layui.$, form = layui.form
+
+                let whereModel = {}
+                let allowMultiple = false
+                let fnOnConfirm = null
+
+                let renderTable = () => {
+                    table.render({
+                        id: "listTable",
+                        elem: '#listTable',
+                        title: '资质信息',
+                        height: 'full-80',
+                        url: '/cert/certificates/page',
+                        where: whereModel,
+                        page: {
+                            limit: 20
+                        },
+                        request: {
+                            pageName: 'currPage',
+                            limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                        },
+                        cols: [[
+                            allowMultiple ? {type:'checkbox'} : {type: "radio"},
+                            { field: 'name', title: '资质名称', align: 'center'},
+                            { field: 'code', title: '资质编码', align: 'center'},
+                        ]]
+                    })
+
+                    // 行单击
+                    table.on('row(listTable)', function(obj){
+
+                    })
+
+                    if(allowMultiple){
+                        return
+                    }
+                    // 行双击
+                    table.on('rowDouble(listTable)', function(obj){
+                        fnOnConfirm && fnOnConfirm([obj.data])
+
+                        let index = parent.layer.getFrameIndex(window.name) //先得到当前iframe层的索引
+                        parent.layer.close(index) //再执行关闭
+                    })
+                }
+
+                // 初始化配置信息，需要暴漏给外部，此为必要函数
+                window.initOptions = (options) => {
+                    whereModel = options.where ? options.where : {}
+                    allowMultiple = options.allowMultiple
+                    fnOnConfirm = options.onConfirm
+                    renderTable()
+                }
+
+
+
+                /**
+                 * 获取选中行数据
+                 * @return {Array}
+                 */
+                window.getCheckedRows = () => {
+                    let checkStatus = table.checkStatus("listTable")
+                    return checkStatus.data
+                }
+
+                // 表格重载
+                window.reloadTable = () => {
+                    let where = $('#queryForm').serializeObject()
+                    $.extend(where, whereModel)
+
+                    table.reload('listTable', {
+                        where
+                    })
+                }
+
+
+
+                // 监听表单重置
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+
+
+                // 监听表单提交事件
+                layui.form.on('submit(list)', (data) => {
+                    window.reloadTable()
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+
+            })
+
+        </script>
+    </body>
+
+
+</html>
+

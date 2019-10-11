@@ -33,7 +33,7 @@
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="certificateName" id="certificateName" lay-verify="required"
-                                   placeholder="请选择资质" readonly
+                                   placeholder="请点击选择资质" readonly
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -163,26 +163,19 @@
                 }
 
                 // 渲染资质选择
-                layui.tableSelect.render({
-                    id:'certificateName',
+                layui.tableSelect.renderOpenTable({
                     elem: '#certificateName',	//定义输入框input对象 必填
-                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                    table: {
-                        url: '/cert/certificates/page_by_keywords',
-                        cols: [[
-                            {type: 'radio'},
-                            {field: 'name', title: '资质名称'}
-                        ]]
-                    },
-                    done(elem, data) {
-                        let selectedRow = data.data.length > 0 ? data.data[0] : null
+                    title: "资质选择",
+                    component: "/components/cert/certificate_select.html",
+                    onConfirm(rows, elem) {
+                        let selectedRow = rows.length > 0 ? rows[0] : null
                         if (!selectedRow) {
                             return
                         }
 
                         model.certificateId = selectedRow.id
                         $("form input[name='certificateId']").val(model.certificateId)
-                        elem.val(selectedRow.name)
+                        $("form input[name='certificateName']").val(selectedRow.name)
 
                         window.renderExpiryDate(selectedRow.needExpiryDate)
 
@@ -190,8 +183,6 @@
                         renderUploader(selectedRow.limitFileExtension, selectedRow.maxiumFileSize, selectedRow.maxiumFileCount)
                     }
                 })
-
-
 
                 let uploader = null
                 window.renderUploader = (limitFileExtension, maxiumFileSize, maxiumFileCount) => {

@@ -3,7 +3,7 @@
 <mapper namespace="fortec.mscm.settlement.mapper.BillItemMapper">
     <select id="totalAmount" resultType="java.lang.Double">
         select
-        sum(subtotal_amount) as total_amount
+            sum(subtotal_amount) as total_amount
         from bill_item bi
         where bi.bill_id = #{billId}
     </select>

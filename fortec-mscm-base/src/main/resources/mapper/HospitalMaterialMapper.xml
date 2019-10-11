@@ -17,6 +17,9 @@
             <if test="request.hospitalName != null and request.hospitalName != ''">
                 and h.name like concat( '%', #{request.hospitalName}, '%')
             </if>
+            <if test="request.supplierName != null and request.supplierName != ''">
+                and s.name like concat( '%', #{request.supplierName}, '%')
+            </if>
             <if test="request.materialSpec != null and request.materialSpec != ''">
                 and ms.material_spec like concat( '%', #{request.materialSpec}, '%')
             </if>

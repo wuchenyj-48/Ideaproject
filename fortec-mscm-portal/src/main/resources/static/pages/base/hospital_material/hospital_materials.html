@@ -15,7 +15,7 @@
 
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
-                                    <input type="text" name="hospitalName" placeholder="请输入医院名称" autocomplete="off"
+                                    <input type="text" name="supplierName" placeholder="请输入供应商名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
@@ -75,11 +75,11 @@
                         {field: 'materialName', title: '品名', align: 'center',width:220},
                         {field: 'materialSpec', title: '商品规格', align: 'center',width:180},
                         {field: 'materialCode', title: '商品编码', align: 'center'},
-                        {field: 'unit', title: '单位', align: 'center'},
+                        {field: 'unit', title: '单位', align: 'center',width:60},
                         {field: 'price', title: '单价（元）', align: 'center'},
-                        {field: 'miniumRequestUnit', title: '请领单位', align: 'center'},
+                        {field: 'miniumRequestUnit', title: '请领单位', align: 'center',width:90},
                         {field: 'miniumRequestQty', title: '请领单位数量', align: 'center'},
-                        {field: 'miniumOrderUnit', title: '订单单位', align: 'center'},
+                        {field: 'miniumOrderUnit', title: '订单单位', align: 'center',width:90},
                         {field: 'miniumOrderQty', title: '订单单位数量', align: 'center'},
 
                         {field: 'isConsignment', title: '寄售', align: 'center', templet(item) {

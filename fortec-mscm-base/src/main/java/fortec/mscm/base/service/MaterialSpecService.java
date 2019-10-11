@@ -18,13 +18,6 @@ import java.util.List;
 */
 public interface MaterialSpecService extends IBaseService<MaterialSpec> {
 
-    /**
-     * 供货申请明细，关键字搜索
-     * @param request
-     * @return
-     */
-    IPage<MaterialSpec> pageByKeywords(MaterialSpecQueryRequest request);
-
     IPage<MaterialSpec> page(MaterialSpecQueryRequest request);
 
     List<MaterialSpec> list(MaterialSpecQueryRequest request);

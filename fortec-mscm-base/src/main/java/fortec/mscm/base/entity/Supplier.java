@@ -62,6 +62,9 @@ public class Supplier extends DataEntity  implements Serializable {
     /** 区域id */
     private Long regionId;
 
+    /** 区域名称 */
+    private String regionName;
+
     /** 地址 */
     @NotBlank(message="地址不能为空")
     @Length(min=1, max=200, message="地址长度必须介于 1 和 200 之间")

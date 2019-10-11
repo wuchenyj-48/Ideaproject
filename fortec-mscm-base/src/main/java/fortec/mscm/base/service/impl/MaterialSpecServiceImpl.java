@@ -26,20 +26,10 @@ import java.util.List;
 @Service
 public class MaterialSpecServiceImpl extends BaseServiceImpl<MaterialSpecMapper, MaterialSpec> implements MaterialSpecService {
 
-
-    @Override
-    public IPage<MaterialSpec> pageByKeywords(MaterialSpecQueryRequest request) {
-        request.setSupplierId(UserUtils.getSupplierId());
-        return this.baseMapper.pageByKeywords(request.getPage(),request);
-    }
-
     @Override
     public IPage<MaterialSpec> page(MaterialSpecQueryRequest request) {
-        IPage page = this.page(request.getPage(), Wrappers.<MaterialSpec>query()
-                .like(StringUtils.isNotBlank(request.getMaterialSpec()), "material_spec", request.getMaterialSpec())
-                .between(request.getBeginPrice() != null && request.getEndPrice() != null, "price", request.getBeginPrice(), request.getEndPrice())
-                .orderByDesc("gmt_modified")
-        );
+        request.setSupplierId(UserUtils.getSupplierId());
+        IPage page = baseMapper.page(request.getPage(),request);
         return page;
     }
 

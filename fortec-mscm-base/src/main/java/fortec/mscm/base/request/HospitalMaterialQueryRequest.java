@@ -46,5 +46,8 @@ public class HospitalMaterialQueryRequest extends PageRequest {
     /** 是否一物一码 */
     private Integer isOneThingOneYard;
 
+    /** 供应商名称 */
+    private String supplierName;
+
 }
     

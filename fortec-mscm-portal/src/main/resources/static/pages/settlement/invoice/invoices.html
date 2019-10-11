@@ -1,32 +1,28 @@
+
+    
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>采购订单管理</title>
+        <title>开票单管理</title>
     </head>
     <body>
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">待提交订单管理</div>
+                        <div class="layui-card-header">开票单管理</div>
                         <div class="layui-card-body">
                             <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
                                 <i class="layui-icon layui-icon-add-1"></i> 新增
                             </button>
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
-                                    <input type="text" name="code" id="code" placeholder="请输入订单编号" autocomplete="off"
+                                    <input type="text" name="code" placeholder="请输入单号" autocomplete="off"
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="supplierName" placeholder="请输入供应商名称" autocomplete="off"
-                                           class="layui-input">
-                                </div>
-
-                                <div class="layui-input-inline">
-                                    <input type="hidden" type="text" name="status" placeholder="请输入订单状态 "
-                                           autocomplete="off"
+                                    <input type="text" name="hospitalName" placeholder="请输入院方名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
@@ -69,59 +65,38 @@
 
                 window.reloadTable = () => {
                     table.reload('listTable', {
-                        where: layui.$('#queryForm').serializeObject()
+                        where: $('#queryForm').serializeObject()
                     })
                 }
 
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
-                    title: '采购订单信息',
+                    title: '开票单信息',
                     height: 'full-160',
-                    url: '/order/purchase_orders/page?status=0',
+                    url: '/settlement/invoices/page',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-
-                        {field: 'code', title: '订单编号', align: 'center', width: '170'},
-                        {field: 'supplierName', title: '供应商名称', align: 'center', width: '180'},
-                        {field: 'warehouseName', title: '送货地点', align: 'center', width: '175'},
-                        {field: 'gmtRequireLatestDelivery', title: '要求送达时间', align: 'center', width: '180'},
-                        {
-                            field: 'isOneThingOneYard', title: '一物一码', align: 'center', width: '100',
-                            templet(item) {
-                                return `<div>${$global.getDictLabel('common_yes_no', item.isOneThingOneYard, "否")}</div>`;
-                            }
-                        },
-                        {
-                            field: 'isConsignment', title: '寄售', align: 'center', width: '130',
-                            templet(item) {
-                                return `<div>${$global.getDictLabel('common_yes_no', item.isConsignment, "否")}</div>`;
-                            }
-                        },
-                        {field: 'totalAmount', title: '订单总金额(元)', align: 'center', width: '130'},
-                        {field: 'creator', title: '制单人 ', align: 'center', width: '180'},
-                        {field: 'gmtCreate', title: '制单时间', align: 'center', width: '180'},
-                        {
-                            field: "LAY_CELL_TOOLBAR",
-                            title: '操作',
-                            templet: '#cellToolbar',
-                            width: 150,
-                            align: 'center',
-                            fixed: 'right'
-                        }
+                        { field: 'code', title: '单号', align: 'center'},
+                        { field: 'hospitalName', title: '院方名称', align: 'center'},
+                        { field: 'gmtMakeOut', title: '开票时间', align: 'center'},
+                        { field: 'drawer', title: '开票人', align: 'center'},
+                        { field: 'totalAmount', title: '开票金额', align: 'center'},
+                        { field: 'remark', title: '备注', align: 'center'},
+                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
                 });
 
-                // 渲染下拉框 数据
+                 // 渲染下拉框 数据
                 form.render('select')
 
-                window.edit = (data, rowIndex) => {
+                window.edit = (data,rowIndex) => {
                     let index = layer.open({
-                        title: "编辑界面",
+                        title: "编辑开票单",
                         type: 2,
                         area: ['950px', '400px'],
-                        content: ['./test_unsubmit_order_form.html'],
+                        content: ['./invoice_form.html'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
@@ -130,10 +105,10 @@
                     layer.full(index)
                 }
 
-                window.deleteById = (data, rowIndex) => {
+                window.deleteById = (data,rowIndex) => {
                     layer.confirm('真的删除行么', function (index) {
 
-                        $http.delete(`/order/purchase_orders/` + data.id).then(resp => {
+                        $http.delete(`/settlement/invoices/` + data.id).then(resp => {
                             layer.msg(resp.data.msg, {icon: 1})
                             window.reloadTable()
 
@@ -148,13 +123,13 @@
                 })
 
                 // 监听表单提交事件
-                layui.form.on('submit(list)', (data) => {
+                form.on('submit(list)', (data) => {
                     window.reloadTable()
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
 
 
-                layui.$(".layui-btn").on('click', function () {
+                $(".layui-btn").on('click', function () {
                     let layevent = this.getAttribute("lay-event");
                     if (layevent == 'addNew') {
                         edit({});
@@ -163,63 +138,20 @@
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
-                    // 获取当前行索引
+                     // 获取当前行索引
                     let rowIndex = obj.tr[0].getAttribute("data-index")
 
                     if (obj.event === 'del') {
-                        window.deleteById(obj.data, rowIndex)
+                        window.deleteById(obj.data,rowIndex)
                     } else if (obj.event === 'edit') {
-                        window.edit(obj.data, rowIndex)
+                        window.edit(obj.data,rowIndex)
                     }
                 });
 
 
-
-//测试
-                let event = {
-                    getElemId: function (options) {	// 根据传入的参数获取ID
-                        var elem = options.elem || "";
-                        var obj = options.obj || $(elem);
-
-                        if (obj.length == 0) {	//页面中未找到绑定id
-                            return "";
-                        } else {
-                            return $(obj)[0].id;
-                        }
-                    }
-                }
-                renderOpenTable = function (options) {
-                    //初始加载树
-                    let id = event.getElemId(options);
-                    if (id == "") {
-                        console.error("页面中未找到绑定id");
-                        return;
-                    }
-                    $(options.elem).click(function () {
-
-                        layer.open({
-                            title: options.title,
-                            area: ["400px", "80%"],
-                            content: options.component
-                        })
-                    })
-                }
-
-                $("#code").click(function () {
-                    layer.open({
-                        area: ["400px", "80%"],
-                        content: ['./hospital_materials.html']
-                    })
-                })
-
-                /*renderOpenTable({
-                    elem: '#code',	//定义输入框input对象 必填
-                    component:['./hospital_materials.html']
-                })*/
             })
 
         </script>
-
     </body>
 
 
