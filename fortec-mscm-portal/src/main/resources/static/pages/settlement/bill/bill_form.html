@@ -126,7 +126,7 @@
         <a class="layui-btn layui-btn-xs layui-btn-normal" data-name="itemSelect"
            lay-filter="itemSelect"
            data-index="{{d.LAY_TABLE_INDEX}}" title="选择"><i
-                class="fas fa-search"></i></a>
+                class="fa fa-search"></i></a>
     </script>
 
         <script type="text/html" id="qtyTpl">
@@ -142,14 +142,14 @@
         <script type="text/html" id="billItemCellToolbar">
             {{#  if($strings.isBlank(d.id)){ }}
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
-                    class="fas fa-check"></i></a>
+                    class="fa fa-check"></i></a>
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
-                    class="far fa-trash-alt"></i></a>
+                    class="fa fa-trash-o"></i></a>
             {{#  } else { }}
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
-                    class="fas fa-save"></i></a>
+                    class="fa fa-save"></i></a>
             <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
-                    class="far fa-trash-alt"></i></a>
+                    class="fa fa-trash-o"></i></a>
             {{#  } }}
         </script>
         <!-- 子表管理模板 结束  -->

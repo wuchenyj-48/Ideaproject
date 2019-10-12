@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template>
     <name>viewList</name>
-    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
-    <fileName>${uncamelClassName}_form.html</fileName>
-    <content>
+    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}
+    </#if>/${uncamelCase(className)}
+</fileDir>
+<fileName>${uncamelClassName}_form.html</fileName>
+<content>
 <![CDATA[
 <!DOCTYPE html>
 <html lang="en">
@@ -190,14 +192,14 @@
                 <script type="text/html" id="${t.className?uncap_first}CellToolbar">
                 {{#  if($strings.isBlank(d.id)){ }}
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
-                        class="fas fa-check"></i></a>
+                        class="fa fa-check"></i></a>
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
-                        class="far fa-trash-alt"></i></a>
+                        class="fa fa-trash-o"></i></a>
                 {{#  } else { }}
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
-                        class="fas fa-save"></i></a>
+                        class="fa fa-save"></i></a>
                 <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
-                        class="far fa-trash-alt"></i></a>
+                        class="fa fa-trash-o"></i></a>
                 {{#  } }}
             </script>
             </#list>
@@ -215,7 +217,7 @@
                 <#if (childTableList?size > 0)>
                 // 加载子表表格
                     <#list childTableList as t>
-                window.reload${t.className}Table = (loadChildTableByHttp) => {
+                window.reload${t.className}Table = (loadChildTableByHttp  = false) => {
                     if ($strings.isBlank(model.id)) {
                         return
                     }
@@ -242,7 +244,7 @@
                      if (!loadChildTableByHttp) {
                         // 如果不需要通过请求的方式加载表格（一般情况下 主表新增后 不需要从后台拉取数据）
                         table.render(options);
-                        $editable.watch('dict_data_table')
+                        $editable.watch('${uncamelCase(t.className)}_table')
                         return
                     }
                     $http.get(`/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/list?${camelCase(t.parentTableFkName)}=${r"$"}{model.id}`).then(resp => {
@@ -261,9 +263,11 @@
                  * */
                 window.initForm = (formData, loadChildTableByHttp = true) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    let model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         <#list childTableList as t>
@@ -323,12 +327,12 @@
                         if (!valid) {
                             return
                         }
-                        let rows = layui.table.getRows('${uncamelCase(t.className)}_table')
+                        let rows = table.getRows('${uncamelCase(t.className)}_table')
                         rows.forEach(o => o.${camelCase(t.parentTableFkName)} = model.id)
                         $http.put("/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/batch_save", rows).then(resp => {
                             if (resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 1})
-                                window.reload${t.className}Table()
+                                window.reload${t.className}Table(true)
                             } else {
                                 layer.msg(resp.data.msg, {icon: 5})
                             }
@@ -337,7 +341,7 @@
                 })
 
                 $("#${t.className?uncap_first}Toolbar button[lay-event='refresh']").click(() => {
-                    window.reload${t.className}Table()
+                    window.reload${t.className}Table(true)
                 })
 
 
@@ -398,8 +402,8 @@
                     $("form input:hidden").val('')
                 })
                 $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
+                    let index = parent.layer.getFrameIndex(window.name)
+                    parent.layer.close(index)
                 })
 
                 // 监听表单提交事件
@@ -413,15 +417,15 @@
                     }
 
                     promise.then(resp => {
-                        if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1})
-                            if(!model.id){
-                                model.id = resp.data.data.id
-                                initForm(model, false)
-                            }
-                        } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                        if (!resp.data.success) {
+                           layer.msg(resp.data.msg, {icon: 5})
+                           return
                         }
+                        layer.msg(resp.data.msg, {icon: 1})
+                        if($strings.isBlank(model.id)){
+                            initForm(resp.data.data, false)
+                        }
+                        parent.reloadTable()
                     })
 
                     return false;

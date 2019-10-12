@@ -156,7 +156,6 @@
                             </button>
                             <button class="layui-btn layui-btn-normal form-print" type="button">打印发货单</button>
                             <button class="layui-btn layui-btn-danger form-delivery" type="button">取消发货</button>
-                            <!--                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>-->
                             <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
                         </div>
                     </div>
@@ -178,18 +177,8 @@
                 </div>
             </div>
         </div>
-        <!--        <input type="text" data-name="sn" value="{{d.sn ? d.sn : ''}}" lay-filter="sn"-->
-        <!--               data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"-->
-        <!--               class="layui-input custom-input" hidden/>-->
-        <script type="text/html" id="SnBarCoded">
-            <ul>
-                {{# layui.each(d, function(index, item){ }}
-                <li>
-                    <span>{{ item.sn }}</span>
-                </li>
-                {{# }); }}
-            </ul>
-        </script>
+
+
         <script src="/scripts/utils/common.js"></script>
         <script>
 
@@ -358,19 +347,7 @@
 
                 /*** 子表管理结束 */
                 $(".form-print").click(() => {
-                    // let windowName = window.name
-                    // let newIndex = parent.layer.open({
-                    //     title: "打印预览",
-                    //     type: 2,
-                    //     area: ['950px', '400px'],
-                    //     content: ['./print_delivery_form.html'],
-                    //     success(layero) {
-                    //         parent.layer.close(parent.layer.getFrameIndex(windowName))
-                    //         let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                    //         iframeWin && iframeWin.initForm(model)
-                    //     }
-                    // });
-                    // parent.layer.full(newIndex)
+
 
                     let windowName = window.name
                     let newIndex = parent.layer.open({
@@ -382,11 +359,16 @@
                             parent.layer.close(parent.layer.getFrameIndex(windowName))
                             let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm({
-                                title: "发货单",
-                                headers: {
-                                    "供应商名称": model.supplierName,
-                                    "发货时间": model.gmtDelivery
-                                },
+                                title: `${model.hospitalName}送货单`,
+                                barcode: model.code,
+                                headers: [
+                                    {title: "发货单号",value: model.code},
+                                    {title: "供应商名称",value: model.supplierName},
+                                    {title: "发货时间",value: model.gmtDelivery},
+                                    {title: "采购单号",value: model.poCode},
+                                    {title: "采购金额(元)",value: model.orderAmount},
+                                    {title: "发货金额(元)",value: model.deliveryAmount},
+                                ],
                                 grid: {
                                     cols: [
                                         {field: "materialName", title: "品名"},
@@ -467,12 +449,12 @@
                         for (let i = 0; i < data.length; i++) {
 
                             let container = $("<div style='border: 1px solid #000000;margin-top: 5px;padding: 5px;width:300px'></div>")
-                            container.append(`<p>材料编号: ${data[i].materialName}</p>`)
-                            container.append(`<p>品名: ${data[i].materialName}</p>`)
-                            container.append(`<p>规格: ${data[i].materialSpec}</p>`)
-                            container.append(`<p>生产批号: ${data[i].lot}</p>`)
-                            container.append(`<p>生产日期: ${data[i].productionDate}  失效日期: ${data[i].validDate}</p>`)
-                            container.append(`<p>生产厂商: ${data[i].manufacturerName}</p>`)
+                            container.append(`<p>材料编号: ${$strings.defaultString(data[i].materialName)}</p>`)
+                            container.append(`<p>品名: ${$strings.defaultString(data[i].materialName)}</p>`)
+                            container.append(`<p>规格: ${$strings.defaultString(data[i].materialSpec)}</p>`)
+                            container.append(`<p>生产批号: ${$strings.defaultString(data[i].lot)}</p>`)
+                            container.append(`<p>生产日期: ${$strings.defaultString(data[i].productionDate)}  失效日期: ${data[i].validDate}</p>`)
+                            container.append(`<p>生产厂商: ${$strings.defaultString(data[i].manufacturerName)}</p>`)
 
 
                             let barcode = $("<img />")
@@ -493,7 +475,6 @@
                 form.on('submit(*)', (data) => {
                     data.field = layui.$.extend({}, data.field);
                     let promise = null;
-                    console.log(data);
                     if ($strings.isBlank(data.field.id)) {
                         promise = $http.post("/order/deliverys", data.field)
                     } else {

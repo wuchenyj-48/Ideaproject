@@ -4,76 +4,82 @@
         <meta charset="UTF-8">
         <title>编辑表单</title>
         <style>
-            .custom-form .layui-form-label {
-                width: 120px
-            }
+            /*.custom-form .layui-form-label {*/
+            /*    width: 120px*/
+            /*}*/
+
+            /*.custom-form .layui-input-block {*/
+            /*    margin-left: 150px*/
+            /*}*/
 
             .custom-form .layui-input-block {
-                margin-left: 150px
+                min-height: unset;
+                vertical-align: middle;
+                padding: 9px 15px;
+                height: 20px;
+                font-weight: 400;
+                line-height: 20px;
             }
-
-            .custom-form .layui-input {
-                border: 0px
+            .layui-col-md4 {
+                width: 33.33333333%;
+            }
+            .layui-col-md1, .layui-col-md10, .layui-col-md11, .layui-col-md12, .layui-col-md2, .layui-col-md3, .layui-col-md4, .layui-col-md5, .layui-col-md6, .layui-col-md7, .layui-col-md8, .layui-col-md9 {
+                float: left;
+            }
+            .container > .title {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .container > .headers{
+                margin-bottom: 20px;
             }
         </style>
     </head>
     <body>
 
-        <div class="layui-fluid" id="app">
-            <div id="title"></div>
-            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+        <div class="layui-fluid container">
+            <!--      操作区域      -->
+            <div class="operation no-print">
+                <div id="bts">
+                    <button class="layui-btn layui-btn-normal form-print" type="button">打印</button>
+                    <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                </div>
+            </div>
+
+            <!--      标题区域      -->
+            <div class="title">
 
                 <div class="layui-row">
-
-
+                    <div class="layui-col-md9  layui-col-xs6 layui-col-sm6 ">
+                        <h1 id="title"></h1>
+                    </div>
+                    <div style="visibility:hidden;">分割线</div>
+                    <div class="layui-col-md3  layui-col-xs6 layui-col-sm6 ">
+                        <img id="barcode" />
+                    </div>
                 </div>
+            </div>
 
-            </form>
+            <!--      表单区域      -->
+            <div class="headers">
+                <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
 
-            <div id="grid">
+                </form>
+            </div>
+
+            <!--      表格区域      -->
+            <div class="grid">
                 <table class="layui-table" id="gridTable">
 
                 </table>
             </div>
+
+            <!--      底部区域      -->
             <div id="footer">
 
             </div>
-
         </div>
 
-        <script type="text/html" id="template">
-            <div id="title">{{d.title}}</div>
-            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
-
-                <div class="layui-row">
-
-                </div>
-
-            </form>
-
-            <div id="grid">
-                <table class="layui-table" id="gridTable">
-                    <colgroup>
-                    {{#  layui.each(d.grid.cols, function(index, item){ }}
-                        <col>
-                    {{#  }); }}
-                    </colgroup>
-
-                    <thead>
-                        {{#  layui.each(d.grid.cols, function(index, item){ }}
-                        <td>{{ item.title }}</td>
-                        {{#  }); }}
-
-
-                    </thead>
-
-                </table>
-            </div>
-            <div id="footer">
-
-            </div>
-
-        </script>
         <script src="/scripts/utils/common.js"></script>
         <script>
 
@@ -82,7 +88,7 @@
 
                 let defaultOptions = {
                     title: "",
-                    headers: {},
+                    headers: [],
                     grid: {
                         cols: [],
                         data: []
@@ -93,31 +99,34 @@
                 window.initForm = (options) => {
                     $.extend(window.options, options)
 
-                    $("#app").html()
-
-                    layui.laytpl($("#template").html()).render(options, function(result){
-                        $("#app").html(result)
-                    });
-                    // renderPrintForm()
+                    renderPrintForm()
                 };
 
                 let renderPrintForm = () => {
                     $("#title").html(options.title)
+                    $("#barcode").JsBarcode(options.barcode,{height: 35,width: 2, Font: "Fantasy", fontOptions: "Bold"})
 
-
-                    for (const key in options.headers) {
-                        $("#editForm").append(`
-                            <div class="layui-col-md4">
+                    let newRow = true
+                    let row = null
+                    for (let i = 0; i < options.headers.length; i++) {
+                        if(newRow){
+                            row =  $("<div class='layui-row'></div>")
+                            $("#editForm").append(row)
+                        }
+                        let header = options.headers[i]
+                        row.append(`
+                            <div class="layui-col-md4 layui-col-xs4 layui-col-sm4 ">
                                 <label class="layui-form-label">
-                                    ${key}
+                                    ${header.title}
                                 </label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="supplierName" readonly
-                                           placeholder="" value="${options.headers[key]}" autocomplete="off" class="layui-input">
+                                   ${header.value}
                                 </div>
                             </div>`
                         )
+                        newRow = (i + 1) / 3 == 1
                     }
+
 
                     let grid = options.grid
                     let colgroup = $("<colgroup></colgroup>")
@@ -131,22 +140,26 @@
                     $("#gridTable").append(colgroup)
 
                     let thead = $("<thead></thead>")
+                    let tr = $("<tr></tr>")
                     for (let i = 0; i < grid.cols.length; i++) {
-                        thead.append(
+                        let col = grid.cols[i]
+                        tr.append(
                             `
-                                <th >${grid.cols[i].title}</th>
+                                <th style="text-align:${col.align ? col.align : 'center'}">${col.title}</th>
                             `
                         )
                     }
+                    thead.append(tr)
                     $("#gridTable").append(thead)
 
                     let tbody = $("<tbody></tbody>")
                     for (let i = 0; i < grid.data.length; i++) {
                         let tr = $("<tr></tr>")
                         for (let j = 0; j < grid.cols.length; j++) {
+                            let col = grid.cols[j]
                             tr.append(
                                 `
-                                <td >${grid.data[i][grid.cols[j].field]}</th>
+                                <td style="text-align:${col.align ? col.align : 'center'}">${$strings.defaultString(grid.data[i][col.field],"")}</th>
                             `
                             )
                         }
@@ -156,10 +169,20 @@
                     $("#gridTable").append(tbody)
 
                 }
+
+                $(".form-print").click(() => {
+                    $(".container").jqprint({importCSS: true,printContainer: true})
+                })
+                $(".form-close").click(() => {
+                    let index = parent.layer.getFrameIndex(window.name)
+                    parent.layer.close(index)
+                })
             }
 
             extendParentScriptsAndStyles(() => {
-                mainFunction()
+                window.$ = layui.$
+                window.jQuery = layui.$
+                loadAllJs(["https://cdn.bootcss.com/jsbarcode/3.9.0/JsBarcode.all.min.js"],mainFunction)
             })
 
         </script>
