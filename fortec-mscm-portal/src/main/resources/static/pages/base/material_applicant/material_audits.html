@@ -125,7 +125,7 @@
                     layer.confirm('真的删除行么', function (index) {
 
                         $http.delete(`/base/material_applicants/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             table.reload('listTable')
 
                             layer.close(index)
@@ -137,10 +137,10 @@
                     layer.confirm('确定通过么', function (index) {
                         $http.post(`/base/material_applicants/pass/` + data.id).then(resp => {
                             if(!resp.data.success){
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
                         })
                     });
@@ -151,10 +151,10 @@
 
                         $http.post(`/base/material_applicants/cancel/` + data.id + "/" + val).then(resp => {
                             if (!resp.data.success){
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
                             layer.close(index)
                         })

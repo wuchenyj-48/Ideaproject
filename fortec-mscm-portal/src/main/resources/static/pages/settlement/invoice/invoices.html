@@ -109,7 +109,7 @@
                     layer.confirm('真的删除行么', function (index) {
 
                         $http.delete(`/settlement/invoices/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
 
                             layer.close(index)

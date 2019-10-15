@@ -131,7 +131,7 @@
                     layer.confirm('真的撤销行么', function (index) {
 
                         $http.delete(`/base/supplier_applicants/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable();
                             layer.close(index)
                         })
@@ -141,7 +141,7 @@
                 window.subm = (data, rowIndex) => {
                     layer.confirm('真的提交行么', function (index) {
                         $http.post(`/base/supplier_applicants/submit/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             // 提交成功后状态会变更为 1：提交待审核，刷新单行
                             layui.table.renderSpecRow('listTable', rowIndex, {id: data.id, status: 1})
                             layer.close(index)

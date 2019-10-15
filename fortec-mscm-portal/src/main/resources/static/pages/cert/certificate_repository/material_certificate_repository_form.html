@@ -302,7 +302,7 @@
                     layer.confirm('真的关闭么', function (index) {
 
                         $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadMaterialSpecTable()
 
                             layer.close(index)

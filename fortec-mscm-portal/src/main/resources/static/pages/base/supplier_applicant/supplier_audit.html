@@ -124,10 +124,10 @@
 
                         $http.post(`/base/supplier_applicants/pass/` + data.id).then(resp => {
                             if(!resp.data.success){
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
                             parent.reloadTable()
                             var index = parent.layer.getFrameIndex(window.name);
@@ -140,7 +140,7 @@
                     layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
 
                         $http.post(`/base/supplier_applicants/cancel/` + data.id + "/" + val).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
                             layer.close(index)
                         })

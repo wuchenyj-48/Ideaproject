@@ -338,11 +338,11 @@
                         }
                         $http.put("/order/purchase_order_items/batch_save", rows).then(resp => {
                             if (resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 1})
+                                layui.layer.success(resp.data.msg)
                                 window.reloadPurchaseOrderItemTable()
                                 parent.reloadTable()
                             } else {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
+                                layui.layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -412,7 +412,7 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/order/purchase_order_items/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 layui.table.deleteRow('purchase_order_item_table', rowIndex)
                                 parent.reloadTable()
                             })
@@ -442,7 +442,7 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 parent.reloadTable()
                                 // 重新渲染单行数据
                                 layui.table.renderSpecRow('purchase_order_item_table', rowIndex, {
@@ -450,7 +450,7 @@
                                 })
 
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -471,10 +471,10 @@
                     layer.confirm('确定提交么', function (index) {
                         $http.post(`/order/purchase_orders/submit_order/` + model.id).then(resp => {
                             if (!resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             parent.reloadTable()
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);

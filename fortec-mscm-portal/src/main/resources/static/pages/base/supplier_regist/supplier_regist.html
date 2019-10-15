@@ -215,10 +215,10 @@
 
                     promise.then(resp => {
                         if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             $(".form-reset").click()
                         } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                            layer.error(resp.data.msg)
                         }
                     })
 

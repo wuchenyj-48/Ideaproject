@@ -138,7 +138,7 @@
                     layer.confirm('真的删除行么', function (index) {
 
                         $http.delete(`/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
 
                             layer.close(index)

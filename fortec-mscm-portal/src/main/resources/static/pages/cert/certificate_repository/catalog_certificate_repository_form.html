@@ -244,7 +244,7 @@
                     layer.confirm('真的关闭么', function (index) {
 
                         $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadMaterialSpecTable()
 
                             layer.close(index)
@@ -271,7 +271,7 @@
                 window.subm = (data) => {
                     layer.confirm('确定提交吗', (index) => {
                         $http.post(`/cert/certificate_repositorys/certificate_submit/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadMaterialSpecTable()
                             layer.close(index)
                         })

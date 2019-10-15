@@ -308,7 +308,7 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/upms/test/childs/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 obj.del()
                             })
                         });
@@ -331,14 +331,14 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                parent.layer.msg(resp.data.msg, {icon: 1})
+                                parent.layer.success(resp.data.msg)
 
                                 // 重新渲染单行数据
                                 layui.table.renderSpecRow('child_table', index, {
                                     id: resp.data.data.id
                                 })
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -369,10 +369,10 @@
                         if (resp.data.success) {
                             window.initForm(resp.data.data)
 
-                            parent.layer.msg(resp.data.msg, {icon: 1})
+                            parent.layer.success(resp.data.msg)
                             parent.reloadTable()
                         } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                            layer.error(resp.data.msg)
                         }
                     })
 

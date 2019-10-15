@@ -212,10 +212,10 @@
                         $http.delete(`/base/material_catalogs/${data.id}`).then(resp => {
                             layer.close(index)
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 window.reloadTable()
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     });

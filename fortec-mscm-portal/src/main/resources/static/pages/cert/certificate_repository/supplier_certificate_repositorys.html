@@ -136,7 +136,7 @@
                     layer.confirm('确定关闭么', function (index) {
 
                         $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
 
                             layer.close(index)
@@ -165,9 +165,9 @@
 
                         $http.post(`/cert/certificate_repositorys/certificate_submit/` + data.id).then(resp => {
                             if (!resp.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
                             layer.close(index)
                         })

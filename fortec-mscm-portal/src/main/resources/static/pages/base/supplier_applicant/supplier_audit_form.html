@@ -98,10 +98,10 @@
                     layer.confirm('确定通过么', function (index) {
                         $http.post(`/base/supplier_applicants/pass/` + model.id).then(resp => {
                             if (!resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             parent.reloadTable()
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
@@ -114,10 +114,10 @@
 
                         $http.post(`/base/supplier_applicants/cancel/` + model.id + "/" + val).then(resp => {
                             if (!resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             parent.reloadTable()
                             let index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);

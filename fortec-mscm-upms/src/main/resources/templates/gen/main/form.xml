@@ -332,10 +332,10 @@
                         rows.forEach(o => o.${camelCase(t.parentTableFkName)} = model.id)
                         $http.put("/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/batch_save", rows).then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 window.reload${t.className}Table(true)
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -359,7 +359,7 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/${t.moduleName}<#if t.subModuleName != "">/${t.subModuleName}</#if>/${uncamelCase(t.className)}s/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 table.deleteRow('${uncamelCase(t.className)}_table', rowIndex)
                             })
                         });
@@ -382,14 +382,14 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
 
                                 // 重新渲染单行数据
                                 table.renderSpecRow('${uncamelCase(t.className)}_table', rowIndex, {
                                     id: resp.data.data.id
                                 })
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -419,10 +419,10 @@
 
                     promise.then(resp => {
                         if (!resp.data.success) {
-                           layer.msg(resp.data.msg, {icon: 5})
+                           layer.error(resp.data.msg)
                            return
                         }
-                        layer.msg(resp.data.msg, {icon: 1})
+                        layer.success(resp.data.msg)
                         if($strings.isBlank(model.id)){
                             initForm(resp.data.data, false)
                         }

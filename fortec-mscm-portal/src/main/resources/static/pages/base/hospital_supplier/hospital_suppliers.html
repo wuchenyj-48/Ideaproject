@@ -109,13 +109,13 @@
                     let id = layui.$(this).attr("data-id")
                     if (obj.elem.checked) {
                         $http.post(`/base/hospital_suppliers/enable/` + id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
 
                         })
                     }
                     if (!obj.elem.checked) {
                         $http.post(`/base/hospital_suppliers/disable/` + id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
 
                         })
                     }
