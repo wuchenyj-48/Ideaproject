@@ -225,13 +225,14 @@
         </script>
         <script type="text/html" id="isConsignmentTpl">
             <input type="checkbox" data-name="isConsignment" value="1" lay-filter="isConsignment" lay-skin="primary"
-                   data-index="{{d.LAY_TABLE_INDEX}}" {{d.isConsignment == 1 ? 'checked' : ''}}
-                   class="layui-input custom-input"/>
+                   data-index="{{d.LAY_TABLE_INDEX}}" {{d.isConsignment== 1 ? 'checked' : ''}}
+            class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="isOneThingOneYardTpl">
-            <input type="checkbox" data-name="isOneThingOneYard" value="1" lay-filter="isOneThingOneYard" lay-skin="primary"
-                   data-index="{{d.LAY_TABLE_INDEX}}" {{d.isOneThingOneYard == 1 ? 'checked' : ''}}
-                   class="layui-input custom-input"/>
+            <input type="checkbox" data-name="isOneThingOneYard" value="1" lay-filter="isOneThingOneYard"
+                   lay-skin="primary"
+                   data-index="{{d.LAY_TABLE_INDEX}}" {{d.isOneThingOneYard== 1 ? 'checked' : ''}}
+            class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="smallPackageUnitTpl">
             <select data-name="smallPackageUnit" value="{{d.smallPackageUnit ? d.smallPackageUnit : ''}}"
@@ -302,7 +303,7 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$, dtree = layui.dtree,table = layui.table
+                let form = layui.form, $ = layui.$, dtree = layui.dtree, table = layui.table
 
                 let model = {}
 
@@ -326,7 +327,7 @@
                 let renderPackUnit = (rows) => {
                     let data = rows ? rows : table.getRows("material_spec_table")
 
-                    data.forEach((o,index) =>  {
+                    data.forEach((o, index) => {
                         $(`[lay-filter='unit'][data-index='${index}']`).val(o.unit)
                         $(`[lay-filter='smallPackageUnit'][data-index='${index}']`).val(o.smallPackageUnit)
                         $(`[lay-filter='mediumPackageUnit'][data-index='${index}']`).val(o.mediumPackageUnit)
@@ -355,11 +356,23 @@
                                     templet: "#inputCodingTypeTpl"
                                 },
                                 {field: 'inputCode', title: '输入编码', align: 'center', templet: "#inputCodeTpl"},
-                                {field: 'form', title: '剂型', align: 'center', templet: "#formTpl",width: 80},
+                                {field: 'form', title: '剂型', align: 'center', templet: "#formTpl", width: 80},
                                 {field: 'unit', title: '单位', align: 'center', templet: "#unitTpl"},
-                                {field: 'price', title: '价格', align: 'center', templet: "#priceTpl",width: 80},
-                                {field: 'isConsignment', title: '寄售', align: 'center', templet: "#isConsignmentTpl",width:60},
-                                {field: 'isOneThingOneYard', title: '一物一码', align: 'center', templet: "#isOneThingOneYardTpl",width:90},
+                                {field: 'price', title: '价格', align: 'center', templet: "#priceTpl", width: 80},
+                                {
+                                    field: 'isConsignment',
+                                    title: '寄售',
+                                    align: 'center',
+                                    templet: "#isConsignmentTpl",
+                                    width: 60
+                                },
+                                {
+                                    field: 'isOneThingOneYard',
+                                    title: '一物一码',
+                                    align: 'center',
+                                    templet: "#isOneThingOneYardTpl",
+                                    width: 90
+                                },
                                 {
                                     field: 'smallPackageUnit',
                                     title: '小包装单位',
@@ -406,7 +419,7 @@
                                     templet: "#materialSpecCellToolbar"
                                 },
                             ]],
-                            done(res){
+                            done(res) {
                                 renderPackUnit(res.data)
                             }
                         });
@@ -416,211 +429,212 @@
 
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    model = $.extend({}, formData)
+                    $(".form-reset").click()
+                    form.val("editForm", model)
 
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         $(".child-tab").show()
                         window.reloadMaterialSpecTable && window.reloadMaterialSpecTable()
                     } else {
+                        $(".form-reset").show()
                         $(".child-tab").hide()
                     }
+            }
+
+            // 渲染商品品类
+            dtree.renderOpenTree({
+                title: "选择树",
+                elem: "#catalogName",
+                url: "/base/material_catalogs/tree",
+                record: true,
+                allowClear: true,
+                allowFilter: true,
+                filterMode: "pinyin",
+                onClear() {
+                    $("input[name='catalogId']").val("");
+                    $("input[name='catalogName']").val("");
+                },
+                onConfirm(node) {
+
+                    if (!node.leaf) {
+                        layui.layer.msg("只能选择末级品类", {icon: 5})
+                        return;
+                    }
+
+                    $("input[name='catalogId']").val(node.nodeId);
+                    $("input[name='catalogName']").val(node.context);
+
+                    let recordData = JSON.parse(node.recordData)
+                    let materialTypeCode = recordData.properties.materialTypeCode
+                    $("select[name='materialTypeCode']").val(materialTypeCode)
+                    form.render('select')
+                }
+            })
+
+            //渲染生产厂商
+            layui.tableSelect.renderOpenTable({
+                elem: '#manufacturerName',	//定义输入框input对象 必填
+                title: "厂商选择",
+                component: "/components/base/manufacturer_select.html",
+                onConfirm(rows, elem) {
+                    model.manufacturerId = rows.length > 0 ? rows[0].id : null
+                    model.manufacturerName = rows.length > 0 ? rows[0].name : null
+                    layui.each(rows, function (index, item) {
+                        $("form input[name='manufacturerId']").val(model.manufacturerId)
+                        $("form input[name='manufacturerName']").val(item.name)
+                    })
+                }
+            })
+
+            // 渲染下拉框 数据
+            $global.getDictDataList('base_material_type').forEach(o => {
+                $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+            })
+
+            // 渲染下拉框 数据
+            form.render('select')
+
+            // 渲染单选框/多选框 数据
+            form.render('radio')
+
+            // 渲染日期、时间 数据
+            layui.laydate.render({
+                elem: "input[name='certificateExpiredDate']",
+                type: 'datetime',
+                trigger: 'click'
+            });
+
+
+            /*** 子表管理开始 */
+            $("#materialSpecToolbar button[lay-event='addNewLine']").click(() => {
+                layui.table.addRow('material_spec_table', 0, {
+                    inputCodingType: 0
+                })
+
+                form.render('select')
+            })
+
+            $("#materialSpecToolbar button[lay-event='batchSave']").click(() => {
+                $editable.validateAllRows('material_spec_table', (valid, errors) => {
+                    if (!valid) {
+                        return
+                    }
+                    let rows = layui.table.getRows('material_spec_table')
+                    if (rows.length == 0) {
+                        return;
+                    }
+                    rows.forEach(o => {
+                        o.materialId = model.id
+                        o.isConsignment = $(`[data-name='isConsignment'][data-index='${o.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
+                        o.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${o.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
+
+                    })
+
+                    $http.put("/base/material_specs/batch_save", rows).then(resp => {
+
+                        if (resp.data.success) {
+                            layui.layer.msg(resp.data.msg, {icon: 1})
+                            window.reloadMaterialSpecTable()
+                        } else {
+                            layui.layer.msg(resp.data.msg, {icon: 5})
+                        }
+                    })
+                })
+            })
+
+            $("#materialSpecToolbar button[lay-event='refresh']").click(() => {
+                window.reloadMaterialSpecTable()
+            })
+
+            // 监听子表的列工具栏
+            layui.table.on('tool(material_spec_table)', function (obj) {
+                // 获取行索引
+                let index = obj.tr[0].getAttribute("data-index")
+                let data = obj.data;
+                if (obj.event === 'newDel') {
+                    // 未在数据库中存在，直接从界面移除即可
+                    layui.table.deleteRow('material_spec_table', index)
+                    return
+                }
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $http.delete(`/base/material_specs/` + data.id).then(resp => {
+                            window.reloadMaterialSpecTable()
+                            layer.msg(resp.data.msg, {icon: 1})
+                        })
+                    });
+                    return
                 }
 
-                // 渲染商品品类
-                dtree.renderOpenTree({
-                    title: "选择树",
-                    elem: "#catalogName",
-                    url: "/base/material_catalogs/tree",
-                    record: true,
-                    allowClear: true,
-                    allowFilter: true,
-                    filterMode: "pinyin",
-                    onClear() {
-                        $("input[name='catalogId']").val("");
-                        $("input[name='catalogName']").val("");
-                    },
-                    onConfirm(node) {
-
-                        if (!node.leaf) {
-                            layui.layer.msg("只能选择末级品类", {icon: 5})
-                            return;
-                        }
-
-                        $("input[name='catalogId']").val(node.nodeId);
-                        $("input[name='catalogName']").val(node.context);
-
-                        let recordData = JSON.parse(node.recordData)
-                        let materialTypeCode = recordData.properties.materialTypeCode
-                        $("select[name='materialTypeCode']").val(materialTypeCode)
-                        form.render('select')
-                    }
-                })
-
-                //渲染生产厂商
-                layui.tableSelect.renderOpenTable({
-                    elem: '#manufacturerName',	//定义输入框input对象 必填
-                    title: "厂商选择",
-                    component: "/components/base/manufacturer_select.html",
-                    onConfirm(rows, elem) {
-                        model.manufacturerId = rows.length > 0 ? rows[0].id : null
-                        model.manufacturerName = rows.length > 0 ? rows[0].name : null
-                        layui.each(rows, function (index, item) {
-                            $("form input[name='manufacturerId']").val(model.manufacturerId)
-                            $("form input[name='manufacturerName']").val(item.name)
-                        })
-                    }
-                })
-
-                // 渲染下拉框 数据
-                $global.getDictDataList('base_material_type').forEach(o => {
-                    $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
-
-                // 渲染下拉框 数据
-                form.render('select')
-
-                // 渲染单选框/多选框 数据
-                form.render('radio')
-
-                // 渲染日期、时间 数据
-                layui.laydate.render({
-                    elem: "input[name='certificateExpiredDate']",
-                    type: 'datetime',
-                    trigger: 'click'
-                });
-
-
-                /*** 子表管理开始 */
-                $("#materialSpecToolbar button[lay-event='addNewLine']").click(() => {
-                    layui.table.addRow('material_spec_table', 0, {
-                        inputCodingType: 0
-                    })
-
-                    form.render('select')
-                })
-
-                $("#materialSpecToolbar button[lay-event='batchSave']").click(() => {
-                    $editable.validateAllRows('material_spec_table', (valid, errors) => {
-                        if (!valid) {
-                            return
-                        }
-                        let rows = layui.table.getRows('material_spec_table')
-                        if (rows.length == 0) {
-                            return;
-                        }
-                        rows.forEach(o => {
-                            o.materialId = model.id
-                            o.isConsignment = $(`[data-name='isConsignment'][data-index='${o.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
-                            o.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${o.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
-
-                        })
-
-                        $http.put("/base/material_specs/batch_save", rows).then(resp => {
-
-                            if (resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 1})
-                                window.reloadMaterialSpecTable()
-                            } else {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
-                            }
-                        })
-                    })
-                })
-
-                $("#materialSpecToolbar button[lay-event='refresh']").click(() => {
-                    window.reloadMaterialSpecTable()
-                })
-
-                // 监听子表的列工具栏
-                layui.table.on('tool(material_spec_table)', function (obj) {
-                    // 获取行索引
-                    let index = obj.tr[0].getAttribute("data-index")
-                    let data = obj.data;
-                    if (obj.event === 'newDel') {
-                        // 未在数据库中存在，直接从界面移除即可
-                        layui.table.deleteRow('material_spec_table', index)
-                        return
-                    }
-                    if (obj.event === 'del') {
-                        layer.confirm('真的删除行么', function (index) {
-                            $http.delete(`/base/material_specs/` + data.id).then(resp => {
-                                window.reloadMaterialSpecTable()
-                                layer.msg(resp.data.msg, {icon: 1})
-                            })
-                        });
+                // 校验并保存
+                $editable.validateSingleRow("material_spec_table", index, (valid, error) => {
+                    if (!valid) {
                         return
                     }
 
-                    // 校验并保存
-                    $editable.validateSingleRow("material_spec_table", index, (valid, error) => {
-                        if (!valid) {
-                            return
-                        }
+                    let data = layui.table.cache.material_spec_table[index]
+                    data.materialId = model.id
+                    data.isConsignment = $(`[data-name='isConsignment'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
+                    data.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
 
-                        let data = layui.table.cache.material_spec_table[index]
-                        data.materialId = model.id
-                        data.isConsignment = $(`[data-name='isConsignment'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
-                        data.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
-
-                        let promise = null
-                        if ($strings.isBlank(data.id)) {
-                            promise = $http.post("/base/material_specs/", data)
-                        } else {
-                            promise = $http.put("/base/material_specs/", data)
-                        }
-
-                        promise.then(resp => {
-                            if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
-
-                                // 重新渲染单行数据
-                                layui.table.renderSpecRow('material_spec_table', index, {
-                                    id: resp.data.data.id
-                                })
-                            } else {
-                                layer.msg(resp.data.msg, {icon: 5})
-                            }
-                        })
-                    })
-                });
-
-
-                /*** 子表管理结束 */
-
-                $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
-                })
-                $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                })
-
-                // 监听表单提交事件
-                form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({}, data.field)
                     let promise = null
-                    if ($strings.isBlank(data.field.id)) {
-                        promise = $http.post("/base/materials", data.field)
+                    if ($strings.isBlank(data.id)) {
+                        promise = $http.post("/base/material_specs/", data)
                     } else {
-                        promise = $http.put("/base/materials", data.field)
+                        promise = $http.put("/base/material_specs/", data)
                     }
 
                     promise.then(resp => {
                         if (resp.data.success) {
                             layer.msg(resp.data.msg, {icon: 1})
-                            parent.reloadTable()
-                            window.initForm($.extend(model, resp.data.data, {isNew: false}))
+
+                            // 重新渲染单行数据
+                            layui.table.renderSpecRow('material_spec_table', index, {
+                                id: resp.data.data.id
+                            })
                         } else {
                             layer.msg(resp.data.msg, {icon: 5})
                         }
                     })
+                })
+            });
 
-                    return false;
-                });
+
+            /*** 子表管理结束 */
+
+            $(".form-reset").click(() => {
+                $("form")[0].reset()
+                $("form input:hidden").val('')
+            })
+            $(".form-close").click(() => {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            })
+
+            // 监听表单提交事件
+            form.on('submit(*)', (data) => {
+                data.field = layui.$.extend({}, data.field)
+                let promise = null
+                if ($strings.isBlank(data.field.id)) {
+                    promise = $http.post("/base/materials", data.field)
+                } else {
+                    promise = $http.put("/base/materials", data.field)
+                }
+                promise.then(resp => {
+                    if (!resp.data.success) {
+                        layer.error(resp.data.msg)
+                        return
+                    }
+                    layer.success(resp.data.msg)
+
+                    initForm($.extend(model, resp.data.data, {isNew: false}), false)
+                    parent.reloadTable()
+                })
+
+                return false;
+            });
             }
 
             extendParentScriptsAndStyles(() => {

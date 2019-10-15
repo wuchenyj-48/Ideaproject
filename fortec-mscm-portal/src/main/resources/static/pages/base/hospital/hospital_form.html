@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="layui-row layui-col-space5 layui-form-item">
-                    
+
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             <span class="required-star">*</span> 拼音
@@ -97,10 +97,10 @@
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="regionName" id="regionName" lay-verify="" placeholder="请点击选择区域"
-                                 readonly  autocomplete="off" class="layui-input" lay-filter="tree" />
+                                   readonly autocomplete="off" class="layui-input" lay-filter="tree"/>
                         </div>
                     </div>
-                    
+
                     <div class="layui-col-xs4">
                         <label class="layui-form-label">
                             地址
@@ -126,7 +126,6 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
 
 
-                    
                 </div>
 
                 <div class="block"></div>
@@ -238,14 +237,16 @@
 
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    model = $.extend({}, formData)
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         $(".child-tab").show()
                         window.reloadHospitalLocationTable && window.reloadHospitalLocationTable()
                     } else {
+                        $(".form-reset").show()
                         $(".child-tab").hide()
                     }
                 }
@@ -262,8 +263,8 @@
                         $("input[name='regionName']").val("");
                     },
                     onConfirm(node) {
-                        if (!node.leaf){
-                            layer.msg("只能选择最末节点",{icon : 5})
+                        if (!node.leaf) {
+                            layer.msg("只能选择最末节点", {icon: 5})
                             return
                         }
                         $("input[name='regionId']").val(node.nodeId);
@@ -286,7 +287,7 @@
                             return
                         }
                         let rows = layui.table.getRows('hospital_location_table')
-                        if (rows.length == 0){
+                        if (rows.length == 0) {
                             return;
                         }
 
@@ -378,14 +379,14 @@
                     }
 
                     promise.then(resp => {
-                        let data = resp.data
-                        if (data.success) {
-                            layer.msg(data.msg, {icon: 1})
-                            window.initForm($.extend(model ,resp.data.data,{isNew: false}))
-                            parent.reloadTable()
-                        } else {
-                            layer.msg(data.msg, {icon: 5})
+                        if (!resp.data.success) {
+                            layer.error(resp.data.msg)
+                            return
                         }
+                        layer.success(resp.data.msg)
+
+                        initForm($.extend(model, resp.data.data, {isNew: false}), false)
+                        parent.reloadTable()
                     })
 
                     return false;
@@ -393,7 +394,7 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js","/scripts/utils/editable.js"], mainFunction)
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js", "/scripts/utils/editable.js"], mainFunction)
                 loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
             })
 

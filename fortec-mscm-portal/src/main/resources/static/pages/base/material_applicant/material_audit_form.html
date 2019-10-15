@@ -8,7 +8,7 @@
 
         <div class="layui-fluid" id="app">
 
-            <form  class="layui-form" id="editForm" lay-filter="editForm">
+            <form class="layui-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
                 <input type="hidden" name="hospitalId" class="layui-input"/>
 
@@ -16,10 +16,11 @@
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
-                             医院
+                            医院
                         </label>
                         <div class="layui-input-block">
-                            <input disabled type="text" name="hospitalName" id="hospitalName" required lay-verify="required"
+                            <input disabled type="text" name="hospitalName" id="hospitalName" required
+                                   lay-verify="required"
                                    placeholder="请选择医院"
                                    autocomplete="off" class="layui-input">
                         </div>
@@ -108,15 +109,14 @@
 
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    model = $.extend({}, formData)
+                    $(".form-reset").click()
+                    form.val("editForm", model)
 
-                    if(model.status != 1){
+                    if (model.status != 1) {
                         $(".form-pass").hide()
                         $(".form-cancel").hide()
                     }
-
                     window.reloadMaterialApplicantItemTable && window.reloadMaterialApplicantItemTable()
 
                 }
@@ -129,7 +129,7 @@
                 $(".form-pass").click(() => {
                     layer.confirm('确定通过么', function (index) {
                         $http.post(`/base/material_applicants/pass/` + model.id).then(resp => {
-                            if(!resp.data.success){
+                            if (!resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 5})
                                 return
                             }
@@ -145,7 +145,7 @@
                     layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
 
                         $http.post(`/base/material_applicants/cancel/` + model.id + "/" + val).then(resp => {
-                            if (!resp.data.success){
+                            if (!resp.data.success) {
                                 layer.msg(resp.data.msg, {icon: 5})
                                 return
                             }
