@@ -36,9 +36,15 @@ public class HospitalSupplier extends DataEntity  implements Serializable {
 
     private Integer inactive;
 
+    /** 医院名称 */
     @TableField(exist = false)
     private String hospitalName;
 
+    /** 医院代码 */
+    @TableField(exist = false)
+    private String code;
+
+    /** 供应商名称 */
     @TableField(exist = false)
     private String supplierName;
 

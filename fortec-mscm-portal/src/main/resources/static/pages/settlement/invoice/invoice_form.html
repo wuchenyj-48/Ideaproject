@@ -6,8 +6,8 @@
         <meta charset="UTF-8">
         <title>编辑表单</title>
         <style>
-             .custom-form .layui-form-label { width: 120px }
-             .custom-form .layui-input-block { margin-left: 150px}
+            .custom-form .layui-form-label { width: 120px }
+            .custom-form .layui-input-block { margin-left: 150px}
         </style>
     </head>
     <body>
@@ -18,64 +18,64 @@
                 <input type="hidden" name="id" class="layui-input"/>
                 <input type="hidden" name="hospitalId" class="layui-input"/>
 
-                   <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label layui-required">
-                             院方名称
+                            院方名称
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="hospitalName" id="hospitalName" required lay-verify="required"
                                    placeholder="请选择医院" readonly
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
 
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label layui-required">
-                             开票时间
+                            开票时间
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="gmtMakeOut" required lay-verify="required"   placeholder="请选择开票时间" autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
 
-                   <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label layui-required">
-                             开票人
+                            开票人
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="drawer" required lay-verify="required" placeholder="请输入开票人"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
 
-                   <div class="layui-col-xs6">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label layui-required">
-                             开票金额
+                            开票金额(元)
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="totalAmount" required lay-verify="required" placeholder="请输入开票金额"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
 
-                   <div class="layui-row layui-col-space5 layui-form-item">
-                   <div class="layui-col-xs6">
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
                         <label class="layui-form-label ">
-                             备注
+                            备注
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="remark"  lay-verify="" placeholder="请输入备注"
                                    autocomplete="off" class="layui-input">
                         </div>
-                   </div>
+                    </div>
 
                 </div>
                 <div class="block"></div>
@@ -83,6 +83,7 @@
                     <div class="layui-form-item">
                         <div class="layui-input-block">
                             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-normal form-audit" type="button">审核</button>
                             <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
                             <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
                         </div>
@@ -116,12 +117,12 @@
 
         <script type="text/html" id="invoiceNoTpl">
             <input type="text" data-name="invoiceNo" value="{{d.invoiceNo ? d.invoiceNo : ''}}" lay-filter="invoiceNo"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填" 
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="amountTpl">
             <input type="text" data-name="amount" value="{{d.amount ? d.amount : ''}}" lay-filter="amount"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填" 
+                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required|number" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="remarkTpl">
@@ -129,19 +130,19 @@
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""  placeholder="选填"
                    class="layui-input custom-input"/>
         </script>
-                <script type="text/html" id="invoiceLineCellToolbar">
-                {{#  if($strings.isBlank(d.id)){ }}
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
-                        class="fa fa-check"></i></a>
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
-                        class="fa fa-trash-o"></i></a>
-                {{#  } else { }}
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
-                        class="fa fa-save"></i></a>
-                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
-                        class="fa fa-trash-o"></i></a>
-                {{#  } }}
-            </script>
+        <script type="text/html" id="invoiceLineCellToolbar">
+            {{#  if($strings.isBlank(d.id)){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
+                    class="fa fa-check"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
+                    class="fa fa-trash-o"></i></a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
+                    class="fa fa-save"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
+                    class="fa fa-trash-o"></i></a>
+            {{#  } }}
+        </script>
         <script type="text/html" id="relateTpl">
             {{#  if($strings.isBlank(d.id)){ }}
             {{#  } else { }}
@@ -179,17 +180,18 @@
                         cols: [[
                             {type: 'numbers', align: 'center'},
                             { field: 'invoiceNo', title: '税务发票号', align: 'center', templet: "#invoiceNoTpl"},
-                            { field: 'amount', title: '开票金额', align: 'center', templet: "#amountTpl"},
+                            { field: 'amount', title: '开票金额(元)', align: 'center', templet: "#amountTpl"},
                             { field: 'remark', title: '备注', align: 'center', templet: "#remarkTpl"},
-                            {field: 'RELATE', title: '关联', align: 'center', templet: "#relateTpl",width:100},
-                            {field: 'VIEW', title: '查看', align: 'center', templet: "#viewTpl",width:100},
+                            { field: 'billQty', title: '记账单数量', align: 'center'},
+                            {field: 'LAY_CELL_RELATE', title: '关联', align: 'center', templet: "#relateTpl",width:100},
+                            {field: 'LAY_CELL_VIEW', title: '查看', align: 'center', templet: "#viewTpl",width:100},
                             {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#invoiceLineCellToolbar"},
                         ]]
                     }
-                     if (!loadChildTableByHttp) {
+                    if (!loadChildTableByHttp) {
                         // 如果不需要通过请求的方式加载表格（一般情况下 主表新增后 不需要从后台拉取数据）
                         table.render(options);
-                        $editable.watch('dict_data_table')
+                        $editable.watch('invoice_line_table')
                         return
                     }
                     $http.get(`/settlement/invoice_lines/list?invoiceId=${model.id}`).then(resp => {
@@ -199,21 +201,26 @@
                     })
                 }
 
-                 /**
+                /**
                  * 初始化表单
                  * @param formData 表单数据
                  * @param loadChildTableByHttp  通过http请求的方式加载子表数据
                  * */
                 window.initForm = (formData, loadChildTableByHttp = true) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         $(".child-tab").show()
+                        $(".form-audit").show()
                         window.reloadInvoiceLineTable && window.reloadInvoiceLineTable(loadChildTableByHttp)
                     } else {
+                        $(".form-reset").show()
+                        $(".form-audit").hide()
                         $(".child-tab").hide()
                     }
                 }
@@ -321,12 +328,15 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
-
                                 // 重新渲染单行数据
                                 table.renderSpecRow('invoice_line_table', rowIndex, {
-                                    id: resp.data.data.id
+                                    id: resp.data.data.id,
+                                    billQty: resp.data.data.billQty,
+                                    LAY_CELL_RELATE: "",
+                                    LAY_CELL_VIEW: ""
                                 })
+
+                                layer.msg(resp.data.msg, {icon: 1})
                             } else {
                                 layer.msg(resp.data.msg, {icon: 5})
                             }
@@ -348,6 +358,10 @@
                             invoiceLineId : data.id
                         },
                         onConfirm(rows, elem){
+
+                            if (rows.length == 0){
+                                return
+                            }
                             rows.forEach(o => {
                                 o.invoiceLineId = data.id
                                 o.invoiceId = model.id
@@ -356,8 +370,9 @@
                             })
                             $http.put("/settlement/invoice_items/batch_save", rows).then(resp => {
                                 if (resp.data.success) {
-                                    layer.msg(resp.data.msg, {icon: 1})
                                     window.reloadInvoiceLineTable(true)
+                                    layer.msg(resp.data.msg, {icon: 1})
+
                                 } else {
                                     layer.msg(resp.data.msg, {icon: 5})
                                 }
@@ -375,15 +390,59 @@
                         title : "查看已关联",
                         area : ["1150px", "600px"],
                         component : "/components/settlement/invoice_item_select.html",
+                        btn: ['关闭', '清除', '刷新', '删除'],
                         allowMultiple : true,
                         where : {
                             invoiceLineId : data.id
+                        },
+                        onConfirm(rows, elem){
+                            if (rows.length == 0){
+                                return
+                            }
+                            $http.post("/settlement/invoice_items/batch_delete", {
+                                ids : rows.map(o => o.id),
+                                invoiceLineId : rows[0].invoiceLineId
+                            }).then(resp => {
+                                if (resp.data.success) {
+                                    layer.msg(resp.data.msg, {icon: 1})
+                                    window.reloadInvoiceLineTable(true)
+                                } else {
+                                    layer.msg(resp.data.msg, {icon: 5})
+                                }
+                            })
                         }
                     })
                 }
 
                 /*** 子表管理结束 */
+                $(".form-audit").click(() => {
+                    let rows = layui.table.getRows('invoice_line_table')
+                    if (rows.length == 0){
+                        layer.msg("开票单行信息不能为空",{icon: 5})
+                        return
+                    }
 
+                    for (let i = 0; i < rows.length; i++) {
+                        if (rows[i].billQty == 0){
+                            layer.msg("记账单数量不能为0",{icon: 5})
+                            return
+                        }
+                    }
+
+                    layer.confirm('确定审核通过么', function (index) {
+                        $http.post("/settlement/invoices/audit/"+ model.id).then(resp => {
+                            if(!resp.data.success){
+                                layer.msg(resp.data.msg, {icon: 5})
+                                return
+                            }
+                            layer.msg(resp.data.msg, {icon: 1})
+                            parent.reloadTable()
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        })
+
+                    });
+                })
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
                     $("form input:hidden").val('')
@@ -408,12 +467,13 @@
                             layer.msg(resp.data.msg, {icon: 5})
                             return
                         }
+                        parent.reloadTable()
                         layer.msg(resp.data.msg, {icon: 1})
                         if(!model.id){
                             model.id = resp.data.data.id
                             initForm(model, false)
                         }
-                        parent.reloadTable()
+
                     })
 
                     return false;

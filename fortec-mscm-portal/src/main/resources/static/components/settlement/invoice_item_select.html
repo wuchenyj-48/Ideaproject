@@ -64,6 +64,7 @@
                             limitName: 'pageSize' //每页数据量的参数名，默认：limit
                         },
                         cols: [[
+                            allowMultiple ? {type: 'checkbox'} : {type: "radio"},
                             {field: 'code', title: '记账单号', align: 'center'},
                             {field: 'materialName', title: '品名', align: 'center'},
                             {field: 'materialSpec', title: '规格', align: 'center'},
@@ -74,7 +75,7 @@
                             },
                             {field: 'billGmtCreate', title: '记账日期', align: 'center'},
                             {field: 'qty', title: '数量', align: 'center',width:100},
-                            {field: 'subtotalAmount', title: '小计', align: 'center',width:100},
+                            {field: 'subtotalAmount', title: '小计（元）', align: 'center',width:100},
                         ]]
                     })
 

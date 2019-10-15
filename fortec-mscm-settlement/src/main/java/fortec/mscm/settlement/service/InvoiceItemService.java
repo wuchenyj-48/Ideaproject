@@ -38,5 +38,13 @@ public interface InvoiceItemService extends IBaseService<InvoiceItem> {
      */
     IPage<InvoiceItemVO> pageForView(InvoiceItemDTO dto);
 
+    /**
+     * 批量删除
+     * @param ids
+     * @param invoiceLineId
+     * @return
+     */
+    boolean batchDelete(String[] ids,String invoiceLineId);
+
 }
     

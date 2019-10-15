@@ -341,14 +341,15 @@
 
                 window.viewCert = (data, rowIndex) => {
                     let index = layer.open({
+                        id: "viewCert",
+                        side: true,
                         title: "资质查看",
+                        area: ["50%","100%"],
                         type: 2,
-                        area: ['950px', '520px'],
                         content: ['./viewCert.html'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
-                            layer.iframeAuto(index)
                         }
                     });
                 }
@@ -357,15 +358,13 @@
 
                     let rows = layui.table.getRows('listTable')
                     let row = rows[rowIndex]
-                    // top.tabAdd(`/pages/cert/certificate_warning/certificate_repository_historys.html?certificateRepositoryId=${row.id}`,`${row.certificateName}历史资质`)
-                    //
                     layer.open({
+                        id: "certificate_panorama_historys",
+                        side: true,
                         title: `${row.certificateName}历史资质`,
                         type: 2,
-                        area: ['950px', '520px'],
                         content: [`./certificate_panorama_historys.html?certificateRepositoryId=${row.id}`],
                         success(layero, index) {
-                            layer.iframeAuto(index)
                         }
                     });
                 }
@@ -375,9 +374,6 @@
             extendParentScriptsAndStyles(() => {
                 loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
                 loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
-
-                /*loadAllCss(["https://cdn.bootcss.com/zTree.v3/3.5.40/css/zTreeStyle/zTreeStyle.css"])
-                loadAllJs(["https://cdn.bootcss.com/zTree.v3/3.5.40/js/jquery.ztree.core.js"], mainFunction)*/
 
             })
 

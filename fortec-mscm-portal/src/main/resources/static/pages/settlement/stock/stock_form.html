@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="supplierId" class="layui-input"/>
+                <input type="hidden" name="warehouseId" class="layui-input"/>
+                <input type="hidden" name="materialId" class="layui-input"/>
+                <input type="hidden" name="materialSpecId" class="layui-input"/>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label layui-required">
+                            供应商名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="supplierName" id="supplierName" required
+                                   lay-verify="required" placeholder="请输入供应商名称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label layui-required">
+                            仓库名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="warehouseName" id="warehouseName" readonly required
+                                   lay-verify="required"
+                                   placeholder="请选择仓库"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label layui-required">
+                            品规
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="materialSpec" id="materialSpec" readonly required
+                                   lay-verify="required"
+                                   placeholder="请选择商品规格"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label layui-required">
+                            品名
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="materialName" readonly required lay-verify="required"
+                                   placeholder="请输入品名"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label layui-required">
+                            批次
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="lot" required lay-verify="required" placeholder="请输入批次"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label layui-required">
+                            数量
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="qty" required lay-verify="number|required" placeholder="请输入数量"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label layui-required">
+                            单位
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="unit" readonly required lay-verify="required" placeholder="请输入单位"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label layui-required">
+                            单价(元)
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="price" readonly required lay-verify="number|required"
+                                   placeholder="请输入单价(元)"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            序列号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sn" lay-verify="" placeholder="请输入序列号"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            效期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="expiredDate" placeholder="请选择效期" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$, layer = layui.layer, tableSelect = layui.tableSelect
+
+                let model = {}
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                    } else {
+                        $(".form-reset").show()
+                    }
+                }
+
+                //渲染供应商名称
+                tableSelect.renderOpenTable({
+                    elem: '#supplierName',	//定义输入框input对象 必填
+                    title: "供应商选择",
+                    component: "/components/base/hospital_supplier_select.html",
+                    where: {
+                        inactive: 0
+                    },
+                    onConfirm(rows, elem) {
+                        model.supplierId = rows.length > 0 ? rows[0].supplierId : null
+                        layui.each(rows, function (index, item) {
+                            $("form input[name='supplierId']").val(model.supplierId)
+                            $("form input[name='supplierName']").val(item.supplierName)
+                        })
+                    }
+                })
+
+                //渲染收货地址
+                tableSelect.renderOpenTable({
+                    elem: '#warehouseName',	//定义输入框input对象 必填
+                    title: "医院仓库选择",
+                    component: "/components/base/hospital_warehouse_select.html",
+                    onConfirm(rows, elem) {
+                        model.warehouseId = rows.length > 0 ? rows[0].id : null
+                        layui.each(rows, function (index, item) {
+                            $("form input[name='warehouseId']").val(model.warehouseId)
+                            $("form input[name='warehouseName']").val(item.name)
+                        })
+                    }
+                })
+
+                //渲染商品规格
+                tableSelect.renderOpenTable({
+                    elem: '#materialSpec',	//定义输入框input对象 必填
+                    title: "商品规格选择",
+                    component: "/components/base/hospital_material_select.html",
+                    where: {
+                        supplierId: model.supplierId,
+                        inactive: 0
+                    },
+                    onConfirm(rows, elem) {
+                        model.materialSpecId = rows.length > 0 ? rows[0].materialSpecId : null
+                        $("form input[name='materialId']").val(rows[0].materialId)
+                        $("form input[name='materialSpecId']").val(model.materialSpecId)
+                        $("form input[name='materialSpec']").val(rows[0].materialSpec)
+                        $("form input[name='materialName']").val(rows[0].materialName)
+                        $("form input[name='unit']").val(rows[0].unit)
+                        $("form input[name='price']").val(rows[0].price)
+                    }
+                })
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                form.render('radio')
+
+                // 渲染日期、时间 数据
+                layui.laydate.render({elem: "input[name='expiredDate']", type: 'datetime', trigger: 'click'});
+
+                $(".form-reset").click(() => {
+                    $("form")[0].reset()
+                    $("form input:hidden").val('')
+                })
+                $(".form-close").click(() => {
+                    let index = parent.layer.getFrameIndex(window.name)
+                    parent.layer.close(index);
+                })
+
+                // 监听表单提交事件
+                form.on('submit(*)', (data) => {
+                    data.field = $.extend({}, data.field)
+                    let promise = null
+                    if (model.isNew) {
+                        promise = $http.post("/settlement/stocks", data.field)
+                    } else {
+                        promise = $http.put("/settlement/stocks", data.field)
+                    }
+
+                    promise.then(resp => {
+                        if (!resp.data.success) {
+                            layer.error(resp.data.msg)
+                            return
+                        }
+                        layer.success(resp.data.msg)
+
+                        initForm(resp.data.data, false)
+                        parent.reloadTable()
+                    })
+
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(["/lib/tableSelect.js", "/scripts/utils/editable.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

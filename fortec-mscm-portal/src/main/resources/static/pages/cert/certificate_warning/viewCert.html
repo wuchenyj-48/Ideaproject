@@ -155,12 +155,16 @@
                 let model = {}
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
-                        renderUploader(data.limitFileExtension, data.maxiumFileSize, data.maxiumFileCount)
+                        renderUploader(model.limitFileExtension, model.maxiumFileSize, model.maxiumFileCount)
+                    } else {
+                        $(".form-reset").show()
                     }
 
                 }

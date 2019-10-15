@@ -18,10 +18,15 @@ public class InvoiceQueryRequest extends PageRequest {
     /** 院方名称 */
     private String hospitalName;
 
+    /** 供应商id */
+    private String supplierId;
+
     /** 开票时间 */
     private java.util.Date beginGmtMakeOut;
     private java.util.Date endGmtMakeOut;
 
+    /** 状态 */
+    private Integer status;
 
 }
     

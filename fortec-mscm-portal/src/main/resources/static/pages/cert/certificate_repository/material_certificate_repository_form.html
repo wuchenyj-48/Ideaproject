@@ -219,12 +219,17 @@
 
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
                     if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
                         $(".child-tab").show()
                         window.reloadMaterialSpecTable && window.reloadMaterialSpecTable()
+                    } else {
+                        $(".form-reset").show()
                     }
                 }
 
@@ -275,19 +280,19 @@
                 //品名资质编辑
                 window.edit = (data,rowIndex) => {
 
-                    layer.open({
+                    parent.layer.open({
+                        id: "material_form",
+                        side: true,
                         title: "商品资质信息",
                         type: 2,
-                        area: ['950px', '520px'],
                         content: ["./material_form.html?targetDescribeId=" + model.id+
                         "&manufacturerId=" + model.manufacturerId+
                         "&limitFileExtension=" + data.limitFileExtension+
                         "&maxiumFileSize=" + data.maxiumFileSize+
                         "&maxiumFileCount="+data.maxiumFileCount],
                         success(layero, index) {
-                            let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
-                            // layer.iframeAuto(index)
                         }
                     });
                 }
@@ -307,15 +312,15 @@
 
                 //查看
                 window.viewCert = (data,rowIndex) => {
-                    let index = layer.open({
+                    let index = parent.layer.open({
+                        id: "material_form",
+                        side: true,
                         title: "资质查看",
                         type: 2,
-                        area: ['950px', '520px'],
                         content: ['./viewCert.html'],
                         success(layero, index) {
-                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            var iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
-                            layer.iframeAuto(index)
                         }
                     });
                 }
@@ -360,8 +365,6 @@
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 })
-
-
             }
 
             extendParentScriptsAndStyles(() => {

@@ -17,4 +17,9 @@ public interface DictConsts {
 
     int BILL_STATUS_INVOICED = 2;
 
+    /** 开票单 - 开票单状态，字典类型：settlement_invoice_status  */
+
+    int INVOICE_STATUS_UNSUBMIT = 0;
+
+    int INVOICE_STATUS_AUDITED = 1;
 }

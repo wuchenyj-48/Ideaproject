@@ -22,5 +22,6 @@ public interface InvoiceLineService extends IBaseService<InvoiceLine> {
 
     IPage<InvoiceLine> page(InvoiceLineQueryRequest request);
 
+
 }
     

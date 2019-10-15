@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="hospitalId" class="layui-input"/>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            院方名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="hospitalName" id="hospitalName" required lay-verify="required"
+                                   placeholder="请选择医院" readonly
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            开票时间
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="gmtMakeOut" readonly required lay-verify="required" placeholder="请选择开票时间"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            开票人
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="drawer" readonly required lay-verify="required" placeholder="请输入开票人"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            开票金额(元)
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="totalAmount" readonly required lay-verify="required" placeholder="请输入开票金额"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            备注
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="remark" readonly lay-verify="" placeholder="请输入备注"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-tab child-tab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">发票单行信息管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="row-edit-table" id="invoice_line_table" lay-filter="invoice_line_table"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/html" id="viewTpl">
+            <button class="layui-btn layui-btn-xs layui-btn-normal" data-name="view" lay-filter="materialSpecSelect"
+                    lay-event="view" data-index="{{d.LAY_TABLE_INDEX}}">查看
+            </button>
+        </script>
+        <!-- 子表管理模板 结束  -->
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$, table = layui.table, layer = layui.layer
+
+                let model = {}
+
+                // 加载子表表格
+                window.reloadInvoiceLineTable = (loadChildTableByHttp) => {
+                    if ($strings.isBlank(model.id)) {
+                        return
+                    }
+                    let options = {
+                        id: "invoice_line_table",
+                        elem: '#invoice_line_table',
+                        data: [],
+                        height: 450,
+                        cols: [[
+                            {type: 'numbers', align: 'center'},
+                            {field: 'invoiceNo', title: '税务发票号', align: 'center', templet: "#invoiceNoTpl"},
+                            {field: 'amount', title: '开票金额(元)', align: 'center', templet: "#amountTpl"},
+                            {field: 'remark', title: '备注', align: 'center', templet: "#remarkTpl"},
+                            { field: 'billQty', title: '记账单数量', align: 'center'},
+                            {field: 'VIEW', title: '查看', align: 'center', templet: "#viewTpl", width: 100},
+                        ]]
+                    }
+                    if (!loadChildTableByHttp) {
+                        // 如果不需要通过请求的方式加载表格（一般情况下 主表新增后 不需要从后台拉取数据）
+                        table.render(options);
+                        $editable.watch('dict_data_table')
+                        return
+                    }
+                    $http.get(`/settlement/invoice_lines/list?invoiceId=${model.id}`).then(resp => {
+                        options.data = resp.data.data
+                        table.render(options);
+                        $editable.watch('invoice_line_table')
+                    })
+                }
+
+                /**
+                 * 初始化表单
+                 * @param formData 表单数据
+                 * @param loadChildTableByHttp  通过http请求的方式加载子表数据
+                 * */
+                window.initForm = (formData, loadChildTableByHttp = true) => {
+                    // 必须要重新创建对象，原因未知
+                    model = $.extend({}, formData)
+
+                    form.val("editForm", model)
+                    $(".child-tab").show()
+                    window.reloadInvoiceLineTable && window.reloadInvoiceLineTable(loadChildTableByHttp)
+                }
+
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                form.render('radio')
+
+                /*** 子表管理开始 */
+
+                // 监听子表的列工具栏
+                table.on('tool(invoice_line_table)', function (obj) {
+                    // 获取行索引
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    let data = obj.data
+
+                    if (obj.event === 'view') {
+                        window.renderViewBtn(data)
+                        return
+                    }
+
+                });
+
+                /**
+                 *  渲染查看按钮
+                 */
+                window.renderViewBtn = (data) => {
+                    layui.tableSelect.renderOpenTable({
+                        elem: `[data-name='view']`,
+                        title: "查看已关联",
+                        area: ["1150px", "600px"],
+                        component: "/components/settlement/invoice_item_select.html",
+                        allowSelect: false,
+                        where: {
+                            invoiceLineId: data.id
+                        }
+                    })
+                }
+
+                /*** 子表管理结束 */
+
+
+                $(".form-close").click(() => {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
+
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(["/scripts/utils/editable.js", "/lib/tableSelect.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    

@@ -109,9 +109,11 @@
                         businessTypeCode = 23
                     }
                     layer.open({
+                        id: "catalog_certificate_repository_form",
+                        side: true,
                         title: "品类信息",
                         type: 2,
-                        area: ['960px', '400px'],
+                        area: ['60%', '100%'],
                         content: ['./catalog_certificate_repository_form.html?businessTypeCode='+businessTypeCode, 'no'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]
@@ -121,7 +123,6 @@
                                 data.parentName = parentNames.length > 0 ? parentNames[0] : ''
                             }
                             iframeWin && iframeWin.initForm(data)
-                            layer.full(index)
                         }
                     });
                 }

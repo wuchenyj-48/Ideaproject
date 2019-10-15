@@ -66,11 +66,11 @@ public class CertificateRepositoryController extends BaseController {
      * @return
      */
     @PostMapping("/save_for_supplier")
-    public CommonResult addForSupplier(@RequestBody @Valid CertificateRepository entity) {
+    public CommonResult saveForSupplier(@RequestBody @Valid CertificateRepository entity) {
         if(entity.getDocIds().size() == 0){
             return CommonResult.error("资质文件至少上传一个及以上");
         }
-        boolean bSave = certificateRepositoryService.addForSupplier(entity);
+        boolean bSave = certificateRepositoryService.saveForSupplier(entity);
         return bSave ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
@@ -80,8 +80,8 @@ public class CertificateRepositoryController extends BaseController {
      * @return
      */
     @PostMapping("/save_for_material")
-    public CommonResult addForMaterial(@RequestBody @Valid CertificateRepository entity) {
-        boolean bSave = certificateRepositoryService.addForMaterial(entity);
+    public CommonResult saveForMaterial(@RequestBody @Valid CertificateRepository entity) {
+        boolean bSave = certificateRepositoryService.saveForMaterial(entity);
         return bSave ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
@@ -91,8 +91,8 @@ public class CertificateRepositoryController extends BaseController {
      * @return
      */
     @PostMapping("/save_for_manufacturer")
-    public CommonResult addForManufacturer(@RequestBody @Valid CertificateRepository entity) {
-        boolean bSave = certificateRepositoryService.addForManufacturer(entity);
+    public CommonResult saveForManufacturer(@RequestBody @Valid CertificateRepository entity) {
+        boolean bSave = certificateRepositoryService.saveForManufacturer(entity);
         return bSave ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
@@ -102,8 +102,8 @@ public class CertificateRepositoryController extends BaseController {
      * @return
      */
     @PostMapping("/save_for_catalog")
-    public CommonResult addForCatalog(@RequestBody @Valid CertificateRepository entity) {
-        boolean bSave = certificateRepositoryService.addForCatalog(entity);
+    public CommonResult saveForCatalog(@RequestBody @Valid CertificateRepository entity) {
+        boolean bSave = certificateRepositoryService.saveForCatalog(entity);
         return bSave ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 

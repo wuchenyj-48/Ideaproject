@@ -74,7 +74,7 @@
                     elem: '#listTable',
                     title: '开票单信息',
                     height: 'full-160',
-                    url: '/settlement/invoices/page',
+                    url: '/settlement/invoices/page?status=0',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
@@ -82,7 +82,7 @@
                         { field: 'hospitalName', title: '院方名称', align: 'center'},
                         { field: 'gmtMakeOut', title: '开票时间', align: 'center'},
                         { field: 'drawer', title: '开票人', align: 'center'},
-                        { field: 'totalAmount', title: '开票金额', align: 'center'},
+                        { field: 'totalAmount', title: '开票金额（元）', align: 'center'},
                         { field: 'remark', title: '备注', align: 'center'},
                         {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
                     ]]
@@ -93,16 +93,16 @@
 
                 window.edit = (data,rowIndex) => {
                     let index = layer.open({
+                        id: "invoice_form",
+                        side: true,
                         title: "编辑开票单",
                         type: 2,
-                        area: ['950px', '400px'],
                         content: ['./invoice_form.html'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
                         }
                     });
-                    layer.full(index)
                 }
 
                 window.deleteById = (data,rowIndex) => {
@@ -134,6 +134,12 @@
                     if (layevent == 'addNew') {
                         edit({});
                     }
+                });
+
+                //监听行双击事件
+                table.on('rowDouble(listTable)', function (obj) {
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    window.edit(obj.data, rowIndex)
                 });
 
                 //监听行工具事件

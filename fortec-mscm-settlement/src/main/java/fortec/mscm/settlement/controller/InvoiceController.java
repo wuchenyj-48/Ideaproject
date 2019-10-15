@@ -61,5 +61,11 @@ public class InvoiceController extends BaseController {
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
+    @PostMapping("/audit/{id}")
+    public CommonResult audit(@PathVariable("id") String id){
+        invoiceService.audit(id);
+        return CommonResult.ok("审核成功");
+    }
+
 }
     

@@ -118,15 +118,14 @@
 
                 window.edit = (data, rowIndex) => {
                     layer.open({
+                        id: "certificate_form",
+                        side: true,
                         title: "编辑预定义资质信息",
                         type: 2,
-                        area: ['950px', '400px'],
                         content: ['./certificate_form.html', 'no'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
-
-                            layer.iframeAuto(index)
                         }
                     });
                 }
@@ -160,6 +159,12 @@
                     if (layevent == 'addNew') {
                         edit({isNew: true});
                     }
+                });
+
+                //监听行双击事件
+                table.on('rowDouble(listTable)', function (obj) {
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    window.edit(obj.data, rowIndex)
                 });
 
                 //监听行工具事件

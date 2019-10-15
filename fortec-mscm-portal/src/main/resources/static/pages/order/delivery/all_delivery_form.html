@@ -229,12 +229,18 @@
 
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData);
-                    form.val("editForm", data);
-                    model = data;
-                    $(".child-tab").show();
-                    window.reloadDeliveryItemTable && window.reloadDeliveryItemTable()
+                    model = $.extend({}, formData)
 
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                        $(".child-tab").show();
+                        window.reloadDeliveryItemTable && window.reloadDeliveryItemTable()
+                    } else {
+                        $(".form-reset").show()
+                    }
                 };
 
                 $(".form-close").click(() => {

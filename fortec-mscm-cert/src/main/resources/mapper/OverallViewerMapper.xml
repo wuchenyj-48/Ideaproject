@@ -108,10 +108,16 @@
     </select>
     <select id="pageOverAllForSupplier" resultType="fortec.mscm.cert.entity.CertificateRepository">
         select
-        c.id as certificate_id,c.name as certificate_name,cr.business_type_code,cr.id,cr.certificate_no,cr.expiry_date,cr.certificate_sign,cr.certificate_sign_to,cr.version,cr.doc_ids,cr.target_describe_id
+        cr.*,
+        c.id as certificate_id,
+        c.name as certificate_name,
+        c.need_expiry_date as need_expiry_date,
+        c.maxium_file_size as maxium_file_size,
+        c.maxium_file_count as maxium_file_count,
+        c.limit_file_extension as limit_file_extension
         from
-        certificate c
-        inner join certificate_repository cr
+        certificate_repository cr
+        inner join certificate c
         on c.id = cr.certificate_id and cr.business_type_code = #{request.businessTypeCode} and cr.target_describe_id = #{request.targetDescribeId} and  cr.close_flag = 0 and cr.submit_flag = 1
 
     </select>

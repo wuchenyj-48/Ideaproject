@@ -60,5 +60,14 @@ public class Invoice extends DataEntity  implements Serializable {
     @Length(max=100, message="备注长度必须介于 0 和 100 之间")
     private String remark;
 
+    /** 审核人 */
+    private String auditorName;
+
+    /** 审核时间 */
+    private java.util.Date gmtAudited;
+
+    /** 状态 */
+    private Integer status;
+
 }
     

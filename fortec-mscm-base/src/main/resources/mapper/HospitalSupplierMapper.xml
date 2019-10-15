@@ -5,6 +5,7 @@
         select
         hs.*,
         h.name as hospital_name,
+        h.code as code,
         s.name as supplier_name
         from
         hospital_supplier hs

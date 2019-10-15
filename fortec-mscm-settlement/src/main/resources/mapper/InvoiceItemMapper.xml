@@ -18,12 +18,16 @@
             <if test="dto.materialSpec != null and dto.materialSpec != ''">
                 and bi.material_spec like concat( '%', #{dto.materialSpec}, '%')
             </if>
-            and bi.id not in (select ii.bill_item_id from invoice_item ii where ii.invoice_line_id = #{dto.invoiceLineId})
+            and bi.id not in (select ii.bill_item_id from invoice_item ii)
             and b.status in (0,1)
         </where>
     </select>
     <select id="pageForView" resultType="fortec.mscm.settlement.VO.InvoiceItemVO">
-        select bi.*,b.code,b.gmt_create as bill_gmt_create
+        select
+            ii.*,b.code,b.gmt_create as bill_gmt_create,
+            bi.material_spec_id,bi.material_code,bi.material_erp_code,
+            bi.material_name,bi.material_trade_name,bi.material_spec,
+            bi.manufacturer_name,bi.form,bi.qty,bi.subtotal_amount
         from invoice_item ii
         inner join bill_item bi on bi.id = ii.bill_item_id
         inner join bill b on bi.bill_id = b.id
