@@ -167,7 +167,8 @@
 
                 //监听行双击事件
                 table.on('rowDouble(listTable)', function (obj) {
-                    window.edit(obj.data)
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    window.edit(obj.data,rowIndex)
                 });
 
                 //监听行工具事件

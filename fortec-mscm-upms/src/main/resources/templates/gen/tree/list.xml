@@ -163,15 +163,14 @@
                 // 表格行编辑
                 window.edit = (data,rowIndex) => {
                     let index = layer.open({
+                        id: "${uncamelClassName}_form",
+                        side: true,
                         title: "编辑${functionName}",
                         type: 2,
-                        area: ['950px', '400px'],
                         content: ['./${uncamelClassName}_form.html'],
                         success(layero, index) {
-                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            let iframeWin = window[layero.find('iframe')[0]['name']]
                             iframeWin && iframeWin.initForm(data)
-                            layer.iframeAuto(index)
-
                         }
                     });
                 }
@@ -201,19 +200,24 @@
                 })
 
                 // 监听表单提交事件
-                layui.form.on('submit(list)', (data) => {
+                form.on('submit(list)', (data) => {
                     window.reloadTable()
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
 
 
-                layui.$(".layui-btn").on('click', function () {
+                $(".layui-btn").on('click', function () {
                     let layevent = this.getAttribute("lay-event");
                     if (layevent == 'addNew') {
                         edit({});
                     }
                 });
 
+                //监听行双击事件
+                table.on('rowDouble(listTable)', function (obj) {
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    window.edit(obj.data,rowIndex)
+                });
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
                      // 获取当前行索引

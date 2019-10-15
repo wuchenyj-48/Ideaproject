@@ -152,7 +152,7 @@
                 })
 
                 // 监听表单提交事件
-                layui.form.on('submit(list)', (data) => {
+                form.on('submit(list)', (data) => {
                     window.reloadTable()
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
@@ -167,7 +167,8 @@
 
                 //监听行双击事件
                 table.on('rowDouble(listTable)', function (obj) {
-                    window.edit(obj.data)
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    window.edit(obj.data,rowIndex)
                 });
 
                 //监听行工具事件

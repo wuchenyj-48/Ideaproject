@@ -123,9 +123,9 @@
                 <div class="layui-row ">
                     <div class="layui-form-item">
                         <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="*">保存</button>
-                            <button class="layui-btn layui-btn-primary form-reset" type="button">重置</button>
-                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">关闭</button>
                         </div>
                     </div>
                 </div>
@@ -141,13 +141,15 @@
                 let model = {}
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let model = $.extend({}, formData)
+                    model = $.extend({}, formData)
 
                     $(".form-reset").click()
                     form.val("editForm", model)
 
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
+                    }else{
+                        $(".form-reset").show()
                     }
                 }
 
@@ -192,7 +194,7 @@
                 })
                 $(".form-close").click(() => {
                     let index = parent.layer.getFrameIndex(window.name)
-                    parent.layer.close(index);
+                    parent.layer.close(index)
                 })
 
                 // 监听表单提交事件
