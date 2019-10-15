@@ -114,9 +114,10 @@
 
                 window.edit = (data) => {
                     layer.open({
+                        id: "supplier_applicant_form",
+                        side: true,
                         title: "编辑供方申请信息",
                         type: 2,
-                        area: ['950px', '500px'],
                         content: ['./supplier_applicant_form.html', 'no'],
                         success(layero, index) {
                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
@@ -154,7 +155,11 @@
                     $("form")[0].reset()
                     $("form input:hidden").val('')
                 })
-
+                //监听行双击事件
+                table.on('rowDouble(listTable)', function (obj) {
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    window.edit(obj.data, rowIndex)
+                });
                 // 监听表单提交事件
                 layui.form.on('submit(list)', (data) => {
                     window.reloadTable()
