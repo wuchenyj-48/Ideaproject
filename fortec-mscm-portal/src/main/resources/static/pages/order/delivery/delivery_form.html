@@ -242,16 +242,18 @@
                 };
 
                 window.initForm = (formData) => {
-                    console.log(model)
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData);
-                    form.val("editForm", data);
-                    model = data;
+                    model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
                     if ($strings.isNotBlank(model.id)) {
-                        $(".form-reset").hide();
+                        $(".form-reset").hide()
                         $(".child-tab").show();
                         window.reloadDeliveryItemTable && window.reloadDeliveryItemTable()
                     } else {
+                        $(".form-reset").show()
                         $(".child-tab").hide()
                     }
                     if (model.isOneThingOneYard === 1) {
@@ -482,15 +484,14 @@
                     }
 
                     promise.then(resp => {
-                        if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1});
-                            parent.reloadTable()
-
-                            //  明细表格
-                            initForm($.extend(model, resp.data.data))
-                        } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                        if (!resp.data.success) {
+                            layer.error(resp.data.msg)
+                            return
                         }
+                        layer.success(resp.data.msg)
+
+                        initForm(resp.data.data, false)
+                        parent.reloadTable()
                     });
 
                     return false;

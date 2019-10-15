@@ -11,6 +11,7 @@ import fortec.common.core.msg.enums.ReceiverType;
 import fortec.common.core.msg.provider.MsgPushProvider;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.DateUtils;
+import fortec.common.core.utils.StringUtils;
 import fortec.mscm.base.feign.vo.CatalogVO;
 import fortec.mscm.base.feign.vo.ManufacturerVO;
 import fortec.mscm.base.feign.vo.MaterialVO;
@@ -154,9 +155,12 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
      * @return
      */
     @Override
-    public boolean addForSupplier(CertificateRepository entity) {
-        //判断资质是否已上传
-        this.assertCertUnique(entity.getCertificateId(), UserUtils.getSupplierId());
+    public boolean saveForSupplier(CertificateRepository entity) {
+        if (StringUtils.isBlank(entity.getId())){
+            //判断资质是否已上传
+            this.assertCertUnique(entity.getCertificateId(), UserUtils.getSupplierId());
+        }
+
         entity.setSupplierId(UserUtils.getSupplierId())
                 .setManufacturerId("0")
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
@@ -172,8 +176,11 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
      * @return
      */
     @Override
-    public boolean addForMaterial(CertificateRepository entity) {
-        this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+    public boolean saveForMaterial(CertificateRepository entity) {
+        if (StringUtils.isBlank(entity.getId())){
+            //判断资质是否已上传
+            this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+        }
 
         entity.setSupplierId(UserUtils.getSupplierId())
                 .setBusinessTypeCode(BusinessTypeConsts.MATERIAL)
@@ -188,8 +195,11 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
      * @return
      */
     @Override
-    public boolean addForManufacturer(CertificateRepository entity) {
-        this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+    public boolean saveForManufacturer(CertificateRepository entity) {
+        if (StringUtils.isBlank(entity.getId())){
+            //判断资质是否已上传
+            this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+        }
 
         entity.setSupplierId(UserUtils.getSupplierId())
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
@@ -204,8 +214,11 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
      * @return
      */
     @Override
-    public boolean addForCatalog(CertificateRepository entity) {
-        this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+    public boolean saveForCatalog(CertificateRepository entity) {
+        if (StringUtils.isBlank(entity.getId())){
+            //判断资质是否已上传
+            this.assertCertUnique(entity.getCertificateId(), entity.getTargetDescribeId());
+        }
 
         entity.setSupplierId(UserUtils.getSupplierId())
                 .setCloseFlag(CertificateRepository.CLOSE_FLAG_NORMAL)
@@ -271,10 +284,8 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         }
 
         //当前版本号+1
-        CertificateRepository certificateRepository = new CertificateRepository();
-        certificateRepository.setVersion(old.getVersion() + 1)
-                .setId(old.getId());
-        this.updateById(certificateRepository);
+        entity.setVersion(old.getVersion() + 1);
+        this.updateById(entity);
 
         //保存一条记录到历史表
         CertificateRepositoryHistory crh = new CertificateRepositoryHistory();

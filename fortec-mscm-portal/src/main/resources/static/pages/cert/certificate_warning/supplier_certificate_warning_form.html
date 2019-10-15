@@ -131,14 +131,17 @@
                 let model = {}
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         renderUploader(data.limitFileExtension, data.maxiumFileSize, data.maxiumFileCount)
+                    } else {
+                        $(".form-reset").show()
                     }
-
                     window.renderExpiryDate(data.needExpiryDate)
                 }
 
@@ -229,14 +232,14 @@
 
                     let promise = $http.post("/cert/certificate_repositorys/upgrade", data.field)
                     promise.then(resp => {
-                        if (resp.data.success) {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index); //再执行关闭
-                            parent.layer.msg(resp.data.msg, {icon: 1})
-                            parent.reloadTable()
-                        } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                        if (!resp.data.success) {
+                            layer.error(resp.data.msg)
+                            return
                         }
+                        layer.success(resp.data.msg)
+                        parent.reloadTable()
+                        let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
                     })
 
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

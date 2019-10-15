@@ -42,5 +42,8 @@ public class InvoiceLine extends DataEntity  implements Serializable {
     @Length(max=100, message="备注长度必须介于 0 和 100 之间")
     private String remark;
 
+    /** 记账单数量 */
+    private int billQty;
+
 }
     

@@ -7,6 +7,7 @@ import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
 
+import fortec.mscm.settlement.DTO.BatchDeleteDTO;
 import fortec.mscm.settlement.DTO.InvoiceItemDTO;
 import fortec.mscm.settlement.entity.InvoiceItem;
 import fortec.mscm.settlement.request.InvoiceItemQueryRequest;
@@ -65,10 +66,10 @@ public class InvoiceItemController extends BaseController {
     @PutMapping("/batch_save")
     public CommonResult batchSave(@RequestBody @Valid InvoiceItem[] children) {
         if (children == null || children.length == 0) {
-            return CommonResult.error("保存失败");
+            return CommonResult.error("关联失败");
         }
         boolean bSuccess = invoiceItemService.saveOrUpdateBatch(Lists.newArrayList(children));
-        return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
+        return bSuccess ? CommonResult.ok("关联成功") : CommonResult.error("关联失败");
     }
 
     @GetMapping("/page_for_relate")
@@ -82,4 +83,14 @@ public class InvoiceItemController extends BaseController {
         IPage page = invoiceItemService.pageForView(invoiceItemDTO);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
+
+    @PostMapping("/batch_delete")
+    public CommonResult batchDelete(@RequestBody BatchDeleteDTO batchDeleteDTO) {
+        if (batchDeleteDTO.getIds() == null || batchDeleteDTO.getIds().length==0){
+            return CommonResult.error("删除失败");
+        }
+        invoiceItemService.batchDelete(batchDeleteDTO.getIds(),batchDeleteDTO.getInvoiceLineId());
+        return CommonResult.ok("删除成功");
+    }
+
 }

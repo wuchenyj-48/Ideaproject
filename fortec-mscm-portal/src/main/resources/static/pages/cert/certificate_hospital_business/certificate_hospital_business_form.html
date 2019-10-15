@@ -123,15 +123,14 @@
                     }
 
                     promise.then(resp => {
-                        if (resp.data.success) {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index); //再执行关闭
-
-                            parent.layer.msg(resp.data.msg, {icon: 1})
-                            parent.reloadTable()
-                        } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                        if (!resp.data.success) {
+                            layer.error(resp.data.msg)
+                            return
                         }
+                        layer.success(resp.data.msg)
+                        let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                        parent.reloadTable()
                     })
 
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

@@ -28,5 +28,10 @@ public interface InvoiceService extends IBaseService<Invoice> {
      */
     boolean add(Invoice entity);
 
+    /**
+     * 审核 将状态从制单状态0改为已审核1
+     */
+    void audit(String id);
+
 }
     

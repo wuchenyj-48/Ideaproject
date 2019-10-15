@@ -25,19 +25,19 @@ public class InvoiceItem extends DataEntity  implements Serializable {
 
     /** 开票单ID */
     @NotNull(message="开票单ID不能为空")
-    private Long invoiceId;
+    private String invoiceId;
 
     /** 开票单行ID */
     @NotNull(message="开票单行ID不能为空")
-    private Long invoiceLineId;
+    private String invoiceLineId;
 
     /** 记账单ID */
     @NotNull(message="记账单ID不能为空")
-    private Long billId;
+    private String billId;
 
     /** 记账单明细ID */
     @NotNull(message="记账单明细ID不能为空")
-    private Long billItemId;
+    private String billItemId;
 
     /** 备注 */
     @Length(max=100, message="备注长度必须介于 0 和 100 之间")

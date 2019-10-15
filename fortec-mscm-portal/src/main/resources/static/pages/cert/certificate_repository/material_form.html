@@ -132,19 +132,17 @@
                 let params = $global.getUrlParams()
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
+                    model = $.extend({}, formData)
 
-                    form.val("editForm", data)
-                    model = data
-
-                    $(".message").hide()
+                    $(".form-reset").click()
+                    form.val("editForm", model)
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         renderUploader(params.limitFileExtension, params.maxiumFileSize, params.maxiumFileCount)
+                    } else {
+                        $(".form-reset").show()
                     }
-
-                    window.renderExpiryDate(data.needExpiryDate)
-
+                    window.renderExpiryDate(model.needExpiryDate)
                 }
 
                 /**
@@ -246,7 +244,7 @@
                     $("form input:hidden").val('')
                 })
                 $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name);
+                    let index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 })
 
@@ -259,15 +257,16 @@
                     let promise = $http.post("/cert/certificate_repositorys/save_for_material", data.field)
 
                     promise.then(resp => {
-                        if (resp.data.success) {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index); //再执行关闭
-                            parent.layer.msg(resp.data.msg, {icon: 1})
-                            //window.parent.reloadTable()
-                            window.parent.reloadMaterialSpecTable() //刷新父表格
-                        } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                        if (!resp.data.success) {
+                            layer.error(resp.data.msg)
+                            return
                         }
+                        layer.success(resp.data.msg)
+
+                        initForm(resp.data.data, false)
+                        let index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                        parent.frames[0].reloadMaterialSpecTable()
                     })
 
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

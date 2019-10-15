@@ -24,16 +24,16 @@ import java.util.Date;
 public class InvoiceItemVO extends DataEntity  implements Serializable {
 
     /** 开票单ID */
-    private Long invoiceId;
+    private String invoiceId;
 
     /** 开票单行ID */
-    private Long invoiceLineId;
+    private String invoiceLineId;
 
     /** 记账单ID */
-    private Long billId;
+    private String billId;
 
     /** 记账单明细ID */
-    private Long billItemId;
+    private String billItemId;
 
     /** 备注 */
     private String remark;

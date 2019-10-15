@@ -215,9 +215,10 @@
 
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
+                    model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         $(".child-tab").show()
@@ -229,7 +230,9 @@
                         window.reloadBillItemTable && window.reloadBillItemTable()
                     } else {
                         $(".child-tab").hide()
+                        $(".form-reset").show()
                     }
+
                 }
 
                 //渲染供应商名称
@@ -452,14 +455,15 @@
                     }
 
                     promise.then(resp => {
-                        if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1})
-                            if (!model.id) {
-                                window.initForm($.extend(model, resp.data.data, {isNew: false}))
-                            }
-                        } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                        if (!resp.data.success) {
+                            layer.error(resp.data.msg)
+                            return
                         }
+                        layer.success(resp.data.msg)
+                        if (!model.id) {
+                            initForm(resp.data.data, false)
+                        }
+                        parent.reloadTable()
                     })
 
                     return false;

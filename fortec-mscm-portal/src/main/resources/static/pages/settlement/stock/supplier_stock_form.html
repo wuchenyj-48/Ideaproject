@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>编辑表单</title>
+        <style>
+            .custom-form .layui-form-label {
+                width: 120px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 150px
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="layui-fluid" id="app">
+
+            <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+                <input type="hidden" name="id" class="layui-input"/>
+                <input type="hidden" name="supplierId" class="layui-input"/>
+                <input type="hidden" name="warehouseId" class="layui-input"/>
+                <input type="hidden" name="materialId" class="layui-input"/>
+                <input type="hidden" name="materialSpecId" class="layui-input"/>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            供应商名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="supplierName" id="supplierName" required readonly
+                                   lay-verify="required" placeholder="请输入供应商名称"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            仓库名称
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="warehouseName" id="warehouseName" readonly required
+                                   lay-verify="required"
+                                   placeholder="请选择仓库"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            品规
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="materialSpec" id="materialSpec" readonly required
+                                   lay-verify="required"
+                                   placeholder="请选择商品规格"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            品名
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="materialName" readonly required lay-verify="required"
+                                   placeholder="请输入品名"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            批次
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="lot" required lay-verify="required" placeholder="请输入批次" readonly
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            数量
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="qty" required lay-verify="number|required" placeholder="请输入数量" readonly
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            单位
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="unit" readonly required lay-verify="required" placeholder="请输入单位"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            单价(元)
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="price" readonly required lay-verify="number|required"
+                                   placeholder="请输入单价(元)"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-col-space5 layui-form-item">
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            序列号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="sn" lay-verify="" placeholder="请输入序列号" readonly
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label ">
+                            效期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="expiredDate" placeholder="请选择效期" autocomplete="off" readonly
+                                   class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="block"></div>
+                <div class="layui-row ">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn layui-btn-primary form-close" type="button">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script src="/scripts/utils/common.js"></script>
+        <script>
+
+            let mainFunction = () => {
+                let form = layui.form, $ = layui.$, layer = layui.layer
+
+                let model = {}
+                window.initForm = (formData) => {
+                    // 必须要重新创建对象，原因未知
+                    model = $.extend({}, formData)
+
+                    $(".form-reset").click()
+                    form.val("editForm", model)
+
+                    if ($strings.isNotBlank(model.id)) {
+                        $(".form-reset").hide()
+                    }
+                }
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                form.render('radio')
+
+                $(".form-close").click(() => {
+                    let index = parent.layer.getFrameIndex(window.name)
+                    parent.layer.close(index);
+                })
+
+            }
+
+            extendParentScriptsAndStyles(() => {
+                loadAllJs(["/lib/tableSelect.js", "/scripts/utils/editable.js"], mainFunction)
+            })
+
+        </script>
+
+    </body>
+</html>
+    
+    

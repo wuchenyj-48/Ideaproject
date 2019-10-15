@@ -54,28 +54,28 @@ public interface CertificateRepositoryService extends IBaseService<CertificateRe
      * @param entity
      * @return
      */
-    boolean addForSupplier(CertificateRepository entity);
+    boolean saveForSupplier(CertificateRepository entity);
 
     /**
      * 添加商品资质
      * @param entity
      * @return
      */
-    boolean addForMaterial(CertificateRepository entity);
+    boolean saveForMaterial(CertificateRepository entity);
 
     /**
      * 添加厂商资质
      * @param entity
      * @return
      */
-    boolean addForManufacturer(CertificateRepository entity);
+    boolean saveForManufacturer(CertificateRepository entity);
 
     /**
      * 添加品类资质
      * @param entity
      * @return
      */
-    boolean addForCatalog(CertificateRepository entity);
+    boolean saveForCatalog(CertificateRepository entity);
 
     /**
      * 供应商资质关闭
