@@ -56,14 +56,6 @@
             </div>
         </div>
 
-        <script type="text/html" id="headToolbar">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                    <i class="layui-icon layui-icon-add-1"></i>添加
-                </button>
-            </div>
-        </script>
-
         <script type="text/html" id="cellToolbar">
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>

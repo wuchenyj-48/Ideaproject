@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template>
     <name>viewList</name>
-    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}
-    </#if>/${uncamelCase(className)}
-</fileDir>
+    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
 <fileName>${uncamelClassName}_form.html</fileName>
 <content>
 <![CDATA[
@@ -79,7 +77,7 @@
                     </#if>
 
                     <#if newRowFlag>
-                   <div class="layui-row layui-col-space5 layui-form-item">
+                <div class="layui-row layui-col-space5 layui-form-item">
                         <#assign newRowFlag=false>
                    </#if>
                    <div class="layui-col-xs${c.colSpan}">
@@ -135,7 +133,7 @@
 
 
             <#if (childTableList?size > 0)>
-            // 加载子表表格
+            <#-- 加载子表表格   -->
                 <#list childTableList as t>
             <div class="layui-tab child-tab">
                 <ul class="layui-tab-title">
@@ -144,8 +142,7 @@
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <div id="${t.className?uncap_first}Toolbar">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
-                                    lay-event="addNewLine">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNewLine">
                                 <i class="layui-icon layui-icon-add-1"></i> 增行
                             </button>
                             <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
@@ -166,8 +163,9 @@
         <#-- 子表管理模板 开始  -->
         <#if (childTableList?size > 0)>
             <#list childTableList as t>
+                <#--
                 <#list t.columns as c>
-                    <#if c.isEdit?? && c.isEdit == 1>
+                    <#if c.isEdit?? && c.isEdit == 1  && (c.showType != 'input' && c.showType != 'textarea')>
                         <#assign showType="${c.showType!''}">
                         <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
         <script type="text/html" id="${c.attrName}Tpl">
@@ -189,19 +187,20 @@
                         </#if>
                     </#if>
                 </#list>
-                <script type="text/html" id="${t.className?uncap_first}CellToolbar">
-                {{#  if($strings.isBlank(d.id)){ }}
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
-                        class="fa fa-check"></i></a>
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
-                        class="fa fa-trash-o"></i></a>
-                {{#  } else { }}
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
-                        class="fa fa-save"></i></a>
-                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
-                        class="fa fa-trash-o"></i></a>
-                {{#  } }}
-            </script>
+                -->
+        <script type="text/html" id="${t.className?uncap_first}CellToolbar">
+            {{#  if($strings.isBlank(d.id)){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
+                    class="fa fa-check"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
+                    class="fa fa-trash-o"></i></a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
+                    class="fa fa-save"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
+                    class="fa fa-trash-o"></i></a>
+            {{#  } }}
+        </script>
             </#list>
         </#if>
         <!-- 子表管理模板 结束  -->
@@ -231,10 +230,12 @@
                             <#list t.columns as c>
                                 <#if c.isEdit?? && c.isEdit == 1>
                                     <#assign showType="${c.showType!''}">
-                                    <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
-                            { field: '${c.attrName}', title: '${c.comments}', align: 'center', templet: "#${c.attrName}Tpl"},
+                                    <#if showType == "select" || showType == "select_multiple" || showType == "radio" || showType == "switch">
+                            { field: '${c.attrName}', title: '${c.comments}', align: 'center', editConfig: { form: "select", verify: "${vc(c.isNull,c.validators)}", dict: "${c.dictType}" } },
+                                    <#elseif showType == 'checkbox'>
+                            { field: '${c.attrName}', title: '${c.comments}', align: 'center', editConfig: { form: "checkbox" } },
                                     <#else>
-                            { field: '${c.attrName}', title: '${c.comments}', align: 'center', templet: "#${c.attrName}Tpl"},
+                            { field: '${c.attrName}', title: '${c.comments}', align: 'center', editConfig: { form: "input", verify: "${vc(c.isNull,c.validators)}", placeholder: "${ (c.isNull?? && c.isNull == 0) ? string('必填','选填') }" } },
                                     </#if>
                                 </#if>
                             </#list>

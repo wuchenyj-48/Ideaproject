@@ -42,7 +42,7 @@
                 </div>
                         </#if>
                 <#--输出新行信息-->
-                <div class="layui-row layui-col-space5 layui-form-item">
+            <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs12">
                         <label class="layui-form-label <#if c.isNull == 0>layui-required</#if>">
                              ${c.comments}
@@ -107,7 +107,6 @@
                             </#if>
                         </div>
                    </div>
-
                         <#assign rowSpan = rowSpan + c.colSpan?number >
                         <#if (rowSpan >= 12)>
                 </div>
@@ -153,19 +152,20 @@
                     }
                 }
 
-                // 渲染下拉框 数据
-                <#list table.columns as c>
-                    <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && c.showType == 'select'>
-                $("select[name='${c.attrName}']").empty()
-                        <#if c.isNull == 1>
-                $("select[name='${c.attrName}']").append('<option>请选择</option>')
-                        </#if>
-                $global.getDictDataList('${c.dictType!""}').forEach(o => {
-                    $("select[name='${c.attrName}']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
-                    </#if>
-                </#list>
-                form.render('select')
+                // 渲染表单元素
+                let renderElement = () => {
+                    // 渲染下拉框 数据
+                    $("select[name='type']").empty()
+                    $global.getDictDataList('upms_menu_type').forEach(o => {
+                        $("select[name='type']").append(`<option value='${o.value}' ${o.value == model.type ? 'selected' : ''}>${o.label}</option>`)
+                    })
+
+                    $("select[name='isShow']").empty()
+                    $global.getDictDataList('common_yes_no').forEach(o => {
+                        $("select[name='isShow']").append(`<option value='${o.value}' ${o.value == model.isShow ? 'selected' : ''}>${o.label}</option>`)
+                    })
+                }
+
 
                 // 渲染单选框/多选框 数据
                 <#list table.columns as c>
