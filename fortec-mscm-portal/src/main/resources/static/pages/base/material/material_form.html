@@ -210,7 +210,7 @@
         </script>
         <script type="text/html" id="unitTpl">
             <select data-name="unit" value="{{d.unit ? d.unit : ''}}" placeholder="必填"
-                    lay-filter="unit" lay-verify="required" required data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
+                    lay-filter="unit" lay-verify=""  data-index="{{d.LAY_TABLE_INDEX}}" lay-search>
                 <option value="">请选择</option>
                 {{# layui.each(packUnits, function(index, item){ }}
                 <option value="{{item.name}}" {{item.name== d.unit ?
@@ -535,10 +535,10 @@
                     $http.put("/base/material_specs/batch_save", rows).then(resp => {
 
                         if (resp.data.success) {
-                            layui.layer.msg(resp.data.msg, {icon: 1})
+                            layui.layer.success(resp.data.msg)
                             window.reloadMaterialSpecTable()
                         } else {
-                            layui.layer.msg(resp.data.msg, {icon: 5})
+                            layui.layer.error(resp.data.msg)
                         }
                     })
                 })
@@ -562,7 +562,7 @@
                     layer.confirm('真的删除行么', function (index) {
                         $http.delete(`/base/material_specs/` + data.id).then(resp => {
                             window.reloadMaterialSpecTable()
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                         })
                     });
                     return
@@ -579,6 +579,7 @@
                     data.isConsignment = $(`[data-name='isConsignment'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
                     data.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
 
+                    debugger
                     let promise = null
                     if ($strings.isBlank(data.id)) {
                         promise = $http.post("/base/material_specs/", data)
@@ -588,14 +589,14 @@
 
                     promise.then(resp => {
                         if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
 
                             // 重新渲染单行数据
                             layui.table.renderSpecRow('material_spec_table', index, {
                                 id: resp.data.data.id
                             })
                         } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                            layer.error(resp.data.msg)
                         }
                     })
                 })

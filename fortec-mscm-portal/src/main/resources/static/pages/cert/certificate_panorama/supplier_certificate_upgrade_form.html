@@ -228,7 +228,7 @@
 
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({docIds: model.docIds}, data.field)
+                    data.field = layui.$.extend({}, data.field)
 
                     let promise = $http.post("/cert/certificate_repositorys/upgrade", data.field)
                     promise.then(resp => {

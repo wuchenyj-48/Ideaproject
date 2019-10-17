@@ -226,6 +226,7 @@
                         id: "bill_form",
                         side: true,
                         title: "商品资质信息",
+                        area:["50%" , "100%"],
                         type: 2,
                         content: ["./catalog_form.html?targetDescribeId=" + model.id +
                         "&businessTypeCode=" + params.businessTypeCode +
@@ -244,7 +245,7 @@
                     layer.confirm('真的关闭么', function (index) {
 
                         $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadMaterialSpecTable()
 
                             layer.close(index)
@@ -258,6 +259,7 @@
                         id: "bill_form",
                         side: true,
                         title: "资质查看",
+                        area: ["50%" , "100%"],
                         type: 2,
                         content: ['./viewCert.html'],
                         success(layero, index) {
@@ -271,7 +273,7 @@
                 window.subm = (data) => {
                     layer.confirm('确定提交吗', (index) => {
                         $http.post(`/cert/certificate_repositorys/certificate_submit/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadMaterialSpecTable()
                             layer.close(index)
                         })

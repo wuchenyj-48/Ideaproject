@@ -1,28 +1,30 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>商品管理</title>
+        <title>综合查询</title>
     </head>
     <body>
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">厂商资质维护</div>
+                        <div class="layui-card-header">综合查询</div>
                         <div class="layui-card-body">
 
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
-
                                 <div class="layui-input-inline">
-                                    <input type="text" name="companyCode" placeholder="请输入社会信用代码" autocomplete="off"
+                                    <input type="text" name="code" placeholder="请输入单据号" autocomplete="off"
                                            class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="name" placeholder="请输入厂商名" autocomplete="off"
+                                    <input type="text" name="supplierName" placeholder="请输入供应商名称" autocomplete="off"
                                            class="layui-input">
+                                </div>
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">请选择单据状态</option>
+                                    </select>
                                 </div>
 
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
@@ -41,12 +43,9 @@
             </div>
         </div>
 
-        <script type="text/html" id="headToolbar">
-
-        </script>
-
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">上传资质</a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="view">查看</a>
+
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -65,47 +64,55 @@
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
-                    title: '商品信息',
+                    title: 'MaterialApplicant信息',
                     height: 'full-160',
-                    url: '/base/manufacturers/page',
+                    url: '/base/material_applicants/pageAudit',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
-                        { field: 'companyCode', title: '社会信用代码', align: 'center'},
-                        { field: 'name', title: '厂商名称', align: 'center'},
-                        { field: 'productionLicence', title: '生产许可证', align: 'center'},
-                        { field: 'pinyin', title: '助记码', align: 'center'},
-                        {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#cellToolbar"},
+                        {field: 'code', title: '单据号', align: 'center'},
+                        {field: 'supplierName', title: '供应商名称', align: 'center'},
+                        {field: 'remark', title: '申请说明', align: 'center'},
+                        {
+                            field: 'status', title: '单据状态', align: 'center',
+                            templet(item) {
+                                return `<div>${$global.getDictLabel('base_supplier_applicant_status', item.status)}</div>`;
+                            }
+                        },
+                        {field: 'gmtAudited', title: '审核时间', align: 'center'},
+                        {field: 'auditor', title: '审核人', align: 'center'},
+                        {field: 'auditedRemark', title: '审核备注', align: 'center'},
+                        {
+                            field: "LAY_CELL_TOOL_BAR",
+                            title: '操作',
+                            toolbar: '#cellToolbar',
+                            width: 150,
+                            align: 'center',
+                            fixed: 'right'
+                        }
                     ]]
                 });
 
+                // 渲染下拉框 数据
+                $global.getDictDataList('base_supplier_applicant_status').forEach(o => {
+                    $("select[name='status']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                form.render('select')
 
-                window.edit = (data) => {
+                window.view = (data) => {
                     let index = layer.open({
-                        id: "manufacturer_certificate_repository_form",
+                        id: "general_form",
                         side: true,
-                        title: "厂商信息",
+                        title: "供货申请信息",
                         type: 2,
-                        area: ['60%', '100%'],
-                        content: ['./manufacturer_certificate_repository_form.html', 'no'],
+                        content: ['./general_form.html'],
                         success(layero, index) {
-                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
                         }
                     });
                 }
 
-                window.deleteById = (data) => {
-                    layer.confirm('真的删除行么', function (index) {
-
-                        $http.delete(`/base/materials/` + data.id).then(resp => {
-                            layer.success(resp.data.msg)
-                            window.reloadTable()
-
-                            layer.close(index)
-                        })
-                    });
-                }
                 // 监听表单重置
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
@@ -118,27 +125,17 @@
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
 
-
-                layui.$(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({});
-                    }
-                });
-
                 //监听行双击事件
                 table.on('rowDouble(listTable)', function (obj) {
                     let rowIndex = obj.tr[0].getAttribute("data-index")
-                    window.edit(obj.data, rowIndex)
+                    window.view(obj.data, rowIndex)
                 });
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
                     var data = obj.data;
                     if (obj.event === 'del') {
-                        window.deleteById(obj.data)
-                    } else if (obj.event === 'edit') {
-                        window.edit(obj.data)
+                        window.view(data)
                     }
                 });
 

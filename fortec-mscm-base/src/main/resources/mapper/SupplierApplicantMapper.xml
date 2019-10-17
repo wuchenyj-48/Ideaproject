@@ -17,6 +17,9 @@
             <if test="request.code != null and request.code != ''">
                 and sa.code like concat( '%', #{request.code}, '%')
             </if>
+            <if test="request.hospitalName != null and request.hospitalName != ''">
+                and h.name like concat( '%', #{request.hospitalName}, '%')
+            </if>
             <if test="request.status != null">
                 and sa.status = #{request.status}
             </if>
@@ -38,6 +41,9 @@
             </if>
             <if test="request.code != null and request.code != ''">
                 and sa.code like concat( '%', #{request.code}, '%')
+            </if>
+            <if test="request.supplierName != null and request.supplierName != ''">
+                and s.name like concat( '%', #{request.supplierName}, '%')
             </if>
             <if test="request.status != null">
                 and sa.status = #{request.status}

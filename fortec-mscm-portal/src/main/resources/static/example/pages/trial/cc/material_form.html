@@ -469,10 +469,10 @@
                         rows.forEach(o => o.materialId = model.id)
                         $http.put("/base/material_specs/batch_save", rows).then(resp => {
                             if (resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 1})
+                                layui.layer.success(resp.data.msg)
                                 window.reloadMaterialSpecTable()
                             } else {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
+                                layui.layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -495,7 +495,7 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/base/material_specs/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 obj.del()
                             })
                         });
@@ -518,14 +518,14 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
 
                                 // 重新渲染单行数据
                                 layui.table.renderSpecRow('material_spec_table', index, {
                                     id: resp.data.data.id
                                 })
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -558,10 +558,10 @@
 
                     promise.then(resp => {
                         if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             parent.reloadTable()
                         } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                            layer.error(resp.data.msg)
                         }
                     })
 

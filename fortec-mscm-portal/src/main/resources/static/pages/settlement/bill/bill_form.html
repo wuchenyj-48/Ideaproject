@@ -40,7 +40,7 @@
                             供应商名称
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="supplierName" id="supplierName" required
+                            <input type="text" name="supplierName" id="supplierName" required readonly
                                    lay-verify="required" placeholder="请输入供应商名称"
                                    autocomplete="off" class="layui-input">
                         </div>
@@ -285,10 +285,10 @@
                         rows.forEach(o => o.billId = model.id)
                         $http.put("/settlement/bill_items/batch_save", rows).then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 window.reloadBillItemTable()
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -387,7 +387,7 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/settlement/bill_items/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 table.deleteRow('bill_item_table', rowIndex)
                                 window.renderItemSelect()
                             })
@@ -416,14 +416,14 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
 
                                 // 重新渲染单行数据
                                 table.renderSpecRow('bill_item_table', rowIndex, {
                                     id: resp.data.data.id
                                 })
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })

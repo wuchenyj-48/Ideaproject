@@ -267,10 +267,10 @@
                         rows.forEach(o => o.invoiceId = model.id)
                         $http.put("/settlement/invoice_lines/batch_save", rows).then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 window.reloadInvoiceLineTable(true)
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -305,7 +305,7 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/settlement/invoice_lines/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                                 table.deleteRow('invoice_line_table', rowIndex)
                             })
                         });
@@ -336,9 +336,9 @@
                                     LAY_CELL_VIEW: ""
                                 })
 
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -355,7 +355,8 @@
                         component : "/components/settlement/bill_item_select.html",
                         allowMultiple : true,
                         where : {
-                            invoiceLineId : data.id
+                            invoiceLineId : data.id,
+                            hospitalId : model.hospitalId
                         },
                         onConfirm(rows, elem){
 
@@ -371,10 +372,10 @@
                             $http.put("/settlement/invoice_items/batch_save", rows).then(resp => {
                                 if (resp.data.success) {
                                     window.reloadInvoiceLineTable(true)
-                                    layer.msg(resp.data.msg, {icon: 1})
+                                    layer.success(resp.data.msg)
 
                                 } else {
-                                    layer.msg(resp.data.msg, {icon: 5})
+                                    layer.error(resp.data.msg)
                                 }
                             })
                         }
@@ -404,10 +405,10 @@
                                 invoiceLineId : rows[0].invoiceLineId
                             }).then(resp => {
                                 if (resp.data.success) {
-                                    layer.msg(resp.data.msg, {icon: 1})
+                                    layer.success(resp.data.msg)
                                     window.reloadInvoiceLineTable(true)
                                 } else {
-                                    layer.msg(resp.data.msg, {icon: 5})
+                                    layer.error(resp.data.msg)
                                 }
                             })
                         }
@@ -432,10 +433,10 @@
                     layer.confirm('确定审核通过么', function (index) {
                         $http.post("/settlement/invoices/audit/"+ model.id).then(resp => {
                             if(!resp.data.success){
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             parent.reloadTable()
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
@@ -464,11 +465,11 @@
 
                     promise.then(resp => {
                         if (!resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 5})
+                            layer.error(resp.data.msg)
                             return
                         }
                         parent.reloadTable()
-                        layer.msg(resp.data.msg, {icon: 1})
+                        layer.success(resp.data.msg)
                         if(!model.id){
                             model.id = resp.data.data.id
                             initForm(model, false)

@@ -148,7 +148,7 @@
                     layer.confirm('真的删除行么', function (index) {
 
                         $http.delete(`/upms/test/sp_regs/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             table.reload('listTable')
 
                             layer.close(index)
@@ -181,7 +181,7 @@
                         $http.post("/upms/test/sp_regs/audit/" + obj.data.id).then(resp => {
 
                             if (!resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
+                                layui.layer.error(resp.data.msg)
                                 return
                             }
                             // 审核成功

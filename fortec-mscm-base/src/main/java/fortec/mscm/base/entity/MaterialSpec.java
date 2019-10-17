@@ -47,7 +47,6 @@ public class MaterialSpec extends DataEntity  implements Serializable {
     private String form;
 
     /** 单位 */
-    @NotNull(message="单位不能为空")
     private String unit;
 
     /** 价格 */

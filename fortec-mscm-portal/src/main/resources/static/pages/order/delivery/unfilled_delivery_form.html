@@ -412,13 +412,13 @@
                         rows.forEach(o => o.deliveryId = model.id);
                         $http.put("/order/delivery_items/batch_save", rows).then(resp => {
                             if (resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 1});
+                                layui.layer.success(resp.data.msg);
                                 window.reloadDeliveryItemTable()
                                 parent.reloadTable();
 
                                 form.val("editForm", {"deliveryAmount": rows.map(o => o.subtotalAmount).reduce((prev, curr) => prev + curr)})
                             } else {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
+                                layui.layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -540,7 +540,7 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/order/delivery_items/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1});
+                                layer.success(resp.data.msg);
                                 layui.table.deleteRow('delivery_item_table', rowIndex);
                                 renderDateTime()
                             })
@@ -564,7 +564,7 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1});
+                                layer.success(resp.data.msg);
 
                                 // 重新渲染单行数据
                                 layui.table.renderSpecRow('delivery_item_table', rowIndex, {
@@ -572,7 +572,7 @@
                                 })
                                 window.reloadDeliveryItemTable()
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -593,10 +593,10 @@
                     layer.confirm('确定发货吗', function (index) {
                         $http.post(`/order/deliverys/${model.id}/delivery`).then(resp => {
                             if (!resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1});
+                            layer.success(resp.data.msg);
                             parent.reloadTable()
 
                             let newIndex = parent.layer.open({

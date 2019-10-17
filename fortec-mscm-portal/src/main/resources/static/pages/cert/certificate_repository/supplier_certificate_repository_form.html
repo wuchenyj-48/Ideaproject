@@ -92,7 +92,7 @@
                         <div class="layui-input-block">
                             <div class="uploader uploader1">
                                 <div class="message">
-                                    文件类型限定为：png|pdf|jpg，单个文件大小不能超过2M，最多上传5个文件
+                                    文件类型限定为：png|pdf|jpg，单个文件大小不能超过2048KB，最多上传5个文件
                                 </div>
                                 <div class="wrapper">
                                     <div class="file-list"></div>
@@ -141,6 +141,7 @@
                         renderUploader(model.limitFileExtension, model.maxiumFileSize, model.maxiumFileCount)
                     } else {
                         $(".form-reset").show()
+                        renderUploader("png|pdf|jpg", "2048", "5")
                     }
                     window.renderExpiryDate(model.needExpiryDate)
                 }
@@ -249,7 +250,7 @@
 
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({docIds: model.docIds}, data.field)
+                    data.field = layui.$.extend({}, data.field)
 
                     let promise = $http.post("/cert/certificate_repositorys/save_for_supplier", data.field)
 

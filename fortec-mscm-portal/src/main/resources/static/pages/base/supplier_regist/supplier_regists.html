@@ -168,7 +168,7 @@
                     layer.confirm('真的删除行么', function (index) {
 
                         $http.delete(`/base/supplier_regists/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             table.reload('listTable')
 
                             layer.close(index)
@@ -180,7 +180,7 @@
                     layer.confirm('确定通过么', function (index) {
 
                         $http.post(`/base/supplier_regists/pass/${data.id}`).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
                         })
                     });
@@ -194,9 +194,9 @@
                             reason: val
                         }).then(resp => {
                             if (resp.data.success){
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                             }else{
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                             window.reloadTable()
                             layer.close(index)

@@ -18,11 +18,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
-* 商品品类 controller
-*
-* @author chenchen
-* @version 1.0
-*/
+ * 商品品类 controller
+ *
+ * @author chenchen
+ * @version 1.0
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/material_catalogs")
@@ -58,7 +58,15 @@ public class MaterialCatalogController extends BaseController {
     @GetMapping("/tree")
     public CommonResult tree(MaterialCatalogQueryRequest request) {
         List<MaterialCatalog> list = materialCatalogService.list(request);
-        TreeModel<MaterialCatalog> treeModel = new TreeModel<MaterialCatalog>(list, "name") {
+
+        TreeNode root = null;
+        if (request.isAutoAddRoot()) {
+            root = new TreeNode();
+            root.setId("0");
+            root.setTitle("商品分类");
+        }
+
+        TreeModel<MaterialCatalog> treeModel = new TreeModel<MaterialCatalog>(list, "name", root) {
             @Override
             protected void addExtraProperties(TreeNode node, MaterialCatalog entity) {
                 node.addProperty("materialTypeCode", entity.getMaterialTypeCode());

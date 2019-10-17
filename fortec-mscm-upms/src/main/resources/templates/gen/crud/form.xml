@@ -209,10 +209,10 @@
 
                     promise.then(resp => {
                         if (!resp.data.success) {
-                           layer.msg(resp.data.msg, {icon: 5})
+                           layer.error(resp.data.msg)
                            return
                         }
-                        layer.msg(resp.data.msg, {icon: 1})
+                        layer.success(resp.data.msg)
                         if($strings.isBlank(model.id)){
                             initForm(resp.data.data, false)
                         }

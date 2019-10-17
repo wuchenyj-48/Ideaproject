@@ -284,6 +284,7 @@
                         id: "material_form",
                         side: true,
                         title: "商品资质信息",
+                        area:["50%" , "100%"],
                         type: 2,
                         content: ["./material_form.html?targetDescribeId=" + model.id+
                         "&manufacturerId=" + model.manufacturerId+
@@ -302,7 +303,7 @@
                     layer.confirm('真的关闭么', function (index) {
 
                         $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadMaterialSpecTable()
 
                             layer.close(index)
@@ -316,6 +317,7 @@
                         id: "material_form",
                         side: true,
                         title: "资质查看",
+                        area:["50%" , "100%"],
                         type: 2,
                         content: ['./viewCert.html'],
                         success(layero, index) {

@@ -23,12 +23,6 @@
                                     <input type="text" name="hospitalName" placeholder="请输入接收医院名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
-                                <div class="layui-input-inline">
-                                    <select name="status">
-                                        <option value="">请选择单据状态</option>
-                                    </select>
-                                </div>
-
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
                                         lay-filter="list">
                                     <i class="layui-icon layui-icon-search"></i> 查询
@@ -80,7 +74,7 @@
                     id: "listTable",
                     elem: '#listTable',
                     height: 'full-160',
-                    url: '/base/material_applicants/page',
+                    url: '/base/material_applicants/page?status=0',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
@@ -131,7 +125,7 @@
                     layer.confirm('真的删除行么', function (index) {
 
                         $http.delete(`/base/material_applicants/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
 
                             layer.close(index)
@@ -144,11 +138,11 @@
                     layer.confirm('真的提交行么', function (index) {
                         $http.post(`/base/material_applicants/submit/` + data.id).then(resp => {
                             if (!resp.data.success){
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
 
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             // 提交成功后状态会变更为 1：提交待审核，刷新单行
                             layui.table.renderSpecRow('listTable', rowIndex, {id: data.id, status: 1})
 

@@ -25,7 +25,6 @@
             <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
 
-
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
@@ -57,7 +56,8 @@
                             <span class="required-star">*</span> 是否药品供应商
                         </label>
                         <div class="layui-input-block">
-                            <div id="isDrugDiv"></div>
+                            <select name="isDrug">
+                            </select>
                         </div>
                     </div>
 
@@ -69,7 +69,8 @@
                             <span class="required-star">*</span> 是否耗材供应商
                         </label>
                         <div class="layui-input-block">
-                            <div id="isConsumableDiv"></div>
+                            <select name="isConsumable">
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -80,7 +81,8 @@
                             <span class="required-star">*</span> 是否试剂供应商
                         </label>
                         <div class="layui-input-block">
-                            <div id="isReagentDiv"></div>
+                            <select name="isReagent">
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -167,11 +169,10 @@
                     }
                 }
 
-
                 form.render('select')
 
                 // 渲染单选框/多选框 数据
-                $global.getDictDataList('common_yes_no').forEach(o => {
+                /*$global.getDictDataList('common_yes_no').forEach(o => {
                     $("#isDrugDiv").append(`<input type="radio" name="isDrug" value="${o.value}" title="${o.label}" /> `)
                 })
                 $global.getDictDataList('common_yes_no').forEach(o => {
@@ -182,7 +183,17 @@
                 })
                 //默认选中
                 $("input:radio[value='0']").attr('checked', 'true')
-                form.render('radio')
+                form.render('radio')*/
+                $global.getDictDataList('common_yes_no').forEach(o => {
+                    $("select[name='isDrug']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                $global.getDictDataList('common_yes_no').forEach(o => {
+                    $("select[name='isConsumable']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                $global.getDictDataList('common_yes_no').forEach(o => {
+                    $("select[name='isReagent']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                form.render('select')
 
                 // 渲染日期、时间 数据
 
@@ -215,10 +226,10 @@
 
                     promise.then(resp => {
                         if (resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             $(".form-reset").click()
                         } else {
-                            layer.msg(resp.data.msg, {icon: 5})
+                            layer.error(resp.data.msg)
                         }
                     })
 

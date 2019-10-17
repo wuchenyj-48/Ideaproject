@@ -223,10 +223,10 @@
                     layer.confirm('确定可供货么', function (index) {
                         $http.post(`/order/purchase_orders/able/` + model.id).then(resp => {
                             if (!resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             parent.reloadTable()
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
@@ -238,10 +238,10 @@
                     layer.confirm('确定不可供货么', function (index) {
                         $http.post(`/order/purchase_orders/disable/` + model.id).then(resp => {
                             if (!resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                                 return
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             parent.reloadTable()
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);

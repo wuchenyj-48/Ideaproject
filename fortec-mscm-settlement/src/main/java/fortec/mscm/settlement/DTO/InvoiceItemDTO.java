@@ -25,5 +25,8 @@ public class InvoiceItemDTO extends PageRequest {
 
     /** 记账单号 */
     private String code;
+
+    /** 医院id */
+    private String hospitalId;
 }
     

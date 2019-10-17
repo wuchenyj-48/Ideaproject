@@ -201,7 +201,7 @@
                     if (resp.data.success) {
                         window.initForm(resp.data.data)
                     } else {
-                        layui.layer.msg(resp.data.msg, {icon: 5})
+                        layui.layer.error(resp.data.msg)
                     }
                 })
 
@@ -275,10 +275,10 @@
                         rows.forEach(o => o.hospitalId = model.id)
                         $http.put("/base/hospital_warehouses/batch_save", rows).then(resp => {
                             if (resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 1})
+                                layui.layer.success(resp.data.msg)
                                 window.reloadHospitalLocationTable()
                             } else {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
+                                layui.layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -303,7 +303,7 @@
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/base/hospital_warehouses/` + data.id).then(resp => {
                                 window.reloadHospitalLocationTable()
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
                             })
                         });
                         return
@@ -325,14 +325,14 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1})
+                                layer.success(resp.data.msg)
 
                                 // 重新渲染单行数据
                                 layui.table.renderSpecRow('hospital_warehouse_table', index, {
                                     id: resp.data.data.id
                                 })
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })

@@ -122,6 +122,7 @@
                         id: "supplier_certificate_repository_form",
                         side: true,
                         title: "编辑企业资质信息",
+                        area: ["50%" , "100%"],
                         type: 2,
                         content: ['./supplier_certificate_repository_form.html'],
                         success(layero, index) {
@@ -136,7 +137,7 @@
                     layer.confirm('确定关闭么', function (index) {
 
                         $http.post(`/cert/certificate_repositorys/close/` + data.id).then(resp => {
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
 
                             layer.close(index)
@@ -150,6 +151,7 @@
                         id: "viewCert",
                         side: true,
                         title: "资质查看",
+                        area: ["50%" , "100%"],
                         type: 2,
                         content: ['./viewCert.html'],
                         success(layero, index) {
@@ -165,9 +167,9 @@
 
                         $http.post(`/cert/certificate_repositorys/certificate_submit/` + data.id).then(resp => {
                             if (!resp.success) {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
-                            layer.msg(resp.data.msg, {icon: 1})
+                            layer.success(resp.data.msg)
                             window.reloadTable()
                             layer.close(index)
                         })

@@ -77,8 +77,10 @@
         certificate_repository cr
         inner join certificate c on cr.certificate_id = c.id
         inner join `mscm-base`.hospital_supplier hs on hs.supplier_id = cr.supplier_id
+        inner join certificate_hospital_business chb on cr.certificate_id = chb.certificate_id
         <where>
                 and hs.hospital_id = #{request.hospitalId}
+                and chb.hospital_id = hs.hospital_id
             <if test="request.businessTypeCode != null and request.businessTypeCode != ''">
                 and cr.business_type_code = #{request.businessTypeCode}
             </if>

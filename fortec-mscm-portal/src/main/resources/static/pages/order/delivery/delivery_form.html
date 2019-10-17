@@ -285,10 +285,10 @@
                         rows.forEach(o => o.deliveryId = model.id);
                         $http.put("/order/delivery_items/batch_save", rows).then(resp => {
                             if (resp.data.success) {
-                                layui.layer.msg(resp.data.msg, {icon: 1});
+                                layui.layer.success(resp.data.msg);
                                 window.reloadDeliveryItemTable()
                             } else {
-                                layui.layer.msg(resp.data.msg, {icon: 5})
+                                layui.layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -311,7 +311,7 @@
                     if (obj.event === 'del') {
                         layer.confirm('真的删除行么', function (index) {
                             $http.delete(`/order/delivery_items/` + data.id).then(resp => {
-                                layer.msg(resp.data.msg, {icon: 1});
+                                layer.success(resp.data.msg);
                                 obj.del()
                             })
                         });
@@ -334,14 +334,14 @@
 
                         promise.then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1});
+                                layer.success(resp.data.msg);
 
                                 // 重新渲染单行数据
                                 layui.table.renderSpecRow('delivery_item_table', index, {
                                     id: resp.data.data.id
                                 })
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         })
                     })
@@ -406,12 +406,12 @@
                     layer.confirm('确定取消发货吗?', function () {
                         $http.post(`/order/deliverys/${model.id}/cancel_delivery`).then(resp => {
                             if (resp.data.success) {
-                                layer.msg(resp.data.msg, {icon: 1});
+                                layer.success(resp.data.msg);
                                 parent.reloadTable()
                                 //  明细表格
                                 $(".form-close").click()
                             } else {
-                                layer.msg(resp.data.msg, {icon: 5})
+                                layer.error(resp.data.msg)
                             }
                         });
 
@@ -421,7 +421,7 @@
                 $(".form-barCode").click(() => {
                     $http.post(`/order/delivery_item_sns/${model.id}`).then(resp => {
                         if (!resp.data.success) {
-                            layer.msg(resp.data.msg, {icon: 5})
+                            layer.error(resp.data.msg)
                             return
                         }
 

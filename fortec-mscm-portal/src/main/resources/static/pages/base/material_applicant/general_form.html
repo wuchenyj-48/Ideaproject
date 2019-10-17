@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>编辑表单</title>
+        <title>查看表单</title>
     </head>
     <body>
 
@@ -11,7 +11,6 @@
             <form class="layui-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
                 <input type="hidden" name="hospitalId" class="layui-input"/>
-
 
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
@@ -45,8 +44,6 @@
                 <div class="layui-row ">
                     <div class="layui-form-item">
                         <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-sm layui-btn form-pass" type="button">通过</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-danger form-cancel" type="button">取消</button>
                             <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">关闭</button>
                         </div>
                     </div>
@@ -124,37 +121,6 @@
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
-                })
-
-                $(".form-pass").click(() => {
-                    layer.confirm('确定通过么', function (index) {
-                        $http.post(`/base/material_applicants/pass/` + model.id).then(resp => {
-                            if (!resp.data.success) {
-                                layer.error(resp.data.msg)
-                                return
-                            }
-                            layer.success(resp.data.msg)
-                            parent.reloadTable()
-                            var index = parent.layer.getFrameIndex(window.name);
-                            parent.layer.close(index);
-                        })
-                    });
-                })
-
-                $(".form-cancel").click(() => {
-                    layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
-
-                        $http.post(`/base/material_applicants/cancel/` + model.id + "/" + val).then(resp => {
-                            if (!resp.data.success) {
-                                layer.error(resp.data.msg)
-                                return
-                            }
-                            layer.success(resp.data.msg)
-                            parent.reloadTable()
-                            var index = parent.layer.getFrameIndex(window.name);
-                            parent.layer.close(index);
-                        })
-                    });
                 })
 
             }
