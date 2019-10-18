@@ -71,11 +71,9 @@
                         <label class="layui-form-label">
                             <span class="required-star">*</span>  药品供应商
                         </label>
-                       <div class="layui-input-block">
-                           <select name="isDrug">
-                           </select>
-                       </div>
-
+                        <div class="layui-input-block">
+                            <div id="isDrugDiv" lay-data="radio"></div>
+                        </div>
                    </div>
 
 
@@ -83,11 +81,9 @@
                         <label class="layui-form-label">
                             <span class="required-star">*</span>  耗材供应商
                         </label>
-                       <div class="layui-input-block">
-                           <select name="isConsumable">
-                           </select>
-                       </div>
-
+                        <div class="layui-input-block">
+                            <div id="isConsumableDiv" lay-data="radio"></div>
+                        </div>
                    </div>
 
                 </div>
@@ -97,11 +93,9 @@
                         <label class="layui-form-label">
                             <span class="required-star">*</span>  试剂供应商
                         </label>
-                       <div class="layui-input-block">
-                           <select name="isReagent">
-                           </select>
-                       </div>
-
+                        <div class="layui-input-block">
+                            <div id="isReagentDiv" lay-data="radio"></div>
+                        </div>
                    </div>
 
 
@@ -215,26 +209,6 @@
         </div>
 
         <!-- 子表管理模板 开始  -->
-        <script type="text/html" id="nameTpl">
-            <input type="text" data-name="name" value="{{d.name ? d.name : ''}}" lay-filter="name"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="companyCodeTpl">
-            <input type="text" data-name="companyCode" value="{{d.companyCode ? d.companyCode : ''}}" lay-filter="companyCode"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="productionLicenceTpl">
-            <input type="text" data-name="productionLicence" value="{{d.productionLicence ? d.productionLicence : ''}}" lay-filter="productionLicence"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="abc"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="pinyinTpl">
-            <input type="text" data-name="pinyin" value="{{d.pinyin ? d.pinyin : ''}}" lay-filter="pinyin"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="abc"
-                   class="layui-input custom-input"/>
-        </script>
         <script type="text/html" id="manufacturerCellToolbar">
                 {{#  if($strings.isBlank(d.id)){ }}
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
@@ -270,10 +244,10 @@
                             height: 300,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                { field: 'name', title: '厂商名称', align: 'center', templet: "#nameTpl"},
-                                { field: 'companyCode', title: '社会信用代码', align: 'center', templet: "#companyCodeTpl"},
-                                { field: 'productionLicence', title: '生产许可证', align: 'center', templet: "#productionLicenceTpl"},
-                                { field: 'pinyin', title: '助记码', align: 'center', templet: "#pinyinTpl"},
+                                { field: 'name', title: '厂商名称', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
+                                { field: 'companyCode', title: '社会信用代码', align: 'center', editConfig: { form: "input", verify: "required|number", placeholder: "必填" }},
+                                { field: 'productionLicence', title: '生产许可证', align: 'center', editConfig: { form: "input", verify: "required|abc", placeholder: "必填" }},
+                                { field: 'pinyin', title: '助记码', align: 'center', editConfig: { form: "input", verify: "required|abc", placeholder: "必填" }},
                                 {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#manufacturerCellToolbar"},
                             ]]
                         });
@@ -295,34 +269,7 @@
                         $(".form-reset").show()
                         $(".child-tab").hide()
                     }
-
-
-
                 }
-
-                // 渲染单选框/多选框 数据
-                /*$global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isDrugDiv").append(`<input type="radio" name="isDrug" value="${o.value}" title="${o.label}"  ${o.value == model.isDrug ? 'checked' : ""}/> `)
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isConsumableDiv").append(`<input type="radio" name="isConsumable" value="${o.value}" title="${o.label}" ${o.value == model.isConsumable ? 'checked' : ""}/> `)
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    console.log(`<input type="radio" name="isReagent" value="${o.value}" title="${o.label}"  ${o.value == model.isReagent ? 'checked' : ""}/> `)
-                    $("#isReagentDiv").append(`<input type="radio" name="isReagent" value="${o.value}" title="${o.label}"  ${o.value == model.isReagent ? 'checked' : ""}/> `)
-                })
-                form.render('radio')
-                */
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("select[name='isDrug']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("select[name='isConsumable']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("select[name='isReagent']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
-                form.render('select')
 
                 //渲染区域名称
                 dtree.renderOpenTree({
@@ -344,6 +291,23 @@
                         $("input[name='regionName']").val(node.context);
                     }
                 })
+
+                // 渲染下拉框 数据
+                form.render('select')
+
+                // 渲染单选框/多选框 数据
+                $global.getDictDataList('common_yes_no').forEach(o => {
+                    $("div[lay-data='radio']").each((i,r) =>{
+                        $(r).append(`<input type="radio" name="${r.id.replace('Div','')}" value="${o.value}" title="${o.label}" /> `)
+                    })
+
+                })
+                //默认选中
+                $("input:radio[value='0']").attr('checked','true')
+                form.render('radio')
+
+
+                // 渲染日期、时间 数据
 
                 //供应商生成大写首字母
                 $("input[name='name']").bind("input propertychange", ()=> {
@@ -446,7 +410,7 @@
 
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
-                    $("form input:hidden").val('')
+                    $("form input[type='hidden']").val('')
                 })
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);
@@ -456,12 +420,11 @@
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     let field = data.field
-                    if((Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent)) == 0){
+                    if(!(field.isDrug | field.isConsumable | field.isReagent)){
                         layer.msg("药品/耗材/试剂供应商 至少选中一个", {icon: 5})
                         return false;
                     }
                     data.field = layui.$.extend({}, data.field)
-
                     let promise = null
                     if ($strings.isBlank(data.field.id)) {
                         promise = $http.post("/base/suppliers", data.field)

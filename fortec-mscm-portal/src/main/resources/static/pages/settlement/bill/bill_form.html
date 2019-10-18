@@ -129,7 +129,7 @@
                 class="fa fa-search"></i></a>
     </script>
 
-        <script type="text/html" id="qtyTpl">
+        <!--<script type="text/html" id="qtyTpl">
             <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
@@ -138,7 +138,7 @@
             <input type="text" data-name="lot" value="{{d.lot ? d.lot : ''}}" lay-filter="lot"
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"
                    class="layui-input custom-input"/>
-        </script>
+        </script>-->
         <script type="text/html" id="billItemCellToolbar">
             {{#  if($strings.isBlank(d.id)){ }}
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
@@ -191,9 +191,9 @@
                                     align: 'center',
                                     width: 250
                                 },
-                                {field: 'lot', title: '批次', align: 'center', templet: "#lotTpl"},
+                                {field: 'lot', title: '批次', align: 'center', editConfig: { form: "input", placeholder: "选填" }},
                                 {field: 'unit', title: '单位', align: 'center'},
-                                {field: 'qty', title: '数量', align: 'center', templet: "#qtyTpl"},
+                                {field: 'qty', title: '数量', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
                                 {field: 'price', title: '价格(元)', align: 'center'},
                                 {
                                     field: 'subtotalAmount',

@@ -26,7 +26,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
     druid:
-      url: jdbc:mysql://mysql.forten-tech.com:3366/mscm-base?useUnicode=true&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+      url: jdbc:mysql://spring.forten-tech.com:3366/mscm-base?useUnicode=true&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
       username: root
       password: 34821015
 

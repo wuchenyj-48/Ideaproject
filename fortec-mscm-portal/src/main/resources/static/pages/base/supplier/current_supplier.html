@@ -75,7 +75,7 @@
                                         <span class="required-star">*</span>  药品供应商
                                     </label>
                                     <div class="layui-input-block">
-                                        <div id="isDrugDiv"></div>
+                                        <div id="isDrugDiv" lay-data="radio"></div>
                                     </div>
                                 </div>
 
@@ -85,7 +85,7 @@
                                         <span class="required-star">*</span>  耗材供应商
                                     </label>
                                     <div class="layui-input-block">
-                                        <div id="isConsumableDiv"></div>
+                                        <div id="isConsumableDiv" lay-data="radio"></div>
                                     </div>
                                 </div>
 
@@ -97,7 +97,7 @@
                                         <span class="required-star">*</span>  试剂供应商
                                     </label>
                                     <div class="layui-input-block">
-                                        <div id="isReagentDiv"></div>
+                                        <div id="isReagentDiv" lay-data="radio"></div>
                                     </div>
                                 </div>
 
@@ -215,26 +215,6 @@
         </div>
 
         <!-- 子表管理模板 开始  -->
-        <script type="text/html" id="nameTpl">
-            <input type="text" data-name="name" value="{{d.name ? d.name : ''}}" lay-filter="name"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="companyCodeTpl">
-            <input type="text" data-name="companyCode" value="{{d.companyCode ? d.companyCode : ''}}" lay-filter="companyCode"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="productionLicenceTpl">
-            <input type="text" data-name="productionLicence" value="{{d.productionLicence ? d.productionLicence : ''}}" lay-filter="productionLicence"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="abc"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="pinyinTpl">
-            <input type="text" data-name="pinyin" value="{{d.pinyin ? d.pinyin : ''}}" lay-filter="pinyin"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="abc"
-                   class="layui-input custom-input"/>
-        </script>
         <script type="text/html" id="manufacturerCellToolbar">
                 {{#  if($strings.isBlank(d.id)){ }}
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
@@ -278,16 +258,14 @@
                             height: 250,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                { field: 'name', title: '厂商名称', align: 'center', templet: "#nameTpl"},
-                                { field: 'companyCode', title: '社会信用代码', align: 'center', templet: "#companyCodeTpl"},
-                                { field: 'productionLicence', title: '生产许可证', align: 'center', templet: "#productionLicenceTpl"},
-                                { field: 'pinyin', title: '助记码', align: 'center', templet: "#pinyinTpl"},
+                                { field: 'name', title: '厂商名称', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
+                                { field: 'companyCode', title: '社会信用代码', align: 'center', editConfig: { form: "input", verify: "required|number", placeholder: "必填" }},
+                                { field: 'productionLicence', title: '生产许可证', align: 'center', editConfig: { form: "input", verify: "required|abc", placeholder: "必填" }},
+                                { field: 'pinyin', title: '助记码', align: 'center', editConfig: { form: "input", verify: "required|abc", placeholder: "必填" }},
                                 {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#manufacturerCellToolbar"},
-                            ]],
-                            done(){
-                                $editable.watch('manufacturer_table')
-                            }
-                        });
+                            ]]
+                        })
+                        $editable.watch('manufacturer_table')
                     })
                 }
 
@@ -331,20 +309,14 @@
 
                 // 渲染单选框/多选框 数据
                 $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isDrugDiv").append(`<input type="radio" name="isDrug" value="${o.value}" title="${o.label}" /> `)
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isConsumableDiv").append(`<input type="radio" name="isConsumable" value="${o.value}" title="${o.label}" /> `)
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isReagentDiv").append(`<input type="radio" name="isReagent" value="${o.value}" title="${o.label}" /> `)
+                    $("div[lay-data='radio']").each((i,r) =>{
+                        $(r).append(`<input type="radio" name="${r.id.replace('Div','')}" value="${o.value}" title="${o.label}" /> `)
+                    })
+
                 })
                 //默认选中
                 $("input:radio[value='0']").attr('checked','true')
                 form.render('radio')
-
-
-                // 渲染日期、时间 数据
 
                 //供应商生成大写首字母
                 $("input[name='name']").bind("input propertychange", ()=> {

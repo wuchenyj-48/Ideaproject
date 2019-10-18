@@ -115,21 +115,6 @@
             </div>
         </div>
 
-        <script type="text/html" id="invoiceNoTpl">
-            <input type="text" data-name="invoiceNo" value="{{d.invoiceNo ? d.invoiceNo : ''}}" lay-filter="invoiceNo"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="amountTpl">
-            <input type="text" data-name="amount" value="{{d.amount ? d.amount : ''}}" lay-filter="amount"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required|number" placeholder="必填"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="remarkTpl">
-            <input type="text" data-name="remark" value="{{d.remark ? d.remark : ''}}" lay-filter="remark"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify=""  placeholder="选填"
-                   class="layui-input custom-input"/>
-        </script>
         <script type="text/html" id="invoiceLineCellToolbar">
             {{#  if($strings.isBlank(d.id)){ }}
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
@@ -179,9 +164,9 @@
                         height: 450,
                         cols: [[
                             {type: 'numbers', align: 'center'},
-                            { field: 'invoiceNo', title: '税务发票号', align: 'center', templet: "#invoiceNoTpl"},
-                            { field: 'amount', title: '开票金额(元)', align: 'center', templet: "#amountTpl"},
-                            { field: 'remark', title: '备注', align: 'center', templet: "#remarkTpl"},
+                            { field: 'invoiceNo', title: '税务发票号', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
+                            { field: 'amount', title: '开票金额(元)', align: 'center', editConfig: { form: "input", verify: "required|number", placeholder: "必填" }},
+                            { field: 'remark', title: '备注', align: 'center', editConfig: { form: "input", placeholder: "选填" }},
                             { field: 'billQty', title: '记账单数量', align: 'center'},
                             {field: 'LAY_CELL_RELATE', title: '关联记账单', align: 'center', templet: "#relateTpl",width:100},
                             {field: 'LAY_CELL_VIEW', title: '查看/取消关联', align: 'center', templet: "#viewTpl",width:100},
