@@ -25,7 +25,6 @@
             <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
 
-
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">
@@ -57,7 +56,7 @@
                             <span class="required-star">*</span> 是否药品供应商
                         </label>
                         <div class="layui-input-block">
-                            <div id="isDrugDiv"></div>
+                            <div id="isDrugDiv" lay-data="radio"></div>
                         </div>
                     </div>
 
@@ -69,7 +68,7 @@
                             <span class="required-star">*</span> 是否耗材供应商
                         </label>
                         <div class="layui-input-block">
-                            <div id="isConsumableDiv"></div>
+                            <div id="isConsumableDiv" lay-data="radio"></div>
                         </div>
                     </div>
                 </div>
@@ -80,7 +79,7 @@
                             <span class="required-star">*</span> 是否试剂供应商
                         </label>
                         <div class="layui-input-block">
-                            <div id="isReagentDiv"></div>
+                            <div id="isReagentDiv" lay-data="radio"></div>
                         </div>
                     </div>
                 </div>
@@ -167,18 +166,14 @@
                     }
                 }
 
-
                 form.render('select')
 
                 // 渲染单选框/多选框 数据
                 $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isDrugDiv").append(`<input type="radio" name="isDrug" value="${o.value}" title="${o.label}" /> `)
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isConsumableDiv").append(`<input type="radio" name="isConsumable" value="${o.value}" title="${o.label}" /> `)
-                })
-                $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("#isReagentDiv").append(`<input type="radio" name="isReagent" value="${o.value}" title="${o.label}" /> `)
+                    $("div[lay-data='radio']").each((i,r) =>{
+                        $(r).append(`<input type="radio" name="${r.id.replace('Div','')}" value="${o.value}" title="${o.label}" /> `)
+                    })
+
                 })
                 //默认选中
                 $("input:radio[value='0']").attr('checked', 'true')

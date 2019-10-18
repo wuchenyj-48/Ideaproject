@@ -209,26 +209,6 @@
         </div>
 
         <!-- 子表管理模板 开始  -->
-        <script type="text/html" id="nameTpl">
-            <input type="text" data-name="name" value="{{d.name ? d.name : ''}}" lay-filter="name"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="companyCodeTpl">
-            <input type="text" data-name="companyCode" value="{{d.companyCode ? d.companyCode : ''}}" lay-filter="companyCode"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="number|required"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="productionLicenceTpl">
-            <input type="text" data-name="productionLicence" value="{{d.productionLicence ? d.productionLicence : ''}}" lay-filter="productionLicence"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="abc"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="pinyinTpl">
-            <input type="text" data-name="pinyin" value="{{d.pinyin ? d.pinyin : ''}}" lay-filter="pinyin"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="abc"
-                   class="layui-input custom-input"/>
-        </script>
         <script type="text/html" id="manufacturerCellToolbar">
                 {{#  if($strings.isBlank(d.id)){ }}
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
@@ -264,10 +244,10 @@
                             height: 300,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                { field: 'name', title: '厂商名称', align: 'center', templet: "#nameTpl"},
-                                { field: 'companyCode', title: '社会信用代码', align: 'center', templet: "#companyCodeTpl"},
-                                { field: 'productionLicence', title: '生产许可证', align: 'center', templet: "#productionLicenceTpl"},
-                                { field: 'pinyin', title: '助记码', align: 'center', templet: "#pinyinTpl"},
+                                { field: 'name', title: '厂商名称', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
+                                { field: 'companyCode', title: '社会信用代码', align: 'center', editConfig: { form: "input", verify: "required|number", placeholder: "必填" }},
+                                { field: 'productionLicence', title: '生产许可证', align: 'center', editConfig: { form: "input", verify: "required|abc", placeholder: "必填" }},
+                                { field: 'pinyin', title: '助记码', align: 'center', editConfig: { form: "input", verify: "required|abc", placeholder: "必填" }},
                                 {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#manufacturerCellToolbar"},
                             ]]
                         });

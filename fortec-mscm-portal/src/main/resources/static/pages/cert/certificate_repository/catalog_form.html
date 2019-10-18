@@ -103,7 +103,7 @@
                         <div class="layui-input-block">
                             <div class="uploader uploader1">
                                 <div class="message">
-                                    文件类型限定为：png|pdf|jpg，单个文件大小不能超过2M，最多上传5个文件
+                                    文件类型限定为：png|pdf|jpg，单个文件大小不能超过2048KB，最多上传5个文件
                                 </div>
                                 <div class="wrapper">
                                     <div class="file-list"></div>
@@ -143,29 +143,17 @@
                 let params = $global.getUrlParams()
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    /*let data = $.extend({}, formData)
-
-                    console.log(data)
-                    form.val("editForm", data)
-                    model = data
-                    $(".message").hide()
-                    if ($strings.isNotBlank(model.id)) {
-                        $(".form-reset").hide()
-                        renderUploader(params.limitFileExtension, params.maxiumFileSize, params.maxiumFileCount)
-                    }
-                    window.renderExpiryDate(data.needExpiryDate)
-*/
-
                     model = $.extend({}, formData)
 
                     $(".form-reset").click()
                     form.val("editForm", model)
-                    $(".message").hide()
+
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
                         renderUploader(params.limitFileExtension, params.maxiumFileSize, params.maxiumFileCount)
                     } else {
                         $(".form-reset").show()
+                        renderUploader("png|pdf|jpg", "2048", "5")
                     }
                     window.renderExpiryDate(model.needExpiryDate)
 

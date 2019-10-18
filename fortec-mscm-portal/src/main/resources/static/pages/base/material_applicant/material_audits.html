@@ -21,12 +21,6 @@
                                     <input type="text" name="supplierName" placeholder="请输入供应商名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
-                                <div class="layui-input-inline">
-                                    <select name="status">
-                                        <option value="">请选择单据状态</option>
-                                    </select>
-                                </div>
-
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
                                         lay-filter="list">
                                     <i class="layui-icon layui-icon-search"></i> 查询
@@ -74,7 +68,7 @@
                     elem: '#listTable',
                     title: 'MaterialApplicant信息',
                     height: 'full-160',
-                    url: '/base/material_applicants/pageAudit',
+                    url: '/base/material_applicants/pageAudit?status=1',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},

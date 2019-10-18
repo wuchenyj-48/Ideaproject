@@ -92,7 +92,7 @@
                         <div class="layui-input-block">
                             <div class="uploader uploader1">
                                 <div class="message">
-                                    文件类型限定为：png|pdf|jpg，单个文件大小不能超过2M，最多上传5个文件
+                                    文件类型限定为：png|pdf|jpg，单个文件大小不能超过2048KB，最多上传5个文件
                                 </div>
                                 <div class="wrapper">
                                     <div class="file-list"></div>
@@ -141,6 +141,7 @@
                         renderUploader(params.limitFileExtension, params.maxiumFileSize, params.maxiumFileCount)
                     } else {
                         $(".form-reset").show()
+                        renderUploader("png|pdf|jpg", "2048", "5")
                     }
                     window.renderExpiryDate(model.needExpiryDate)
                 }
@@ -234,7 +235,6 @@
                     $("select[name='businessTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
                 })
                 form.render('select')
-
 
                 // 渲染日期、时间 数据
                 layui.laydate.render({elem: "input[name='expiryDate']", type: 'date', trigger: 'click', min: 0});

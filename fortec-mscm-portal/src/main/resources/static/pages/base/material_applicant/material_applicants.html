@@ -23,12 +23,6 @@
                                     <input type="text" name="hospitalName" placeholder="请输入接收医院名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
-                                <div class="layui-input-inline">
-                                    <select name="status">
-                                        <option value="">请选择单据状态</option>
-                                    </select>
-                                </div>
-
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
                                         lay-filter="list">
                                     <i class="layui-icon layui-icon-search"></i> 查询
@@ -80,7 +74,7 @@
                     id: "listTable",
                     elem: '#listTable',
                     height: 'full-160',
-                    url: '/base/material_applicants/page',
+                    url: '/base/material_applicants/page?status=0',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},

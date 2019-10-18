@@ -132,9 +132,9 @@
                         height: 450,
                         cols: [[
                             {type: 'numbers', align: 'center'},
-                            {field: 'invoiceNo', title: '税务发票号', align: 'center', templet: "#invoiceNoTpl"},
-                            {field: 'amount', title: '开票金额(元)', align: 'center', templet: "#amountTpl"},
-                            {field: 'remark', title: '备注', align: 'center', templet: "#remarkTpl"},
+                            {field: 'invoiceNo', title: '税务发票号', align: 'center'},
+                            {field: 'amount', title: '开票金额(元)', align: 'center'},
+                            {field: 'remark', title: '备注', align: 'center'},
                             { field: 'billQty', title: '记账单数量', align: 'center'},
                             {field: 'VIEW', title: '查看', align: 'center', templet: "#viewTpl", width: 100},
                         ]]
@@ -205,7 +205,6 @@
                 }
 
                 /*** 子表管理结束 */
-
 
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);

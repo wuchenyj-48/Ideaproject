@@ -131,28 +131,18 @@
                 let model = {}
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
-                    let data = $.extend({}, formData)
-                    form.val("editForm", data)
-                    model = data
-                    if ($strings.isNotBlank(model.id)) {
-                        $(".form-reset").hide()
-                        renderUploader(data.limitFileExtension, data.maxiumFileSize, data.maxiumFileCount)
-                    }
-                    window.renderExpiryDate(data.needExpiryDate)
-
-
-                    /*model = $.extend({}, formData)
+                    model = $.extend({}, formData)
 
                     $(".form-reset").click()
                     form.val("editForm", model)
 
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
-                        renderUploader(data.limitFileExtension, data.maxiumFileSize, data.maxiumFileCount)
+                        renderUploader(model.limitFileExtension, model.maxiumFileSize, model.maxiumFileCount)
                     } else {
                         $(".form-reset").show()
                     }
-                    window.renderExpiryDate(data.needExpiryDate)*/
+                    window.renderExpiryDate(model.needExpiryDate)
                 }
 
                 /**
@@ -238,7 +228,7 @@
 
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({docIds: model.docIds}, data.field)
+                    data.field = layui.$.extend({}, data.field)
 
                     let promise = $http.post("/cert/certificate_repositorys/upgrade", data.field)
                     promise.then(resp => {

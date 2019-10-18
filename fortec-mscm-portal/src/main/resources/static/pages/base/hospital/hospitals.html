@@ -16,6 +16,10 @@
                             </button>
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
+                                    <input type="text" name="code" placeholder="请输入医院代码" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                                <div class="layui-input-inline">
                                     <input type="text" name="name" placeholder="请输入医院名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
@@ -71,6 +75,7 @@
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
+                        {field: 'code', title: '医院代码', align: 'center'},
                         {field: 'name', title: '医院名称', align: 'center'},
                         {field: 'shortName', title: '简称', align: 'center'},
                         {field: 'pinyin', title: '拼音', align: 'center'},

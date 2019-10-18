@@ -138,11 +138,11 @@
 
                     if ($strings.isNotBlank(model.id)) {
                         $(".form-reset").hide()
-                        renderUploader(data.limitFileExtension, data.maxiumFileSize, data.maxiumFileCount)
+                        renderUploader(model.limitFileExtension, model.maxiumFileSize, model.maxiumFileCount)
                     } else {
                         $(".form-reset").show()
                     }
-                    window.renderExpiryDate(data.needExpiryDate)
+                    window.renderExpiryDate(model.needExpiryDate)
                 }
 
                 /**
@@ -188,7 +188,6 @@
                             uploader: ".uploader.uploader1",  //上传区域容器选择器
                             edit: true,
                             fileSize: maxiumFileCount,  //文件总个数, -1时无限制
-                            // [{name:string, src: string, attrs: {}}]
                             serverFiles: model.docIds == null ? [] : model.docIds.map(o => {
                                 return {
                                     id: o,
@@ -228,7 +227,7 @@
 
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
-                    data.field = layui.$.extend({docIds: model.docIds}, data.field)
+                    data.field = layui.$.extend({}, data.field)
 
                     let promise = $http.post("/cert/certificate_repositorys/upgrade", data.field)
                     promise.then(resp => {

@@ -9,6 +9,9 @@
             <if test="dto.supplierId != null and dto.supplierId != ''">
                and b.supplier_id = #{dto.supplierId}
             </if>
+            <if test="dto.hospitalId != null and dto.hospitalId != ''">
+                and b.hospital_id = #{dto.hospitalId}
+            </if>
             <if test="dto.code != null and dto.code != ''">
                 and b.code like concat( '%', #{dto.code}, '%')
             </if>

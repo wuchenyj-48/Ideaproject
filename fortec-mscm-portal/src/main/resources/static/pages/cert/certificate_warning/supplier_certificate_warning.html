@@ -87,12 +87,12 @@
                                 return `<div>${$global.getDictLabel('cert_business_type', item.businessTypeCode)}</div>`;
                             }
                         },
-                        { field: 'certificateName', title: '资质名称', align: 'center'},
+                        { field: 'certificateName', title: '资质名称', align: 'center',width:270},
                         { field: 'certificateNo', title: '资质编号', align: 'center'},
                         { field: 'expiryDate', title: '有效期', align: 'center'},
                         { field: 'certificateSign', title: '签发方', align: 'center'},
                         { field: 'certificateSignTo', title: '签发给', align: 'center'},
-                        { title: '状态', align: 'center',
+                        { title: '状态', align: 'center',width: 90,
                             templet(item) {
                                 if(new Date(item.expiryDate) <= new Date()){
                                     return '<div><span style="color: red">已过期</span></div>'
@@ -100,7 +100,7 @@
                                 return `<div>正常</div>`;
                             }
                         },
-                        { field: 'version', title: '当前版本号', align: 'center'},
+                        { field: 'version', title: '当前版本号', align: 'center',width: 110},
                         {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 250, align: 'center', fixed: 'right'}
                     ]]
                 });
@@ -133,6 +133,7 @@
                         id: "certificate_repository_historys",
                         side: true,
                         title: `${row.certificateName}历史资质`,
+                        area: ["50%" , "100%"],
                         type: 2,
                         content: [`./certificate_repository_historys.html?certificateRepositoryId=${row.id}`],
                         success(layero, index) {
@@ -147,6 +148,7 @@
                         id: "supplier_certificate_warning_form",
                         side: true,
                         title: "资质升级",
+                        area: ["50%" , "100%"],
                         type: 2,
                         content: ['./supplier_certificate_warning_form.html'],
                         success(layero, index) {
@@ -161,6 +163,7 @@
                         id: "viewCert",
                         side: true,
                         title: "资质查看",
+                        area: ["50%" , "100%"],
                         type: 2,
                         content: ['./viewCert.html'],
                         success(layero, index) {

@@ -158,24 +158,9 @@
                     </div>
                 </div>
             </div>
-
-
-
         </div>
 
         <!-- 子表管理模板 开始  -->
-        <script type="text/html" id="codeTpl">
-            <input type="text" data-name="code" value="{{d.code ? d.code : ''}}"
-                   lay-filter="code"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
-                   class="layui-input custom-input"/>
-        </script>
-        <script type="text/html" id="nameTpl">
-            <input type="text" data-name="name" value="{{d.name ? d.name : ''}}"
-                   lay-filter="name"
-                   data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="required"
-                   class="layui-input custom-input"/>
-        </script>
         <script type="text/html" id="hospitalLocationCellToolbar">
             {{#  if($strings.isBlank(d.id)){ }}
             <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
@@ -219,8 +204,8 @@
                             height: 400,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                {field: 'code', title: '仓库代码', align: 'center', templet: "#codeTpl"},
-                                {field: 'name', title: '仓库名称', align: 'center', templet: "#nameTpl"},
+                                {field: 'code', title: '仓库代码', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
+                                {field: 'name', title: '仓库名称', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
                                 {
                                     field: 'LAY_CELL_TOOLBAR',
                                     title: '操作',

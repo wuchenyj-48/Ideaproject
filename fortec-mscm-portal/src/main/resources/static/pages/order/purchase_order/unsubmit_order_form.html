@@ -468,6 +468,11 @@
                 })
 
                 $(".form-submit-order").click(() => {
+                    let rows = layui.table.getRows('purchase_order_item_table')
+                    if (rows.length == 0){
+                        layer.error("采购订单明细为空，不允许提交")
+                        return
+                    }
                     layer.confirm('确定提交么', function (index) {
                         $http.post(`/order/purchase_orders/submit_order/` + model.id).then(resp => {
                             if (!resp.data.success) {

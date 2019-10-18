@@ -2,15 +2,14 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>综合查询</title>
     </head>
     <body>
-
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">供方资格审核</div>
+                        <div class="layui-card-header">综合查询</div>
                         <div class="layui-card-body">
 
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
@@ -22,6 +21,12 @@
                                     <input type="text" name="supplierName" placeholder="请输入供应商名称" autocomplete="off"
                                            class="layui-input">
                                 </div>
+                                <div class="layui-input-inline">
+                                    <select name="status">
+                                        <option value="">请选择单据状态</option>
+                                    </select>
+                                </div>
+
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
                                         lay-filter="list">
                                     <i class="layui-icon layui-icon-search"></i> 查询
@@ -38,16 +43,9 @@
             </div>
         </div>
 
-        <script type="text/html" id="headToolbar">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
-                    <i class="layui-icon layui-icon-add-1"></i>添加
-                </button>
-            </div>
-        </script>
-
         <script type="text/html" id="cellToolbar">
-            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">查看</a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="view">查看</a>
+
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -55,7 +53,7 @@
         <script>
 
             extendParentScriptsAndStyles(() => {
-                let table = layui.table, $ = layui.$, form = layui.form;
+                let table = layui.table, $ = layui.$, form = layui.form
 
                 window.reloadTable = () => {
                     table.reload('listTable', {
@@ -66,15 +64,15 @@
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
-                    title: 'SupplierApplicant信息',
+                    title: 'MaterialApplicant信息',
                     height: 'full-160',
-                    url: '/base/supplier_applicants/pageAudit?status=1',
+                    url: '/base/material_applicants/pageAudit',
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},
                         {field: 'code', title: '单据号', align: 'center'},
                         {field: 'supplierName', title: '供应商名称', align: 'center'},
-                        {field: 'remark', title: '说明', align: 'center'},
+                        {field: 'remark', title: '申请说明', align: 'center'},
                         {
                             field: 'status', title: '单据状态', align: 'center',
                             templet(item) {
@@ -85,9 +83,9 @@
                         {field: 'auditor', title: '审核人', align: 'center'},
                         {field: 'auditedRemark', title: '审核备注', align: 'center'},
                         {
-                            field: "LAY_CELL_TOOLBAR",
+                            field: "LAY_CELL_TOOL_BAR",
                             title: '操作',
-                            templet: '#cellToolbar',
+                            toolbar: '#cellToolbar',
                             width: 150,
                             align: 'center',
                             fixed: 'right'
@@ -101,14 +99,13 @@
                 })
                 form.render('select')
 
-                //查看
-                window.edit = (data) => {
+                window.view = (data) => {
                     let index = layer.open({
-                        id: "supplier_audit_form",
+                        id: "general_form",
                         side: true,
-                        title: data.supplierName+"资质信息",
+                        title: "供货申请信息",
                         type: 2,
-                        content: ['./supplier_audit_form.html?supplierId='+data.supplierId],
+                        content: ['./general_form.html'],
                         success(layero, index) {
                             let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                             iframeWin && iframeWin.initForm(data)
@@ -128,25 +125,21 @@
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
 
-
-                layui.$(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({isNew: true});
-                    }
-                });
                 //监听行双击事件
                 table.on('rowDouble(listTable)', function (obj) {
                     let rowIndex = obj.tr[0].getAttribute("data-index")
-                    window.edit(obj.data, rowIndex)
+                    window.view(obj.data, rowIndex)
                 });
+
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
                     var data = obj.data;
-                    if (obj.event === 'edit') {
-                        window.edit(obj.data)
+                    if (obj.event === 'del') {
+                        window.view(data)
                     }
                 });
+
+
             })
 
         </script>

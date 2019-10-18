@@ -44,8 +44,6 @@
                 <div class="layui-row ">
                     <div class="layui-form-item">
                         <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-sm layui-btn form-pass" type="button">通过</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-danger form-cancel" type="button">取消</button>
                             <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">关闭</button>
                         </div>
                     </div>
@@ -94,36 +92,6 @@
                     parent.layer.close(index);
                 })
 
-                $(".form-pass").click(() => {
-                    layer.confirm('确定通过么', function (index) {
-                        $http.post(`/base/supplier_applicants/pass/` + model.id).then(resp => {
-                            if (!resp.data.success) {
-                                layer.error(resp.data.msg)
-                                return
-                            }
-                            layer.success(resp.data.msg)
-                            parent.reloadTable()
-                            var index = parent.layer.getFrameIndex(window.name);
-                            parent.layer.close(index);
-                        })
-                    });
-                })
-
-                $(".form-cancel").click(() => {
-                    layer.prompt({title: '请输入取消原因，并确定', formType: 2}, function (val, index) {
-
-                        $http.post(`/base/supplier_applicants/cancel/` + model.id + "/" + val).then(resp => {
-                            if (!resp.data.success) {
-                                layer.error(resp.data.msg)
-                                return
-                            }
-                            layer.success(resp.data.msg)
-                            parent.reloadTable()
-                            let index = parent.layer.getFrameIndex(window.name);
-                            parent.layer.close(index);
-                        })
-                    });
-                })
                 window.reloadSupplierAuditItemTable = () => {
                     let params = $global.getUrlParams()
                     table.render({
@@ -146,7 +114,26 @@
                             {field: 'version', title: '当前版本号', align: 'center'},
                         ]]
                     });
+                }
 
+                //监听行双击事件
+                table.on('rowDouble(listTable)', function (obj) {
+                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                    window.view(obj.data, rowIndex)
+                });
+
+                window.view = (data) => {
+                    let index = parent.layer.open({
+                        id: "viewCert",
+                        side: true,
+                        title: "资质查看",
+                        type: 2,
+                        content: ['./viewCert.html'],
+                        success(layero, index) {
+                            let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            iframeWin && iframeWin.initForm(data)
+                        }
+                    });
                 }
 
                 layui.$(document).on("click", "[lay-id='listTable'] .layui-btn", function () {
@@ -160,17 +147,8 @@
                     let rows = layui.table.getRows('listTable')
                     let row = rows[index]
 
-                    parent.layer.open({
-                        id: "viewCert",
-                        side: true,
-                        title: "资质查看",
-                        type: 2,
-                        content: ['./viewCert.html'],
-                        success(layero, index) {
-                            let iframeWin = parent.window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                            iframeWin && iframeWin.initForm(row)
-                        }
-                    });
+                    window.view(row)
+
                 });
 
             })

@@ -24,8 +24,10 @@ public class MaterialApplicantQueryRequest extends PageRequest {
     /** 单据状态 */
     private Integer status;
 
+    /** 医院名称 */
     private String hospitalName;
 
+    /** 供应商名称 */
     private String supplierName;
 
 }
