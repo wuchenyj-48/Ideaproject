@@ -11,9 +11,6 @@
                     <div class="layui-card">
                         <div class="layui-card-header">发货单管理</div>
                         <div class="layui-card-body">
-<!--                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">-->
-<!--                                <i class="layui-icon layui-icon-add-1"></i> 新增-->
-<!--                            </button>-->
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
                                     <input type="text" name="code" placeholder="请输入发货单号" autocomplete="off"
@@ -54,7 +51,6 @@
 
         <script type="text/html" id="cellToolbar">
             <a class="layui-btn layui-btn-xs" lay-event="edit">详细</a>
-<!--            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
         </script>
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
@@ -128,14 +124,12 @@
                     ]]
                 });
 
-
-
                 window.edit = (data, rowIndex) => {
                     let index = layer.open({
                         id: "all_delivery_form",
                         side: true,
                         title: "查看发货单",
-                        area: ["60%","100%"],
+                        area: ["100%","100%"],
                         type: 2,
                         content: ['./all_delivery_form.html'],
                         success(layero, index) {
