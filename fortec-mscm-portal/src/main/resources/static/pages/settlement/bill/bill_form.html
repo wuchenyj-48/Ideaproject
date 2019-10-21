@@ -236,24 +236,18 @@
                 }
 
                 //渲染供应商名称
-                layui.tableSelect.render({
-                    id: 'supplierName',
+                layui.tableSelect.renderOpenTable({
                     elem: '#supplierName',	//定义输入框input对象 必填
-                    checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                    searchKey: 'keywords',	//搜索输入框的name值 默认keyword
-                    searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
-                    table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                        url: '/base/hospital_suppliers/page_by_keywords_for_hospital',
-                        cols: [[
-                            {type: 'radio'},
-                            {field: 'supplierName', title: '供应商名称'}
-                        ]]
+                    title: "供应商选择",
+                    component: "/components/base/hospital_supplier_select.html",
+                    where: {
+                        inactive: 0
                     },
-                    done(elem, data) {
-                        model.supplierId = data.data.length > 0 ? data.data[0].supplierId : null
-                        layui.each(data.data, function (index, item) {
+                    onConfirm(rows, elem) {
+                        model.supplierId = rows.length > 0 ? rows[0].supplierId : null
+                        layui.each(rows, function (index, item) {
                             $("form input[name='supplierId']").val(model.supplierId)
-                            elem.val(item.supplierName)
+                            $("form input[name='supplierName']").val(item.supplierName)
                         })
                     }
                 })
@@ -302,61 +296,48 @@
                  *  渲染记账单明细选择框
                  */
                 window.renderItemSelect = () => {
-                    let data = layui.table.getRows('bill_item_table')
-                    for (let i = 0; i < data.length; i++) {
-                        //渲染规格
-                        layui.tableSelect.render({
-                            id: `billItemSelect${i}`,
-                            elem: `[data-name='itemSelect'][data-index='${i}']`,	//定义输入框input对象 必填
-                            checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
-                            searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
-                            table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-                                url: `/base/hospital_materials/page_by_keywords?isConsignment=${model.isConsignment}&isOneThingOneYard=${model.isOneThingOneYard}&supplierId=${model.supplierId}`,
-                                cols: [[
-                                    {type: 'checkbox'},
-                                    {field: 'materialName', title: '商品名称'},
-                                    {field: 'materialSpec', title: '规格'},
-                                    {field: 'price', title: '价格(元)'}
-                                ]]
-                            },
-                            done(elem, data) {
-                                // 当前点击行
-                                let startIndex = parseInt(elem[0].getAttribute("data-index"))
+                    layui.tableSelect.renderOpenTable({
+                        elem: `[data-name='itemSelect']`,	//定义输入框input对象 必填
+                        title: "医院商品选择",
+                        component: "/components/base/hospital_material_select.html",
+                        allowMultiple: true,
+                        where: {
+                            isConsignment: model.isConsignment,
+                            isOneThingOneYard: model.isOneThingOneYard,
+                            supplierId: model.supplierId,
+                            inactive: 0
+                        },
+                        onConfirm(rows, elem) {
+                            // 当前点击行
+                            let startIndex = parseInt(elem.getAttribute("data-index"))
 
-                                // 表格所有数据
-                                let tableRows = layui.table.getRows('bill_item_table')
-                                // 当前选中数据
-                                let checkedRows = data.data
+                            // 表格所有数据
+                            let tableRows = layui.table.getRows('bill_item_table')
 
-                                let newFlag = false
-                                for (let j = 0; j < checkedRows.length; j++) {
-                                    let rowIndex = startIndex + j
+                            let newFlag = false
+                            for (let j = 0; j < rows.length; j++) {
+                                let rowIndex = startIndex + j
 
-                                    if (rowIndex > tableRows.length - 1) {
-                                        layui.table.addRow('bill_item_table', tableRows.length, {})
-                                        tableRows = layui.table.getRows('bill_item_table')
-                                        newFlag = true
-                                    }
-                                    let newData = {}
-                                    $.extend(newData, checkedRows[j])
-                                    $.extend(newData, {
-                                        billId: model.id,
-                                        subtotalAmount: null,
-                                        qty: null,
-                                        lot: null,
-                                        id: tableRows[rowIndex].id ? tableRows[rowIndex].id : null
-                                    })
-                                    console.log(newData)
-                                    // 重新渲染单行数据
-                                    layui.table.renderSpecRow('bill_item_table', rowIndex, newData)
+                                if (rowIndex > tableRows.length - 1) {
+                                    layui.table.addRow('bill_item_table', tableRows.length, {})
+                                    tableRows = layui.table.getRows('bill_item_table')
+                                    newFlag = true
                                 }
-                                if (newFlag) {
-                                    // 当有新增行数时，表格会被重载，需重新进行选择渲染
-                                    window.renderItemSelect()
-                                }
+                                let newData = {}
+                                $.extend(newData, rows[j])
+                                $.extend(newData, {
+                                    billId: model.id,
+                                    subtotalAmount: null,
+                                    qty: null,
+                                    lot: null,
+                                    id: tableRows[rowIndex].id ? tableRows[rowIndex].id : null
+                                })
+
+                                // 重新渲染单行数据
+                                layui.table.renderSpecRow('bill_item_table', rowIndex, newData)
                             }
-                        })
-                    }
+                        }
+                    })
                 }
 
                 // 监听数量输入框
