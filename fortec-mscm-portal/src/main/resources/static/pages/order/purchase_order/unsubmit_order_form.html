@@ -62,7 +62,7 @@
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="supplierName" id="supplierName" required
-                                   lay-verify="required" placeholder="请输入供应商名称"
+                                   lay-verify="required" placeholder="请选择供应商"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                         <div class="layui-input-block">
                             <input type="text" name="warehouseName" id="warehouseName" readonly required
                                    lay-verify="required"
-                                   placeholder="请输入送达地点名称"
+                                   placeholder="请选择送达地点"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -112,10 +112,13 @@
                 <div class="layui-row ">
                     <div class="layui-form-item">
                         <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="*">保存
+                            </button>
                             <button class="layui-btn layui-btn-sm form-submit-order" type="button">提交</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="button">重置</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">关闭</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="button">重置
+                            </button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">关闭
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -129,14 +132,15 @@
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <div id="purchaseOrderItemToolbar">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
                                     lay-event="addNewLine">
                                 <i class="layui-icon layui-icon-add-1"></i> 增行
                             </button>
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                    lay-event="batchSave">
                                 <i class="layui-icon layui-icon-save"></i> 批量保存
                             </button>
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="refresh">
                                 <i class="layui-icon layui-icon-refresh"></i> 刷新
                             </button>
                         </div>
@@ -187,7 +191,8 @@
         <script>
 
             let mainFunction = () => {
-                let form = layui.form, $ = layui.$, laydate = layui.laydate, table = layui.table, tableSelect = layui.tableSelect
+                let form = layui.form, $ = layui.$, laydate = layui.laydate, table = layui.table,
+                    tableSelect = layui.tableSelect
 
                 let model = {}
 
@@ -299,8 +304,9 @@
 
                 laydate.render({
                     id: 'gmtRequireLatestDelivery',
-                    elem: '#gmtRequireLatestDelivery'
-                    , min: 'new Date()'
+                    elem: '#gmtRequireLatestDelivery',
+                    type: 'datetime',
+                    min: 'new Date()'
                 });
 
                 // 渲染下拉框 数据
@@ -398,7 +404,6 @@
                 }
 
 
-
                 // 监听子表的列工具栏
                 layui.table.on('tool(purchase_order_item_table)', function (obj) {
                     // 获取行索引
@@ -469,7 +474,7 @@
 
                 $(".form-submit-order").click(() => {
                     let rows = layui.table.getRows('purchase_order_item_table')
-                    if (rows.length == 0){
+                    if (rows.length == 0) {
                         layer.error("采购订单明细为空，不允许提交")
                         return
                     }

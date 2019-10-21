@@ -172,6 +172,7 @@ public class SupplierServiceImpl extends BaseServiceImpl<SupplierMapper, Supplie
                             .setNickname(entity.getName())
                             .setEmail(entity.getEmail())
                             .setMobile(entity.getMobile())
+                            .setRoles(new String[]{"suuplier_manager"})
                             .setRemark("供应商" + entity.getName() + "主账号");
                     UserInfoVO vo = userClient.addUser(infoDTO);
                     if (vo == null) {
