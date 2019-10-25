@@ -21,7 +21,6 @@
 
             <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
-
                 <#assign rowSpan=0 >
                 <#-- 默认为新行标志 -->
                 <#assign newRowFlag=true>
@@ -43,73 +42,73 @@
                         </#if>
                 <#--输出新行信息-->
             <div class="layui-row layui-col-space5 layui-form-item">
-                    <div class="layui-col-xs12">
-                        <label class="layui-form-label <#if c.isNull == 0>layui-required</#if>">
-                             ${c.comments}
-                        </label>
-                        <div class="layui-input-block">
-                            <#if showType == 'input'>
-                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required</#if> lay-verify="${vc(c.isNull,c.validators)}" placeholder="请输入${c.comments}"
-                                   autocomplete="off" class="layui-input">
-                            <#elseif showType == 'textarea'>
-                            <textarea name="${c.attrName}"  placeholder="请输入${c.comments}" class="layui-textarea"></textarea>
-                            <#elseif showType == 'select'>
-                            <select name="${c.attrName}"></select>
-                            <#elseif showType == 'select_multiple'>
+                <div class="layui-col-xs12">
+                    <label class="layui-form-label <#if c.isNull == 0>layui-required</#if>">
+                         ${c.comments}
+                    </label>
+                    <div class="layui-input-block">
+                        <#if showType == 'input'>
+                        <input type="text" name="${c.attrName}" <#if c.isNull == 0>required</#if> lay-verify="${vc(c.isNull,c.validators)}" placeholder="请输入${c.comments}"
+                               autocomplete="off" class="layui-input">
+                        <#elseif showType == 'textarea'>
+                        <textarea name="${c.attrName}"  placeholder="请输入${c.comments}" class="layui-textarea"></textarea>
+                        <#elseif showType == 'select'>
+                        <select name="${c.attrName}"></select>
+                        <#elseif showType == 'select_multiple'>
 
-                            <#elseif showType == 'radio'>
-                            <div id="${c.attrName}Div"></div>
-                            <#elseif showType == 'checkbox'>
-                            <div id="${c.attrName}Div"></div>
-                            <#elseif showType == 'switch'>
-                            <input type="checkbox" name="${c.attrName}" lay-skin="switch" lay-text="是|否">
-                            <#elseif showType == 'date'>
-                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
-                            <#elseif showType == 'datetime'>
-                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
-                            </#if>
-                        </div>
+                        <#elseif showType == 'radio'>
+                        <div id="${c.attrName}Div"></div>
+                        <#elseif showType == 'checkbox'>
+                        <div id="${c.attrName}Div"></div>
+                        <#elseif showType == 'switch'>
+                        <input type="checkbox" name="${c.attrName}" lay-skin="switch" lay-text="是|否">
+                        <#elseif showType == 'date'>
+                        <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                        <#elseif showType == 'datetime'>
+                        <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                        </#if>
                     </div>
                 </div>
+            </div>
                             <#assign newRowFlag=true>
                             <#assign rowSpan=0>
                             <#continue>
                     </#if>
 
                     <#if newRowFlag>
-                   <div class="layui-row layui-col-space5 layui-form-item">
+            <div class="layui-row layui-col-space5 layui-form-item">
                         <#assign newRowFlag=false>
                    </#if>
-                   <div class="layui-col-xs${c.colSpan}">
-                        <label class="layui-form-label <#if c.isNull == 0>layui-required</#if>">
-                             ${c.comments}
-                        </label>
-                        <div class="layui-input-block">
-                            <#if showType == 'input'>
-                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required</#if> lay-verify="${vc(c.isNull,c.validators)}" placeholder="请输入${c.comments}"
-                                   autocomplete="off" class="layui-input">
-                            <#elseif showType == 'textarea'>
-                            <textarea name="${c.attrName}"  placeholder="请输入${c.comments}" class="layui-textarea"></textarea>
-                            <#elseif showType == 'select'>
-                            <select name="${c.attrName}"></select>
-                            <#elseif showType == 'select_multiple'>
+               <div class="layui-col-xs${c.colSpan}">
+                    <label class="layui-form-label <#if c.isNull == 0>layui-required</#if>">
+                         ${c.comments}
+                    </label>
+                    <div class="layui-input-block">
+                        <#if showType == 'input'>
+                        <input type="text" name="${c.attrName}" <#if c.isNull == 0>required</#if> lay-verify="${vc(c.isNull,c.validators)}" placeholder="请输入${c.comments}"
+                               autocomplete="off" class="layui-input">
+                        <#elseif showType == 'textarea'>
+                        <textarea name="${c.attrName}"  placeholder="请输入${c.comments}" class="layui-textarea"></textarea>
+                        <#elseif showType == 'select'>
+                        <select name="${c.attrName}"></select>
+                        <#elseif showType == 'select_multiple'>
 
-                            <#elseif showType == 'radio'>
-                            <div id="${c.attrName}Div"></div>
-                            <#elseif showType == 'checkbox'>
-                            <div id="${c.attrName}Div"></div>
-                            <#elseif showType == 'switch'>
-                            <input type="checkbox" name="${c.attrName}" lay-skin="switch" lay-text="是|否">
-                            <#elseif showType == 'date'>
-                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
-                            <#elseif showType == 'datetime'>
-                            <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>   placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
-                            </#if>
-                        </div>
-                   </div>
-                        <#assign rowSpan = rowSpan + c.colSpan?number >
-                        <#if (rowSpan >= 12)>
-                </div>
+                        <#elseif showType == 'radio'>
+                        <div id="${c.attrName}Div"></div>
+                        <#elseif showType == 'checkbox'>
+                        <div id="${c.attrName}Div"></div>
+                        <#elseif showType == 'switch'>
+                        <input type="checkbox" name="${c.attrName}" lay-skin="switch" lay-text="是|否">
+                        <#elseif showType == 'date'>
+                        <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>  placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                        <#elseif showType == 'datetime'>
+                        <input type="text" name="${c.attrName}" <#if c.isNull == 0>required lay-verify="required"</#if>   placeholder="请选择${c.comments}" autocomplete="off" class="layui-input">
+                        </#if>
+                    </div>
+               </div>
+                    <#assign rowSpan = rowSpan + c.colSpan?number >
+                    <#if (rowSpan >= 12)>
+            </div>
                             <#assign rowSpan=0 >
                             <#assign newRowFlag=true>
                         </#if>
@@ -141,39 +140,44 @@
                 window.initForm = (formData) => {
                     // 必须要重新创建对象，原因未知
                     model = $.extend({}, formData)
-
                     $(".form-reset").click()
                     form.val("editForm", model)
 
-                    if ($strings.isNotBlank(model.id)) {
+                    <#list table.columns as c>
+                        <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'radio' || c.showType == 'checkbox')>
+                    // 必须先清除，否则赋值的时候会选中第一个checkbox
+                    let ${c.attrName} = $strings.defaultString(model.${c.attrName}).split(",")
+                    $(`[name='${c.attrName}']`).removeAttr("checked")
+                    ${c.attrName}.forEach(o => $(`[name='${c.attrName}'][value='${o}']`).prop("checked", "checked"))
+                    form.render("checkbox")
+                        </#if>
+                    </#list>
+
+                    if (model.isNew) {
                         $(".form-reset").hide()
                     }else{
                         $(".form-reset").show()
                     }
                 }
 
-                // 渲染表单元素
-                let renderElement = () => {
-                    // 渲染下拉框 数据
-                    $("select[name='type']").empty()
-                    $global.getDictDataList('upms_menu_type').forEach(o => {
-                        $("select[name='type']").append(`<option value='${o.value}' ${o.value == model.type ? 'selected' : ''}>${o.label}</option>`)
-                    })
-
-                    $("select[name='isShow']").empty()
-                    $global.getDictDataList('common_yes_no').forEach(o => {
-                        $("select[name='isShow']").append(`<option value='${o.value}' ${o.value == model.isShow ? 'selected' : ''}>${o.label}</option>`)
-                    })
-                }
-
+                // 渲染下拉框 数据
+                <#list table.columns as c>
+                    <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && c.showType == 'select'>
+                $("select[name='${c.attrName}']").empty()
+                        <#if c.isNull == 1>
+                $("select[name='${c.attrName}']").append('<option>请选择</option>')
+                        </#if>
+                $global.getDictDataList('${c.dictType!""}').forEach(o => {
+                    $("select[name='${c.attrName}']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                })
+                    </#if>
+                </#list>
+                form.render('select')
 
                 // 渲染单选框/多选框 数据
                 <#list table.columns as c>
                     <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'radio' || c.showType == 'checkbox')>
                 $("#${c.attrName}Div").empty()
-                        <#if c.isNull == 1>
-                $("#${c.attrName}Div").append('<option>请选择</option>')
-                        </#if>
                 $global.getDictDataList('${c.dictType!""}').forEach(o => {
                     $("#${c.attrName}Div").append(`<input type="${c.showType}" name="${c.attrName}" value="${r"$"}{o.value}" title="${r"$"}{o.label}" /> `)
                 })
@@ -189,8 +193,10 @@
                 </#list>
 
                 $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
+                    $("#editForm")[0].reset()
+                    $("#editForm input[type='hidden']").val('')
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    form.render(null, "editForm")
                 })
                 $(".form-close").click(() => {
                     let index = parent.layer.getFrameIndex(window.name)
@@ -200,6 +206,11 @@
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     data.field = $.extend({}, data.field)
+                    <#list table.columns as c>
+                        <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'checkbox')>
+                    data.field.${c.attrName} = $("[name='${c.attrName}']:checked").map((index, elem) => $(elem).val()).get().join()
+                        </#if>
+                    </#list>
                     let promise = null
                     if (model.isNew) {
                         promise = $http.post("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)
@@ -213,7 +224,8 @@
                            return
                         }
                         layer.success(resp.data.msg)
-                        if($strings.isBlank(model.id)){
+                        if(model.isNew){
+                            model.isNew = false
                             initForm(resp.data.data, false)
                         }
                         parent.reloadTable()

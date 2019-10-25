@@ -72,6 +72,7 @@ public class HospitalServiceImpl extends BaseServiceImpl<HospitalMapper, Hospita
                 .setNickname(entity.getName())
                 .setEmail(entity.getEmail())
                 .setMobile(entity.getPhone())
+                .setRoles(new String[]{"hospital_manager"})
                 .setRemark("医院" + entity.getName() + "主账号");
         UserInfoVO vo = userClient.addUser(userDTO);
         if (vo == null) {

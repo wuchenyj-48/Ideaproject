@@ -47,8 +47,7 @@
                             制单人
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="creator" readonly lay-verify="" placeholder=""
-                                   autocomplete="off" class="layui-input">
+                            <input type="text" name="creator" readonly lay-verify="" placeholder="" autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-col-xs4">
@@ -56,8 +55,7 @@
                             制单时间
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="gmtCreate" readonly lay-verify="" placeholder="" autocomplete="off"
-                                   class="layui-input">
+                            <input type="text" name="gmtCreate" readonly lay-verify="" placeholder="" autocomplete="off" class="layui-input">
                         </div>
                     </div>
 
@@ -71,7 +69,7 @@
                         </label>
                         <div class="layui-input-block">
                             <input type="text" name="poCode" id="poCode" required lay-verify="required"
-                                   placeholder="请输入采购单号"
+                                   placeholder="请选择采购订单"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -168,14 +166,13 @@
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <div id="deliveryItemToolbar">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"
-                                    lay-event="addNewLine">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"lay-event="addNewLine">
                                 <i class="layui-icon layui-icon-add-1"></i> 增行
                             </button>
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchSave">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="batchSave">
                                 <i class="layui-icon layui-icon-save"></i> 批量保存
                             </button>
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="refresh">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="refresh">
                                 <i class="layui-icon layui-icon-refresh"></i> 刷新
                             </button>
                         </div>
@@ -196,29 +193,29 @@
 
         <script type="text/html" id="qtyTpl">
             {{#  if(layui.$('#isOneThingOneYard')[0].checked){ }}
-            <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
+            <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"  autocomplete="off"
                    data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required|integer" placeholder="必填"
                    class="layui-input custom-input"/>
             {{#  } else { }}
-            <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"
+            <input type="text" data-name="qty" value="{{d.qty ? d.qty : ''}}" lay-filter="qty"  autocomplete="off"
                    data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
             {{#  } }}
         </script>
         <script type="text/html" id="productionDateTpl">
-            <input type="text" data-name="productionDate" value="{{d.productionDate ? d.productionDate : ''}}"
+            <input type="text" data-name="productionDate" value="{{d.productionDate ? d.productionDate : ''}}"  autocomplete="off"
                    lay-filter="productionDate" id="{{'productionDate' + d.LAY_TABLE_INDEX}}"
                    data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="expiredDateTpl">
-            <input type="text" data-name="expiredDate" value="{{d.expiredDate ? d.expiredDate : ''}}"
+            <input type="text" data-name="expiredDate" value="{{d.expiredDate ? d.expiredDate : ''}}" autocomplete="off"
                    lay-filter="expiredDate" id="{{'expiredDate' + d.LAY_TABLE_INDEX}}"
                    data-index="{{d.LAY_TABLE_INDEX}}" required lay-verify="required" placeholder="必填"
                    class="layui-input custom-input"/>
         </script>
         <script type="text/html" id="sterilizationDateTpl">
-            <input type="text" data-name="sterilizationDate" value="{{d.sterilizationDate ? d.sterilizationDate : ''}}"
+            <input type="text" data-name="sterilizationDate" value="{{d.sterilizationDate ? d.sterilizationDate : ''}}"  autocomplete="off"
                    lay-filter="sterilizationDate" id="{{'sterilizationDate' + d.LAY_TABLE_INDEX}}"
                    data-index="{{d.LAY_TABLE_INDEX}}" lay-verify="" placeholder="选填"
                    class="layui-input custom-input"/>
@@ -273,7 +270,7 @@
                                 {field: 'materialSpec', title: '规格', align: 'center', width: 150},
                                 {field: 'form', title: '剂型', align: 'center', width: 80},
                                 {field: 'unit', title: '单位', align: 'center', width: 70},
-                                {field: 'price', title: '单价(元)', align: 'center', width: 70},
+                                {field: 'price', title: '单价(元)', align: 'center', width: 90},
                                 {field: 'shouldDeliveryQty', title: '应发', align: 'center', width: 70},
                                 {field: 'deliveredQty', title: '已发', align: 'center', width: 70},
                                 {field: 'qty', title: '本次实发', align: 'center', width: 90, templet: "#qtyTpl"},
@@ -351,6 +348,7 @@
                         $(".form-reset").show()
                         $(".child-tab").hide()
                         $(".form-delivery").hide();
+
                     }
 
                 };
@@ -575,6 +573,7 @@
                 $(".form-reset").click(() => {
                     $("form")[0].reset()
                     $("form input:hidden").val('')
+                    $("#poCode").removeAttr("disabled")
                 })
                 $(".form-close").click(() => {
                     let index = parent.layer.getFrameIndex(window.name)
