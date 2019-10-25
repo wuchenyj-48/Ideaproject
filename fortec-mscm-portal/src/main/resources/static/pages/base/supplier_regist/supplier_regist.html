@@ -143,6 +143,7 @@
                         <div class="layui-input-block">
                             <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="*">提交</button>
                             <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="button">重置</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">关闭</button>
                         </div>
                     </div>
                 </div>
@@ -191,7 +192,7 @@
                     })
                 })
                 $(".form-close").click(() => {
-                    var index = parent.layer.getFrameIndex(window.name);
+                    let index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 })
 

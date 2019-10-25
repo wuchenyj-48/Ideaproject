@@ -191,6 +191,10 @@
                     $("form")[0].reset()
                     $("form input:hidden").val('')
                 })
+                $(".form-close").click(() => {
+                    let index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                })
 
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
