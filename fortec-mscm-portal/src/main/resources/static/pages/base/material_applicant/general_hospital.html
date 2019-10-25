@@ -134,8 +134,9 @@
 
                 //监听行工具事件
                 table.on('tool(listTable)', function (obj) {
-                    var data = obj.data;
-                    if (obj.event === 'del') {
+                    debugger
+                    let data = obj.data;
+                    if (obj.event === 'view') {
                         window.view(data)
                     }
                 });
