@@ -111,6 +111,14 @@
                     title: '编辑品类信息',
                     height: 'full-160',
                     url: '/base/material_catalogs/page',
+                    toolbar: true,
+                    defaultToolbar: ["filter"],
+                    extToolbar: ["excel"],
+                    excel: {
+                        templateUrl: "/base/material_catalogs/excel/template",
+                        exportUrl: "/base/material_catalogs/excel/export",
+                        importUrl: "/base/material_catalogs/excel/import"
+                    },
                     page: {limit: 30},
                     cols: [[
                         {type: 'numbers', align: 'center', fixed: 'left'},
@@ -187,7 +195,7 @@
                         layer.msg("最多支持5级分类", {icon: 5})
                         return
                     }
-                    window.edit({parentId: data.id,parentName:data.name})
+                    window.edit({parentId: data.id,parentName:data.name,materialTypeCode:data.materialTypeCode})
                 }
 
                 //行编辑
@@ -228,7 +236,7 @@
              */
             extendParentScriptsAndStyles(() => {
                 // 加载外部JS ，如果和父级有依赖关系，必须通过此种方式
-                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js"], mainFunction)
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js","/lib/layui/lay.exts/layImportExcel.js"], mainFunction)
                 loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
             })
         </script>

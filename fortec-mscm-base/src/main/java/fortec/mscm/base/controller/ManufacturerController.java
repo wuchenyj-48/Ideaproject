@@ -33,13 +33,13 @@ public class ManufacturerController extends BaseController {
     @PostMapping
     public CommonResult add(@RequestBody @Valid Manufacturer entity) {
         boolean bSave = manufacturerService.add(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("社会信用代码不可重复");
+        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("厂商名称或社会信用代码不可重复");
     }
 
     @PutMapping
     public CommonResult update(@RequestBody @Valid Manufacturer entity) {
         boolean bUpdate = manufacturerService.update(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
+        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("厂商名称或社会信用代码不可重复");
     }
 
     @GetMapping("/page")

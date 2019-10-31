@@ -29,4 +29,42 @@
         </where>
         order by m.gmt_modified desc
     </select>
+    <select id="exportList" resultType="fortec.mscm.base.vo.MaterialVO">
+        select
+        m.*,
+        s.code as supplier_code,
+        s.name as supplier_name,
+        c.code as catalog_code,
+        c.name as catalog_name,
+        f.name as manufacturer_name
+        from
+        material m
+        left join supplier s on m.supplier_id = s.id
+        left join material_catalog c on m.catalog_id = c.id
+        left join manufacturer f on m.manufacturer_id = f.id
+        <where>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and s.id = #{request.supplierId}
+            </if>
+        </where>
+        order by m.gmt_modified desc
+    </select>
+    <select id="importList" resultType="fortec.mscm.base.vo.MaterialVO">
+        select
+        m.*,
+        c.code as catalog_code,
+        c.name as catalog_name,
+        f.name as manufacturer_name
+        from
+        material m
+        left join supplier s on m.supplier_id = s.id
+        left join material_catalog c on m.catalog_id = c.id
+        left join manufacturer f on m.manufacturer_id = f.id
+        <where>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and s.id = #{request.supplierId}
+            </if>
+        </where>
+        order by m.gmt_modified desc
+    </select>
 </mapper>

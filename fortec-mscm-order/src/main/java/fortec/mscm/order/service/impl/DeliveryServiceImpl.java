@@ -60,6 +60,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
     @Override
     public List<Delivery> list(DeliveryQueryRequest request) {
         List<Delivery> list = this.list(Wrappers.<Delivery>query()
+                .eq("supplier_id",UserUtils.getSupplierId())
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())
                 .eq("status", DictConsts.STATUS_DELIVERY_UNFILLED)
@@ -71,6 +72,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
     @Override
     public IPage<Delivery> page(DeliveryQueryRequest request) {
         IPage page = this.page(request.getPage(), Wrappers.<Delivery>query()
+                .eq("supplier_id",UserUtils.getSupplierId())
                 .eq(StringUtils.isBlank(request.getCode()), "status", DictConsts.STATUS_DELIVERY_UNFILLED)
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())
@@ -207,6 +209,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
     @Override
     public IPage<Delivery> sendPage(DeliveryQueryRequest request) {
         IPage page = this.page(request.getPage(), Wrappers.<Delivery>query()
+                .eq("supplier_id",UserUtils.getSupplierId())
                 .eq(StringUtils.isBlank(request.getCode()), "status", DictConsts.STATUS_DELIVERY_SENT)
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())
@@ -260,6 +263,7 @@ public class DeliveryServiceImpl extends BaseServiceImpl<DeliveryMapper, Deliver
     @Override
     public IPage allDeliveryPage(DeliveryQueryRequest request) {
         IPage page = this.page(request.getPage(), Wrappers.<Delivery>query()
+                .eq("supplier_id",UserUtils.getSupplierId())
                 .eq(StringUtils.isNotBlank(request.getStatus()), "status", request.getStatus())
                 .like(StringUtils.isNotBlank(request.getCode()), "code", request.getCode())
                 .like(StringUtils.isNotBlank(request.getPoCode()), "po_code", request.getPoCode())

@@ -4,7 +4,7 @@
     <select id="pageForTree" resultType="fortec.mscm.base.entity.MaterialCatalog">
         select
             mc.*,mc2.name as parent_name
-         from material_catalog mc
+        from material_catalog mc
         left join material_catalog mc2 on mc.parent_id = mc2.id
         <where>
             <if test="request.materialTypeCode != null and request.materialTypeCode != ''">
@@ -20,6 +20,13 @@
                 and mc.name like concat ('%',#{request.name},'%')
             </if>
         </where>
+        order by mc.gmt_modified desc
+    </select>
+    <select id="exportList" resultType="fortec.mscm.base.vo.MaterialCatalogVO">
+        select
+            mc.*,mc2.code as parent_code,mc2.name as parent_name
+        from material_catalog mc
+        left join material_catalog mc2 on mc.parent_id = mc2.id
         order by mc.gmt_modified desc
     </select>
 </mapper>

@@ -72,8 +72,7 @@ public class SupplierRegistController extends BaseController {
         if(!valid){
             return CommonResult.error("注册失败，手机号已注册");
         }
-        entity.setAuditStatus(SupplierRegist.AUDIT_STATUS_SUBMITED);
-        boolean bSave = supplierRegistService.saveCascadeById(entity);
+        boolean bSave = supplierRegistService.regist(entity);
         return bSave ? CommonResult.ok("注册成功", entity) : CommonResult.error("注册失败");
     }
 

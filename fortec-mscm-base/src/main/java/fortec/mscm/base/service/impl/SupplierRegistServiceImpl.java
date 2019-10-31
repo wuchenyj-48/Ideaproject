@@ -70,7 +70,13 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
      */
     @Override
     public boolean checkPhoneValid(String phone) {
-        return this.count(Wrappers.<SupplierRegist>query().eq("applicant_mobile", phone)) == 0;
+        return this.count(Wrappers.<SupplierRegist>query().eq("applicant_mobile", phone).ne("audit_status",SupplierRegist.AUDIT_STATUS_CANCELED)) == 0;
+    }
+
+    @Override
+    public boolean regist(SupplierRegist supplierRegist) {
+        supplierRegist.setAuditStatus(SupplierRegist.AUDIT_STATUS_SUBMITED);
+        return saveOrUpdate(supplierRegist);
     }
 
 
@@ -122,6 +128,7 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
                 .setNickname(regist.getName())
                 .setEmail(regist.getApplicantEmail())
                 .setMobile(regist.getApplicantMobile())
+                .setRoles(new String[]{"1159773410232754178"})
                 .setRemark("供应商" + regist.getName() + "主账号");
         UserInfoVO vo = userClient.addUser(infoDTO);
         if (vo == null) {

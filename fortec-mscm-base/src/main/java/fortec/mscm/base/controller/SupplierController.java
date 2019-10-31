@@ -99,8 +99,6 @@ public class SupplierController extends BaseController {
         return CommonResult.ok("查询成功",supplier);
     }
 
-
-
     @GetMapping({"/excel/export"})
     public void export(SupplierQueryRequest request) throws IOException {
         String fileName = "供应商信息" + DateUtils.format(DateUtils.now(), "yyyyMMddHHmmss") + ".xlsx";
@@ -113,7 +111,6 @@ public class SupplierController extends BaseController {
     public BatchImportResult importExcel( MultipartFile file) throws IOException {
         return this.supplierService.batchImport(file);
     }
-
 
 }
     

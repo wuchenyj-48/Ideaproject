@@ -27,7 +27,7 @@
                             <span class="required-star">*</span> 识别码
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="code" required lay-verify="required" placeholder="请输入识别码"
+                            <input type="text" name="code" readonly required lay-verify="required" placeholder="请输入识别码"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                             <span class="required-star">*</span> 统一社会信用代码
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="companyCode" required lay-verify="number|required"
+                            <input type="text" name="companyCode" required lay-verify="required|abc"
                                    placeholder="请输入统一社会信用代码"
                                    autocomplete="off" class="layui-input">
                         </div>
@@ -155,7 +155,7 @@
                             电话
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="phone" lay-verify="phone" placeholder="请输入电话"
+                            <input type="text" name="phone" lay-verify="Phone" placeholder="请输入电话"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -302,6 +302,14 @@
                         $(".child-tab").hide()
                     }
                 }
+
+                //自定义验证规则
+                form.verify({
+                    Phone: [
+                        /^$|^((0\d{2,3})-)?(\d{7,8})(-(\d{3,}))?$/
+                        ,'电话格式错误，请重新填写'
+                    ]
+                });
 
                 //渲染区域名称
                 dtree.renderOpenTree({

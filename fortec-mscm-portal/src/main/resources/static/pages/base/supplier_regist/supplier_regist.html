@@ -24,6 +24,18 @@
 
             <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
                 <input type="hidden" name="id" class="layui-input"/>
+               <!-- <div class="layui-row layui-col-space5 layui-form-item">
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label">
+                            识别码
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="code" required lay-verify="required"
+                                   placeholder="请输入识别码"
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>-->
 
                 <div class="layui-row layui-col-space5 layui-form-item">
                     <div class="layui-col-xs6">
@@ -192,8 +204,7 @@
                     })
                 })
                 $(".form-close").click(() => {
-                    let index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
+                    top.closeThisTab();
                 })
 
 
@@ -211,8 +222,8 @@
 
                     promise.then(resp => {
                         if (resp.data.success) {
-                            layer.success(resp.data.msg)
-                            $(".form-reset").click()
+                            top.layer.success(resp.data.msg)
+                            top.closeThisTab();
                         } else {
                             layer.error(resp.data.msg)
                         }

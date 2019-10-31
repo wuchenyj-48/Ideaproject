@@ -3,18 +3,22 @@ package fortec.mscm.base.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import fortec.common.core.model.CommonResult;
-import fortec.common.core.model.PageResult;
-import fortec.common.core.model.TreeModel;
-import fortec.common.core.model.TreeNode;
+import fortec.common.core.exceptions.BusinessException;
+import fortec.common.core.model.*;
 import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.utils.DateUtils;
+import fortec.common.core.utils.excel.ExportExcel;
+import fortec.mscm.base.dto.MaterialCatalogDTO;
 import fortec.mscm.base.entity.MaterialCatalog;
 import fortec.mscm.base.request.MaterialCatalogQueryRequest;
 import fortec.mscm.base.service.MaterialCatalogService;
+import fortec.mscm.base.vo.MaterialCatalogVO;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -80,6 +84,29 @@ public class MaterialCatalogController extends BaseController {
     public CommonResult deleteById(@PathVariable("id") String id) {
         boolean bRemove = materialCatalogService.deleteById(id);
         return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
+    }
+
+    @GetMapping( "excel/template")
+    public void importFileTemplate(MaterialCatalogQueryRequest request) {
+        try {
+            String fileName = "商品品类导入模板.xlsx";
+            new ExportExcel("商品品类信息", MaterialCatalogDTO.class, 2).setDataList(materialCatalogService.list(request)).write(response(), fileName).dispose();
+        } catch (Exception e) {
+            throw new BusinessException("导出模板失败", e);
+        }
+    }
+
+
+    @GetMapping({"/excel/export"})
+    public void export(MaterialCatalogQueryRequest request) throws IOException {
+        String fileName = "商品品类信息" + DateUtils.format(DateUtils.now(), "yyyyMMddHHmmss") + ".xlsx";
+        List<MaterialCatalogVO> list = this.materialCatalogService.exportList(request);
+        (new ExportExcel("商品品类信息", MaterialCatalogVO.class)).setDataList(list).write(this.response(), fileName).dispose();
+    }
+
+    @PostMapping({"/excel/import"})
+    public BatchImportResult importExcel(MultipartFile file) throws IOException {
+        return this.materialCatalogService.batchImport(file);
     }
 
 }

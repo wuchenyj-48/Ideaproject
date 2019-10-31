@@ -296,7 +296,7 @@
                                     editConfig: { form: "select", verify: "required", dict: "base_input_coding_type"}
                                 },
                                 {field: 'inputCode', title: '输入编码', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
-                                {field: 'form', title: '剂型', align: 'center', width: 80 ,editConfig: { form: "input", dict: "base_input_coding_type"}},
+                                {field: 'form', title: '剂型', align: 'center', width: 80 ,hide: model.materialTypeCode != 3, editConfig: { form: "input", dict: "base_input_coding_type"}},
                                 {field: 'unit', title: '单位', align: 'center', templet: "#unitTpl"},
                                 {field: 'price', title: '价格', align: 'center', width: 80 , editConfig: { form: "input", verify: "required", placeholder: "必填" }},
                                 {
@@ -448,6 +448,7 @@
 
 
             /*** 子表管理开始 */
+
             $("#materialSpecToolbar button[lay-event='addNewLine']").click(() => {
                 layui.table.addRow('material_spec_table', 0, {
                     inputCodingType: 0
@@ -518,7 +519,7 @@
                     data.materialId = model.id
                     data.isConsignment = $(`[data-name='isConsignment'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
                     data.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
-
+debugger
                     let promise = null
                     if ($strings.isBlank(data.id)) {
                         promise = $http.post("/base/material_specs/", data)
@@ -529,7 +530,7 @@
                     promise.then(resp => {
                         if (resp.data.success) {
                             layer.success(resp.data.msg)
-
+debugger
                             // 重新渲染单行数据
                             layui.table.renderSpecRow('material_spec_table', index, {
                                 id: resp.data.data.id
