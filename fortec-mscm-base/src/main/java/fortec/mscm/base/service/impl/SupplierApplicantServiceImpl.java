@@ -7,7 +7,7 @@ import com.google.common.collect.Maps;
 import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.msg.domain.SceneMessage;
 import fortec.common.core.msg.enums.ReceiverType;
-import fortec.common.core.msg.provider.MsgPushProvider;
+import fortec.common.core.msg.provider.ISceneMsgPushProvider;
 import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.DateUtils;
@@ -51,7 +51,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
 
     private final SupplierService supplierService;
 
-    private final MsgPushProvider msgPushProvider;
+    private final ISceneMsgPushProvider ISceneMsgPushProvider;
 
     private final HospitalService hospitalService;
 
@@ -159,7 +159,7 @@ public class SupplierApplicantServiceImpl extends BaseServiceImpl<SupplierApplic
         message.setSceneCode(MsgConsts.SCENE_SUPPLIER_APP_SUCCESS).setReceiver(supplier.getCode())
                 .setReceiverType(ReceiverType.USER).params(params);
 
-        msgPushProvider.push(message);
+        ISceneMsgPushProvider.push(message);
 
     }
 

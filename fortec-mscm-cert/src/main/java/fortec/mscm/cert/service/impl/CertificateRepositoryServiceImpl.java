@@ -8,7 +8,7 @@ import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.global.GlobalDictService;
 import fortec.common.core.msg.domain.SceneMessage;
 import fortec.common.core.msg.enums.ReceiverType;
-import fortec.common.core.msg.provider.MsgPushProvider;
+import fortec.common.core.msg.provider.ISceneMsgPushProvider;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.DateUtils;
 import fortec.common.core.utils.StringUtils;
@@ -59,7 +59,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
 
     private final SupplierClient supplierClient;
 
-    private final MsgPushProvider msgPushProvider;
+    private final ISceneMsgPushProvider ISceneMsgPushProvider;
 
     private final ManufacturerClient manufacturerClient;
 
@@ -357,7 +357,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         SceneMessage sm = new SceneMessage();
         sm.setSceneCode(scene).setReceiver(supplierVO.getCode())
                 .setReceiverType(ReceiverType.USER).params(params);
-        msgPushProvider.push(sm);
+        ISceneMsgPushProvider.push(sm);
     }
 
 
@@ -409,7 +409,7 @@ public class CertificateRepositoryServiceImpl extends BaseServiceImpl<Certificat
         message.setSceneCode(scene).setReceiver(supplierVO.getCode())
                 .setReceiverType(ReceiverType.USER).params(params);
 
-        msgPushProvider.push(message);
+        ISceneMsgPushProvider.push(message);
 
     }
 

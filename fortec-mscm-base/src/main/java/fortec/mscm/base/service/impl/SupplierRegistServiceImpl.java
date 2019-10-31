@@ -9,7 +9,7 @@ import fortec.common.core.exceptions.BusinessException;
 import fortec.common.core.global.GlobalParamService;
 import fortec.common.core.msg.domain.SceneMessage;
 import fortec.common.core.msg.enums.ReceiverType;
-import fortec.common.core.msg.provider.MsgPushProvider;
+import fortec.common.core.msg.provider.ISceneMsgPushProvider;
 import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.utils.DateUtils;
@@ -59,7 +59,7 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
 
     private final OfficeClient officeClient;
 
-    private final MsgPushProvider msgPushProvider;
+    private final ISceneMsgPushProvider ISceneMsgPushProvider;
 
     private final GlobalParamService globalParamService;
 
@@ -160,7 +160,7 @@ public class SupplierRegistServiceImpl extends BaseServiceImpl<SupplierRegistMap
         SceneMessage sm = new SceneMessage();
         sm.setSceneCode(MsgConsts.SCENE_SUPPLLIER_REG_SUCCESS).setReceiver(infoDTO.getLoginKey())
                 .setReceiverType(ReceiverType.USER).params(params);
-        msgPushProvider.push(sm);
+        ISceneMsgPushProvider.push(sm);
     }
 
     @Override
