@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Version: 1.0
  */
 @Configuration
-@ComponentScan({"fortec.mscm.base.service", "fortec.mscm.base.controller", "fortec.mscm.base.listener"})
+@ComponentScan({"fortec.mscm.base.service", "fortec.mscm.base.controller", "fortec.mscm.base.listener", "fortec.mscm.base.feign.controller"})
 @EnableTransactionManagement
 @EnableDiscoveryClient
 @EnableMscmFeignConfig

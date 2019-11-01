@@ -44,16 +44,14 @@ public class MaterialServiceImpl extends BaseServiceImpl<MaterialMapper, Materia
     private final MaterialCatalogService materialCatalogService;
 
     @Override
-    public IPage<Material> page(MaterialQueryRequest request) {
+    public IPage<MaterialVO> page(MaterialQueryRequest request) {
         request.setSupplierId(UserUtils.getSupplierId());
         return this.baseMapper.page(request.getPage(), request);
     }
 
     @Override
-    public List<Material> list(MaterialQueryRequest request) {
-        List<Material> list = this.list(Wrappers.<Material>query()
-                .orderByDesc("gmt_modified")
-        );
+    public List<MaterialVO> list(MaterialQueryRequest request) {
+        List<MaterialVO> list = this.baseMapper.list(request);
         return list;
     }
 
@@ -69,12 +67,6 @@ public class MaterialServiceImpl extends BaseServiceImpl<MaterialMapper, Materia
         return this.baseMapper.exportList(request);
     }
 
-
-    @Override
-    public boolean saveOrUpdate(Material entity) {
-        entity.setSupplierId(UserUtils.getSupplierId());
-        return super.saveOrUpdate(entity);
-    }
 
     public BatchImportResult batchImport(MultipartFile file) {
         BatchImportResult result = new BatchImportResult();

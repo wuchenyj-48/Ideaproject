@@ -118,7 +118,8 @@
                     } else {
                         $(".form-reset").show()
                     }
-                    if ($strings.isNotBlank(model.parentId)) {
+
+                    if (model.parentId != undefined && model.parentId != 0) {
                         $("select[name='materialTypeCode']").attr("disabled",true);
                     }
                 }

@@ -5,12 +5,11 @@ package fortec.mscm.order.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
-
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.order.entity.Delivery;
 import fortec.mscm.order.request.DeliveryQueryRequest;
 import fortec.mscm.order.service.DeliveryService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,31 +25,23 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/deliverys")
-public class DeliveryController extends BaseController {
-
-    private final DeliveryService deliveryService;
+public class DeliveryController extends CrudController<Delivery, String, DeliveryService> implements ImAndExAbleController<DeliveryQueryRequest> {
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid Delivery entity) {
-        boolean bSave = deliveryService.saveDeliverys(entity);
+        boolean bSave = service.saveDeliverys(entity);
         return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid Delivery entity) {
-        boolean bUpdate = deliveryService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
     @GetMapping("/page")
     public PageResult page(DeliveryQueryRequest request) {
-        IPage page = deliveryService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(DeliveryQueryRequest request) {
-        List<Delivery> list = deliveryService.list(request);
+        List<Delivery> list = service.list(request);
         return CommonResult.ok("查询成功", list);
     }
     /**
@@ -61,7 +52,7 @@ public class DeliveryController extends BaseController {
     @PostMapping("/{id}/delivery")
     public CommonResult delivery(@PathVariable("id") String id) {
 
-        boolean deliverStatusBool = deliveryService.updateDeliverStatus(id);
+        boolean deliverStatusBool = service.updateDeliverStatus(id);
         return deliverStatusBool ? CommonResult.ok("发货成功") : CommonResult.error("发货失败");
     }
 
@@ -73,26 +64,18 @@ public class DeliveryController extends BaseController {
     @PostMapping("/{id}/cancel_delivery")
     public CommonResult cancelDelivery(@PathVariable("id") String id) {
 
-        boolean cancelDeliverBool = deliveryService.cancelDelivery(id);
+        boolean cancelDeliverBool = service.cancelDelivery(id);
         return cancelDeliverBool ? CommonResult.ok("取消发货成功") : CommonResult.error("取消发货失败");
     }
 
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") String id) {
-        boolean bRemove = deliveryService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
-    }
-
-
     @GetMapping("/send_page")
     public PageResult sendPage(DeliveryQueryRequest request) {
-        IPage page = deliveryService.sendPage(request);
+        IPage page = service.sendPage(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
     @GetMapping("/all_delivery_page")
     public PageResult allDeliveryPage(DeliveryQueryRequest request) {
-        IPage page = deliveryService.allDeliveryPage(request);
+        IPage page = service.allDeliveryPage(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 }

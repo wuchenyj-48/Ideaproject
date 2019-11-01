@@ -519,7 +519,7 @@
                     data.materialId = model.id
                     data.isConsignment = $(`[data-name='isConsignment'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
                     data.isOneThingOneYard = $(`[data-name='isOneThingOneYard'][data-index='${data.LAY_TABLE_INDEX}']`)[0].checked ? "1" : "0"
-debugger
+
                     let promise = null
                     if ($strings.isBlank(data.id)) {
                         promise = $http.post("/base/material_specs/", data)
@@ -530,7 +530,7 @@ debugger
                     promise.then(resp => {
                         if (resp.data.success) {
                             layer.success(resp.data.msg)
-debugger
+
                             // 重新渲染单行数据
                             layui.table.renderSpecRow('material_spec_table', index, {
                                 id: resp.data.data.id

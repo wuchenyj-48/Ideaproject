@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
 <mapper namespace="fortec.mscm.base.mapper.MaterialSpecMapper">
-    <select id="page" resultType="fortec.mscm.base.entity.MaterialSpec">
+    <select id="page" resultType="fortec.mscm.base.vo.MaterialSpecVO">
         select
-            ms.id ,
-            ms.material_id,
-            ms.material_spec,
-            ms.price,
-            ms.unit,
+            ms.*,
             m.material_name,
             m.material_trade_name
         from
         material_spec ms
         inner join material m on ms.material_id = m.id
         <where>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and m.supplier_id = #{request.supplierId}
+            </if>
+            <if test="request.materialName != null and request.materialName != ''">
+                and m.material_name like concat('%',#{request.materialName},'%')
+            </if>
+            <if test="request.materialSpec != null and request.materialSpec != ''">
+                and ms.material_spec like concat('%',#{request.materialSpec},'%')
+            </if>
+            order by ms.gmt_modified desc
+        </where>
+    </select>
+    <select id="list" resultType="fortec.mscm.base.vo.MaterialSpecVO">
+        select
+        ms.*,
+        m.material_name,
+        m.material_trade_name
+        from
+        material_spec ms
+        inner join material m on ms.material_id = m.id
+        <where>
+            <if test="request.materialId != null and request.materialId != ''">
+                and ms.material_id = #{request.materialId}
+            </if>
             <if test="request.supplierId != null and request.supplierId != ''">
                 and m.supplier_id = #{request.supplierId}
             </if>

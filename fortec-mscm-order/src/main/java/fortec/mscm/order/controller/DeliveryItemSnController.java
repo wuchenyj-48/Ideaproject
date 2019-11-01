@@ -4,14 +4,14 @@ package fortec.mscm.order.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.order.entity.DeliveryItemSn;
 import fortec.mscm.order.request.DeliveryItemSnQueryRequest;
 import fortec.mscm.order.service.DeliveryItemSnService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,39 +23,25 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/delivery_item_sns")
-public class DeliveryItemSnController extends BaseController {
-
-    private final DeliveryItemSnService deliveryItemSnService;
+public class DeliveryItemSnController extends CrudController<DeliveryItemSn, String, DeliveryItemSnService> implements ImAndExAbleController<DeliveryItemSnQueryRequest> {
 
     @PostMapping("/{id}")
     public CommonResult saveDeliveryItemSns(@PathVariable("id") String deliveryId) {
-        List<DeliveryItemSn> deliveryItemSnList = deliveryItemSnService.saveDeliveryItemSns(deliveryId);
+        List<DeliveryItemSn> deliveryItemSnList = service.saveDeliveryItemSns(deliveryId);
         return CommonResult.ok("新增成功",deliveryItemSnList);
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid DeliveryItemSn entity) {
-        boolean bUpdate = deliveryItemSnService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
     @GetMapping("/page")
     public PageResult page(DeliveryItemSnQueryRequest request) {
-        IPage page = deliveryItemSnService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(DeliveryItemSnQueryRequest request) {
-        List<DeliveryItemSn> list = deliveryItemSnService.list(request);
+        List<DeliveryItemSn> list = service.list(request);
         return CommonResult.ok("查询成功", list);
     }
 
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") String id) {
-        boolean bRemove = deliveryItemSnService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
-    }
 
 }

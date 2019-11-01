@@ -23,9 +23,9 @@ public interface MaterialService extends IBaseService<Material> {
      * @param request
      * @return
      */
-    IPage<Material> page(MaterialQueryRequest request);
+    IPage<MaterialVO> page(MaterialQueryRequest request);
 
-    List<Material> list(MaterialQueryRequest request);
+    List<MaterialVO> list(MaterialQueryRequest request);
 
     List<MaterialVO> importList(MaterialQueryRequest request);
 

@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.order.entity.Delivery;
 import fortec.mscm.order.entity.DeliveryItem;
 import fortec.mscm.order.request.DeliveryItemQueryRequest;
@@ -25,41 +26,32 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/delivery_items")
-public class DeliveryItemController extends BaseController {
-
-    private final DeliveryItemService deliveryItemService;
+public class DeliveryItemController extends CrudController<DeliveryItem, String, DeliveryItemService> implements ImAndExAbleController<DeliveryItemQueryRequest> {
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid DeliveryItem entity) {
-        boolean bSave = deliveryItemService.saveDeliveryItemsById(entity);
+        boolean bSave = service.saveDeliveryItemsById(entity);
         return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
     }
 
     @PutMapping
     public CommonResult update(@RequestBody @Valid DeliveryItem entity) {
-        boolean bUpdate = deliveryItemService.updateDeliveryItemsById(entity);
+        boolean bUpdate = service.updateDeliveryItemsById(entity);
         return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
     @GetMapping("/page")
     public PageResult page(DeliveryItemQueryRequest request) {
-        IPage page = deliveryItemService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(DeliveryItemQueryRequest request) {
-        List<DeliveryItem> list = deliveryItemService.list(request);
+        List<DeliveryItem> list = service.list(request);
         return CommonResult.ok("查询成功", list);
     }
-
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") String id) {
-        boolean bRemove = deliveryItemService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
-    }
-
+    
     /**
      * @param children
      * @Description: 批量保存明细
@@ -70,13 +62,13 @@ public class DeliveryItemController extends BaseController {
         if (children == null || children.length == 0) {
             return CommonResult.error("保存失败");
         }
-        boolean bSuccess = deliveryItemService.saveOrUpdateBatchDtl(Lists.newArrayList(children));
+        boolean bSuccess = service.saveOrUpdateBatchDtl(Lists.newArrayList(children));
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
     }
 
     @GetMapping("/surplus_order_item")
     public CommonResult surplusPurchaseOrder(Delivery delivery) {
-        List<DeliveryItem> deliveryItemList = deliveryItemService.surplusPurchaseOrder(delivery);
+        List<DeliveryItem> deliveryItemList = service.surplusPurchaseOrder(delivery);
         return CommonResult.ok("查询成功", deliveryItemList);
     }
 }

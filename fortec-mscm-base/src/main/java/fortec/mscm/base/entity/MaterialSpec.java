@@ -2,6 +2,7 @@
 
 package fortec.mscm.base.entity;
 
+import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fortec.common.core.model.DataEntity;
@@ -23,6 +24,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 @Accessors(chain = true)
+@ExcelTarget("materialSpec")
 public class MaterialSpec extends DataEntity  implements Serializable {
 
     /** 商品ID */
@@ -52,7 +54,7 @@ public class MaterialSpec extends DataEntity  implements Serializable {
     /** 价格 */
     private Double price;
 
-    /** 是否寄售 */
+   /** 是否寄售 */
     @NotNull(message="是否寄售不能为空")
     private Integer isConsignment;
 
@@ -86,7 +88,7 @@ public class MaterialSpec extends DataEntity  implements Serializable {
     @TableField(exist = false)
     private String materialName;
 
-    /**商品名*/
+   /**商品名*/
     @TableField(exist = false)
     private String materialTradeName;
 

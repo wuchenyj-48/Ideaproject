@@ -5,7 +5,8 @@ package fortec.mscm.order.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.order.entity.PurchaseOrder;
 import fortec.mscm.order.request.PurchaseOrderQueryRequest;
 import fortec.mscm.order.service.PurchaseOrderService;
@@ -24,40 +25,25 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/purchase_orders")
-public class PurchaseOrderController extends BaseController {
-
-    private final PurchaseOrderService purchaseOrderService;
+public class PurchaseOrderController extends CrudController<PurchaseOrder, String, PurchaseOrderService> implements ImAndExAbleController<PurchaseOrderQueryRequest> {
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid PurchaseOrder entity) {
-        boolean bSave = purchaseOrderService.add(entity);
+        boolean bSave = service.add(entity);
         return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid PurchaseOrder entity) {
-        boolean bUpdate = purchaseOrderService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
     }
 
     @GetMapping("/page")
     public PageResult page(PurchaseOrderQueryRequest request) {
-        IPage page = purchaseOrderService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
 
     @GetMapping("/list")
     public CommonResult list(PurchaseOrderQueryRequest request) {
-        List<PurchaseOrder> list = purchaseOrderService.list(request);
+        List<PurchaseOrder> list = service.list(request);
         return CommonResult.ok("查询成功", list);
-    }
-
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") Long id) {
-        boolean bRemove = purchaseOrderService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
     /**
@@ -68,7 +54,7 @@ public class PurchaseOrderController extends BaseController {
      */
     @PostMapping("/submit_order/{id}")
     public CommonResult submitOrder(@PathVariable("id") String id) {
-        purchaseOrderService.submitOrder(id);
+        service.submitOrder(id);
         return CommonResult.ok("提交成功");
     }
 
@@ -80,7 +66,7 @@ public class PurchaseOrderController extends BaseController {
      */
     @PostMapping("/pass/{id}")
     public CommonResult passOrder(@PathVariable("id") String id) {
-        purchaseOrderService.passOrder(id);
+        service.passOrder(id);
         return CommonResult.ok("通过成功");
     }
 
@@ -92,7 +78,7 @@ public class PurchaseOrderController extends BaseController {
      */
     @GetMapping("/page_for_supplier")
     public PageResult pageForSupplier(PurchaseOrderQueryRequest request) {
-        IPage page = purchaseOrderService.pageForSupplier(request);
+        IPage page = service.pageForSupplier(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
@@ -105,7 +91,7 @@ public class PurchaseOrderController extends BaseController {
      */
     @GetMapping("/page_For_Delivery")
     public PageResult pageForDelivery(PurchaseOrderQueryRequest request) {
-        IPage page = purchaseOrderService.pageForDelivery(request);
+        IPage page = service.pageForDelivery(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
@@ -117,7 +103,7 @@ public class PurchaseOrderController extends BaseController {
      */
     @PostMapping("/able/{id}")
     public CommonResult able(@PathVariable("id") String id) {
-        purchaseOrderService.able(id);
+        service.able(id);
         return CommonResult.ok("通过成功");
     }
 
@@ -129,7 +115,7 @@ public class PurchaseOrderController extends BaseController {
      */
     @PostMapping("/disable/{id}")
     public CommonResult disable(@PathVariable("id") String id) {
-        purchaseOrderService.disable(id);
+        service.disable(id);
         return CommonResult.ok("通过成功");
     }
 

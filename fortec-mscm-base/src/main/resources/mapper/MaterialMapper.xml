@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
 <mapper namespace="fortec.mscm.base.mapper.MaterialMapper">
 
-    <select id="page" resultType="fortec.mscm.base.entity.Material">
+    <select id="page" resultType="fortec.mscm.base.vo.MaterialVO">
         select
             m.*,
             s.name as supplier_name,
@@ -25,6 +25,26 @@
             </if>
             <if test="request.materialTradeName != null and request.materialTradeName != ''">
                 and m.material_trade_name like concat( '%', #{request.materialTradeName}, '%')
+            </if>
+        </where>
+        order by m.gmt_modified desc
+    </select>
+    <select id="list" resultType="fortec.mscm.base.vo.MaterialVO">
+        select
+        m.*,
+        s.code as supplier_code,
+        s.name as supplier_name,
+        c.code as catalog_code,
+        c.name as catalog_name,
+        f.name as manufacturer_name
+        from
+        material m
+        left join supplier s on m.supplier_id = s.id
+        left join material_catalog c on m.catalog_id = c.id
+        left join manufacturer f on m.manufacturer_id = f.id
+        <where>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and s.id = #{request.supplierId}
             </if>
         </where>
         order by m.gmt_modified desc

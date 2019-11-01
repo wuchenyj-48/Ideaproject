@@ -21,7 +21,9 @@ import java.util.List;
 @Mapper
 public interface MaterialMapper extends BaseMapper<Material> {
 
-    IPage<Material> page(IPage page, @Param("request") MaterialQueryRequest request);
+    IPage<MaterialVO> page(IPage page, @Param("request") MaterialQueryRequest request);
+
+    List<MaterialVO> list(@Param("request") MaterialQueryRequest request);
 
     List<MaterialVO> importList(@Param("request") MaterialQueryRequest request);
 
