@@ -3,7 +3,7 @@ package fortec.mscm.base.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import fortec.common.core.model.BatchImportResult;
+import fortec.common.core.model.ImportResult;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.BaseController;
@@ -110,8 +110,8 @@ public class SupplierController extends BaseController {
     }
 
     @PostMapping({"/excel/import"})
-    public BatchImportResult importExcel( MultipartFile file) throws IOException {
-        return this.supplierService.batchImport(file);
+    public ImportResult importExcel(MultipartFile file) throws IOException {
+        return this.supplierService.excelImport(file);
     }
 
 

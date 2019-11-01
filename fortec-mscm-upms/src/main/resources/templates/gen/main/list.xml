@@ -73,117 +73,121 @@
         <script>
 
             extendParentScriptsAndStyles(() => {
-                let table = layui.table, $ = layui.$, form = layui.form
+                   let mainFunction = () => {
+                        let table = layui.table, $ = layui.$, form = layui.form
 
-                window.reloadTable = () => {
-                    table.reload('listTable', {
-                        where: $('#queryForm').serializeObject()
-                    })
-                }
+                        window.reloadTable = () => {
+                            table.reload('listTable', {
+                                where: $('#queryForm').serializeObject()
+                            })
+                        }
 
-                table.render({
-                    id: "listTable",
-                    elem: '#listTable',
-                    title: '${functionName}信息',
-                    height: 'full-160',
-                    url: '/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/page',
-                    page: {limit: 30},
-                    cols: [[ //表头
-                        {type: 'numbers', align: 'center', fixed: 'left'},
+                        table.render({
+                            id: "listTable",
+                            elem: '#listTable',
+                            title: '${functionName}信息',
+                            height: 'full-160',
+                            url: '/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/page',
+                            page: {limit: 30},
+                            cols: [[ //表头
+                                {type: 'numbers', align: 'center', fixed: 'left'},
 
+                                <#list table.columns as c>
+                                    <#if c.isList?? && c.isList == 1>
+                                        <#assign showType="${c.showType!''}">
+                                        <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
+                                {
+                                    field: '${c.attrName}', title: '${c.comments}', align: 'center',
+                                    templet(item) {
+                                        return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.${c.attrName})}</div>`;
+                                    }
+                                },
+                                        <#else>
+                                { field: '${c.attrName}', title: '${c.comments}', align: 'center'},
+                                        </#if>
+                                    </#if>
+                                </#list>
+                                {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
+                            ]]
+                        });
+
+                         // 渲染下拉框 数据
                         <#list table.columns as c>
-                            <#if c.isList?? && c.isList == 1>
-                                <#assign showType="${c.showType!''}">
-                                <#if showType == "select" || showType == "select_multiple" || showType == "checkbox" || showType == "radio" || showType == "switch">
-                        {
-                            field: '${c.attrName}', title: '${c.comments}', align: 'center',
-                            templet(item) {
-                                return `<div>${r"$"}{${r"$"}global.getDictLabel('${c.dictType!""}', item.${c.attrName})}</div>`;
-                            }
-                        },
-                                <#else>
-                        { field: '${c.attrName}', title: '${c.comments}', align: 'center'},
-                                </#if>
+                            <#if c.isQuery?? && c.isQuery == 1 && c.showType?? && (c.showType == "select" || c.showType == "select_multiple" || c.showType == "checkbox" || c.showType == "radio" || c.showType == "switch")>
+                        $global.getDictDataList('${c.dictType!""}').forEach(o => {
+                            $("select[name='${c.attrName}']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                        })
                             </#if>
                         </#list>
-                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
-                    ]]
-                });
+                        form.render('select')
 
-                 // 渲染下拉框 数据
-                <#list table.columns as c>
-                    <#if c.isQuery?? && c.isQuery == 1 && c.showType?? && (c.showType == "select" || c.showType == "select_multiple" || c.showType == "checkbox" || c.showType == "radio" || c.showType == "switch")>
-                $global.getDictDataList('${c.dictType!""}').forEach(o => {
-                    $("select[name='${c.attrName}']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
-                    </#if>
-                </#list>
-                form.render('select')
-
-                window.edit = (data,rowIndex) => {
-                    let index = layer.open({
-                        id: "${uncamelClassName}_form",
-                        side: true,
-                        title: "编辑${functionName}",
-                        type: 2,
-                        content: ['./${uncamelClassName}_form.html'],
-                        success(layero, index) {
-                            let iframeWin = window[layero.find('iframe')[0]['name']]
-                            iframeWin && iframeWin.initForm(data)
+                        window.edit = (data,rowIndex) => {
+                            let index = layer.open({
+                                id: "${uncamelClassName}_form",
+                                side: true,
+                                title: "编辑${functionName}",
+                                type: 2,
+                                content: ['./${uncamelClassName}_form.html'],
+                                success(layero, index) {
+                                    let iframeWin = window[layero.find('iframe')[0]['name']]
+                                    iframeWin && iframeWin.initForm(data)
+                                }
+                            });
                         }
-                    });
-                }
 
-                window.deleteById = (data,rowIndex) => {
-                    layer.confirm('真的删除行么', function (index) {
+                        window.deleteById = (data,rowIndex) => {
+                            layer.confirm('真的删除行么', function (index) {
 
-                        $http.delete(`/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/` + data.id).then(resp => {
-                            layer.success(resp.data.msg)
-                            window.reloadTable()
+                                $http.delete(`/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s/` + data.id).then(resp => {
+                                    layer.success(resp.data.msg)
+                                    window.reloadTable()
 
-                            layer.close(index)
+                                    layer.close(index)
+                                })
+                            });
+                        }
+                        // 监听表单重置
+                        $(".form-reset").click(() => {
+                            $("#editForm")[0].reset()
+                    $("#editForm").find("input[type='hidden']").val('')
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    form.render(null, "editForm")
                         })
-                    });
-                }
-                // 监听表单重置
-                $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
-                })
 
-                // 监听表单提交事件
-                form.on('submit(list)', (data) => {
-                    window.reloadTable()
-                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-                });
+                        // 监听表单提交事件
+                        form.on('submit(list)', (data) => {
+                            window.reloadTable()
+                            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                        });
 
 
-                $(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({});
-                    }
-                });
+                        $(".layui-btn").on('click', function () {
+                            let layevent = this.getAttribute("lay-event");
+                            if (layevent == 'addNew') {
+                                edit({isNew: true});
+                            }
+                        });
 
-                //监听行双击事件
-                table.on('rowDouble(listTable)', function (obj) {
-                    let rowIndex = obj.tr[0].getAttribute("data-index")
-                    window.edit(obj.data,rowIndex)
-                });
+                        //监听行双击事件
+                        table.on('rowDouble(listTable)', function (obj) {
+                            let rowIndex = obj.tr[0].getAttribute("data-index")
+                            window.edit(obj.data,rowIndex)
+                        });
 
-                //监听行工具事件
-                table.on('tool(listTable)', function (obj) {
-                     // 获取当前行索引
-                    let rowIndex = obj.tr[0].getAttribute("data-index")
+                        //监听行工具事件
+                        table.on('tool(listTable)', function (obj) {
+                             // 获取当前行索引
+                            let rowIndex = obj.tr[0].getAttribute("data-index")
 
-                    if (obj.event === 'del') {
-                        window.deleteById(obj.data,rowIndex)
-                    } else if (obj.event === 'edit') {
-                        window.edit(obj.data,rowIndex)
-                    }
-                });
+                            if (obj.event === 'del') {
+                                window.deleteById(obj.data,rowIndex)
+                            } else if (obj.event === 'edit') {
+                                window.edit(obj.data,rowIndex)
+                            }
+                        });
+                   }
 
-
+                   mainFunction()
             })
 
         </script>
