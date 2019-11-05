@@ -124,8 +124,10 @@
                 }
                 // 监听表单重置
                 $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
+                    $("#editForm")[0].reset()
+                    $("#editForm").find("input[type='hidden']").val('')
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    form.render(null, "editForm")
                 })
 
                 // 监听表单提交事件

@@ -142,7 +142,7 @@
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <div id="${t.className?uncap_first}Toolbar">
-                            <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNewLine">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="addNewLine">
                                 <i class="layui-icon layui-icon-add-1"></i> 增行
                             </button>
                             <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="batchSave">
@@ -265,19 +265,28 @@
                 window.initForm = (formData, loadChildTableByHttp = true) => {
                     // 必须要重新创建对象，原因未知
                     model = $.extend({}, formData)
-
                     $(".form-reset").click()
                     form.val("editForm", model)
 
-                    if ($strings.isNotBlank(model.id)) {
-                        $(".form-reset").hide()
-                        <#list childTableList as t>
-                        $(".child-tab").show()
-                        window.reload${t.className}Table && window.reload${t.className}Table(loadChildTableByHttp)
-                        </#list>
-                    } else {
+                    <#list table.columns as c>
+                        <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'radio' || c.showType == 'checkbox')>
+                    // 必须先清除，否则赋值的时候会选中第一个checkbox
+                    let ${c.attrName} = $strings.defaultString(model.${c.attrName}).split(",")
+                    $(`[name='${c.attrName}']`).removeAttr("checked")
+                    ${c.attrName}.forEach(o => $(`[name='${c.attrName}'][value='${o}']`).prop("checked", "checked"))
+                    form.render("checkbox")
+                        </#if>
+                    </#list>
+
+                    if (model.isNew) {
                         $(".child-tab").hide()
                         $(".form-reset").show()
+                    } else {
+                        $(".child-tab").show()
+                        $(".form-reset").hide()
+                        <#list childTableList as t>
+                        window.reload${t.className}Table && window.reload${t.className}Table(loadChildTableByHttp)
+                        </#list>
                     }
                 }
 
@@ -400,8 +409,10 @@
                 </#list>
 
                 $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
+                    $("#editForm")[0].reset()
+                    $("#editForm").find("input[type='hidden']").val('')
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    form.render(null, "editForm")
                 })
                 $(".form-close").click(() => {
                     let index = parent.layer.getFrameIndex(window.name)
@@ -411,6 +422,11 @@
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     data.field = $.extend({}, data.field)
+                     <#list table.columns as c>
+                     <#if c.isEdit?? && c.isEdit == 1 && c.showType?? && (c.showType == 'checkbox')>
+                    data.field.${c.attrName} = $("[name='${c.attrName}']:checked").map((index, elem) => $(elem).val()).get().join()
+                        </#if>
+                    </#list>
                     let promise = null
                     if ($strings.isBlank(data.field.id)) {
                         promise = $http.post("/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s", data.field)

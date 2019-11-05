@@ -45,7 +45,13 @@
                 </div>
             </div>
         </div>
-
+        <script type="text/html" id="list_table_toolbar">
+            <div class="layui-btn-container">
+              <div class="pull-right" style="margin-top: 12px">
+                    <input type="checkbox" id="exportSpecs"  lay-skin="primary" title="导出品规">
+                </div>
+            </div>
+        </script>
         <script type="text/html" id="headToolbar">
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
@@ -79,13 +85,24 @@
                         title: '编辑商品信息',
                         height: 'full-160',
                         url: '/base/materials/page',
-                        toolbar: true,
+                        toolbar: "#list_table_toolbar",
                         defaultToolbar: ["filter"],
                         extToolbar: ["excel"],
                         excel: {
                             templateUrl: "/base/materials/excel/template",
                             exportUrl: "/base/materials/excel/export",
-                            importUrl: "/base/materials/excel/import"
+                            importUrl: "/base/materials/excel/import",
+                            beforeHandle(obj){
+                                let excel = table.getInstance("listTable").config.excel
+                                if(obj.type == "excel_import"){
+                                    excel.params = {}
+                                }else{
+                                    excel.params = {
+                                        exportSpecs: $("#exportSpecs")[0].checked
+                                    }
+                                }
+
+                            }
                         },
                         page: {limit: 30},
                         cols: [[ //表头
@@ -143,14 +160,16 @@
                                 window.reloadTable()
 
                                 layer.close(index)
-                            })
-                        });
-                    }
-                    // 监听表单重置
-                    $(".form-reset").click(() => {
-                        $("form")[0].reset()
-                        $("form input:hidden").val('')
-                    })
+                        })
+                    });
+                }
+                // 监听表单重置
+                $(".form-reset").click(() => {
+                    $("#editForm")[0].reset()
+                    $("#editForm").find("input[type='hidden']").val('')
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    form.render(null, "editForm")
+                })
 
                     // 监听表单提交事件
                     layui.form.on('submit(list)', (data) => {

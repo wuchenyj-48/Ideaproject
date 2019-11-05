@@ -4,8 +4,8 @@ package fortec.mscm.base.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.model.BatchImportResult;
 import fortec.common.core.model.CommonResult;
+import fortec.common.core.model.ImportResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.CrudController;
 import fortec.common.core.mvc.controller.ImAndExAbleController;
@@ -83,16 +83,20 @@ public class SupplierController extends CrudController<Supplier, String, Supplie
     }
 
     @Override
-    public void excelExport(SupplierQueryRequest request) throws IOException {
+    public void excelExport(SupplierQueryRequest request)  {
         String fileName = "供应商信息" + DateUtils.format(DateUtils.now(), "yyyyMMddHHmmss") + ".xlsx";
         List<Supplier> list = this.service.list(request);
 
-        (new ExportExcel("供应商信息", SupplierVO.class)).setDataList(list).write(this.response(), fileName).dispose();
+        try {
+            (new ExportExcel("供应商信息", SupplierVO.class)).setDataList(list).write(this.response(), fileName).dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public BatchImportResult excelImport(MultipartFile file) throws IOException {
-        return this.service.batchImport(file);
+    public CommonResult<ImportResult> excelImport(MultipartFile file) {
+        return CommonResult.ok("导入成功",this.service.excelImport(file));
     }
 
     @Override

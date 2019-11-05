@@ -80,8 +80,10 @@
                 // 渲染日期、时间 数据
 
                 $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
+                    $("#editForm")[0].reset()
+                    $("#editForm").find("input[type='hidden']").val('')
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    form.render(null, "editForm")
                 })
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);

@@ -10,7 +10,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.entity.${className};
 import ${packageName}.${moduleName}<#if subModuleName != "">.${subModuleName}</#if>.request.${className}QueryRequest;
@@ -31,47 +32,27 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("<#if subModuleName != "">/${subModuleName}</#if>/${uncamelClassName}s")
-public class ${className}Controller extends BaseController {
-
-    private final  ${className}Service ${className?uncap_first}Service;
-
-    @PostMapping
-    public CommonResult add(@RequestBody @Valid ${className} entity) {
-        boolean bSave = ${className?uncap_first}Service.saveCascadeById(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid ${className} entity) {
-        boolean bUpdate = ${className?uncap_first}Service.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
-    }
+public class ${className}Controller extends CrudController<${className},String,${className}Service> implements ImAndExAbleController<${className}QueryRequest> {
 
     @GetMapping("/page")
     public PageResult page(${className}QueryRequest request) {
-        IPage page = ${className?uncap_first}Service.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(${className}QueryRequest request) {
-        List<${className}> list = ${className?uncap_first}Service.list(request);
+        List<${className}> list = service.list(request);
         return CommonResult.ok("查询成功", list);
     }
 
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") String id) {
-        boolean bRemove = ${className?uncap_first}Service.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
-    }
 
     @PutMapping("/batch_save")
     public CommonResult batchSave(@RequestBody @Valid ${className}[] children) {
         if (children == null || children.length == 0) {
             return CommonResult.error("保存失败");
         }
-        boolean bSuccess = ${className?uncap_first}Service.saveOrUpdateBatch(Lists.newArrayList(children));
+        boolean bSuccess = service.saveOrUpdateBatch(Lists.newArrayList(children));
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
     }
 }]]>

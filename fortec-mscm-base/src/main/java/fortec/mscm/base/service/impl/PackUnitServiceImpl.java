@@ -4,7 +4,7 @@ package fortec.mscm.base.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.model.BatchImportResult;
+import fortec.common.core.model.ImportResult;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.thread.BatchSaveTask;
 import fortec.common.core.thread.DefaultSaveHandler;
@@ -55,8 +55,8 @@ public class PackUnitServiceImpl extends BaseServiceImpl<PackUnitMapper, PackUni
     }
 
 
-    public BatchImportResult batchImport(MultipartFile file) {
-        BatchImportResult result = new BatchImportResult();
+    public ImportResult batchImport(MultipartFile file) {
+        ImportResult result = new ImportResult();
 
         try {
             StopWatch stopWatch = new StopWatch();

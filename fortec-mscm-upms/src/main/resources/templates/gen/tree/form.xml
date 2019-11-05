@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template>
     <name>viewList</name>
-    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}
-    </#if>/${uncamelCase(className)}
-</fileDir>
+    <fileDir>${genBaseDir}/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${uncamelCase(className)}</fileDir>
 <fileName>${uncamelClassName}_form.html</fileName>
 <content>
 <![CDATA[
@@ -218,8 +216,10 @@
                 </#list>
 
                 $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
+                    $("#editForm")[0].reset()
+                    $("#editForm").find("input[type='hidden']").val('')
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    form.render(null, "editForm")
                 })
                 $(".form-close").click(() => {
                     let index = parent.layer.getFrameIndex(window.name)

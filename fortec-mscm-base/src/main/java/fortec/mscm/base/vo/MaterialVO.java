@@ -107,10 +107,19 @@ public class MaterialVO extends DataEntity  implements Serializable {
         @NotNull(message="品类ID不能为空")
         private String catalogId;
 
+        @Excel(name = "品类代码", needMerge = true)
+        private String catalogCode;
 
         @Excel(name = "品类名称", width = 25, needMerge = true)
         @TableField(exist = false)
         private String catalogName;
+
+        /** 生产厂商 */
+        private String manufacturerId;
+
+
+        @Excel(name = "厂商代码", needMerge = true)
+        private String manufacturerCompanyCode;
 
         @Excel(name = "厂商名称", width = 29, needMerge = true)
         private String manufacturerName;
@@ -156,8 +165,6 @@ public class MaterialVO extends DataEntity  implements Serializable {
         @Length(max=50, message="批准文号长度必须介于 0 和 50 之间")
         private String approvalNo;
 
-        /** 生产厂商 */
-        private String manufacturerId;
 
         private String supplierName;
 

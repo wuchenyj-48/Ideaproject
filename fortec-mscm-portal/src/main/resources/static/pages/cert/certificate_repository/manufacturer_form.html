@@ -244,8 +244,10 @@
                 layui.laydate.render({elem: "input[name='expiryDate']", type: 'date', trigger: 'click', min: 0});
 
                 $(".form-reset").click(() => {
-                    $("form")[0].reset()
-                    $("form input:hidden").val('')
+                    $("#editForm")[0].reset()
+                    $("#editForm").find("input[type='hidden']").val('')
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    form.render(null, "editForm")
                 })
                 $(".form-close").click(() => {
                     var index = parent.layer.getFrameIndex(window.name);

@@ -4,8 +4,9 @@ package fortec.mscm.base.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.model.BatchImportResult;
+import fortec.common.core.exceptions.ImportException;
 import fortec.common.core.model.CommonResult;
+import fortec.common.core.model.ImportResult;
 import fortec.common.core.model.PageResult;
 import fortec.common.core.mvc.controller.CrudController;
 import fortec.common.core.mvc.controller.ImAndExAbleController;
@@ -51,15 +52,19 @@ public class PackUnitController extends CrudController<PackUnit, String, PackUni
 
 
     @Override
-    public void excelExport(PackUnitQueryRequest request) throws IOException {
+    public void excelExport(PackUnitQueryRequest request) {
         String fileName = "包装单位信息" + DateUtils.format(DateUtils.now(), "yyyyMMddHHmmss") + ".xlsx";
         List<PackUnit> list = this.service.list(request);
-        (new ExportExcel("包装单位信息", PackUnitVO.class)).setDataList(list).write(this.response(), fileName).dispose();
+        try {
+            (new ExportExcel("包装单位信息", PackUnitVO.class)).setDataList(list).write(this.response(), fileName).dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public BatchImportResult excelImport(MultipartFile file) throws IOException {
-        return this.service.batchImport(file);
+    public CommonResult<ImportResult> excelImport(MultipartFile file) throws ImportException {
+        return CommonResult.ok("导入成功", service.excelImport(file));
     }
 
     @Override

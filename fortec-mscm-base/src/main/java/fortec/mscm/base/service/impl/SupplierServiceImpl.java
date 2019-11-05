@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import com.google.common.collect.Sets;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.model.BatchImportResult;
+import fortec.common.core.model.ImportResult;
 import fortec.common.core.serial.SerialUtils;
 import fortec.common.core.service.BaseServiceImpl;
 import fortec.common.core.thread.BatchSaveTask;
@@ -106,8 +106,8 @@ public class SupplierServiceImpl extends BaseServiceImpl<SupplierMapper, Supplie
     @Transactional(rollbackFor = Exception.class)
     @LcnTransaction
     @Override
-    public BatchImportResult batchImport(MultipartFile file) {
-        BatchImportResult result = new BatchImportResult();
+    public ImportResult excelImport(MultipartFile file) {
+        ImportResult result = new ImportResult();
 
         try {
             StopWatch stopWatch = new StopWatch();
@@ -144,8 +144,8 @@ public class SupplierServiceImpl extends BaseServiceImpl<SupplierMapper, Supplie
                     }
 
                     //联系人手机号是否平台唯一
-                    if (phoneSet.contains(entity.getPhone())) {
-                        throw new BusinessException("第" + currentIndex + "行电话重复，请检查");
+                    if (phoneSet.contains(entity.getMobile())) {
+                        throw new BusinessException("第" + currentIndex + "行移动电话重复，请检查");
                     }
 
                     //至少选择一个类型供应商

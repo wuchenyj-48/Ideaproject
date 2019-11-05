@@ -72,15 +72,19 @@ public class MaterialCatalogController extends CrudController<MaterialCatalog, S
     }
 
     @Override
-    public void excelExport(MaterialCatalogQueryRequest request) throws IOException {
+    public void excelExport(MaterialCatalogQueryRequest request) {
         String fileName = "商品品类信息" + DateUtils.format(DateUtils.now(), "yyyyMMddHHmmss") + ".xlsx";
         List<MaterialCatalogVO> list = this.service.exportList(request);
-        (new ExportExcel("商品品类信息", MaterialCatalogVO.class)).setDataList(list).write(this.response(), fileName).dispose();
+        try {
+            (new ExportExcel("商品品类信息", MaterialCatalogVO.class)).setDataList(list).write(this.response(), fileName).dispose();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public BatchImportResult excelImport(MultipartFile file) throws IOException {
-        return this.service.batchImport(file);
+    public CommonResult<ImportResult> excelImport(MultipartFile file) {
+        return CommonResult.ok("导入成功",this.service.excelImport(file));
     }
 
     @Override

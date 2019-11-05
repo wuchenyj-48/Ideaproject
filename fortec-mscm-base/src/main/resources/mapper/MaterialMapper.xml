@@ -6,7 +6,9 @@
         select
             m.*,
             s.name as supplier_name,
+            c.code as catalog_code,
             c.name as catalog_name,
+            f.company_code as manufacturer_company_code,
             f.name as manufacturer_name
         from
         material m

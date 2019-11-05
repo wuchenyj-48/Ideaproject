@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import fortec.common.core.exceptions.BusinessException;
-import fortec.common.core.model.BatchImportResult;
+import fortec.common.core.model.ImportResult;
 import fortec.common.core.model.TreeModel;
 import fortec.common.core.model.TreeNode;
 import fortec.common.core.service.TreeServiceImpl;
@@ -78,8 +78,9 @@ public class MaterialCatalogServiceImpl extends TreeServiceImpl<MaterialCatalogM
         return list;
     }
 
-    public BatchImportResult batchImport(MultipartFile file) {
-        BatchImportResult result = new BatchImportResult();
+    @Override
+    public ImportResult excelImport(MultipartFile file) {
+        ImportResult result = new ImportResult();
         try {
 
             StopWatch stopWatch = new StopWatch();
