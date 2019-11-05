@@ -6,8 +6,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.mscm.base.entity.MaterialSpec;
 import fortec.mscm.base.request.MaterialSpecQueryRequest;
+import fortec.mscm.base.vo.MaterialSpecVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * 商品规格 mapper对象
@@ -18,7 +21,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MaterialSpecMapper extends BaseMapper<MaterialSpec> {
 
-    IPage<MaterialSpec> page(IPage page, @Param("request") MaterialSpecQueryRequest request);
+    IPage<MaterialSpecVO> page(IPage page, @Param("request") MaterialSpecQueryRequest request);
 
+    List<MaterialSpecVO> list(@Param("request") MaterialSpecQueryRequest request);
 }
     

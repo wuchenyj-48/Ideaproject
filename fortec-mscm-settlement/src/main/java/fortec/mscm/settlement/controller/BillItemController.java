@@ -4,7 +4,8 @@ package fortec.mscm.settlement.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.settlement.entity.BillItem;
 import fortec.mscm.settlement.request.BillItemQueryRequest;
 import fortec.mscm.settlement.service.BillItemService;
@@ -23,38 +24,36 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/bill_items")
-public class BillItemController extends BaseController {
-
-    private final  BillItemService billItemService;
+public class BillItemController extends CrudController<BillItem, String, BillItemService> implements ImAndExAbleController<BillItemQueryRequest> {
 
     @PostMapping
     public CommonResult add(@RequestBody @Valid BillItem entity) {
-        billItemService.add(entity);
+        service.add(entity);
         return CommonResult.ok("新增成功", entity);
     }
 
     @PutMapping
     public CommonResult update(@RequestBody @Valid BillItem entity) {
-        billItemService.add(entity);
+        service.add(entity);
         return CommonResult.ok("保存成功", entity);
     }
 
     @GetMapping("/page")
     public PageResult page(BillItemQueryRequest request) {
-        IPage page = billItemService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(BillItemQueryRequest request) {
-        List<BillItem> list = billItemService.list(request);
+        List<BillItem> list = service.list(request);
         return CommonResult.ok("查询成功", list);
     }
 
 
     @DeleteMapping("/{id}")
     public CommonResult deleteById(@PathVariable("id") String id) {
-        billItemService.delete(id);
+        service.delete(id);
         return CommonResult.ok("删除成功");
     }
 
@@ -63,7 +62,7 @@ public class BillItemController extends BaseController {
         if (children == null || children.length == 0) {
             return CommonResult.error("保存失败");
         }
-        billItemService.batchSave(children);
+        service.batchSave(children);
         return CommonResult.ok("保存成功");
     }
 }

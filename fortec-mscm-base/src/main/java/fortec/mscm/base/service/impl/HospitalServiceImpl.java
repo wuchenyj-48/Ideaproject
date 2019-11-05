@@ -48,21 +48,20 @@ public class HospitalServiceImpl extends BaseServiceImpl<HospitalMapper, Hospita
     @Override
     public boolean saveCascadeById(Hospital entity) {
 
+        // 添加用户，供应商编号作为主账户
+        String hospitalCode = SerialUtils.generateCode(SerialRuleConsts.BASE_HOSPITAL_CODE);
+        entity.setCode(hospitalCode);
+
         // 添加机构
         OfficeDTO officeDTO = new OfficeDTO();
         officeDTO.setCode(entity.getCode())
                 .setName(entity.getName());
         OfficeVO result = officeClient.addForHospital(officeDTO);
-        if (result == null) {
+        if (result == null || StringUtils.isBlank(result.getId())) {
             throw new BusinessException("机构添加失败");
         }
 
         entity.setOfficeId(result.getId());
-
-
-        // 添加用户，供应商编号作为主账户
-        String hospitalCode = SerialUtils.generateCode(SerialRuleConsts.BASE_HOSPITAL_CODE);
-        entity.setCode(hospitalCode);
 
         UserInfoDTO userDTO = new UserInfoDTO();
         userDTO.setOfficeId(result.getId())
@@ -73,7 +72,7 @@ public class HospitalServiceImpl extends BaseServiceImpl<HospitalMapper, Hospita
                 .setRoles(new String[]{"hospital_manager"})
                 .setRemark("医院" + entity.getName() + "主账号");
         UserInfoVO vo = userClient.addUser(userDTO);
-        if (vo == null) {
+        if (vo == null || StringUtils.isBlank(vo.getId())) {
             throw new BusinessException("用户添加失败");
         }
         return super.saveCascadeById(entity);

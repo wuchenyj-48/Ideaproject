@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.service.IBaseService;
 import fortec.mscm.base.entity.Material;
 import fortec.mscm.base.request.MaterialQueryRequest;
+import fortec.mscm.base.vo.MaterialVO;
 
 import java.util.List;
 
@@ -22,10 +23,13 @@ public interface MaterialService extends IBaseService<Material> {
      * @param request
      * @return
      */
-    IPage<Material> page(MaterialQueryRequest request);
+    IPage<MaterialVO> page(MaterialQueryRequest request);
 
-    List<Material> list(MaterialQueryRequest request);
+    List<MaterialVO> list(MaterialQueryRequest request);
 
+    List<MaterialVO> importList(MaterialQueryRequest request);
+
+    List<MaterialVO> exportList(MaterialQueryRequest request);
 
 }
     

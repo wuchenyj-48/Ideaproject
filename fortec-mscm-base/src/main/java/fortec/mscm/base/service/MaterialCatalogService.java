@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.service.ITreeService;
 import fortec.mscm.base.entity.MaterialCatalog;
 import fortec.mscm.base.request.MaterialCatalogQueryRequest;
+import fortec.mscm.base.vo.MaterialCatalogVO;
 
 import java.util.List;
 
@@ -33,6 +34,6 @@ public interface MaterialCatalogService extends ITreeService<MaterialCatalog> {
 
     List<MaterialCatalog> list(MaterialCatalogQueryRequest request);
 
-
+    List<MaterialCatalogVO> exportList(MaterialCatalogQueryRequest request);
 }
     

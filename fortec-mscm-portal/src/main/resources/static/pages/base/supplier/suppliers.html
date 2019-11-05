@@ -47,14 +47,6 @@
                                 </button>
 
                             </form>
-                            <div class="layui-dropdown dropdown-right " id="moreCommand">
-                                <button class="layui-btn layui-btn-sm layui-btn-primary">更多操作</button>
-                                <ul class="layui-anim layui-anim-upbit" style="top: 100%; bottom: auto; ">
-                                    <li><a href="javascript:;" lay-event="downloadTpl">下载导入模板</a></li>
-                                    <li><a href="javascript:;" lay-event="exportExcel">导出Excel</a></li>
-                                    <li><a href="javascript:;" lay-event="importExcel">导入Excel</a></li>
-                                </ul>
-                            </div>
                             <table id="listTable" lay-filter="listTable"></table>
                         </div>
                     </div>
@@ -81,31 +73,20 @@
                     })
                 }
 
-                $("#moreCommand a").click(function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == "exportExcel") {
-                        $http.download("/base/suppliers/excel/export")
-                    }
-                    if (layevent == "importExcel") {
-                        layui.importExcel.render(
-                            {
-                                url: "/base/suppliers/excel/import",
-                                title: '用户信息',
-                                autoClose: true,
-                                success: () => {
-                                    layer.msg('导入成功', {icon: 1});
-                                    reloadTable()
-                                }
-                            })
-                    }
-                })
-
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
                     title: '供应商信息',
                     height: 'full-160',
                     url: '/base/suppliers/page',
+                    toolbar: true,
+                    defaultToolbar: ["filter"],
+                    extToolbar: ["excel"],
+                    excel: {
+                        templateUrl: "/base/suppliers/excel/template",
+                        exportUrl: "/base/suppliers/excel/export",
+                        importUrl: "/base/suppliers/excel/import"
+                    },
                     page: {limit: 30},
                     cols: [[ //表头
                         {type: 'numbers', align: 'center', fixed: 'left'},

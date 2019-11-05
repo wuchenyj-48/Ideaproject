@@ -4,16 +4,16 @@ package fortec.mscm.settlement.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
-
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.settlement.entity.Stock;
 import fortec.mscm.settlement.request.StockQueryRequest;
 import fortec.mscm.settlement.service.StockService;
-
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -25,44 +25,24 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/stocks")
-public class StockController extends BaseController {
-
-    private final StockService stockService;
-
-    @PostMapping
-    public CommonResult add(@RequestBody @Valid Stock entity) {
-        boolean bSave = stockService.saveCascadeById(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid Stock entity) {
-        boolean bUpdate = stockService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
-    }
+public class StockController extends CrudController<Stock, String, StockService> implements ImAndExAbleController<StockQueryRequest> {
 
     @GetMapping("/page")
     public PageResult page(StockQueryRequest request) {
-        IPage page = stockService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(StockQueryRequest request) {
-        List<Stock> list = stockService.list(request);
+        List<Stock> list = service.list(request);
         return CommonResult.ok("查询成功", list);
     }
 
     @GetMapping("/page_for_supplier")
     public PageResult pageForSupplier(StockQueryRequest request) {
-        IPage page = stockService.pageForSupplier(request);
+        IPage page = service.pageForSupplier(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
-    }
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") String id) {
-        boolean bRemove = stockService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
 }

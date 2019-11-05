@@ -4,14 +4,14 @@ package fortec.mscm.base.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.base.entity.HospitalSupplier;
 import fortec.mscm.base.request.HospitalSupplierQueryRequest;
 import fortec.mscm.base.service.HospitalSupplierService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,39 +23,18 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/hospital_suppliers")
-public class HospitalSupplierController extends BaseController {
-
-    private HospitalSupplierService hospitalSupplierService;
-
-    @PostMapping
-    public CommonResult add(@RequestBody @Valid HospitalSupplier entity) {
-        boolean bSave = hospitalSupplierService.saveCascadeById(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid HospitalSupplier entity) {
-        boolean bUpdate = hospitalSupplierService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
-    }
+public class HospitalSupplierController extends CrudController<HospitalSupplier, String, HospitalSupplierService> implements ImAndExAbleController<HospitalSupplierQueryRequest> {
 
     @GetMapping("/page")
     public PageResult page(HospitalSupplierQueryRequest request) {
-        IPage page = hospitalSupplierService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(HospitalSupplierQueryRequest request) {
-        List<HospitalSupplier> list = hospitalSupplierService.list(request);
+        List<HospitalSupplier> list = service.list(request);
         return CommonResult.ok("查询成功", list);
-    }
-
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") Long id) {
-        boolean bRemove = hospitalSupplierService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
     /**
@@ -65,7 +44,7 @@ public class HospitalSupplierController extends BaseController {
      */
     @GetMapping("/page_by_keywords")
     public CommonResult pageByKeywords(HospitalSupplierQueryRequest request){
-        IPage<HospitalSupplier> page = hospitalSupplierService.pageByKeywords(request);
+        IPage<HospitalSupplier> page = service.pageByKeywords(request);
         return PageResult.ok("查询成功", page.getRecords(),page.getTotal());
     }
 
@@ -76,7 +55,7 @@ public class HospitalSupplierController extends BaseController {
      */
     @GetMapping("/page_by_keywords_for_hospital")
     public CommonResult pageByKeywordsForHospital(HospitalSupplierQueryRequest request){
-        IPage<HospitalSupplier> page = hospitalSupplierService.pageByKeywordsForHospital(request);
+        IPage<HospitalSupplier> page = service.pageByKeywordsForHospital(request);
         return PageResult.ok("查询成功", page.getRecords(),page.getTotal());
     }
 
@@ -87,7 +66,7 @@ public class HospitalSupplierController extends BaseController {
      */
     @PostMapping("enable/{id}")
     public CommonResult enable(@PathVariable("id") String id){
-        hospitalSupplierService.enable(id);
+        service.enable(id);
         return CommonResult.ok("启用成功");
     }
 
@@ -98,7 +77,7 @@ public class HospitalSupplierController extends BaseController {
      */
     @PostMapping("disable/{id}")
     public CommonResult disable(@PathVariable("id") String id){
-        hospitalSupplierService.disable(id);
+        service.disable(id);
         return CommonResult.ok("停用成功");
     }
 
@@ -109,7 +88,7 @@ public class HospitalSupplierController extends BaseController {
      */
     @GetMapping("/page_for_hospital")
     public PageResult pageForHospital(HospitalSupplierQueryRequest request) {
-        IPage page = hospitalSupplierService.pageForHospital(request);
+        IPage page = service.pageForHospital(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
@@ -120,7 +99,7 @@ public class HospitalSupplierController extends BaseController {
      */
     @GetMapping("/page_for_supplier")
     public PageResult pageForSupplier(HospitalSupplierQueryRequest request) {
-        IPage page = hospitalSupplierService.pageForSupplier(request);
+        IPage page = service.pageForSupplier(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 

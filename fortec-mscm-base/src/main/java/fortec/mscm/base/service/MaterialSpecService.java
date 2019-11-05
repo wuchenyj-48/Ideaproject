@@ -6,6 +6,7 @@ import fortec.mscm.base.entity.MaterialSpec;
 
 import fortec.common.core.service.IBaseService;
 import fortec.mscm.base.request.MaterialSpecQueryRequest;
+import fortec.mscm.base.vo.MaterialSpecVO;
 
 import java.util.List;
 
@@ -18,8 +19,8 @@ import java.util.List;
 */
 public interface MaterialSpecService extends IBaseService<MaterialSpec> {
 
-    IPage<MaterialSpec> page(MaterialSpecQueryRequest request);
+    IPage<MaterialSpecVO> page(MaterialSpecQueryRequest request);
 
-    List<MaterialSpec> list(MaterialSpecQueryRequest request);
+    List<MaterialSpecVO> list(MaterialSpecQueryRequest request);
 }
     

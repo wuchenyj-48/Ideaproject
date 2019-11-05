@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.base.entity.MaterialApplicantItem;
 import fortec.mscm.base.request.MaterialApplicantItemQueryRequest;
 import fortec.mscm.base.service.MaterialApplicantItemService;
@@ -24,39 +25,18 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/material_applicant_items")
-public class MaterialApplicantItemController extends BaseController {
-
-    private MaterialApplicantItemService materialApplicantItemService;
-
-    @PostMapping
-    public CommonResult add(@RequestBody @Valid MaterialApplicantItem entity) {
-        boolean bSave = materialApplicantItemService.saveCascadeById(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid MaterialApplicantItem entity) {
-        boolean bUpdate = materialApplicantItemService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
-    }
+public class MaterialApplicantItemController extends CrudController<MaterialApplicantItem, String, MaterialApplicantItemService> implements ImAndExAbleController<MaterialApplicantItemQueryRequest> {
 
     @GetMapping("/page")
     public PageResult page(MaterialApplicantItemQueryRequest request) {
-        IPage page = materialApplicantItemService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(MaterialApplicantItemQueryRequest request) {
-        List<MaterialApplicantItem> list = materialApplicantItemService.list(request);
+        List<MaterialApplicantItem> list = service.list(request);
         return CommonResult.ok("查询成功", list);
-    }
-
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") Long id) {
-        boolean bRemove = materialApplicantItemService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
     /**
@@ -69,7 +49,7 @@ public class MaterialApplicantItemController extends BaseController {
         if (children == null || children.length == 0) {
             return CommonResult.error("保存失败");
         }
-        boolean bSuccess = materialApplicantItemService.saveOrUpdateBatch(Lists.newArrayList(children));
+        boolean bSuccess = service.saveOrUpdateBatch(Lists.newArrayList(children));
         return bSuccess ? CommonResult.ok("保存成功") : CommonResult.error("保存失败");
     }
 }

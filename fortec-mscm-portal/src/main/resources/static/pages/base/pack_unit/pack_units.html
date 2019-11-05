@@ -1,5 +1,3 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -61,98 +59,116 @@
         <script>
 
             extendParentScriptsAndStyles(() => {
-                let table = layui.table, $ = layui.$, form = layui.form;
+                let mainFunction = () => {
+                    let table = layui.table, $ = layui.$, form = layui.form;
 
-                window.reloadTable = () => {
-                    table.reload('listTable', {
-                        where: layui.$('#queryForm').serializeObject()
+                    window.reloadTable = () => {
+                        table.reload('listTable', {
+                            where: layui.$('#queryForm').serializeObject()
+                        })
+                    }
+
+                    table.render({
+                        id: "listTable",
+                        elem: '#listTable',
+                        title: '包装单位信息',
+                        height: 'full-160',
+                        url: '/base/pack_units/page',
+                        toolbar: true,
+                        defaultToolbar: ["filter"],
+                        extToolbar: ["excel"],
+                        excel: {
+                            templateUrl: "/base/pack_units/excel/template",
+                            exportUrl: "/base/pack_units/excel/export",
+                            importUrl: "/base/pack_units/excel/import"
+                        },
+                        page: {limit: 30},
+                        cols: [[ //表头
+                            {type: 'numbers', align: 'center', fixed: 'left'},
+
+                            {field: 'id', title: '单位编码', align: 'center'},
+                            {field: 'name', title: '单位名称', align: 'center'},
+                            {field: 'gmtModified', title: '修改时间', align: 'center'},
+                            {
+                                field: "LAY_CELL_TOOLBAR",
+                                title: '操作',
+                                templet: '#cellToolbar',
+                                width: 150,
+                                align: 'center',
+                                fixed: 'right'
+                            }
+                        ]]
+                    });
+
+                    // 渲染下拉框 数据
+                    form.render('select')
+
+                    window.edit = (data) => {
+                        layer.open({
+                            id: "pack_unit_form",
+                            side: true,
+                            area: ["50%", "100%"],
+                            title: "编辑包装单位信息",
+                            type: 2,
+                            content: ['./pack_unit_form.html', 'no'],
+                            success(layero, index) {
+                                let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                                iframeWin && iframeWin.initForm(data)
+
+                            }
+                        });
+                    }
+
+                    window.deleteById = (data) => {
+                        layer.confirm('真的删除行么', function (index) {
+
+                            $http.delete(`/base/pack_units/` + data.id).then(resp => {
+                                layer.success(resp.data.msg)
+                                window.reloadTable()
+                                layer.close(index)
+                            })
+                        });
+                    }
+
+                    // 监听表单重置
+                    $(".form-reset").click(() => {
+                        $("#editForm")[0].reset()
+                        $("#editForm").find("input[type='hidden']").val('')
+                        $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                        form.render(null, "editForm")
                     })
-                }
 
-                table.render({
-                    id: "listTable",
-                    elem: '#listTable',
-                    title: '包装单位信息',
-                    height: 'full-160',
-                    url: '/base/pack_units/page',
-                    page: {limit: 30},
-                    cols: [[ //表头
-                        {type: 'numbers', align: 'center', fixed: 'left'},
+                    // 监听表单提交事件
+                    layui.form.on('submit(list)', (data) => {
+                        window.reloadTable()
+                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                    });
 
-                        { field: 'id', title: '单位编码', align: 'center'},
-                        { field: 'name', title: '单位名称', align: 'center'},
-                        { field: 'gmtModified', title: '修改时间', align: 'center'},
-                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
-                    ]]
-                });
 
-                 // 渲染下拉框 数据
-                form.render('select')
+                    layui.$(".layui-btn").on('click', function () {
+                        let layevent = this.getAttribute("lay-event");
+                        if (layevent == 'addNew') {
+                            edit({isNew: true});
+                        }
+                    });
+                    //监听行双击事件
+                    table.on('rowDouble(listTable)', function (obj) {
+                        let rowIndex = obj.tr[0].getAttribute("data-index")
+                        window.edit(obj.data, rowIndex)
+                    });
 
-                window.edit = (data) => {
-                    layer.open({
-                        id: "pack_unit_form",
-                        side: true,
-                        area: ["50%", "100%"],
-                        title: "编辑包装单位信息",
-                        type: 2,
-                        content: ['./pack_unit_form.html', 'no'],
-                        success(layero, index) {
-                            let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                            iframeWin && iframeWin.initForm(data)
-
+                    //监听行工具事件
+                    table.on('tool(listTable)', function (obj) {
+                        let data = obj.data;
+                        if (obj.event === 'del') {
+                            window.deleteById(obj.data)
+                        } else if (obj.event === 'edit') {
+                            window.edit(obj.data)
                         }
                     });
                 }
 
-                window.deleteById = (data) => {
-                    layer.confirm('真的删除行么', function (index) {
-
-                        $http.delete(`/base/pack_units/` + data.id).then(resp => {
-                            layer.success(resp.data.msg)
-                            window.reloadTable()
-                            layer.close(index)
-                        })
-                    });
-                }
-                // 监听表单重置
-                $(".form-reset").click(() => {
-                    $("#editForm")[0].reset()
-                    $("#editForm").find("input[type='hidden']").val('')
-                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
-                    form.render(null, "editForm")
-                })
-
-                // 监听表单提交事件
-                layui.form.on('submit(list)', (data) => {
-                    window.reloadTable()
-                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-                });
-
-
-                layui.$(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({isNew: true});
-                    }
-                });
-                //监听行双击事件
-                table.on('rowDouble(listTable)', function (obj) {
-                    let rowIndex = obj.tr[0].getAttribute("data-index")
-                    window.edit(obj.data, rowIndex)
-                });
-
-                //监听行工具事件
-                table.on('tool(listTable)', function (obj) {
-                    var data = obj.data;
-                    if (obj.event === 'del') {
-                        window.deleteById(obj.data)
-                    } else if (obj.event === 'edit') {
-                        window.edit(obj.data)
-                    }
-                });
-
-
+                loadSingleJs("/lib/layui/lay.exts/layImportExcel.js", mainFunction)
             })
 
         </script>

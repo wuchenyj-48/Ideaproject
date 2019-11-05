@@ -27,6 +27,13 @@ public interface SupplierRegistService extends IBaseService<SupplierRegist> {
     boolean checkPhoneValid(String phone);
 
     /**
+     * 供应商注册
+     * @param supplierRegist
+     * @return
+     */
+    boolean regist(SupplierRegist supplierRegist);
+
+    /**
      * 审核通过
      * @param id
      */

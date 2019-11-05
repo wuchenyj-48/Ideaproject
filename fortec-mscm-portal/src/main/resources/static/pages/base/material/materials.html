@@ -45,7 +45,13 @@
                 </div>
             </div>
         </div>
-
+        <script type="text/html" id="list_table_toolbar">
+            <div class="layui-btn-container">
+              <div class="pull-right" style="margin-top: 12px">
+                    <input type="checkbox" id="exportSpecs"  lay-skin="primary" title="导出品规">
+                </div>
+            </div>
+        </script>
         <script type="text/html" id="headToolbar">
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addNew">
@@ -64,71 +70,96 @@
         <script>
 
             extendParentScriptsAndStyles(() => {
-                let table = layui.table, $ = layui.$, form = layui.form
+                let mainFunction = () => {
+                    let table = layui.table, $ = layui.$, form = layui.form
 
-                window.reloadTable = () => {
-                    table.reload('listTable', {
-                        where: layui.$('#queryForm').serializeObject()
-                    })
-                }
+                    window.reloadTable = () => {
+                        table.reload('listTable', {
+                            where: layui.$('#queryForm').serializeObject()
+                        })
+                    }
 
-                table.render({
-                    id: "listTable",
-                    elem: '#listTable',
-                    title: '编辑商品信息',
-                    height: 'full-160',
-                    url: '/base/materials/page',
-                    page: {limit: 30},
-                    cols: [[ //表头
-                        {type: 'numbers', align: 'center', fixed: 'left'},
-                        { field: 'supplierName', title: '供应商', align: 'center',width : 210},
-                        { field: 'catalogName', title: '品类', align: 'center',width : 220},
-                        {
-                            field: 'materialTypeCode', title: '商品类型', align: 'center',width : 90,
-                            templet(item) {
-                                return `<div>${$global.getDictLabel('base_material_type', item.materialTypeCode)}</div>`;
+                    table.render({
+                        id: "listTable",
+                        elem: '#listTable',
+                        title: '编辑商品信息',
+                        height: 'full-160',
+                        url: '/base/materials/page',
+                        toolbar: "#list_table_toolbar",
+                        defaultToolbar: ["filter"],
+                        extToolbar: ["excel"],
+                        excel: {
+                            templateUrl: "/base/materials/excel/template",
+                            exportUrl: "/base/materials/excel/export",
+                            importUrl: "/base/materials/excel/import",
+                            beforeHandle(obj){
+                                let excel = table.getInstance("listTable").config.excel
+                                if(obj.type == "excel_import"){
+                                    excel.params = {}
+                                }else{
+                                    excel.params = {
+                                        exportSpecs: $("#exportSpecs")[0].checked
+                                    }
+                                }
+
                             }
                         },
-                        { field: 'materialName', title: '品名', align: 'center'},
-                        { field: 'materialTradeName', title: '商品名', align: 'center'},
-                        { field: 'certificateNo', title: '注册证号', align: 'center'},
-                        { field: 'certificateExpiredDate', title: '注册证效期', align: 'center'},
-                        { field: 'manufacturerName', title: '生产厂商', align: 'center',width : 230},
-                        {field: "LAY_CELL_TOOLBAR", title: '操作', templet: '#cellToolbar', width: 150, align: 'center', fixed: 'right'}
-                    ]]
-                });
-
-
-
-                 // 渲染下拉框 数据
-                $global.getDictDataList('base_material_type').forEach(o => {
-                    $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
-                form.render('select')
-
-                window.edit = (data) => {
-                    let index = layer.open({
-                        id: "hospital_form",
-                        side: true,
-                        area: ["100%", "100%"],
-                        title: "编辑商品信息",
-                        type: 2,
-                        content: ['./material_form.html', 'no'],
-                        success(layero, index) {
-                            let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                            iframeWin && iframeWin.initForm(data)
-                        }
+                        page: {limit: 30},
+                        cols: [[ //表头
+                            {type: 'numbers', align: 'center', fixed: 'left'},
+                            {field: 'catalogName', title: '品类', align: 'center', width: 220},
+                            {
+                                field: 'materialTypeCode', title: '商品类型', align: 'center', width: 90,
+                                templet(item) {
+                                    return `<div>${$global.getDictLabel('base_material_type', item.materialTypeCode)}</div>`;
+                                }
+                            },
+                            {field: 'materialName', title: '品名', align: 'center'},
+                            {field: 'materialTradeName', title: '商品名', align: 'center'},
+                            {field: 'certificateNo', title: '注册证号', align: 'center'},
+                            {field: 'certificateExpiredDate', title: '注册证效期', align: 'center'},
+                            {field: 'manufacturerName', title: '生产厂商', align: 'center', width: 230},
+                            {
+                                field: "LAY_CELL_TOOLBAR",
+                                title: '操作',
+                                templet: '#cellToolbar',
+                                width: 150,
+                                align: 'center',
+                                fixed: 'right'
+                            }
+                        ]]
                     });
-                }
 
-                window.deleteById = (data) => {
-                    layer.confirm('真的删除行么', function (index) {
 
-                        $http.delete(`/base/materials/` + data.id).then(resp => {
-                            layer.success(resp.data.msg)
-                            window.reloadTable()
+                    // 渲染下拉框 数据
+                    $global.getDictDataList('base_material_type').forEach(o => {
+                        $("select[name='materialTypeCode']").append("<option value='" + o.value + "'>" + o.label + "</option>")
+                    })
+                    form.render('select')
 
-                            layer.close(index)
+                    window.edit = (data) => {
+                        let index = layer.open({
+                            id: "hospital_form",
+                            side: true,
+                            area: ["100%", "100%"],
+                            title: "编辑商品信息",
+                            type: 2,
+                            content: ['./material_form.html', 'no'],
+                            success(layero, index) {
+                                let iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                                iframeWin && iframeWin.initForm(data)
+                            }
+                        });
+                    }
+
+                    window.deleteById = (data) => {
+                        layer.confirm('真的删除行么', function (index) {
+
+                            $http.delete(`/base/materials/` + data.id).then(resp => {
+                                layer.success(resp.data.msg)
+                                window.reloadTable()
+
+                                layer.close(index)
                         })
                     });
                 }
@@ -140,37 +171,38 @@
                     form.render(null, "editForm")
                 })
 
-                // 监听表单提交事件
-                layui.form.on('submit(list)', (data) => {
-                    window.reloadTable()
-                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-                });
+                    // 监听表单提交事件
+                    layui.form.on('submit(list)', (data) => {
+                        window.reloadTable()
+                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                    });
 
 
-                layui.$(".layui-btn").on('click', function () {
-                    let layevent = this.getAttribute("lay-event");
-                    if (layevent == 'addNew') {
-                        edit({});
-                    }
-                });
+                    layui.$(".layui-btn").on('click', function () {
+                        let layevent = this.getAttribute("lay-event");
+                        if (layevent == 'addNew') {
+                            edit({});
+                        }
+                    });
 
-                //监听行双击事件
-                table.on('rowDouble(listTable)', function (obj) {
-                    let rowIndex = obj.tr[0].getAttribute("data-index")
-                    window.edit(obj.data, rowIndex)
-                });
+                    //监听行双击事件
+                    table.on('rowDouble(listTable)', function (obj) {
+                        let rowIndex = obj.tr[0].getAttribute("data-index")
+                        window.edit(obj.data, rowIndex)
+                    });
 
-                //监听行工具事件
-                table.on('tool(listTable)', function (obj) {
-                    var data = obj.data;
-                    if (obj.event === 'del') {
-                        window.deleteById(obj.data)
-                    } else if (obj.event === 'edit') {
-                        window.edit(obj.data)
-                    }
-                });
+                    //监听行工具事件
+                    table.on('tool(listTable)', function (obj) {
+                        var data = obj.data;
+                        if (obj.event === 'del') {
+                            window.deleteById(obj.data)
+                        } else if (obj.event === 'edit') {
+                            window.edit(obj.data)
+                        }
+                    });
+                }
 
-
+                loadSingleJs("/lib/layui/lay.exts/layImportExcel.js", mainFunction)
             })
 
         </script>

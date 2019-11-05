@@ -1,4 +1,4 @@
-package fortec.mscm.base.controller;
+package fortec.mscm.base.feign.controller;
 
 import fortec.common.core.mvc.controller.BaseController;
 import fortec.mscm.base.entity.Supplier;

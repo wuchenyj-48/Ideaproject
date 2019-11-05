@@ -79,7 +79,7 @@
                             <span class="required-star">*</span> 排序
                         </label>
                         <div class="layui-input-block">
-                            <input type="text" name="sort" required lay-verify="required" placeholder="请输入排序"
+                            <input type="text" name="sort" required lay-verify="required|number" placeholder="请输入排序"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -118,6 +118,10 @@
                     } else {
                         $(".form-reset").show()
                     }
+
+                    if (model.parentId != undefined && model.parentId != 0) {
+                        $("select[name='materialTypeCode']").attr("disabled",true);
+                    }
                 }
 
                 //渲染父级菜单
@@ -125,20 +129,31 @@
                     title: "选择树",
                     elem: "#parentName",
                     url: "/base/material_catalogs/tree",
+                    record: true,
                     allowClear: true,
                     allowFilter: true,
                     filterMode: "pinyin",
                     onClear() {
                         $("input[name='parentId']").val("");
                         $("input[name='parentName']").val("");
+                        $("select[name='materialTypeCode']").val("")
+                        $("select[name='materialTypeCode']").attr("disabled",false);
+                        form.render('select')
                     },
                     onConfirm(node) {
                         if (node.level >= 5) {
                             layer.msg("最多支持5级分类", {icon: 5})
                             return
                         }
+
                         $("input[name='parentId']").val(node.nodeId);
                         $("input[name='parentName']").val(node.context);
+
+                        let recordData = JSON.parse(node.recordData)
+                        let materialTypeCode = recordData.properties.materialTypeCode
+                        $("select[name='materialTypeCode']").val(materialTypeCode)
+                        $("select[name='materialTypeCode']").attr("disabled",true);
+                        form.render('select')
                     }
                 })
 

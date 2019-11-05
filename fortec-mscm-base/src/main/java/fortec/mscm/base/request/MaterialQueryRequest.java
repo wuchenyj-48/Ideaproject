@@ -25,5 +25,11 @@ public class MaterialQueryRequest extends PageRequest {
     private String supplierId;
 
 
+    /**
+     * 是否导出品规
+     */
+    private Boolean exportSpecs;
+
+
 }
     

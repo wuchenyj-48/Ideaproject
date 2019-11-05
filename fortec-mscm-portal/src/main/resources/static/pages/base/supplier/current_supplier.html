@@ -1,13 +1,16 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>编辑表单</title>
         <style>
-             .custom-form .layui-form-label { width: 130px }
-             .custom-form .layui-input-block { margin-left: 160px}
+            .custom-form .layui-form-label {
+                width: 130px
+            }
+
+            .custom-form .layui-input-block {
+                margin-left: 160px
+            }
         </style>
     </head>
     <body>
@@ -24,10 +27,11 @@
                             <div class="layui-row layui-col-space5 layui-form-item">
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  识别码
+                                        识别码
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="code" required lay-verify="required" placeholder="请输入识别码"
+                                        <input type="text" name="code" readonly required lay-verify="required"
+                                               placeholder="请输入识别码"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -35,10 +39,11 @@
 
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  统一社会信用代码
+                                        <span class="required-star">*</span> 统一社会信用代码
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="companyCode" required lay-verify="number|required" placeholder="请输入统一社会信用代码"
+                                        <input type="text" name="companyCode" required lay-verify="required|abc"
+                                               placeholder="请输入统一社会信用代码"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -48,10 +53,11 @@
                             <div class="layui-row layui-col-space5 layui-form-item">
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  供应商名称
+                                        <span class="required-star">*</span> 供应商名称
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="name" required lay-verify="required" placeholder="请输入供应商名称"
+                                        <input type="text" name="name" required lay-verify="required"
+                                               placeholder="请输入供应商名称"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -62,8 +68,8 @@
                                         助记码
                                     </label>
                                     <div class="layui-input-block">
-                                        <input  type="text" name="pinyin"  lay-verify="abc" placeholder="请输入助记码"
-                                                autocomplete="off" class="layui-input">
+                                        <input type="text" name="pinyin" lay-verify="abc" placeholder="请输入助记码"
+                                               autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
 
@@ -72,7 +78,7 @@
                             <div class="layui-row layui-col-space5 layui-form-item">
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  药品供应商
+                                        <span class="required-star">*</span> 药品供应商
                                     </label>
                                     <div class="layui-input-block">
                                         <div id="isDrugDiv" lay-data="radio"></div>
@@ -82,7 +88,7 @@
 
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  耗材供应商
+                                        <span class="required-star">*</span> 耗材供应商
                                     </label>
                                     <div class="layui-input-block">
                                         <div id="isConsumableDiv" lay-data="radio"></div>
@@ -94,7 +100,7 @@
                             <div class="layui-row layui-col-space5 layui-form-item">
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  试剂供应商
+                                        <span class="required-star">*</span> 试剂供应商
                                     </label>
                                     <div class="layui-input-block">
                                         <div id="isReagentDiv" lay-data="radio"></div>
@@ -107,8 +113,9 @@
                                         区域名称
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="regionName" id="regionName" lay-verify="" placeholder="请点击选择区域"
-                                               readonly  autocomplete="off" class="layui-input" lay-filter="tree" />
+                                        <input type="text" name="regionName" id="regionName" lay-verify=""
+                                               placeholder="请点击选择区域"
+                                               readonly autocomplete="off" class="layui-input" lay-filter="tree"/>
                                     </div>
                                 </div>
 
@@ -117,10 +124,11 @@
                             <div class="layui-row layui-col-space5 layui-form-item">
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  地址
+                                        <span class="required-star">*</span> 地址
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="address" required lay-verify="required" placeholder="请输入地址"
+                                        <input type="text" name="address" required lay-verify="required"
+                                               placeholder="请输入地址"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -128,10 +136,11 @@
 
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  联系人
+                                        <span class="required-star">*</span> 联系人
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="contactor" required lay-verify="required" placeholder="请输入联系人"
+                                        <input type="text" name="contactor" required lay-verify="required"
+                                               placeholder="请输入联系人"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -141,10 +150,11 @@
                             <div class="layui-row layui-col-space5 layui-form-item">
                                 <div class="layui-col-xs6">
                                     <label class="layui-form-label">
-                                        <span class="required-star">*</span>  邮箱
+                                        <span class="required-star">*</span> 邮箱
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="email" required lay-verify="required|email" placeholder="请输入邮箱"
+                                        <input type="text" name="email" required lay-verify="required|email"
+                                               placeholder="请输入邮箱"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -154,7 +164,7 @@
                                         电话
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="phone"  lay-verify="phone" placeholder="请输入电话"
+                                        <input type="text" name="phone" lay-verify="Phone" placeholder="请输入电话"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -167,7 +177,7 @@
                                         移动电话
                                     </label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="mobile"  lay-verify="phone" placeholder="请输入移动电话"
+                                        <input type="text" name="mobile" lay-verify="phone" placeholder="请输入移动电话"
                                                autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -177,9 +187,15 @@
                             <div class="layui-row ">
                                 <div class="layui-form-item">
                                     <div class="layui-input-block">
-                                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="*">保存</button>
-                                        <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="button">重置</button>
-                                        <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">关闭</button>
+                                        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
+                                                lay-filter="*">保存
+                                        </button>
+                                        <button class="layui-btn layui-btn-sm layui-btn-primary form-reset"
+                                                type="button">重置
+                                        </button>
+                                        <button class="layui-btn layui-btn-sm layui-btn-primary form-close"
+                                                type="button">关闭
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -192,17 +208,21 @@
                             <div class="layui-tab-content">
                                 <div class="layui-tab-item layui-show">
                                     <div id="manufacturerToolbar">
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="addNewLine">
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                                lay-event="addNewLine">
                                             <i class="layui-icon layui-icon-add-1"></i> 增行
                                         </button>
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="batchSave">
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                                lay-event="batchSave">
                                             <i class="layui-icon layui-icon-save"></i> 批量保存
                                         </button>
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="refresh">
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary"
+                                                lay-event="refresh">
                                             <i class="layui-icon layui-icon-refresh"></i> 刷新
                                         </button>
                                     </div>
-                                    <div class="row-edit-table" id="manufacturer_table" lay-filter="manufacturer_table"></div>
+                                    <div class="row-edit-table" id="manufacturer_table"
+                                         lay-filter="manufacturer_table"></div>
                                 </div>
                             </div>
                         </div>
@@ -215,18 +235,18 @@
 
         <!-- 子表管理模板 开始  -->
         <script type="text/html" id="manufacturerCellToolbar">
-                {{#  if($strings.isBlank(d.id)){ }}
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
-                        class="fa fa-check"></i></a>
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
-                        class="fa fa-trash-o"></i></a>
-                {{#  } else { }}
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
-                        class="fa fa-save"></i></a>
-                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
-                        class="fa fa-trash-o"></i></a>
-                {{#  } }}
-            </script>
+            {{#  if($strings.isBlank(d.id)){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newEdit" title="保存"><i
+                    class="fa fa-check"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="newDel" title="删除"><i
+                    class="fa fa-trash-o"></i></a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" title="保存"><i
+                    class="fa fa-save"></i></a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除"><i
+                    class="fa fa-trash-o"></i></a>
+            {{#  } }}
+        </script>
         <!-- 子表管理模板 结束  -->
 
         <script src="/scripts/utils/common.js"></script>
@@ -257,11 +277,36 @@
                             height: 250,
                             cols: [[
                                 {type: 'numbers', align: 'center'},
-                                { field: 'name', title: '厂商名称', align: 'center', editConfig: { form: "input", verify: "required", placeholder: "必填" }},
-                                { field: 'companyCode', title: '社会信用代码', align: 'center', editConfig: { form: "input", verify: "required|number", placeholder: "必填" }},
-                                { field: 'productionLicence', title: '生产许可证', align: 'center', editConfig: { form: "input", verify: "required|abc", placeholder: "必填" }},
-                                { field: 'pinyin', title: '助记码', align: 'center', editConfig: { form: "input", verify: "required|abc", placeholder: "必填" }},
-                                {field: 'LAY_CELL_TOOLBAR', title: '操作', align: 'center', templet: "#manufacturerCellToolbar"},
+                                {
+                                    field: 'name',
+                                    title: '厂商名称',
+                                    align: 'center',
+                                    editConfig: {form: "input", verify: "required", placeholder: "必填"}
+                                },
+                                {
+                                    field: 'companyCode',
+                                    title: '社会信用代码',
+                                    align: 'center',
+                                    editConfig: {form: "input", verify: "required|number", placeholder: "必填"}
+                                },
+                                {
+                                    field: 'productionLicence',
+                                    title: '生产许可证',
+                                    align: 'center',
+                                    editConfig: {form: "input", verify: "required|abc", placeholder: "必填"}
+                                },
+                                {
+                                    field: 'pinyin',
+                                    title: '助记码',
+                                    align: 'center',
+                                    editConfig: {form: "input", verify: "required|abc", placeholder: "必填"}
+                                },
+                                {
+                                    field: 'LAY_CELL_TOOLBAR',
+                                    title: '操作',
+                                    align: 'center',
+                                    templet: "#manufacturerCellToolbar"
+                                },
                             ]]
                         })
                         $editable.watch('manufacturer_table')
@@ -282,6 +327,14 @@
                     }
                 }
 
+                //自定义验证规则
+                form.verify({
+                    Phone: [
+                        /^$|^(^0\d{2}-?\d{8}$)|(^0\d{3}-?\d{7}$)|(^0\d2-?\d{8}$)|(^0\d3-?\d{7}$)$/
+                        ,'电话格式错误，请重新填写'
+                    ]
+                });
+
                 //渲染区域名称
                 dtree.renderOpenTree({
                     title: "选择区域",
@@ -294,8 +347,8 @@
                         $("input[name='regionName']").val("");
                     },
                     onConfirm(node) {
-                        if (!node.leaf){
-                            layer.msg("只能选择最末节点",{icon : 5})
+                        if (!node.leaf) {
+                            layer.msg("只能选择最末节点", {icon: 5})
                             return
                         }
                         $("input[name='regionId']").val(node.nodeId);
@@ -308,17 +361,17 @@
 
                 // 渲染单选框/多选框 数据
                 $global.getDictDataList('common_yes_no').forEach(o => {
-                    $("div[lay-data='radio']").each((i,r) =>{
-                        $(r).append(`<input type="radio" name="${r.id.replace('Div','')}" value="${o.value}" title="${o.label}" /> `)
+                    $("div[lay-data='radio']").each((i, r) => {
+                        $(r).append(`<input type="radio" name="${r.id.replace('Div', '')}" value="${o.value}" title="${o.label}" /> `)
                     })
 
                 })
                 //默认选中
-                $("input:radio[value='0']").attr('checked','true')
+                $("input:radio[value='0']").attr('checked', 'true')
                 form.render('radio')
 
                 //供应商生成大写首字母
-                $("input[name='name']").bind("input propertychange", ()=> {
+                $("input[name='name']").bind("input propertychange", () => {
                     let allFirstLetter = $pinyins.getAllFirstLetter($("input[name='name']").val())
                     $("input[name='pinyin']").val(allFirstLetter);
                 })
@@ -335,7 +388,7 @@
                             return
                         }
                         let rows = layui.table.getRows('manufacturer_table')
-                        if (rows.length == 0){
+                        if (rows.length == 0) {
                             return;
                         }
 
@@ -356,11 +409,11 @@
                 })
 
                 // 监听厂商名称输入框
-                $(document).on('input propertychange',"input[data-name='name']",function() {
+                $(document).on('input propertychange', "input[data-name='name']", function () {
                     let index = this.getAttribute("data-index")
                     let row = layui.table.getRows('manufacturer_table')[index]
                     row.pinyin = $pinyins.getAllFirstLetter(this.value)
-                    layui.table.renderSpecRow('manufacturer_table',index,{pinyin: row.pinyin,id: row.id})
+                    layui.table.renderSpecRow('manufacturer_table', index, {pinyin: row.pinyin, id: row.id})
                 })
 
 
@@ -390,8 +443,9 @@
                         if (!valid) {
                             return
                         }
+
                         let data = layui.table.cache.manufacturer_table[index]
-                        data.supplierId= model.id
+                        data.supplierId = model.id
                         let promise = null
                         if ($strings.isBlank(data.id)) {
                             promise = $http.post("/base/manufacturers/", data)
@@ -429,10 +483,11 @@
                 // 监听表单提交事件
                 form.on('submit(*)', (data) => {
                     let field = data.field
-                    if((Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent)) == 0){
+                    if ((Number.parseInt(field.isDrug) | Number.parseInt(field.isConsumable) | Number.parseInt(field.isReagent)) == 0) {
                         layer.msg("药品/耗材/试剂供应商 至少选中一个", {icon: 5})
                         return false;
                     }
+
                     data.field = layui.$.extend({}, data.field)
                     let promise = null
                     if ($strings.isBlank(data.field.id)) {
@@ -454,7 +509,7 @@
             }
 
             extendParentScriptsAndStyles(() => {
-                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js","/scripts/utils/editable.js"], mainFunction)
+                loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js", "/scripts/utils/editable.js"], mainFunction)
                 loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
             })
 

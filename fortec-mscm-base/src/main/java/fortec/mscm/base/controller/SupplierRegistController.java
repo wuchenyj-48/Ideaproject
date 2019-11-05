@@ -5,7 +5,8 @@ package fortec.mscm.base.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import fortec.common.core.model.CommonResult;
 import fortec.common.core.model.PageResult;
-import fortec.common.core.mvc.controller.BaseController;
+import fortec.common.core.mvc.controller.CrudController;
+import fortec.common.core.mvc.controller.ImAndExAbleController;
 import fortec.mscm.base.entity.SupplierRegist;
 import fortec.mscm.base.request.SupplierRegistCancelRequest;
 import fortec.mscm.base.request.SupplierRegistQueryRequest;
@@ -25,40 +26,18 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/supplier_regists")
-public class SupplierRegistController extends BaseController {
-
-    private SupplierRegistService supplierRegistService;
-
-
-    @PostMapping
-    public CommonResult add(@RequestBody @Valid SupplierRegist entity) {
-        boolean bSave = supplierRegistService.saveCascadeById(entity);
-        return bSave ? CommonResult.ok("新增成功", entity) : CommonResult.error("新增失败");
-    }
-
-    @PutMapping
-    public CommonResult update(@RequestBody @Valid SupplierRegist entity) {
-        boolean bUpdate = supplierRegistService.updateCascadeById(entity);
-        return bUpdate ? CommonResult.ok("保存成功", entity) : CommonResult.error("保存失败");
-    }
+public class SupplierRegistController extends CrudController<SupplierRegist, String, SupplierRegistService> implements ImAndExAbleController<SupplierRegistQueryRequest> {
 
     @GetMapping("/page")
     public PageResult page(SupplierRegistQueryRequest request) {
-        IPage page = supplierRegistService.page(request);
+        IPage page = service.page(request);
         return PageResult.ok("查询成功", page.getRecords(), page.getTotal());
     }
 
     @GetMapping("/list")
     public CommonResult list(SupplierRegistQueryRequest request) {
-        List<SupplierRegist> list = supplierRegistService.list(request);
+        List<SupplierRegist> list = service.list(request);
         return CommonResult.ok("查询成功", list);
-    }
-
-
-    @DeleteMapping("/{id}")
-    public CommonResult deleteById(@PathVariable("id") Long id) {
-        boolean bRemove = supplierRegistService.removeCascadeById(id);
-        return bRemove ? CommonResult.ok("删除成功") : CommonResult.error("删除失败");
     }
 
     /**
@@ -68,12 +47,11 @@ public class SupplierRegistController extends BaseController {
      */
     @PostMapping("/regist")
     public CommonResult regist(@RequestBody @Valid SupplierRegist entity) {
-        boolean valid = supplierRegistService.checkPhoneValid(entity.getApplicantMobile());
+        boolean valid = service.checkPhoneValid(entity.getApplicantMobile());
         if(!valid){
             return CommonResult.error("注册失败，手机号已注册");
         }
-        entity.setAuditStatus(SupplierRegist.AUDIT_STATUS_SUBMITED);
-        boolean bSave = supplierRegistService.saveCascadeById(entity);
+        boolean bSave = service.regist(entity);
         return bSave ? CommonResult.ok("注册成功", entity) : CommonResult.error("注册失败");
     }
 
@@ -84,7 +62,7 @@ public class SupplierRegistController extends BaseController {
      */
     @PostMapping("/pass/{id}")
     public CommonResult pass(@PathVariable("id") String id) {
-        supplierRegistService.pass(id);
+        service.pass(id);
         return CommonResult.ok("审核通过");
     }
 
@@ -96,7 +74,7 @@ public class SupplierRegistController extends BaseController {
      */
     @PostMapping("/cancel/{id}")
     public CommonResult cancel(@PathVariable("id") String id, @RequestBody SupplierRegistCancelRequest request) {
-        supplierRegistService.cancel(id, request.getReason());
+        service.cancel(id, request.getReason());
         return CommonResult.ok("取消成功");
     }
 

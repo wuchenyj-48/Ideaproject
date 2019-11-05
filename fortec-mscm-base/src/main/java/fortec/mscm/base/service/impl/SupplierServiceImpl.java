@@ -144,8 +144,8 @@ public class SupplierServiceImpl extends BaseServiceImpl<SupplierMapper, Supplie
                     }
 
                     //联系人手机号是否平台唯一
-                    if (phoneSet.contains(entity.getPhone())) {
-                        throw new BusinessException("第" + currentIndex + "行电话重复，请检查");
+                    if (phoneSet.contains(entity.getMobile())) {
+                        throw new BusinessException("第" + currentIndex + "行移动电话重复，请检查");
                     }
 
                     //至少选择一个类型供应商
