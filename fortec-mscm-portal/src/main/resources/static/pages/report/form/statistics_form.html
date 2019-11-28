@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑表单</title>
+    <style>
+        .custom-form .layui-form-label {
+            width: 120px
+        }
+
+        .custom-form .layui-input-block {
+            margin-left: 150px
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid" id="app">
+
+    <form class="layui-form custom-form" id="editForm" lay-filter="editForm">
+        <input type="hidden" name="id" class="layui-input"/>
+        <input type="hidden" name="regionId" class="layui-input"/>
+
+        <div class="layui-row layui-col-space5 layui-form-item">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label">
+                    <span class="required-star">*</span> 编号
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="code" readonly placeholder="请输入供应商编号"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-col-xs6">
+                <label class="layui-form-label">
+                    <span class="required-star">*</span> 供应商名称
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required lay-verify="required" placeholder="请输入供应商名称"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="layui-row layui-col-space5 layui-form-item">
+
+
+
+            <div class="layui-col-xs6">
+                <label class="layui-form-label">
+                    联系人
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="contactor" lay-verify="" placeholder="请输入联系人"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs6">
+                <label class="layui-form-label">
+                    电话
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone" lay-verify="phone" placeholder="请输入电话"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="layui-row layui-col-space5 layui-form-item">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label">
+                    邮箱
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-col-xs6">
+                <label class="layui-form-label">
+                    状态
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="address" lay-verify="" placeholder="请输入状态"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-row layui-col-space5 layui-form-item">
+
+
+        </div>
+
+        <div class="block"></div>
+        <div class="layui-row ">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="*">保存</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-primary form-reset" type="button">重置</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-primary form-close" type="button">关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+
+<script src="/scripts/utils/common.js"></script>
+<script>
+
+    let mainFunction = () => {
+        let form = layui.form, $ = layui.$, dtree = layui.dtree
+
+        let model = {}
+
+
+        window.initForm = (formData) => {
+            // 必须要重新创建对象，原因未知
+            model = $.extend({}, formData)
+            $(".form-reset").click()
+            form.val("editForm", model)
+
+            if ($strings.isNotBlank(model.id)) {
+                $(".form-reset").hide()
+                $(".child-tab").show()
+                window.reloadHospitalLocationTable && window.reloadHospitalLocationTable()
+            } else {
+                $(".form-reset").show()
+                $(".child-tab").hide()
+            }
+        }
+
+        //渲染区域名称
+        dtree.renderOpenTree({
+            title: "选择区域",
+            elem: "#regionName",
+            url: "/upms/areas/tree",
+            allowClear: true,
+            allowFilter: true,
+            onClear() {
+                $("input[name='regionId']").val("");
+                $("input[name='regionName']").val("");
+            },
+            onConfirm(node) {
+                if (!node.leaf) {
+                    layer.msg("只能选择最末节点", {icon: 5})
+                    return
+                }
+                $("input[name='regionId']").val(node.nodeId);
+                $("input[name='regionName']").val(node.context);
+            }
+        })
+
+        form.render('select')
+        form.render('radio')
+
+
+
+        $(".form-reset").click(() => {
+            $("#editForm")[0].reset()
+            $("#editForm").find("input[type='hidden']").val('')
+            $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+            form.render(null, "editForm")
+        })
+        $(".form-close").click(() => {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        })
+
+        // 监听表单提交事件
+        form.on('submit(*)', (data) => {
+            data.field = layui.$.extend({}, data.field)
+            let promise = null
+            if ($strings.isBlank(data.field.id)) {
+                promise = $http.post("/base/suppliers", data.field)
+            } else {
+                promise = $http.put("/base/suppliers", data.field)
+            }
+
+            promise.then(resp => {
+                if (!resp.data.success) {
+                    layer.error(resp.data.msg)
+                    return
+                }
+                layer.success(resp.data.msg)
+
+                initForm($.extend(model, resp.data.data, {isNew: false}), false)
+                parent.reloadTable()
+            })
+
+            return false;
+        });
+    }
+
+    extendParentScriptsAndStyles(() => {
+        loadAllJs(["/lib/layui/lay.exts/dtree/dtree.js", "/scripts/utils/editable.js"], mainFunction)
+        loadAllCss(["/lib/layui/lay.exts/dtree/dtree.css", "/lib/layui/lay.exts/dtree/font/dtreefont.css"])
+    })
+
+</script>
+
+</body>
+</html>
+

@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS pack_unit;
 DROP TABLE IF EXISTS supplier;
 DROP TABLE IF EXISTS supplier_applicant;
 DROP TABLE IF EXISTS supplier_regist;
+DROP TABLE IF EXISTS statistics;
 
 
 
@@ -307,6 +308,9 @@ CREATE TABLE supplier_regist
 	PRIMARY KEY (id),
 	UNIQUE (company_code)
 ) COMMENT = '供应商注册';
+
+
+
 
 
 

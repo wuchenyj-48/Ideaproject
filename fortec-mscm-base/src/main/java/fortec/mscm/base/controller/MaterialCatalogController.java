@@ -75,6 +75,7 @@ public class MaterialCatalogController extends CrudController<MaterialCatalog, S
     public void excelExport(MaterialCatalogQueryRequest request) {
         String fileName = "商品品类信息" + DateUtils.format(DateUtils.now(), "yyyyMMddHHmmss") + ".xlsx";
         List<MaterialCatalogVO> list = this.service.exportList(request);
+
         try {
             (new ExportExcel("商品品类信息", MaterialCatalogVO.class)).setDataList(list).write(this.response(), fileName).dispose();
         } catch (IOException e) {

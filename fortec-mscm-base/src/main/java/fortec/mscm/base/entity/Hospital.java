@@ -46,9 +46,9 @@ public class Hospital extends DataEntity  implements Serializable {
     @NotBlank(message="拼音不能为空")
     @Length(min=1, max=20, message="拼音长度必须介于 1 和 20 之间")
     private String pinyin;
-
     /** 区域id */
     private Long regionId;
+
 
     /** 区域名称 */
     private String regionName;

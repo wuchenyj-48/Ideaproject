@@ -1,31 +1,30 @@
-
-    
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>HospitalSupplier管理</title>
+        <title>供应商统计表</title>
+
     </head>
     <body>
-
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-header">供应商医院关系</div>
+                        <div class="layui-card-header">报表管理</div>
                         <div class="layui-card-body">
-
                             <form class="layui-form layui-inline" id="queryForm" lay-filter="queryForm">
                                 <div class="layui-input-inline">
-                                    <input type="text" name="hospitalName" placeholder="请输入医院名称" autocomplete="off"
+                                    <select name="inactive" lay-verify="">
+                                        <option value=""  selected>请选择状态</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="hospitalName" placeholder="请输入编号" autocomplete="off"
                                            class="layui-input">
                                 </div>
 
-                                <div class="layui-input-inline">
-                                    <select name="inactive">
-                                        <option value="">请选择停用标志</option>
-                                    </select>
-                                </div>
 
                                 <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit
                                         lay-filter="list">
@@ -43,17 +42,16 @@
             </div>
         </div>
 
-        <script type="text/html" id="inactiveTpl">
-            <input type="checkbox" name="inactive" data-id="{{d.id}}" value="{{d.inactive}}" lay-skin="switch" lay-text="正常|停用"
-                   lay-filter="inactive" {{ d.id == 0 ?'checked' : '' }}>
-        </script>
+
+
 
         <script src="/scripts/utils/common.js" data-allow-inherit="false"></script>
 
         <script>
 
             extendParentScriptsAndStyles(() => {
-                let table = layui.table, $ = layui.$, form = layui.form;
+                let table = layui.table, $ = layui.$, form = layui.form,
+                    layer = layui.layer
 
                 window.reloadTable = () => {
                     table.reload('listTable', {
@@ -64,37 +62,56 @@
                 table.render({
                     id: "listTable",
                     elem: '#listTable',
-                    title: 'HospitalSupplier信息',
+                    title: '供应商统计信息',
                     height: 'full-160',
-                    url: '/base/hospital_suppliers/page_for_supplier',
+                    url: '/base/form/page',
                     page: {limit: 30},
+                    extToolbar: ["excel"],
+                    toolbar: true,
+                    excel: {
+                        templateUrl: "/base/form/excel/template",
+                        exportUrl: "/base/form/excel/export",
+                        importUrl: "/base/form/excel/import"
+                    },
                     cols: [[ //表头
-                        {type: 'numbers', align: 'center', fixed: 'left'},
-                        { field: 'hospitalName', title: '医院名称', align: 'center'},
-                        { field: 'inactive', title: '停用标志', align: 'center',
-                            templet(item) {
-                                return `<div>${$global.getDictLabel('common_inactive', item.inactive)}</div>`;
-                            }
-                        },
-                        { field: 'creator', title: '创建人', align: 'center'},
-                        { field: 'gmtCreate', title: '创建时间', align: 'center'},
-                        { field: 'modifier', title: '修改人', align: 'center'},
-                        { field: 'gmtModified', title: '修改时间', align: 'center'}
+                        {title: '序号', type: 'numbers', align: 'center', fixed: 'left'},
+                        {field: 'code', title: '编号', align: 'center'},
+                        {field: 'name', title: '名称', align: 'center'},
+                        {field: 'contactor', title: '联系人', align: 'center'},
+                        {field: 'mobile', title: '手机号', align: 'center'},
+                        {field: 'inactive', title: '状态', align: 'center'},
+                        {field: 'explain', title: '说明', align: 'center'},
                     ]]
                 });
 
-                 // 渲染下拉框 数据
-                $global.getDictDataList('common_inactive').forEach(o => {
-                    $("select[name='inactive']").append("<option value='" + o.value + "'>" + o.label + "</option>")
-                })
+                // 渲染下拉框 数据
+
+
+
                 form.render('select')
 
+
+                window.edit = (data) => {
+                    let index = layer.open({
+                        id: "statistics_form",
+                        side: true,
+                        area: ["70%", "100%"],
+                        title: "编辑报表信息",
+                        type: 2,
+                        content: ['./statistics_form.html', 'no'],
+                        success(layero, index) {
+                            let iframeWin = window[layero.find('iframe')[0]['name']]
+                            iframeWin && iframeWin.initForm(data)
+                        }
+                    });
+
+                }
 
                 // 监听表单重置
                 $(".form-reset").click(() => {
                     $("#editForm")[0].reset()
                     $("#editForm").find("input[type='hidden']").val('')
-                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")
+                    $("#editForm").find("input[type='checkbox'],input[type='radio']").removeAttr("checked")*
                     form.render(null, "editForm")
                 })
 
@@ -108,30 +125,14 @@
                 layui.$(".layui-btn").on('click', function () {
                     let layevent = this.getAttribute("lay-event");
                     if (layevent == 'addNew') {
-                        edit({isNew: true});
+                        edit({});
                     }
                 });
 
-                form.on('switch(inactive)', function (obj) {
-                    let id = layui.$(this).attr("data-id")
-                    if (obj.elem.checked) {
-                        $http.post(`/base/hospital_suppliers/enable/` + id).then(resp => {
-                            layer.success(resp.data.msg)
-                        })
-                    }
-                    if (!obj.elem.checked) {
-                        $http.post(`/base/hospital_suppliers/disable/` + id).then(resp => {
-                            layer.success(resp.data.msg)
-                        })
-                    }
-                });
 
             })
 
         </script>
     </body>
-
-
 </html>
-    
-    
+

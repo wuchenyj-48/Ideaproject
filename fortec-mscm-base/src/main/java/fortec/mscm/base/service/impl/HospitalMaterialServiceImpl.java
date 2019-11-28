@@ -10,6 +10,7 @@ import fortec.mscm.base.mapper.HospitalMaterialMapper;
 import fortec.mscm.base.request.HospitalMaterialQueryRequest;
 import fortec.mscm.base.service.HospitalMaterialService;
 import fortec.mscm.security.utils.UserUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * @author chenchen
  * @version 1.0
  */
+@AllArgsConstructor
 @Slf4j
 @Service
 public class HospitalMaterialServiceImpl extends BaseServiceImpl<HospitalMaterialMapper, HospitalMaterial> implements HospitalMaterialService {

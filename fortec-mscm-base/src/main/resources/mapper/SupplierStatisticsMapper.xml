@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../config/mybatis-3-mapper.dtd">
+<mapper namespace="fortec.mscm.base.mapper.SupplierStatisticsMapper">
+    <select id="page" resultType="fortec.mscm.base.entity.SupplierStatistics">
+        select
+        h.name as hospital_name,
+        hs.inactive as inactive,
+        s.*,
+        h.id as hospital_id
+        from
+        supplier s
+        inner join hospital_supplier hs  on hs.supplier_id = s.id
+        inner join hospital h on hs.hospital_id=h.id
+        <where>
+            <if test="request.hospitalId != null and request.hospitalId != ''">
+                and hs.hospital_id = #{request.hospitalId}
+            </if>
+            <if test="request.supplierId != null and request.supplierId != ''">
+                and s.id = #{request.supplierId}
+            </if>
+            <if test="request.inactive != null and request.inactive != ''">
+                and hs.inactive = #{request.inactive}
+            </if>
+            <if test="request.hospitalName != null and request.hospitalName != ''">
+                and h.name = #{request.hospitalName}
+            </if>
+        </where>
+        order by s.id desc
+    </select>
+
+
+    <select id="pageByNameForHospital" resultType="fortec.mscm.base.entity.SupplierStatistics">
+        select
+        h.name as hospital_name
+        hs.inactive as inactive,
+        s.*,
+        h.id as hospital_id
+        from
+        supplier s
+        inner join hospital_supplier hs  on hs.supplier_id = s.id
+        inner join hospital h on hs.hospital_id=h.id
+        <where>
+            <if test="request.keywords != null and request.keywords != ''">
+                and s.name like concat( '%', #{request.keywords}, '%')
+            </if>
+            <if test="request.hospitalId != null and request.hospitalId != ''">
+                and hs.hospital_id = #{request.hospitalId}
+            </if>
+            <if test="request.hospitalName != null and request.hospitalName != ''">
+                and hs.hospitalName = #{request.hospitalName}
+            </if>
+            <if test="request.inactive != null">
+                and hs.inactive = #{request.inactive}
+            </if>
+        </where>
+    </select>
+    <select id="exportList" resultType="fortec.mscm.base.vo.SupplierStatisticsVO">
+        select
+        hs.inactive as inactive,
+        s.*
+        from
+        supplier s
+        inner join hospital_supplier hs on hs.supplier_id = s.id
+    </select>
+    <select id="list" resultType="fortec.mscm.base.vo.SupplierStatisticsVO">
+        select
+        hs.inactive as inactive,
+        s.*
+        from
+        supplier s
+        inner join hospital_supplier hs on hs.supplier_id = s.id
+    </select>
+</mapper>
